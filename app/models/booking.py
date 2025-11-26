@@ -9,7 +9,15 @@ class BookingBase(BaseModel):
     date_time: datetime
 
 
-class BookingCreate(BookingBase):n    pass
+class BookingCreate(BookingBase):
+    class Config:
+        schema_extra = {
+            "example": {
+                "user_id": "some_user_id",
+                "provider_id": "some_provider_id",
+                "date_time": datetime.now()
+            }
+        }
 
 
 class Booking(BaseModel):
@@ -19,4 +27,3 @@ class Booking(BaseModel):
     date_time: datetime
     status: str
     created_at: datetime
-
