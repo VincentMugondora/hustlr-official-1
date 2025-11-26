@@ -1,0 +1,95 @@
+**Product Requirements Document (PRD): Hustlr WhatsApp Chatbot**
+
+**1. Overview**
+- Hustlr is a real-time WhatsApp chatbot platform that connects users with local service providers (plumbers, electricians, etc.)
+- Automates bookings and appointment reminders for both users and providers.
+- Providers can register through WhatsApp and are stored in MongoDB.
+- New users are onboarded by collecting their name, location, and privacy policy agreement before use.
+
+***
+
+**2. Key Features & Flows**
+
+| User Type    | Feature                                 | Description                                                                                     |
+|--------------|-----------------------------------------|-------------------------------------------------------------------------------------------------|
+| User         | First Time Onboarding                   | Prompt for name, location, and privacy agreement on initial chat. Store in MongoDB.             |
+| User         | Service Search & Booking                | Search for services, connect with a provider, and book appointments.                            |
+| User         | Reminders                              | Receive automated reminders for bookings.                                                       |
+| Provider     | Registration Flow                      | Register as a provider via WhatsApp. Details (e.g., name, service, location) go to MongoDB.     |
+| Provider     | Availability & Response                | Manage when available through WhatsApp commands.                                                |
+| All          | WhatsApp-Only Interaction              | All actions (registration, search, booking) handled fully through WhatsApp.                     |
+
+***
+
+**3. Functional Requirements**
+
+**A. Provider Registration**
+- Triggered when provider sends a “register” keyword.
+- Bot collects:
+  - Full name
+  - Service type (plumber, electrician, etc.)
+  - Location
+  - Optional: business name, contact details
+- Stores provider profile in MongoDB with status (pending/approved/active).
+
+**B. User Onboarding (First Visit)**
+- On new user’s first message:
+  - Bot prompts for: name
+  - Then asks: location
+  - Then: presents privacy policy (summarized) and asks to agree (“yes”/“no”)
+- Only after all data collected and privacy agreed does bot proceed to service access.
+- Store all info in MongoDB (users collection).
+
+**C. Booking & Reminders**
+- User browses or searches for provider types.
+- Bot matches user with available, relevant providers.
+- User selects provider, chooses date/time for booking.
+- Booking event stored (MongoDB).
+- Automated WhatsApp reminders sent to user & provider before appointment time.
+
+***
+
+**4. Database Design (MongoDB collections)**
+
+- **users**
+  - _id
+  - whatsapp_number
+  - name
+  - location
+  - agreed_privacy_policy (bool)
+  - onboarding_completed (bool)
+  - registered_at
+
+- **providers**
+  - _id
+  - whatsapp_number
+  - name
+  - service_type
+  - location
+  - status (pending/active)
+  - registered_at
+
+- **bookings**
+  - _id
+  - user_id (ref)
+  - provider_id (ref)
+  - date_time
+  - status (pending/confirmed/completed)
+  - created_at
+
+***
+
+**5. Acceptance Criteria**
+
+- Providers can register entirely via WhatsApp; details are stored in MongoDB.
+- New users are blocked from search/booking until name, location, and privacy policy agreement are collected and saved.
+- Bookings and reminders are handled automatically.
+- All data–user, provider, bookings–are centrally managed in MongoDB.
+
+***
+
+**6. Non-Functional Requirements**
+- All sensitive data is securely stored and complies with applicable privacy policy.
+- The bot is responsive (avg. < 2s reply to WhatsApp).
+- High reliability—retries failed WhatsApp messages.
+- Scalable to support at least 1000 concurrent users.
