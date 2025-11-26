@@ -1,10 +1,4 @@
-Here’s a clear, thorough prompt you can use with Windsurf (or any AI coding assistant) to generate clean, maintainable, and professional code for your Hustlr WhatsApp chatbot project:
-
-***
-
 **Prompt for Windsurf:**
-
-***
 
 I am building a WhatsApp chatbot called Hustlr using FastAPI and MongoDB. The bot will connect users to local service providers (e.g., plumbers, electricians) in real time. Key features:
 - Providers can register through WhatsApp; their details are stored in MongoDB.
@@ -83,7 +77,3 @@ hustlr/
 - Output code without explanations
 
 Make the codebase something another developer can jump into, understand, and maintain with confidence.
-
-***
-
-Copy and paste this prompt into Windsurf for a comprehensive, high-quality starting point!
