@@ -1,0 +1,89 @@
+Here’s a clear, thorough prompt you can use with Windsurf (or any AI coding assistant) to generate clean, maintainable, and professional code for your Hustlr WhatsApp chatbot project:
+
+***
+
+**Prompt for Windsurf:**
+
+***
+
+I am building a WhatsApp chatbot called Hustlr using FastAPI and MongoDB. The bot will connect users to local service providers (e.g., plumbers, electricians) in real time. Key features:
+- Providers can register through WhatsApp; their details are stored in MongoDB.
+- New users must provide their name, location, and accept a privacy policy before using any service; this data is also stored in MongoDB.
+- The bot manages bookings and sends automated reminders to users and providers.
+- All interaction is through WhatsApp. The backend uses FastAPI and MongoDB.
+
+**I want you to generate code that demonstrates best practices for:**
+- Readability:  
+  - Use clear variable and function names
+  - Apply consistent formatting
+  - Keep structures simple
+  - Only use necessary comments
+  - Follow the PEP8 style guide for Python
+- Maintainability:
+  - Functions should do only one thing (Single Responsibility Principle)
+  - Code should be modular and reusable, following a clean folder structure
+  - Avoid duplication (apply DRY)
+- Correctness:
+  - Handle edge cases
+  - Use input validation and error handling
+  - Organize testable code (suggest where unit/integration tests are needed)
+- Efficiency:
+  - Use efficient algorithms and data structures
+  - Avoid unnecessary processing or database queries
+- Scalability:
+  - Use modular architecture (MVC, services, helpers)
+  - Avoid tight coupling
+- Security:
+  - Validate and sanitize inputs
+  - Protect environment variables
+  - Prevent common vulnerabilities (e.g., injection, data leaks)
+- Documentation:
+  - Include a README
+  - Provide basic API documentation/comments explaining “why”, not “what”
+  - Use clear commit messages and version control best practices
+
+**Folder structure should be clear and logical, for example:**
+```
+hustlr/
+  app/
+    main.py
+    api/
+      whatsapp.py
+      providers.py
+      booking.py
+    models/
+      user.py
+      provider.py
+      booking.py
+    utils/
+      reminders.py
+      webhook_verifier.py
+  requirements.txt
+  .env.example
+  README.md
+```
+
+**Requirements:**
+- Code must be clean, readable, and maintainable
+- Clear docstrings and minimal but meaningful comments 
+- Input validation for user/provider registration
+- MongoDB integration for user and provider data
+- Example endpoints for WhatsApp webhook, provider registration, user onboarding, and booking
+- Suggest places for unit tests (don’t need to write all test cases)
+- Follow PEP8 conventions, handle errors gracefully
+
+**Do**:
+- Demonstrate with actual Python code (FastAPI + Motor for MongoDB)
+- Name everything clearly
+- Show at least one endpoint for each major feature (user onboarding, provider registration, booking)
+
+**Do NOT**:
+- Skip code for critical parts
+- Add unnecessary complexity
+- Output code without explanations
+
+Make the codebase something another developer can jump into, understand, and maintain with confidence.
+
+***
+
+Copy and paste this prompt into Windsurf for a comprehensive, high-quality starting point!
