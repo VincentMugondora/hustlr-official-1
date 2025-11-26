@@ -1,6 +1,5 @@
 from datetime import datetime
 
-from bson import ObjectId
 from fastapi import APIRouter, Depends, HTTPException, status
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
