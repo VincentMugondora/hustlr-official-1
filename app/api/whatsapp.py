@@ -98,8 +98,23 @@ async def receive_whatsapp_message(
     print(f"💬 Message: '{message.text}'")
     print(f"📊 Full payload logged to application logs")
 
-    # Implement your logic (respond, save to DB, etc.)
-    print(f"Received message: {message}")
+    # Handle message with enhanced handler
+    try:
+        if message.text:  # Only process text messages for now
+            await message_handler.handle_message(message)
+            logger.info(f"Message processed successfully for {message.from_number}")
+        else:
+            logger.info(f"Non-text message received from {message.from_number}, skipping")
+    except Exception as e:
+        logger.error(f"Error handling message from {message.from_number}: {e}")
+        # Send error message to user
+        try:
+            await whatsapp_api.send_text_message(
+                message.from_number,
+                "❌ Sorry, I'm having trouble processing your message. Please try again later."
+            )
+        except Exception as send_error:
+            logger.error(f"Failed to send error message: {send_error}")
 
     # Respond to WhatsApp so Meta knows you received successfully
     return {"status": "success"}
