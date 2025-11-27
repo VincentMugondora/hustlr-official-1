@@ -2,6 +2,7 @@ from typing import Dict, Any, List, Optional
 from datetime import datetime
 from enum import Enum
 import re
+from app.models.message import WhatsAppMessage
 
 class ConversationState(Enum):
     NEW = "new"
