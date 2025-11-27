@@ -1,0 +1,50 @@
+2025-11-27 13:24:20,721 - app.api.whatsapp - INFO - [2025-11-27T11:24:20.721889] WhatsApp webhook received
+2025-11-27 13:24:20,722 - app.api.whatsapp - INFO - Headers: {'user-agent': 'Mozilla/5.0 (Windows NT; Windows NT 10.0; en-ZW) WindowsPowerShell/5.1.26100.7019', 'content-type': 'application/json', 'host': '127.0.0.1:8000', 'content-length': '334', 'connection': 'Keep-Alive'}
+2025-11-27 13:24:20,723 - app.api.whatsapp - INFO - Raw payload: {
+  "entry": [
+    {
+      "changes": [
+        {
+          "value": {
+            "messages": [
+              {
+                "from": "1234567890",
+                "text": {
+                  "body": "hello"
+                },
+                "id": "msg123",
+                "timestamp": "1701084000",
+                "type": "text"
+              }
+            ],
+            "contacts": [
+              {
+                "name": {
+                  "formatted_name": "Test User"
+                },
+                "wa_id": "1234567890"
+              }
+            ],
+            "metadata": {
+              "phone_number_id": "912423798601397",
+              "display_phone_number": "15551786519"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
+2025-11-27 13:24:20,724 - app.api.whatsapp - INFO - Parsed message object: <app.models.message.WhatsAppMessage object at 0x00000223849217F0>
+2025-11-27 13:24:20,724 - app.api.whatsapp - INFO - From number: 1234567890
+2025-11-27 13:24:20,725 - app.api.whatsapp - INFO - Message text: 'hello'
+2025-11-27 13:24:20,725 - app.api.whatsapp - INFO - Message length: 5 characters
+2025-11-27 13:24:20,725 - app.api.whatsapp - INFO - Message ID: msg123
+2025-11-27 13:24:20,726 - app.api.whatsapp - INFO - Message timestamp: 1701084000
+2025-11-27 13:24:20,726 - app.api.whatsapp - INFO - Message type: text
+2025-11-27 13:24:20,726 - app.api.whatsapp - INFO - Contact name: Test User
+2025-11-27 13:24:20,727 - app.api.whatsapp - INFO - Contact wa_id: 1234567890
+2025-11-27 13:24:20,727 - app.api.whatsapp - INFO - Phone number ID: 912423798601397
+2025-11-27 13:24:20,727 - app.api.whatsapp - INFO - Display phone number: 15551786519
+2025-11-27 13:24:22,919 - app.api.whatsapp - ERROR - Error handling message from 1234567890: WhatsApp API configuration missing
+2025-11-27 13:24:22,920 - app.api.whatsapp - ERROR - Failed to send error message: WhatsApp API configuration missing
