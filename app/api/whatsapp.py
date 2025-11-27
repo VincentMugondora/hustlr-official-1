@@ -2,6 +2,10 @@ from fastapi import APIRouter, Request, status, HTTPException, Body, Query
 from fastapi.responses import PlainTextResponse
 from app.utils.webhook_verifier import verify_whatsapp_signature
 from app.models.message import WhatsAppMessage
+from app.utils.whatsapp_cloud_api import WhatsAppCloudAPI
+from app.utils.message_handler import MessageHandler
+from app.utils.aws_lambda import AWSLambdaService
+from app.utils.dynamodb_service import DynamoDBService
 from config import settings
 import logging
 import json
