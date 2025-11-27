@@ -13,6 +13,12 @@ from datetime import datetime
 
 router = APIRouter()
 
+# Initialize services
+whatsapp_api = WhatsAppCloudAPI()
+dynamodb_service = DynamoDBService()
+lambda_service = AWSLambdaService()
+message_handler = MessageHandler(whatsapp_api, dynamodb_service, lambda_service)
+
 @router.get("/webhook")
 async def verify_whatsapp_webhook(
     hub_mode: str | None = Query(None, alias="hub.mode"),
