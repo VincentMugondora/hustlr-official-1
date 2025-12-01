@@ -53,12 +53,16 @@ class MessageHandler:
         user_number = message.from_number
         message_text = message.text.strip().lower()
         
-        # Get or create user session
-        session = self.user_sessions.get(user_number, {
-            'state': ConversationState.NEW,
-            'data': {},
-            'last_activity': datetime.utcnow()
-        })
+        # Try to load session from database first, then fall back to memory
+        db_session = await self.db.get_session(user_number)
+        if db_session:
+            session = db_session
+        else:
+            session = self.user_sessions.get(user_number, {
+                'state': ConversationState.NEW,
+                'data': {},
+                'last_activity': datetime.utcnow().isoformat()
+            })
         
         # Get user from database
         user = await self.db.get_user(user_number)
@@ -71,8 +75,14 @@ class MessageHandler:
         else:
             await self.handle_main_menu(user_number, message_text, session, user)
         
-        # Update session
+        # Update session in both memory and database
+        session['last_activity'] = datetime.utcnow().isoformat()
+        # Convert ConversationState enum to string for database storage
+        session_to_save = session.copy()
+        if isinstance(session_to_save.get('state'), ConversationState):
+            session_to_save['state'] = session_to_save['state'].value
         self.user_sessions[user_number] = session
+        await self.db.save_session(user_number, session_to_save)
     
     async def handle_onboarding(self, user_number: str, message_text: str, session: Dict) -> None:
         """Handle new user onboarding flow"""
