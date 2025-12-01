@@ -184,13 +184,19 @@ class MessageHandler:
             if handled_fast:
                 return
         
-        # Handle service search
+        # Handle booking flow states
         if state == ConversationState.SERVICE_SEARCH:
             await self.handle_service_search(user_number, message_text, session, user)
-        elif state == ConversationState.PROVIDER_SELECTION:
-            await self.handle_provider_selection(user_number, message_text, session, user)
+        elif state == ConversationState.BOOKING_SERVICE_DETAILS:
+            await self.handle_booking_service_details(user_number, message_text, session, user)
+        elif state == ConversationState.BOOKING_LOCATION:
+            await self.handle_booking_location(user_number, message_text, session, user)
         elif state == ConversationState.BOOKING_TIME:
             await self.handle_booking_time(user_number, message_text, session, user)
+        elif state == ConversationState.PROVIDER_SELECTION:
+            await self.handle_provider_selection(user_number, message_text, session, user)
+        elif state == ConversationState.BOOKING_CONFIRM:
+            await self.handle_booking_confirmation(user_number, message_text, session, user)
         else:
             # Use AI to understand the message
             await self.handle_ai_response(user_number, message_text, user)
