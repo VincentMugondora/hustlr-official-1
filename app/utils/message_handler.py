@@ -254,7 +254,7 @@ class MessageHandler:
                 message_text, 
                 {'name': user.get('name'), 'location': user.get('location')}
             )
-            await self.whatsapp_api.send_text_message(user_number, ai_response)
+            await self._log_and_send_response(user_number, ai_response, "ai_response")
             return
         
         # Search for providers
@@ -262,12 +262,13 @@ class MessageHandler:
         providers = await self.db.get_providers_by_service(service_type, user_location)
         
         if not providers:
-            await self.whatsapp_api.send_text_message(
+            await self._log_and_send_response(
                 user_number,
                 f"❌ No {service_type} found in your area. Try:\n"
                 "• Expanding your search area\n"
                 "• Trying a different service type\n"
-                "• Type 'help' for more options"
+                "• Type 'help' for more options",
+                "no_providers_found"
             )
             return
         
@@ -279,7 +280,7 @@ class MessageHandler:
                 'title': f"{provider['name']} - {provider.get('location', 'Unknown')}"
             })
         
-        await self.whatsapp_api.send_interactive_buttons(
+        await self._log_and_send_interactive(
             user_number,
             f"🔧 {service_type.title()} Providers",
             f"Found {len(providers)} provider(s) near {user_location}. Select one to book:",
@@ -309,9 +310,10 @@ class MessageHandler:
                     break
         
         if not selected_provider:
-            await self.whatsapp_api.send_text_message(
+            await self._log_and_send_response(
                 user_number,
-                "❌ Please select a valid provider number from the list above."
+                "❌ Please select a valid provider number from the list above.",
+                "invalid_provider_selection"
             )
             return
         
@@ -319,12 +321,13 @@ class MessageHandler:
         session['data']['selected_provider'] = selected_provider
         session['state'] = ConversationState.BOOKING_TIME
         
-        await self.whatsapp_api.send_text_message(
+        await self._log_and_send_response(
             user_number,
             f"✅ Selected: {selected_provider['name']}\n\n"
             f"When would you like to book this service? Please provide:\n"
             f"• Date (e.g., 'tomorrow', 'Dec 15', 'next Monday')\n"
-            f"• Time (e.g., '2pm', 'morning', 'after 5pm')"
+            f"• Time (e.g., '2pm', 'morning', 'after 5pm')",
+            "provider_selected"
         )
     
     async def handle_booking_time(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
