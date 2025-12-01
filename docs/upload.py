@@ -17,6 +17,10 @@ if str(ROOT_DIR) not in sys.path:
 from config import settings
 
 
+# ---------------------------------------
+# UTILITIES
+# ---------------------------------------
+
 def create_provider(
     whatsapp_number: str,
     name: str,
@@ -55,6 +59,10 @@ def _extract_website(text: str) -> str:
     return match.group(0).strip() if match else ""
 
 
+# ---------------------------------------
+# CLASSIFIEDS SCRAPER (OPTIONAL)
+# ---------------------------------------
+
 def scrape_classifieds(service_type: str, location_hint: str, url: str) -> List[Dict[str, Any]]:
     providers: List[Dict[str, Any]] = []
     headers = {
@@ -77,7 +85,7 @@ def scrape_classifieds(service_type: str, location_hint: str, url: str) -> List[
         return providers
 
     if not response.ok:
-        print(f"Skipping classifieds scrape; HTTP {response.status_code} for {url}")
+        print(f"Skipping classifieds scrape; HTTP {response.status_code}")
         return providers
 
     soup = BeautifulSoup(response.text, "html.parser")
@@ -104,10 +112,11 @@ def scrape_classifieds(service_type: str, location_hint: str, url: str) -> List[
             pieces.append(f"Email: {email}")
         if website:
             pieces.append(f"Website: {website}")
-        contact = " | ".join(pieces) if pieces else ""
+
+        contact = " | ".join(pieces) if pieces else None
 
         description_el = card.select_one(".description, .listing-description, p")
-        description = description_el.get_text(strip=True) if description_el else ""
+        description = description_el.get_text(strip=True) if description_el else None
 
         whatsapp_number = phone or ""
         if not whatsapp_number:
@@ -119,28 +128,50 @@ def scrape_classifieds(service_type: str, location_hint: str, url: str) -> List[
             service_type=service_type,
             location=location,
             business_name=title,
-            contact=contact or None,
-            short_description=description or None,
+            contact=contact,
+            short_description=description,
         )
         providers.append(provider)
 
     return providers
 
 
+# ---------------------------------------
+# PINDULA SCRAPER (FIXED)
+# ---------------------------------------
+
 def scrape_pindula(service_type: str, location_hint: str, url: str) -> List[Dict[str, Any]]:
     providers: List[Dict[str, Any]] = []
-    response = requests.get(url, timeout=15)
-    response.raise_for_status()
+
+    headers = {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/120.0 Safari/537.36"
+        ),
+        "Accept-Language": "en-US,en;q=0.9",
+    }
+
+    response = requests.get(url, headers=headers, timeout=15)
+
+    if not response.ok:
+        print(f"Failed to fetch Pindula: HTTP {response.status_code}")
+        return providers
+
     soup = BeautifulSoup(response.text, "html.parser")
 
-    cards = soup.select(".service, .card, article, li")
+    # Correct Pindula structure
+    cards = soup.select(".service-box")
+
     for card in cards:
-        title_el = card.select_one("h3, h2, .title, a")
+        title_el = card.select_one("h3, h2")
         if not title_el:
             continue
+
         title = title_el.get_text(strip=True)
 
         body_text = card.get_text(" ", strip=True)
+
         phone = _extract_phone(body_text)
         email = _extract_email(body_text)
         website = _extract_website(body_text)
@@ -152,54 +183,67 @@ def scrape_pindula(service_type: str, location_hint: str, url: str) -> List[Dict
             pieces.append(f"Email: {email}")
         if website:
             pieces.append(f"Website: {website}")
-        contact = " | ".join(pieces) if pieces else ""
+
+        contact = " | ".join(pieces) if pieces else None
 
         description_el = card.select_one("p")
-        description = description_el.get_text(strip=True) if description_el else ""
+        description = description_el.get_text(strip=True) if description_el else None
 
         whatsapp_number = phone or ""
         if not whatsapp_number:
             continue
 
-        location = location_hint
-
         provider = create_provider(
             whatsapp_number=whatsapp_number,
             name=title,
             service_type=service_type,
-            location=location,
+            location=location_hint,
             business_name=title,
-            contact=contact or None,
-            short_description=description or None,
+            contact=contact,
+            short_description=description,
         )
+
         providers.append(provider)
 
     return providers
 
 
+# ---------------------------------------
+# MONGO SAVE
+# ---------------------------------------
+
 def save_to_mongo(providers: List[Dict[str, Any]]) -> None:
     if not providers:
+        print("No providers to save.")
         return
+
     client = MongoClient(settings.MONGODB_URI)
     db = client[settings.MONGODB_DB_NAME]
     collection = db["providers"]
     collection.insert_many(providers)
+    print(f"Saved {len(providers)} providers to MongoDB.")
 
+
+# ---------------------------------------
+# MAIN EXECUTION
+# ---------------------------------------
 
 def main() -> None:
     service_type = "plumber"
     location_hint = "Harare"
-    classifieds_url = "https://www.classifieds.co.zw/"
     pindula_url = "https://www.pindula.co.zw/services"
 
     all_providers: List[Dict[str, Any]] = []
+
+    # Enable if needed:
+    # classifieds_url = "https://www.classifieds.co.zw/"
     # all_providers.extend(scrape_classifieds(service_type, location_hint, classifieds_url))
+
     all_providers.extend(scrape_pindula(service_type, location_hint, pindula_url))
 
-    print(json.dumps(all_providers, indent=2))
+    print(json.dumps(all_providers, indent=2, ensure_ascii=False))
     save_to_mongo(all_providers)
 
 
-# Example usage
 if __name__ == "__main__":
     main()
