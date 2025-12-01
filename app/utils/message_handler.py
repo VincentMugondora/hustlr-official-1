@@ -4,6 +4,7 @@ from enum import Enum
 import re
 import logging
 from app.models.message import WhatsAppMessage
+from app.utils.location_extractor import get_location_extractor
 
 logger = logging.getLogger(__name__)
 
