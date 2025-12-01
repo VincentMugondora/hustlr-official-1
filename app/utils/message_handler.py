@@ -203,7 +203,7 @@ class MessageHandler:
         if not providers:
             await self._log_and_send_response(
                 user_number,
-                f"❌ No {service_type} found in your area. Try a different service or area.",
+                f"Sorry, no {service_type}s available in your area right now. Try a different service or area.",
                 "no_providers_found"
             )
             return True
@@ -225,11 +225,7 @@ class MessageHandler:
         if success:
             await self._log_and_send_response(
                 user_number,
-                f"✅ **Booking Request Sent!**\n\n"
-                f"Service: {service_type.title()}\n"
-                f"Provider: {selected_provider['name']}\n"
-                f"Time: {booking_time}\n\n"
-                f"If this looks wrong, just reply with the correct details.",
+                f"Booking confirmed! {selected_provider['name']} will help you {service_type} on {booking_time}. We'll send you a reminder.",
                 "booking_created"
             )
             session['state'] = ConversationState.SERVICE_SEARCH
@@ -237,7 +233,7 @@ class MessageHandler:
         else:
             await self._log_and_send_response(
                 user_number,
-                "❌ Sorry, there was an issue creating your booking. Please try again.",
+                "Oops! Something went wrong. Please try again.",
                 "booking_error"
             )
 
@@ -264,10 +260,7 @@ class MessageHandler:
         if not providers:
             await self._log_and_send_response(
                 user_number,
-                f"❌ No {service_type} found in your area. Try:\n"
-                "• Expanding your search area\n"
-                "• Trying a different service type\n"
-                "• Type 'help' for more options",
+                f"Sorry, no {service_type}s available in your area right now. Try searching for a different service or area.",
                 "no_providers_found"
             )
             return
@@ -282,10 +275,10 @@ class MessageHandler:
         
         await self._log_and_send_interactive(
             user_number,
-            f"🔧 {service_type.title()} Providers",
-            f"Found {len(providers)} provider(s) near {user_location}. Select one to book:",
+            f"Available {service_type}s",
+            f"Found {len(providers)} provider(s) near you. Pick one:",
             buttons,
-            "Reply with the provider number or choose from options above"
+            "Tap a provider or reply with the number"
         )
         
         session['data']['service_type'] = service_type
@@ -312,7 +305,7 @@ class MessageHandler:
         if not selected_provider:
             await self._log_and_send_response(
                 user_number,
-                "❌ Please select a valid provider number from the list above.",
+                "Please pick a provider from the list above.",
                 "invalid_provider_selection"
             )
             return
@@ -323,10 +316,7 @@ class MessageHandler:
         
         await self._log_and_send_response(
             user_number,
-            f"✅ Selected: {selected_provider['name']}\n\n"
-            f"When would you like to book this service? Please provide:\n"
-            f"• Date (e.g., 'tomorrow', 'Dec 15', 'next Monday')\n"
-            f"• Time (e.g., '2pm', 'morning', 'after 5pm')",
+            f"Great! You've selected {selected_provider['name']}.\n\nWhen would you like the service? (e.g., 'tomorrow morning', 'Dec 15 at 2pm')",
             "provider_selected"
         )
     
@@ -338,10 +328,7 @@ class MessageHandler:
         if not booking_time:
             await self._log_and_send_response(
                 user_number,
-                "❌ I couldn't understand that time format. Please try:\n"
-                "• 'tomorrow at 2pm'\n"
-                "• 'Dec 15 morning'\n"
-                "• 'next Monday afternoon'",
+                "I didn't catch that. Try 'tomorrow morning', 'Dec 15 at 2pm', or 'next Monday'.",
                 "invalid_time_format"
             )
             return
@@ -362,11 +349,7 @@ class MessageHandler:
             provider_name = session['data']['selected_provider']['name']
             await self._log_and_send_response(
                 user_number,
-                f"✅ **Booking Confirmed!**\n\n"
-                f"📅 Service: {session['data']['service_type'].title()}\n"
-                f"👨‍🔧 Provider: {provider_name}\n"
-                f"⏰ Time: {booking_time}\n\n"
-                f"You'll receive a reminder before your appointment.",
+                f"Booking confirmed! {provider_name} will help you {session['data']['service_type']} on {booking_time}. We'll send you a reminder.",
                 "booking_confirmed"
             )
             
@@ -376,7 +359,7 @@ class MessageHandler:
         else:
             await self._log_and_send_response(
                 user_number,
-                "❌ Sorry, there was an issue creating your booking. Please try again.",
+                "Oops! Something went wrong. Please try again.",
                 "booking_error"
             )
     
