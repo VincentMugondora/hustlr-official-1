@@ -449,3 +449,69 @@ For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/St
 2025-12-01 10:03:01,675 - app.api.whatsapp - INFO - Baileys text: 'Yes'
 2025-12-01 10:03:03,336 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2025-12-01 10:03:03,340 - app.api.whatsapp - INFO - Baileys message processed successfully for 245943215608017@lid
+2025-12-01 10:10:09,254 - app.api.whatsapp - INFO - [2025-12-01T08:10:09.254401] Baileys webhook received
+2025-12-01 10:10:09,255 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "245943215608017",
+  "text": "Hello",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A5CECE723EBDB48202C7F249F38A06AB",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764576606,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "conversation": "Hello",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderTimestamp": "1764140775",
+          "recipientKeyHash": "/T956n6fmdF6bA==",
+          "recipientTimestamp": "1764575501"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "5CvcMiuQowG0Ld/zJ/N5CeRdPlVMIqeaD8FqZTBGcgw="
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-01 10:10:09,255 - app.api.whatsapp - INFO - Baileys message from: 245943215608017
+2025-12-01 10:10:09,255 - app.api.whatsapp - INFO - Baileys text: 'Hello'
+2025-12-01 10:10:11,570 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-01 10:10:11,573 - app.api.whatsapp - INFO - Baileys message processed successfully for 245943215608017
+2025-12-01 10:10:31,035 - app.api.whatsapp - INFO - [2025-12-01T08:10:31.035973] Baileys webhook received
+2025-12-01 10:10:31,035 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "245943215608017",
+  "text": "Hello",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A54581073ACDE3775A61740B3B8481BB",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764576628,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "conversation": "Hello",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderTimestamp": "1764140775",
+          "recipientKeyHash": "/T956n6fmdF6bA==",
+          "recipientTimestamp": "1764575501"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "J499gcYrNn4e1vjAzwik/46HW5oQdRks71mosSI498c="
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-01 10:10:31,035 - app.api.whatsapp - INFO - Baileys message from: 245943215608017
+2025-12-01 10:10:31,037 - app.api.whatsapp - INFO - Baileys text: 'Hello'
+2025-12-01 10:10:32,037 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-01 10:10:32,040 - app.api.whatsapp - INFO - Baileys message processed successfully for 245943215608017
