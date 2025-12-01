@@ -7,6 +7,7 @@ from app.utils.message_handler import MessageHandler
 from app.utils.aws_lambda import AWSLambdaService
 from app.utils.mongo_service import MongoService
 from app.utils.baileys_client import BaileysClient
+from app.utils.location_service import get_location_service
 from config import settings
 import logging
 import json
@@ -103,13 +104,26 @@ async def receive_whatsapp_message(
                         lng = loc.get("longitude")
                         name = loc.get("name") or ""
                         address = loc.get("address") or ""
+                        
+                        # Try to reverse geocode coordinates to get accurate location
+                        location_name = None
+                        if lat is not None and lng is not None:
+                            location_service = get_location_service()
+                            location_name = await location_service.reverse_geocode(lat, lng)
+                            logger.info(f"Reverse geocoded coordinates ({lat}, {lng}) to: {location_name}")
+                        
+                        # Build location text with priority: reverse geocoded name > provided name > address > coordinates
                         parts = []
-                        if name:
+                        if location_name:
+                            parts.append(location_name)
+                        elif name:
                             parts.append(name)
-                        if address:
+                        elif address:
                             parts.append(address)
+                        
                         if lat is not None and lng is not None:
                             parts.append(f"({lat},{lng})")
+                        
                         location_text = " ".join(parts) or "[location shared]"
                         message.text = location_text
                         logger.info(f"Normalized location text: {location_text}")
