@@ -19,6 +19,11 @@ async function startBaileys() {
     browser: ["HustlrBot", "Chrome", "1.0.0"],
   });
 
+  // Always keep the latest active socket in this reference so that
+  // the Express /send-text route uses a valid connection, even after
+  // Baileys reconnects internally.
+  sockRef = sock;
+
   sock.ev.on("creds.update", saveCreds);
 
   sock.ev.on("connection.update", (update) => {
@@ -34,6 +39,7 @@ async function startBaileys() {
       const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
       console.log("connection closed. reconnect:", shouldReconnect, "status:", statusCode);
       if (shouldReconnect) {
+        // This will update sockRef again because startBaileys assigns it.
         startBaileys().catch((err) => console.error("reconnect failed", err));
       }
     } else if (connection === "open") {
@@ -50,9 +56,10 @@ async function startBaileys() {
       if (m.key.fromMe) return;
 
       const remoteJid = m.key.remoteJid || "";
-      const from = remoteJid
-        .replace(/@s\.whatsapp\.net$/, "")
-        .replace(/@c\.us$/, "");
+      // Normalize to plain phone/id (strip anything after '@', such as
+      // @s.whatsapp.net, @c.us, @lid, etc.) so Python always receives
+      // a clean number and can append the proper domain when sending.
+      const from = remoteJid.split("@")[0];
 
       let text = "";
       if (m.message?.conversation) {

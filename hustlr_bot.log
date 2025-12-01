@@ -98,3 +98,49 @@
 2025-11-27 13:29:46,512 - app.api.whatsapp - INFO - Display phone number: 15551786519
 2025-11-27 13:29:48,899 - app.api.whatsapp - ERROR - Error handling message from 1234567890: WhatsApp API configuration missing
 2025-11-27 13:29:48,899 - app.api.whatsapp - ERROR - Failed to send error message: WhatsApp API configuration missing
+2025-12-01 09:52:15,079 - app.api.whatsapp - INFO - [2025-12-01T07:52:15.079816] Baileys webhook received
+2025-12-01 09:52:15,081 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "245943215608017@lid",
+  "text": "Hello",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A5AFF351BF9F0C5C2915D6BD455BED64",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764575532,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "Hello",
+        "previewType": "NONE",
+        "contextInfo": {
+          "entryPointConversionSource": "global_search_new_chat",
+          "entryPointConversionApp": "whatsapp",
+          "entryPointConversionDelaySeconds": 4
+        },
+        "inviteLinkGroupTypeV2": "DEFAULT"
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderTimestamp": "1764140775",
+          "recipientKeyHash": "/T956n6fmdF6bA==",
+          "recipientTimestamp": "1764575501"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "nnsVbaTdSFRmWtP+QD18XgWJNORtDFgtRoSCiR/SI4s="
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-01 09:52:15,082 - app.api.whatsapp - INFO - Baileys message from: 245943215608017@lid
+2025-12-01 09:52:15,083 - app.api.whatsapp - INFO - Baileys text: 'Hello'
+2025-12-01 09:52:19,123 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 500 Internal Server Error"
+2025-12-01 09:52:19,128 - app.api.whatsapp - ERROR - Error handling Baileys message from 245943215608017@lid: Server error '500 Internal Server Error' for url 'http://localhost:3000/send-text'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500
+2025-12-01 09:52:19,911 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 500 Internal Server Error"
+2025-12-01 09:52:19,916 - app.api.whatsapp - ERROR - Failed to send Baileys error message: Server error '500 Internal Server Error' for url 'http://localhost:3000/send-text'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500
