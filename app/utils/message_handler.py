@@ -474,18 +474,20 @@ class MessageHandler:
         # Store booking time and move to confirmation
         session['data']['booking_time'] = booking_time
         
-        # Build confirmation summary
-        provider_name = session['data'].get('selected_provider', {}).get('name', 'Provider')
-        service_type = session['data'].get('service_type', 'service')
-        issue = session['data'].get('issue', '')
+        # Build formatted confirmation summary with all details
+        service_type = session['data'].get('service_type', 'service').title()
+        issue = session['data'].get('issue', 'Not specified')
+        location = session['data'].get('location', 'Not specified')
+        provider_location = session['data'].get('selected_provider', {}).get('location', location)
         
-        confirmation_msg = f"Let me confirm your booking:\n\n"
-        confirmation_msg += f"Service: {service_type}\n"
-        if issue:
-            confirmation_msg += f"Issue: {issue}\n"
-        confirmation_msg += f"Provider: {provider_name}\n"
-        confirmation_msg += f"Time: {booking_time}\n\n"
-        confirmation_msg += f"Is this correct? (Reply 'yes' to confirm or 'no' to change)"
+        confirmation_msg = (
+            f"Perfect! Here's your booking:\n\n"
+            f"🛠 Service: {service_type}\n"
+            f"📝 Issue: {issue}\n"
+            f"📅 Date & Time: {booking_time}\n"
+            f"📍 Location: {provider_location}\n"
+            f"\n✅ Reply \"Yes\" to confirm or \"No\" to edit."
+        )
         
         await self._log_and_send_response(
             user_number,
