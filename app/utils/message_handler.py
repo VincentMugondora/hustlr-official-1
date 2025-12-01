@@ -8,14 +8,21 @@ from app.models.message import WhatsAppMessage
 logger = logging.getLogger(__name__)
 
 class ConversationState(Enum):
+    # Onboarding states
     NEW = "new"
     ONBOARDING_NAME = "onboarding_name"
     ONBOARDING_LOCATION = "onboarding_location"
     ONBOARDING_PRIVACY = "onboarding_privacy"
+    
+    # Booking flow states
     SERVICE_SEARCH = "service_search"
-    PROVIDER_SELECTION = "provider_selection"
+    BOOKING_SERVICE_DETAILS = "booking_service_details"  # Ask about specific issue/details
     BOOKING_TIME = "booking_time"
-    BOOKING_CONFIRM = "booking_confirm"
+    BOOKING_LOCATION = "booking_location"  # Confirm location for service
+    PROVIDER_SELECTION = "provider_selection"
+    BOOKING_CONFIRM = "booking_confirm"  # Final confirmation before booking
+    
+    # Provider registration states
     PROVIDER_REGISTER = "provider_register"
     PROVIDER_REGISTER_NAME = "provider_register_name"
     PROVIDER_REGISTER_SERVICE = "provider_register_service"
