@@ -515,3 +515,806 @@ For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/St
 2025-12-01 10:10:31,037 - app.api.whatsapp - INFO - Baileys text: 'Hello'
 2025-12-01 10:10:32,037 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2025-12-01 10:10:32,040 - app.api.whatsapp - INFO - Baileys message processed successfully for 245943215608017
+2025-12-01 10:28:10,744 - app.api.whatsapp - INFO - [2025-12-01T08:28:10.744915] Baileys webhook received
+2025-12-01 10:28:10,744 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "Hello",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A50B04156AA3B4BB84D22269D370889E",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764577688,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "conversation": "Hello",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderTimestamp": "1764140775",
+          "recipientKeyHash": "/T956n6fmdF6bA==",
+          "recipientTimestamp": "1764575501"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "/9rOvVx0cjgPkVoPk7fn885Jvoux7MoTm6kq8oOg9OQ="
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-01 10:28:10,744 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-01 10:28:10,746 - app.api.whatsapp - INFO - Baileys text: 'Hello'
+2025-12-01 10:28:13,289 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-01 10:28:13,292 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-01 10:28:21,760 - app.api.whatsapp - INFO - [2025-12-01T08:28:21.760656] Baileys webhook received
+2025-12-01 10:28:21,760 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A512E7E7D03D5CCDBE133019755029FA",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764577699,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-01 10:28:21,760 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-01 10:28:21,760 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-01 10:28:21,760 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-01 10:28:27,489 - app.api.whatsapp - INFO - [2025-12-01T08:28:27.489244] Baileys webhook received
+2025-12-01 10:28:27,489 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A512E7E7D03D5CCDBE133019755029FA",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764577705,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-01 10:28:27,490 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-01 10:28:27,490 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-01 10:28:27,491 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-01 10:28:28,159 - app.api.whatsapp - INFO - [2025-12-01T08:28:28.159139] Baileys webhook received
+2025-12-01 10:28:28,159 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "245943215608017",
+  "text": "Vincent Mugondora",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A512E7E7D03D5CCDBE133019755029FA"
+    },
+    "message": {
+      "conversation": "Vincent Mugondora",
+      "messageContextInfo": {
+        "messageSecret": "l4Ym437/8U00l8qQGjhIqvkvfqCmfq3XxVa35EUva1g="
+      }
+    },
+    "messageTimestamp": "1764577699",
+    "messageSecret": "l4Ym437/8U00l8qQGjhIqvkvfqCmfq3XxVa35EUva1g=",
+    "reportingTokenInfo": {
+      "reportingTag": "AQ0XvGnh8XYxtPa1ueSgNbhsDOQ="
+    },
+    "isMentionedInStatus": false
+  }
+}
+2025-12-01 10:28:28,160 - app.api.whatsapp - INFO - Baileys message from: 245943215608017
+2025-12-01 10:28:28,160 - app.api.whatsapp - INFO - Baileys text: 'Vincent Mugondora'
+2025-12-01 10:28:29,032 - app.api.whatsapp - INFO - [2025-12-01T08:28:29.032538] Baileys webhook received
+2025-12-01 10:28:29,032 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "Vincent Mugondora",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A512E7E7D03D5CCDBE133019755029FA",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764577706,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "conversation": "Vincent Mugondora",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderTimestamp": "1764140775",
+          "recipientKeyHash": "/T956n6fmdF6bA==",
+          "recipientTimestamp": "1764575501"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "l4Ym437/8U00l8qQGjhIqvkvfqCmfq3XxVa35EUva1g="
+      }
+    }
+  }
+}
+2025-12-01 10:28:29,034 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-01 10:28:29,034 - app.api.whatsapp - INFO - Baileys text: 'Vincent Mugondora'
+2025-12-01 10:28:29,714 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-01 10:28:29,717 - app.api.whatsapp - INFO - Baileys message processed successfully for 245943215608017
+2025-12-01 10:28:30,034 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-01 10:28:30,036 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-01 10:28:41,331 - app.api.whatsapp - INFO - [2025-12-01T08:28:41.331874] Baileys webhook received
+2025-12-01 10:28:41,333 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A5A2686B5153919502E43ED1C2D74329",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764577718,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-01 10:28:41,333 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-01 10:28:41,333 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-01 10:28:41,335 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-01 10:28:47,120 - app.api.whatsapp - INFO - [2025-12-01T08:28:47.120919] Baileys webhook received
+2025-12-01 10:28:47,120 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A5A2686B5153919502E43ED1C2D74329",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764577724,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-01 10:28:47,120 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-01 10:28:47,120 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-01 10:28:47,123 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-01 10:28:47,677 - app.api.whatsapp - INFO - [2025-12-01T08:28:47.677057] Baileys webhook received
+2025-12-01 10:28:47,677 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "245943215608017",
+  "text": "(-17.8671955,30.9338241)",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A5A2686B5153919502E43ED1C2D74329"
+    },
+    "message": {
+      "locationMessage": {
+        "degreesLatitude": -17.8671955,
+        "degreesLongitude": 30.9338241
+      },
+      "messageContextInfo": {
+        "messageSecret": "0cL16tPix3QkP1AnRi8V6MpVPgS3Nre6L5vDNyVPRpE="
+      }
+    },
+    "messageTimestamp": "1764577718",
+    "messageSecret": "0cL16tPix3QkP1AnRi8V6MpVPgS3Nre6L5vDNyVPRpE=",
+    "reportingTokenInfo": {
+      "reportingTag": "AQ0BQ6fgeetZxupO1sVny24oLfY="
+    },
+    "isMentionedInStatus": false
+  }
+}
+2025-12-01 10:28:47,677 - app.api.whatsapp - INFO - Baileys message from: 245943215608017
+2025-12-01 10:28:47,677 - app.api.whatsapp - INFO - Baileys text: '(-17.8671955,30.9338241)'
+2025-12-01 10:28:48,756 - app.api.whatsapp - INFO - [2025-12-01T08:28:48.756993] Baileys webhook received
+2025-12-01 10:28:48,783 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "(-17.8671955,30.9338241)",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A5A2686B5153919502E43ED1C2D74329",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764577725,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "locationMessage": {
+        "degreesLatitude": -17.8671955,
+        "degreesLongitude": 30.9338241,
+        "jpegThumbnail": "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"
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderTimestamp": "1764140775",
+          "recipientKeyHash": "/T956n6fmdF6bA==",
+          "recipientTimestamp": "1764575501"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "0cL16tPix3QkP1AnRi8V6MpVPgS3Nre6L5vDNyVPRpE="
+      }
+    }
+  }
+}
+2025-12-01 10:28:48,783 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-01 10:28:48,785 - app.api.whatsapp - INFO - Baileys text: '(-17.8671955,30.9338241)'
+2025-12-01 10:28:49,481 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-01 10:28:49,483 - app.api.whatsapp - INFO - Baileys message processed successfully for 245943215608017
+2025-12-01 10:28:49,799 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-01 10:28:49,802 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-01 10:28:54,877 - app.api.whatsapp - INFO - [2025-12-01T08:28:54.877821] Baileys webhook received
+2025-12-01 10:28:54,877 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A5FBF47AE0F60017AF1353C797C32F3A",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764577732,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-01 10:28:54,881 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-01 10:28:54,881 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-01 10:28:54,881 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-01 10:29:00,587 - app.api.whatsapp - INFO - [2025-12-01T08:29:00.587900] Baileys webhook received
+2025-12-01 10:29:00,587 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A5FBF47AE0F60017AF1353C797C32F3A",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764577738,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-01 10:29:00,587 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-01 10:29:00,589 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-01 10:29:00,589 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-01 10:29:01,156 - app.api.whatsapp - INFO - [2025-12-01T08:29:01.156123] Baileys webhook received
+2025-12-01 10:29:01,156 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "245943215608017",
+  "text": "Yes",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A5FBF47AE0F60017AF1353C797C32F3A"
+    },
+    "message": {
+      "conversation": "Yes",
+      "messageContextInfo": {
+        "messageSecret": "AOiXh9at16Cz4b4B7ekHK6a7T1b1W3s+ctexTtyrk88="
+      }
+    },
+    "messageTimestamp": "1764577732",
+    "messageSecret": "AOiXh9at16Cz4b4B7ekHK6a7T1b1W3s+ctexTtyrk88=",
+    "reportingTokenInfo": {
+      "reportingTag": "AQ0MWJuZjUzYVVDynfu+L1DeHhs="
+    },
+    "isMentionedInStatus": false
+  }
+}
+2025-12-01 10:29:01,156 - app.api.whatsapp - INFO - Baileys message from: 245943215608017
+2025-12-01 10:29:01,156 - app.api.whatsapp - INFO - Baileys text: 'Yes'
+2025-12-01 10:29:02,131 - app.api.whatsapp - INFO - [2025-12-01T08:29:02.131490] Baileys webhook received
+2025-12-01 10:29:02,131 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "Yes",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A5FBF47AE0F60017AF1353C797C32F3A",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764577739,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "conversation": "Yes",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderTimestamp": "1764140775",
+          "recipientKeyHash": "/T956n6fmdF6bA==",
+          "recipientTimestamp": "1764575501"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "AOiXh9at16Cz4b4B7ekHK6a7T1b1W3s+ctexTtyrk88="
+      }
+    }
+  }
+}
+2025-12-01 10:29:02,132 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-01 10:29:02,133 - app.api.whatsapp - INFO - Baileys text: 'Yes'
+2025-12-01 10:29:03,116 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-01 10:29:03,118 - app.api.whatsapp - INFO - Baileys message processed successfully for 245943215608017
+2025-12-01 10:29:03,442 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-01 10:29:03,447 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-01 10:31:57,035 - app.api.whatsapp - INFO - [2025-12-01T08:31:57.035365] Baileys webhook received
+2025-12-01 10:31:57,035 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A5AF67AFE5DA890E8E53CD088F5AD8D3",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764577914,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-01 10:31:57,037 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-01 10:31:57,037 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-01 10:31:57,037 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-01 10:32:02,751 - app.api.whatsapp - INFO - [2025-12-01T08:32:02.751411] Baileys webhook received
+2025-12-01 10:32:02,751 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A5AF67AFE5DA890E8E53CD088F5AD8D3",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764577920,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-01 10:32:02,751 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-01 10:32:02,751 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-01 10:32:02,752 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-01 10:32:03,339 - app.api.whatsapp - INFO - [2025-12-01T08:32:03.339987] Baileys webhook received
+2025-12-01 10:32:03,339 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "245943215608017",
+  "text": "Hello",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A5AF67AFE5DA890E8E53CD088F5AD8D3"
+    },
+    "message": {
+      "conversation": "Hello",
+      "messageContextInfo": {
+        "messageSecret": "LUNwDJuC+TtYsK+exhs/UeA9XjCwpi9uXS9/AHw1Low="
+      }
+    },
+    "messageTimestamp": "1764577914",
+    "messageSecret": "LUNwDJuC+TtYsK+exhs/UeA9XjCwpi9uXS9/AHw1Low=",
+    "reportingTokenInfo": {
+      "reportingTag": "AQ2MS9jWsD0WOLx5sg5y1xgB/aM="
+    },
+    "isMentionedInStatus": false
+  }
+}
+2025-12-01 10:32:03,341 - app.api.whatsapp - INFO - Baileys message from: 245943215608017
+2025-12-01 10:32:03,341 - app.api.whatsapp - INFO - Baileys text: 'Hello'
+2025-12-01 10:32:05,503 - app.api.whatsapp - INFO - [2025-12-01T08:32:05.503868] Baileys webhook received
+2025-12-01 10:32:05,503 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "Hello",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A5AF67AFE5DA890E8E53CD088F5AD8D3",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764577921,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "conversation": "Hello",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderTimestamp": "1764140775",
+          "recipientKeyHash": "/T956n6fmdF6bA==",
+          "recipientTimestamp": "1764575501"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "LUNwDJuC+TtYsK+exhs/UeA9XjCwpi9uXS9/AHw1Low="
+      }
+    }
+  }
+}
+2025-12-01 10:32:05,503 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-01 10:32:05,503 - app.api.whatsapp - INFO - Baileys text: 'Hello'
+2025-12-01 10:32:06,528 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-01 10:32:06,531 - app.api.whatsapp - INFO - Baileys message processed successfully for 245943215608017
+2025-12-01 10:32:06,535 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-01 10:32:06,539 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-01 10:32:12,681 - app.api.whatsapp - INFO - [2025-12-01T08:32:12.681368] Baileys webhook received
+2025-12-01 10:32:12,687 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A5C9BBC76D7C6AAB946E9D60441F89C7",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764577930,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-01 10:32:12,687 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-01 10:32:12,687 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-01 10:32:12,687 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-01 10:32:18,414 - app.api.whatsapp - INFO - [2025-12-01T08:32:18.414574] Baileys webhook received
+2025-12-01 10:32:18,415 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A5C9BBC76D7C6AAB946E9D60441F89C7",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764577936,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-01 10:32:18,415 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-01 10:32:18,415 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-01 10:32:18,416 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-01 10:32:18,948 - app.api.whatsapp - INFO - [2025-12-01T08:32:18.948125] Baileys webhook received
+2025-12-01 10:32:18,949 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "245943215608017",
+  "text": "Vincent Mugondora",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A5C9BBC76D7C6AAB946E9D60441F89C7"
+    },
+    "message": {
+      "conversation": "Vincent Mugondora",
+      "messageContextInfo": {
+        "messageSecret": "vwgXsEfr7Yl3EKVcGuLKraqvhaXBj1N6Ks5xCBKzD68="
+      }
+    },
+    "messageTimestamp": "1764577930",
+    "messageSecret": "vwgXsEfr7Yl3EKVcGuLKraqvhaXBj1N6Ks5xCBKzD68=",
+    "reportingTokenInfo": {
+      "reportingTag": "AQ0oPMXTg03wqKJLNuJHifJh9kE="
+    },
+    "isMentionedInStatus": false
+  }
+}
+2025-12-01 10:32:18,950 - app.api.whatsapp - INFO - Baileys message from: 245943215608017
+2025-12-01 10:32:18,950 - app.api.whatsapp - INFO - Baileys text: 'Vincent Mugondora'
+2025-12-01 10:32:19,924 - app.api.whatsapp - INFO - [2025-12-01T08:32:19.924859] Baileys webhook received
+2025-12-01 10:32:19,925 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "Vincent Mugondora",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A5C9BBC76D7C6AAB946E9D60441F89C7",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764577937,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "conversation": "Vincent Mugondora",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderTimestamp": "1764140775",
+          "recipientKeyHash": "/T956n6fmdF6bA==",
+          "recipientTimestamp": "1764575501"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "vwgXsEfr7Yl3EKVcGuLKraqvhaXBj1N6Ks5xCBKzD68="
+      }
+    }
+  }
+}
+2025-12-01 10:32:19,925 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-01 10:32:19,925 - app.api.whatsapp - INFO - Baileys text: 'Vincent Mugondora'
+2025-12-01 10:32:20,597 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-01 10:32:20,603 - app.api.whatsapp - INFO - Baileys message processed successfully for 245943215608017
+2025-12-01 10:32:20,913 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-01 10:32:20,916 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-01 10:32:31,886 - app.api.whatsapp - INFO - [2025-12-01T08:32:31.886831] Baileys webhook received
+2025-12-01 10:32:31,886 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A5F907AF0BF3EF7F28515C3BD2A126CA",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764577949,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-01 10:32:31,886 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-01 10:32:31,886 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-01 10:32:31,886 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-01 10:32:37,581 - app.api.whatsapp - INFO - [2025-12-01T08:32:37.581178] Baileys webhook received
+2025-12-01 10:32:37,582 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A5F907AF0BF3EF7F28515C3BD2A126CA",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764577955,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-01 10:32:37,582 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-01 10:32:37,583 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-01 10:32:37,583 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-01 10:32:38,094 - app.api.whatsapp - INFO - [2025-12-01T08:32:38.094450] Baileys webhook received
+2025-12-01 10:32:38,098 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "245943215608017",
+  "text": "(-17.8671951,30.9338227)",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A5F907AF0BF3EF7F28515C3BD2A126CA"
+    },
+    "message": {
+      "locationMessage": {
+        "degreesLatitude": -17.8671951,
+        "degreesLongitude": 30.9338227
+      },
+      "messageContextInfo": {
+        "messageSecret": "XKcAmR2ElL1dUE+8F1MH4UZpBwMLZ0hYBxX6TzffiSY="
+      }
+    },
+    "messageTimestamp": "1764577949",
+    "messageSecret": "XKcAmR2ElL1dUE+8F1MH4UZpBwMLZ0hYBxX6TzffiSY=",
+    "reportingTokenInfo": {
+      "reportingTag": "AQ3l/zSs3YLrIQh2pyirzwhtl2U="
+    },
+    "isMentionedInStatus": false
+  }
+}
+2025-12-01 10:32:38,099 - app.api.whatsapp - INFO - Baileys message from: 245943215608017
+2025-12-01 10:32:38,102 - app.api.whatsapp - INFO - Baileys text: '(-17.8671951,30.9338227)'
+2025-12-01 10:32:39,105 - app.api.whatsapp - INFO - [2025-12-01T08:32:39.105276] Baileys webhook received
+2025-12-01 10:32:39,105 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "(-17.8671951,30.9338227)",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A5F907AF0BF3EF7F28515C3BD2A126CA",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764577956,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "locationMessage": {
+        "degreesLatitude": -17.8671951,
+        "degreesLongitude": 30.9338227,
+        "jpegThumbnail": "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"
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderTimestamp": "1764140775",
+          "recipientKeyHash": "/T956n6fmdF6bA==",
+          "recipientTimestamp": "1764575501"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "XKcAmR2ElL1dUE+8F1MH4UZpBwMLZ0hYBxX6TzffiSY="
+      }
+    }
+  }
+}
+2025-12-01 10:32:39,107 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-01 10:32:39,108 - app.api.whatsapp - INFO - Baileys text: '(-17.8671951,30.9338227)'
+2025-12-01 10:32:39,783 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-01 10:32:39,783 - app.api.whatsapp - INFO - Baileys message processed successfully for 245943215608017
+2025-12-01 10:32:40,112 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-01 10:32:40,115 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-01 10:32:48,713 - app.api.whatsapp - INFO - [2025-12-01T08:32:48.713523] Baileys webhook received
+2025-12-01 10:32:48,714 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A500698E0F7E3E38F805BDD103DFBE7F",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764577966,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-01 10:32:48,715 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-01 10:32:48,716 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-01 10:32:48,716 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-01 10:32:54,441 - app.api.whatsapp - INFO - [2025-12-01T08:32:54.441968] Baileys webhook received
+2025-12-01 10:32:54,442 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A500698E0F7E3E38F805BDD103DFBE7F",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764577972,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-01 10:32:54,443 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-01 10:32:54,443 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-01 10:32:54,444 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-01 10:32:54,966 - app.api.whatsapp - INFO - [2025-12-01T08:32:54.966280] Baileys webhook received
+2025-12-01 10:32:54,967 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "245943215608017",
+  "text": "Yes",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A500698E0F7E3E38F805BDD103DFBE7F"
+    },
+    "message": {
+      "conversation": "Yes",
+      "messageContextInfo": {
+        "messageSecret": "BzZbtl4ovExrYx2dry4+o+FOTsEQaO9TNcM3lYBdMbM="
+      }
+    },
+    "messageTimestamp": "1764577966",
+    "messageSecret": "BzZbtl4ovExrYx2dry4+o+FOTsEQaO9TNcM3lYBdMbM=",
+    "reportingTokenInfo": {
+      "reportingTag": "AQ0onPuFruMXmZUPEiBb7hB0y1c="
+    },
+    "isMentionedInStatus": false
+  }
+}
+2025-12-01 10:32:54,967 - app.api.whatsapp - INFO - Baileys message from: 245943215608017
+2025-12-01 10:32:54,967 - app.api.whatsapp - INFO - Baileys text: 'Yes'
+2025-12-01 10:32:55,960 - app.api.whatsapp - INFO - [2025-12-01T08:32:55.960562] Baileys webhook received
+2025-12-01 10:32:55,960 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "Yes",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A500698E0F7E3E38F805BDD103DFBE7F",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764577973,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "conversation": "Yes",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderTimestamp": "1764140775",
+          "recipientKeyHash": "/T956n6fmdF6bA==",
+          "recipientTimestamp": "1764575501"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "BzZbtl4ovExrYx2dry4+o+FOTsEQaO9TNcM3lYBdMbM="
+      }
+    }
+  }
+}
+2025-12-01 10:32:55,960 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-01 10:32:55,960 - app.api.whatsapp - INFO - Baileys text: 'Yes'
+2025-12-01 10:32:57,353 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-01 10:32:57,357 - app.api.whatsapp - INFO - Baileys message processed successfully for 245943215608017
+2025-12-01 10:32:57,371 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-01 10:32:57,374 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322

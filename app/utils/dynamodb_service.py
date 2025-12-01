@@ -18,6 +18,10 @@ class DynamoDBService:
         self.users_table = self.dynamodb.Table(os.getenv('AWS_DYNAMODB_USERS_TABLE', 'hustlr-users'))
         self.providers_table = self.dynamodb.Table(os.getenv('AWS_DYNAMODB_PROVIDERS_TABLE', 'hustlr-providers'))
         self.bookings_table = self.dynamodb.Table(os.getenv('AWS_DYNAMODB_BOOKINGS_TABLE', 'hustlr-bookings'))
+        
+        self._fallback_users = {}
+        self._fallback_providers = []
+        self._fallback_bookings = []
     
     # User operations
     async def get_user(self, whatsapp_number: str) -> Optional[Dict]:
@@ -27,7 +31,7 @@ class DynamoDBService:
             return response.get('Item')
         except ClientError as e:
             print(f"Error getting user: {e}")
-            return None
+            return self._fallback_users.get(whatsapp_number)
     
     async def create_user(self, user_data: Dict) -> bool:
         """Create new user"""
@@ -37,6 +41,10 @@ class DynamoDBService:
             return True
         except ClientError as e:
             print(f"Error creating user: {e}")
+            whatsapp_number = user_data.get('whatsapp_number')
+            if whatsapp_number:
+                self._fallback_users[whatsapp_number] = user_data
+                return True
             return False
     
     async def update_user(self, whatsapp_number: str, update_data: Dict) -> bool:
@@ -53,6 +61,11 @@ class DynamoDBService:
             return True
         except ClientError as e:
             print(f"Error updating user: {e}")
+            existing = self._fallback_users.get(whatsapp_number)
+            if existing:
+                existing.update(update_data)
+                self._fallback_users[whatsapp_number] = existing
+                return True
             return False
     
     # Provider operations
@@ -78,7 +91,12 @@ class DynamoDBService:
             return response.get('Items', [])
         except ClientError as e:
             print(f"Error getting providers: {e}")
-            return []
+            results = []
+            for provider in self._fallback_providers:
+                if provider.get('service_type') == service_type:
+                    if not location or (location and location in provider.get('location', '')):
+                        results.append(provider)
+            return results
     
     async def create_provider(self, provider_data: Dict) -> bool:
         """Create new provider"""
@@ -89,7 +107,8 @@ class DynamoDBService:
             return True
         except ClientError as e:
             print(f"Error creating provider: {e}")
-            return False
+            self._fallback_providers.append(provider_data)
+            return True
     
     # Booking operations
     async def create_booking(self, booking_data: Dict) -> bool:
@@ -101,7 +120,8 @@ class DynamoDBService:
             return True
         except ClientError as e:
             print(f"Error creating booking: {e}")
-            return False
+            self._fallback_bookings.append(booking_data)
+            return True
     
     async def get_user_bookings(self, user_whatsapp_number: str) -> List[Dict]:
         """Get all bookings for a user"""
@@ -113,7 +133,11 @@ class DynamoDBService:
             return response.get('Items', [])
         except ClientError as e:
             print(f"Error getting user bookings: {e}")
-            return []
+            return [
+                booking
+                for booking in self._fallback_bookings
+                if booking.get('user_whatsapp_number') == user_whatsapp_number
+            ]
     
     async def update_booking_status(self, booking_id: str, status: str) -> bool:
         """Update booking status"""
@@ -127,4 +151,8 @@ class DynamoDBService:
             return True
         except ClientError as e:
             print(f"Error updating booking status: {e}")
+            for booking in self._fallback_bookings:
+                if booking.get('booking_id') == booking_id:
+                    booking['status'] = status
+                    return True
             return False
