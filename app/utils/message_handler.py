@@ -267,37 +267,72 @@ class MessageHandler:
             await self._log_and_send_response(user_number, ai_response, "ai_response")
             return
         
-        # Search for providers
-        user_location = user.get('location', '')
-        providers = await self.db.get_providers_by_service(service_type, user_location)
+        # Get all providers for this service type (no location filter yet)
+        all_providers = await self.db.get_providers_by_service(service_type)
         
-        if not providers:
+        if not all_providers:
             await self._log_and_send_response(
                 user_number,
-                f"Sorry, no {service_type}s available in your area right now. Try searching for a different service or area.",
+                f"Sorry, no {service_type}s available right now.",
                 "no_providers_found"
             )
             return
         
-        # Present providers as interactive buttons
-        buttons = []
-        for i, provider in enumerate(providers[:3]):  # Limit to 3 providers
-            buttons.append({
-                'id': f"provider_{provider['whatsapp_number']}",
-                'title': f"{provider['name']} - {provider.get('location', 'Unknown')}"
+        # Extract available locations from providers
+        location_extractor = get_location_extractor()
+        available_locations = location_extractor.get_available_locations_for_service(all_providers)
+        
+        # Get user's location
+        user_location = user.get('location', '')
+        
+        # Filter providers by user location if available
+        if user_location:
+            normalized_location = location_extractor.normalize_user_location(user_location)
+            if normalized_location:
+                providers = location_extractor.filter_providers_by_location(all_providers, normalized_location)
+                
+                if providers:
+                    # Show providers from user's location
+                    buttons = []
+                    for provider in providers[:3]:
+                        buttons.append({
+                            'id': f"provider_{provider['whatsapp_number']}",
+                            'title': f"{provider['name']} - {provider.get('location', 'Unknown')}"
+                        })
+                    
+                    await self._log_and_send_interactive(
+                        user_number,
+                        f"Available {service_type}s in {normalized_location}",
+                        f"Found {len(providers)} provider(s). Pick one:",
+                        buttons,
+                        "Tap a provider or reply with the number"
+                    )
+                    
+                    session['data']['service_type'] = service_type
+                    session['data']['providers'] = providers
+                    session['data']['location'] = normalized_location
+                    session['state'] = ConversationState.PROVIDER_SELECTION
+                    return
+        
+        # If no user location or no providers in user location, show available locations
+        location_buttons = []
+        for location in available_locations[:5]:  # Limit to 5 locations
+            location_buttons.append({
+                'id': f"location_{location.lower().replace(' ', '_')}",
+                'title': location
             })
         
         await self._log_and_send_interactive(
             user_number,
-            f"Available {service_type}s",
-            f"Found {len(providers)} provider(s) near you. Pick one:",
-            buttons,
-            "Tap a provider or reply with the number"
+            f"Select Your Area",
+            f"Where would you like the {service_type}? Choose from available areas:",
+            location_buttons,
+            "Tap an area or type the name"
         )
         
         session['data']['service_type'] = service_type
-        session['data']['providers'] = providers
-        session['state'] = ConversationState.PROVIDER_SELECTION
+        session['data']['all_providers'] = all_providers
+        session['state'] = ConversationState.BOOKING_LOCATION
     
     async def handle_booking_service_details(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
         """Ask for specific details about the service issue"""
@@ -313,28 +348,38 @@ class MessageHandler:
     
     async def handle_booking_location(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
         """Confirm or update location for the booking"""
-        session['data']['booking_location'] = message_text
         service_type = session['data'].get('service_type', 'service')
+        all_providers = session['data'].get('all_providers', [])
         
-        await self._log_and_send_response(
-            user_number,
-            f"Perfect! Let me find {service_type}s available in your area...",
-            "booking_searching_providers"
-        )
+        # Normalize user's location input
+        location_extractor = get_location_extractor()
+        normalized_location = location_extractor.normalize_user_location(message_text)
         
-        # Search for providers at the specified location
-        providers = await self.db.get_providers_by_service(service_type, message_text)
+        if not normalized_location:
+            # Location not recognized, show available options again
+            available_locations = location_extractor.get_available_locations_for_service(all_providers)
+            
+            await self._log_and_send_response(
+                user_number,
+                f"I didn't recognize '{message_text}'. Available areas are: {', '.join(available_locations[:5])}",
+                "location_not_recognized"
+            )
+            return
+        
+        # Filter providers by the selected location
+        providers = location_extractor.filter_providers_by_location(all_providers, normalized_location)
         
         if not providers:
             await self._log_and_send_response(
                 user_number,
-                f"Sorry, no {service_type}s available in {message_text} right now. Try a different area.",
+                f"Sorry, no {service_type}s available in {normalized_location} right now. Try a different area.",
                 "no_providers_found"
             )
             session['state'] = ConversationState.SERVICE_SEARCH
+            session['data'] = {}
             return
         
-        # Show available providers
+        # Show available providers in the selected location
         buttons = []
         for provider in providers[:3]:
             buttons.append({
@@ -344,12 +389,13 @@ class MessageHandler:
         
         await self._log_and_send_interactive(
             user_number,
-            f"Available {service_type}s",
-            f"Found {len(providers)} provider(s) in {message_text}. Pick one:",
+            f"Available {service_type}s in {normalized_location}",
+            f"Found {len(providers)} provider(s). Pick one:",
             buttons,
             "Tap a provider or reply with the number"
         )
         
+        session['data']['location'] = normalized_location
         session['data']['providers'] = providers
         session['state'] = ConversationState.PROVIDER_SELECTION
     
