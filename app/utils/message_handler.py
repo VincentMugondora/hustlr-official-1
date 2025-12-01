@@ -30,6 +30,16 @@ class MessageHandler:
         self.lambda_service = lambda_service
         self.user_sessions = {}  # In-memory session store (consider Redis for production)
     
+    async def _log_and_send_response(self, user_number: str, message: str, response_type: str = "text") -> None:
+        """Log bot response and send it to user"""
+        logger.info(f"[BOT RESPONSE] To: {user_number}, Type: {response_type}, Message: {message[:100]}...")
+        await self.whatsapp_api.send_text_message(user_number, message)
+    
+    async def _log_and_send_interactive(self, user_number: str, header: str, body: str, buttons: List[Dict], footer: str = None) -> None:
+        """Log interactive response and send it to user"""
+        logger.info(f"[BOT RESPONSE] To: {user_number}, Type: interactive_buttons, Header: {header}, Body: {body[:50]}...")
+        await self.whatsapp_api.send_interactive_buttons(user_number, header, body, buttons, footer)
+    
     async def handle_message(self, message: WhatsAppMessage) -> None:
         """Main message handler - routes to appropriate handlers"""
         user_number = message.from_number
@@ -62,11 +72,12 @@ class MessageHandler:
         
         if state == ConversationState.NEW:
             # Start onboarding with combined name + location
-            await self.whatsapp_api.send_text_message(
+            await self._log_and_send_response(
                 user_number,
                 "👋 Welcome to Hustlr! I'll help you find local service providers.\n\n"
                 "To get you set up quickly, please send your *name* and *area* in one message.\n"
-                "Example: 'Vincent, Avondale'"
+                "Example: 'Vincent, Avondale'",
+                "onboarding_welcome"
             )
             session['state'] = ConversationState.ONBOARDING_NAME
         
@@ -83,10 +94,11 @@ class MessageHandler:
                 session['data']['location'] = location
             else:
                 # If we can't clearly extract both, ask once more with an example
-                await self.whatsapp_api.send_text_message(
+                await self._log_and_send_response(
                     user_number,
                     "Please send both your *name* and *area* in one message.\n"
-                    "Example: 'Vincent, Avondale'"
+                    "Example: 'Vincent, Avondale'",
+                    "onboarding_retry"
                 )
                 return
             
@@ -100,7 +112,7 @@ class MessageHandler:
                 "Do you agree to this privacy policy? (Yes/No)"
             )
             
-            await self.whatsapp_api.send_text_message(user_number, privacy_text)
+            await self._log_and_send_response(user_number, privacy_text, "privacy_policy")
             session['state'] = ConversationState.ONBOARDING_PRIVACY
         
         elif state == ConversationState.ONBOARDING_PRIVACY:
@@ -119,26 +131,29 @@ class MessageHandler:
                 success = await self.db.create_user(user_data)
                 
                 if success:
-                    await self.whatsapp_api.send_text_message(
+                    await self._log_and_send_response(
                         user_number,
                         f"✅ Perfect! You're all set up, {session['data']['name']}!\n\n"
                         "Now you can:\n"
                         "• Search for service providers\n"
                         "• Book appointments\n"
                         "• Get reminders\n\n"
-                        "What service are you looking for today?"
+                        "What service are you looking for today?",
+                        "onboarding_complete"
                     )
                     session['state'] = ConversationState.SERVICE_SEARCH
                 else:
-                    await self.whatsapp_api.send_text_message(
+                    await self._log_and_send_response(
                         user_number,
-                        "❌ Sorry, there was an issue setting up your account. Please try again later."
+                        "❌ Sorry, there was an issue setting up your account. Please try again later.",
+                        "onboarding_error"
                     )
             else:
-                await self.whatsapp_api.send_text_message(
+                await self._log_and_send_response(
                     user_number,
                     "❌ You need to agree to the privacy policy to use Hustlr.\n\n"
-                    "Type 'yes' to agree, or 'no' to decline."
+                    "Type 'yes' to agree, or 'no' to decline.",
+                    "privacy_policy_decline"
                 )
     
     async def handle_main_menu(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
@@ -186,9 +201,10 @@ class MessageHandler:
         providers = await self.db.get_providers_by_service(service_type, user_location)
         
         if not providers:
-            await self.whatsapp_api.send_text_message(
+            await self._log_and_send_response(
                 user_number,
-                f"❌ No {service_type} found in your area. Try a different service or area."
+                f"❌ No {service_type} found in your area. Try a different service or area.",
+                "no_providers_found"
             )
             return True
 
@@ -207,20 +223,22 @@ class MessageHandler:
         success = await self.db.create_booking(booking_data)
 
         if success:
-            await self.whatsapp_api.send_text_message(
+            await self._log_and_send_response(
                 user_number,
                 f"✅ **Booking Request Sent!**\n\n"
                 f"Service: {service_type.title()}\n"
                 f"Provider: {selected_provider['name']}\n"
                 f"Time: {booking_time}\n\n"
-                f"If this looks wrong, just reply with the correct details."
+                f"If this looks wrong, just reply with the correct details.",
+                "booking_created"
             )
             session['state'] = ConversationState.SERVICE_SEARCH
             session['data'] = {}
         else:
-            await self.whatsapp_api.send_text_message(
+            await self._log_and_send_response(
                 user_number,
-                "❌ Sorry, there was an issue creating your booking. Please try again."
+                "❌ Sorry, there was an issue creating your booking. Please try again.",
+                "booking_error"
             )
 
         return True
