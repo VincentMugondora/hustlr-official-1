@@ -336,12 +336,13 @@ class MessageHandler:
         booking_time = self.parse_datetime(message_text)
         
         if not booking_time:
-            await self.whatsapp_api.send_text_message(
+            await self._log_and_send_response(
                 user_number,
                 "❌ I couldn't understand that time format. Please try:\n"
                 "• 'tomorrow at 2pm'\n"
                 "• 'Dec 15 morning'\n"
-                "• 'next Monday afternoon'"
+                "• 'next Monday afternoon'",
+                "invalid_time_format"
             )
             return
         
@@ -359,22 +360,24 @@ class MessageHandler:
         
         if success:
             provider_name = session['data']['selected_provider']['name']
-            await self.whatsapp_api.send_text_message(
+            await self._log_and_send_response(
                 user_number,
                 f"✅ **Booking Confirmed!**\n\n"
                 f"📅 Service: {session['data']['service_type'].title()}\n"
                 f"👨‍🔧 Provider: {provider_name}\n"
                 f"⏰ Time: {booking_time}\n\n"
-                f"You'll receive a reminder before your appointment."
+                f"You'll receive a reminder before your appointment.",
+                "booking_confirmed"
             )
             
             # Reset session
             session['state'] = ConversationState.SERVICE_SEARCH
             session['data'] = {}
         else:
-            await self.whatsapp_api.send_text_message(
+            await self._log_and_send_response(
                 user_number,
-                "❌ Sorry, there was an issue creating your booking. Please try again."
+                "❌ Sorry, there was an issue creating your booking. Please try again.",
+                "booking_error"
             )
     
     async def handle_provider_registration(self, user_number: str, message_text: str, session: Dict) -> None:
@@ -382,20 +385,22 @@ class MessageHandler:
         state = session['state']
         
         if state == ConversationState.PROVIDER_REGISTER:
-            await self.whatsapp_api.send_text_message(
+            await self._log_and_send_response(
                 user_number,
                 "👨‍🔧 **Provider Registration**\n\n"
                 "Let's get you registered as a service provider.\n\n"
-                "What's your full name?"
+                "What's your full name?",
+                "provider_registration_start"
             )
             session['state'] = ConversationState.PROVIDER_REGISTER_NAME
         
         elif state == ConversationState.PROVIDER_REGISTER_NAME:
             session['data']['name'] = message_text.title()
-            await self.whatsapp_api.send_text_message(
+            await self._log_and_send_response(
                 user_number,
                 f"Great, {session['data']['name']}! 🛠️\n\n"
-                "What service do you provide? (e.g., plumber, electrician, carpenter, etc.)"
+                "What service do you provide? (e.g., plumber, electrician, carpenter, etc.)",
+                "provider_registration_service_prompt"
             )
             session['state'] = ConversationState.PROVIDER_REGISTER_SERVICE
         
@@ -403,10 +408,11 @@ class MessageHandler:
             service_type = message_text.lower()
             session['data']['service_type'] = service_type
             
-            await self.whatsapp_api.send_text_message(
+            await self._log_and_send_response(
                 user_number,
                 f"Perfect! 📍\n\n"
-                "What area or neighborhood do you serve?"
+                "What area or neighborhood do you serve?",
+                "provider_registration_location_prompt"
             )
             session['state'] = ConversationState.PROVIDER_REGISTER_LOCATION
         
@@ -424,23 +430,25 @@ class MessageHandler:
             success = await self.db.create_provider(provider_data)
             
             if success:
-                await self.whatsapp_api.send_text_message(
+                await self._log_and_send_response(
                     user_number,
                     f"✅ **Registration Submitted!**\n\n"
                     f"👨‍🔧 Name: {session['data']['name']}\n"
                     f"🛠️ Service: {session['data']['service_type']}\n"
                     f"📍 Area: {message_text.title()}\n\n"
                     f"Your registration is pending review. We'll notify you once approved!\n\n"
-                    f"You can start receiving bookings once approved."
+                    f"You can start receiving bookings once approved.",
+                    "provider_registration_complete"
                 )
                 
                 # Reset session
                 session['state'] = ConversationState.SERVICE_SEARCH
                 session['data'] = {}
             else:
-                await self.whatsapp_api.send_text_message(
+                await self._log_and_send_response(
                     user_number,
-                    "❌ Sorry, there was an issue with your registration. Please try again."
+                    "❌ Sorry, there was an issue with your registration. Please try again.",
+                    "provider_registration_error"
                 )
     
     async def handle_ai_response(self, user_number: str, message_text: str, user: Dict) -> None:
@@ -454,7 +462,7 @@ class MessageHandler:
             }
         )
         
-        await self.whatsapp_api.send_text_message(user_number, ai_response)
+        await self._log_and_send_response(user_number, ai_response, "ai_response")
     
     async def send_help_menu(self, user_number: str) -> None:
         """Send help menu with options"""
@@ -476,7 +484,7 @@ class MessageHandler:
             "How can I help you today?"
         )
         
-        await self.whatsapp_api.send_text_message(user_number, help_text)
+        await self._log_and_send_response(user_number, help_text, "help_menu")
     
     def extract_service_type(self, message_text: str) -> Optional[str]:
         """Extract service type from message"""
