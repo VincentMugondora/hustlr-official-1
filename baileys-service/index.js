@@ -56,10 +56,12 @@ async function startBaileys() {
       if (m.key.fromMe) return;
 
       const remoteJid = m.key.remoteJid || "";
-      // Normalize to plain phone/id (strip anything after '@', such as
-      // @s.whatsapp.net, @c.us, @lid, etc.) so Python always receives
-      // a clean number and can append the proper domain when sending.
-      const from = remoteJid.split("@")[0];
+      const senderPnJid = m.key.senderPn || "";
+      // Prefer the sender phone JID when available (e.g. 263...@s.whatsapp.net),
+      // fall back to the chat JID. Then normalize to plain number by stripping
+      // anything after '@' so Python always sees a clean phone string.
+      const fromJid = senderPnJid || remoteJid;
+      const from = fromJid.split("@")[0];
 
       let text = "";
       if (m.message?.conversation) {
