@@ -298,6 +298,60 @@ class MessageHandler:
         session['data']['providers'] = providers
         session['state'] = ConversationState.PROVIDER_SELECTION
     
+    async def handle_booking_service_details(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
+        """Ask for specific details about the service issue"""
+        service_type = session['data'].get('service_type', 'service')
+        session['data']['issue'] = message_text
+        
+        await self._log_and_send_response(
+            user_number,
+            f"Got it! When would you like the {service_type}? (e.g., 'tomorrow morning', 'today at 2pm')",
+            "booking_ask_time"
+        )
+        session['state'] = ConversationState.BOOKING_TIME
+    
+    async def handle_booking_location(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
+        """Confirm or update location for the booking"""
+        session['data']['booking_location'] = message_text
+        service_type = session['data'].get('service_type', 'service')
+        
+        await self._log_and_send_response(
+            user_number,
+            f"Perfect! Let me find {service_type}s available in your area...",
+            "booking_searching_providers"
+        )
+        
+        # Search for providers at the specified location
+        providers = await self.db.get_providers_by_service(service_type, message_text)
+        
+        if not providers:
+            await self._log_and_send_response(
+                user_number,
+                f"Sorry, no {service_type}s available in {message_text} right now. Try a different area.",
+                "no_providers_found"
+            )
+            session['state'] = ConversationState.SERVICE_SEARCH
+            return
+        
+        # Show available providers
+        buttons = []
+        for provider in providers[:3]:
+            buttons.append({
+                'id': f"provider_{provider['whatsapp_number']}",
+                'title': f"{provider['name']} - {provider.get('location', 'Unknown')}"
+            })
+        
+        await self._log_and_send_interactive(
+            user_number,
+            f"Available {service_type}s",
+            f"Found {len(providers)} provider(s) in {message_text}. Pick one:",
+            buttons,
+            "Tap a provider or reply with the number"
+        )
+        
+        session['data']['providers'] = providers
+        session['state'] = ConversationState.PROVIDER_SELECTION
+    
     async def handle_provider_selection(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
         """Handle provider selection for booking"""
         providers = session['data'].get('providers', [])
@@ -334,7 +388,7 @@ class MessageHandler:
         )
     
     async def handle_booking_time(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
-        """Handle booking time confirmation"""
+        """Handle booking time and move to confirmation"""
         # Parse date/time (simplified - you'd want more robust parsing)
         booking_time = self.parse_datetime(message_text)
         
@@ -346,13 +400,50 @@ class MessageHandler:
             )
             return
         
-        # Create booking
+        # Store booking time and move to confirmation
+        session['data']['booking_time'] = booking_time
+        
+        # Build confirmation summary
+        provider_name = session['data'].get('selected_provider', {}).get('name', 'Provider')
+        service_type = session['data'].get('service_type', 'service')
+        issue = session['data'].get('issue', '')
+        
+        confirmation_msg = f"Let me confirm your booking:\n\n"
+        confirmation_msg += f"Service: {service_type}\n"
+        if issue:
+            confirmation_msg += f"Issue: {issue}\n"
+        confirmation_msg += f"Provider: {provider_name}\n"
+        confirmation_msg += f"Time: {booking_time}\n\n"
+        confirmation_msg += f"Is this correct? (Reply 'yes' to confirm or 'no' to change)"
+        
+        await self._log_and_send_response(
+            user_number,
+            confirmation_msg,
+            "booking_confirmation_summary"
+        )
+        
+        session['state'] = ConversationState.BOOKING_CONFIRM
+    
+    async def handle_booking_confirmation(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
+        """Handle final booking confirmation"""
+        if message_text.lower() not in ['yes', 'y', 'confirm', 'ok', 'sure']:
+            await self._log_and_send_response(
+                user_number,
+                "No problem! Let's start over. What service do you need?",
+                "booking_cancelled"
+            )
+            session['state'] = ConversationState.SERVICE_SEARCH
+            session['data'] = {}
+            return
+        
+        # Create the booking
         booking_data = {
             'booking_id': f"booking_{datetime.utcnow().timestamp()}",
             'user_whatsapp_number': user_number,
             'provider_whatsapp_number': session['data']['selected_provider']['whatsapp_number'],
             'service_type': session['data']['service_type'],
-            'date_time': booking_time,
+            'date_time': session['data']['booking_time'],
+            'issue': session['data'].get('issue', ''),
             'status': 'pending'
         }
         
@@ -360,9 +451,11 @@ class MessageHandler:
         
         if success:
             provider_name = session['data']['selected_provider']['name']
+            booking_id = booking_data['booking_id']
+            
             await self._log_and_send_response(
                 user_number,
-                f"Booking confirmed! {provider_name} will help you {session['data']['service_type']} on {booking_time}. We'll send you a reminder.",
+                f"Booking confirmed! {provider_name} will help you {session['data']['service_type']} on {session['data']['booking_time']}.\n\nReference: {booking_id}\n\nWe'll send you a reminder!",
                 "booking_confirmed"
             )
             
