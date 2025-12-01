@@ -519,12 +519,37 @@ class MessageHandler:
         
         if success:
             provider_name = session['data']['selected_provider']['name']
+            provider_number = session['data']['selected_provider']['whatsapp_number']
             booking_id = booking_data['booking_id']
+            customer_name = user.get('name', 'Customer')
             
+            # Send message to customer: booking sent, waiting for confirmation
             await self._log_and_send_response(
                 user_number,
-                f"Booking confirmed! {provider_name} will help you {session['data']['service_type']} on {session['data']['booking_time']}.\n\nReference: {booking_id}\n\nWe'll send you a reminder!",
-                "booking_confirmed"
+                f"✅ Your booking was sent to {provider_name}!\n\n"
+                f"We're waiting for their confirmation.\n"
+                f"Reference: {booking_id}\n\n"
+                f"You'll receive a message once they respond.",
+                "booking_sent_waiting"
+            )
+            
+            # Send message to provider: ask to accept/deny booking
+            provider_message = (
+                f"📋 **New Booking Request**\n\n"
+                f"Customer: {customer_name}\n"
+                f"Service: {session['data']['service_type']}\n"
+                f"Issue: {session['data'].get('issue', 'Not specified')}\n"
+                f"Time: {session['data']['booking_time']}\n"
+                f"Reference: {booking_id}\n\n"
+                f"Reply with:\n"
+                f"• 'accept' to confirm\n"
+                f"• 'deny' to decline"
+            )
+            
+            await self._log_and_send_response(
+                provider_number,
+                provider_message,
+                "booking_request_to_provider"
             )
             
             # Reset session
