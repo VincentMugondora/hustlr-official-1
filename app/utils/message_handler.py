@@ -395,6 +395,11 @@ class MessageHandler:
             session['data'] = {}
             return
         
+        # Update user's location in database if it changed
+        if user and user.get('location') != normalized_location:
+            await self.db.update_user(user_number, {'location': normalized_location})
+            logger.info(f"Updated user location from {user.get('location')} to {normalized_location}")
+        
         # Show available providers in the selected location
         buttons = []
         for provider in providers[:3]:
