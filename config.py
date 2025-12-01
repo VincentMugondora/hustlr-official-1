@@ -19,6 +19,13 @@ class Settings(BaseSettings):
     WHATSAPP_VERIFY_TOKEN: str = ""
     WHATSAPP_BUSINESS_ACCOUNT_ID: str = ""
 
+    AWS_ACCESS_KEY_ID: str = ""
+    AWS_SECRET_ACCESS_KEY: str = ""
+    AWS_REGION: str = "us-east-1"
+    USE_BEDROCK_INTENT: bool = False
+    BEDROCK_MODEL_ID: str = ""
+    AWS_LAMBDA_QUESTION_ANSWERER_FUNCTION_NAME: str = ""
+
 
 settings = Settings()
 

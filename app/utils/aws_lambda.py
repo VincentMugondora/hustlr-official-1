@@ -3,27 +3,32 @@ import boto3
 import json
 from typing import Dict, Any, Optional
 from botocore.exceptions import ClientError
+from config import settings
 
 class AWSLambdaService:
     """Service for interacting with AWS Lambda functions"""
     
     def __init__(self):
+        aws_access_key_id = settings.AWS_ACCESS_KEY_ID
+        aws_secret_access_key = settings.AWS_SECRET_ACCESS_KEY
+        aws_region = settings.AWS_REGION
+
         self.lambda_client = boto3.client(
             'lambda',
-            aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
-            aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'),
-            region_name=os.getenv('AWS_REGION', 'us-east-1')
+            aws_access_key_id=aws_access_key_id,
+            aws_secret_access_key=aws_secret_access_key,
+            region_name=aws_region,
         )
-        self.question_answerer_function = os.getenv('AWS_LAMBDA_QUESTION_ANSWERER_FUNCTION_NAME')
-        self.use_bedrock_intent = os.getenv('USE_BEDROCK_INTENT', 'false').lower() == 'true'
-        self.bedrock_model_id = os.getenv('BEDROCK_MODEL_ID')
+        self.question_answerer_function = settings.AWS_LAMBDA_QUESTION_ANSWERER_FUNCTION_NAME or None
+        self.use_bedrock_intent = bool(getattr(settings, 'USE_BEDROCK_INTENT', False))
+        self.bedrock_model_id = getattr(settings, 'BEDROCK_MODEL_ID', "") or None
         self.bedrock_client = None
         if self.use_bedrock_intent and self.bedrock_model_id:
             self.bedrock_client = boto3.client(
                 'bedrock-runtime',
-                aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
-                aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'),
-                region_name=os.getenv('AWS_REGION', 'us-east-1')
+                aws_access_key_id=aws_access_key_id,
+                aws_secret_access_key=aws_secret_access_key,
+                region_name=aws_region,
             )
     
     async def invoke_question_answerer(self, user_message: str, user_context: Optional[Dict] = None) -> str:
