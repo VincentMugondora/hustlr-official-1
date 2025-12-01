@@ -4,10 +4,14 @@ from pathlib import Path
 from typing import Any, List
 
 from pymongo import MongoClient
+from dotenv import load_dotenv
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
+
+# Load .env file from root directory
+load_dotenv(ROOT_DIR / ".env")
 
 from config import settings
 
@@ -379,11 +383,11 @@ def import_providers() -> None:
 
     try:
         result = collection.insert_many(valid_providers)
-        print(f"✅ Successfully imported {len(result.inserted_ids)} providers to MongoDB.")
+        print(f"[SUCCESS] Successfully imported {len(result.inserted_ids)} providers to MongoDB.")
         print(f"   Database: {settings.MONGODB_DB_NAME}")
         print(f"   Collection: providers")
     except Exception as e:
-        print(f"❌ Error importing providers: {e}")
+        print(f"[ERROR] Error importing providers: {e}")
 
 
 if __name__ == "__main__":

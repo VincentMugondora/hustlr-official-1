@@ -2432,3 +2432,116 @@ Bathroom
 2025-12-01 11:21:22,158 - app.api.whatsapp - INFO - Baileys text: 'I want to register'
 2025-12-01 11:21:29,080 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2025-12-01 11:21:29,081 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-01 13:26:32,939 - app.api.whatsapp - INFO - [2025-12-01T11:26:32.939382] Baileys webhook received
+2025-12-01 13:26:32,939 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "Hello",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A5CEAB27E232EA148522CC695C4B7318",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764588391,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "conversation": "Hello",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderTimestamp": "1764140775",
+          "recipientKeyHash": "/T956n6fmdF6bA==",
+          "recipientTimestamp": "1764575501"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "ujaUSkJce0RU8nsUNTDKOqoEiZIC4sEBGBlksf5OUyM="
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-01 13:26:32,939 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-01 13:26:32,939 - app.api.whatsapp - INFO - Baileys text: 'Hello'
+2025-12-01 13:26:39,715 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-01 13:26:39,716 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-01 13:27:36,581 - app.api.whatsapp - INFO - [2025-12-01T11:27:36.581284] Baileys webhook received
+2025-12-01 13:27:36,581 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A57A1247788D4D24DCC54E5CD5C618CE",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764588456,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-01 13:27:36,581 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-01 13:27:36,581 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-01 13:27:36,582 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-01 13:27:42,459 - app.api.whatsapp - INFO - [2025-12-01T11:27:42.459577] Baileys webhook received
+2025-12-01 13:27:42,459 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A57A1247788D4D24DCC54E5CD5C618CE",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764588462,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-01 13:27:42,459 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-01 13:27:42,461 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-01 13:27:42,461 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-01 13:27:44,032 - app.api.whatsapp - INFO - [2025-12-01T11:27:44.032237] Baileys webhook received
+2025-12-01 13:27:44,032 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "I want to book a tree cutter for a three o'clock afternoon tomorrow",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A57A1247788D4D24DCC54E5CD5C618CE",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764588463,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "conversation": "I want to book a tree cutter for a three o'clock afternoon tomorrow",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderTimestamp": "1764140775",
+          "recipientKeyHash": "/T956n6fmdF6bA==",
+          "recipientTimestamp": "1764575501"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "ADycwkCx1e1NkvShD/VPbIa67eSY3QbHkyyU26qqkPA="
+      }
+    }
+  }
+}
+2025-12-01 13:27:44,032 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-01 13:27:44,032 - app.api.whatsapp - INFO - Baileys text: 'I want to book a tree cutter for a three o'clock afternoon tomorrow'
+2025-12-01 13:27:47,764 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-01 13:27:47,766 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322

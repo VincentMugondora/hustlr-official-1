@@ -1,11 +1,14 @@
 import os
 import httpx
 import json
+import logging
 from typing import Dict, Any, List, Optional, Union
 from enum import Enum
 import base64
 import mimetypes
 from app.models.message import WhatsAppMessage
+
+logger = logging.getLogger(__name__)
 
 class MessageType(Enum):
     TEXT = "text"
@@ -249,18 +252,23 @@ class WhatsAppCloudAPI:
                 response_data = response.json()
                 
                 if response.status_code == 200:
-                    print(f"✅ Message sent successfully: {payload.get('type', 'unknown')}")
+                    message_type = payload.get('type', 'unknown')
+                    to_number = payload.get('to', 'unknown')
+                    logger.info(f"[BOT RESPONSE] Message sent successfully - Type: {message_type}, To: {to_number}")
+                    logger.debug(f"[BOT RESPONSE] Payload: {json.dumps(payload, indent=2, default=str)}")
                     return response_data
                 else:
-                    print(f"❌ Failed to send message: {response.status_code}")
-                    print(f"Error: {response_data}")
+                    message_type = payload.get('type', 'unknown')
+                    to_number = payload.get('to', 'unknown')
+                    logger.error(f"[BOT RESPONSE] Failed to send message - Type: {message_type}, To: {to_number}, Status: {response.status_code}")
+                    logger.error(f"[BOT RESPONSE] Error details: {response_data}")
                     raise Exception(f"WhatsApp API error: {response.status_code}")
                     
         except httpx.RequestError as e:
-            print(f"🔌 HTTP request error: {e}")
+            logger.error(f"[BOT RESPONSE] HTTP request error: {e}")
             raise Exception(f"Network error: {e}")
         except Exception as e:
-            print(f"💥 Unexpected error: {e}")
+            logger.error(f"[BOT RESPONSE] Unexpected error: {e}")
             raise
     
     async def get_business_profile(self) -> Dict[str, Any]:
