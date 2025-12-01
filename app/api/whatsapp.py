@@ -5,7 +5,7 @@ from app.models.message import WhatsAppMessage
 from app.utils.whatsapp_cloud_api import WhatsAppCloudAPI
 from app.utils.message_handler import MessageHandler
 from app.utils.aws_lambda import AWSLambdaService
-from app.utils.dynamodb_service import DynamoDBService
+from app.utils.mongo_service import MongoService
 from app.utils.baileys_client import BaileysClient
 from config import settings
 import logging
@@ -16,13 +16,13 @@ router = APIRouter()
 
 # Initialize services
 whatsapp_api = WhatsAppCloudAPI()
-dynamodb_service = DynamoDBService()
+mongo_service = MongoService()
 lambda_service = AWSLambdaService()
-message_handler = MessageHandler(whatsapp_api, dynamodb_service, lambda_service)
+message_handler = MessageHandler(whatsapp_api, mongo_service, lambda_service)
 
 # Baileys-based transport (WhatsApp Web via Node service)
 baileys_client = BaileysClient()
-baileys_message_handler = MessageHandler(baileys_client, dynamodb_service, lambda_service)
+baileys_message_handler = MessageHandler(baileys_client, mongo_service, lambda_service)
 
 @router.get("/webhook")
 async def verify_whatsapp_webhook(
