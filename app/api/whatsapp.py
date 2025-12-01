@@ -164,7 +164,26 @@ async def receive_baileys_message(
         logger.info("Baileys payload could not be JSON-encoded for logging")
 
     from_number = (payload.get("from") or "").strip()
+    from_number = from_number.split("@")[0]
     text = (payload.get("text") or "").strip()
+
+    if not text:
+        raw = payload.get("rawMessage") or {}
+        raw_msg = raw.get("message") or {}
+        loc = raw_msg.get("locationMessage")
+        if loc:
+            lat = loc.get("degreesLatitude")
+            lng = loc.get("degreesLongitude")
+            name = loc.get("name") or ""
+            address = loc.get("address") or ""
+            parts = []
+            if name:
+                parts.append(name)
+            if address:
+                parts.append(address)
+            if lat is not None and lng is not None:
+                parts.append(f"({lat},{lng})")
+            text = " ".join(parts) or "[location shared]"
 
     message = WhatsAppMessage(from_number, text)
 
