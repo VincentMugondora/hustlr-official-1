@@ -292,12 +292,12 @@ class MessageHandler:
                 providers = location_extractor.filter_providers_by_location(all_providers, normalized_location)
                 
                 if providers:
-                    # Show providers from user's location
+                    # Show providers from user's location immediately
                     buttons = []
                     for provider in providers[:3]:
                         buttons.append({
                             'id': f"provider_{provider['whatsapp_number']}",
-                            'title': f"{provider['name']} - {provider.get('location', 'Unknown')}"
+                            'title': f"{provider['name']}"
                         })
                     
                     await self._log_and_send_interactive(
