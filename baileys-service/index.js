@@ -66,13 +66,24 @@ async function startBaileys() {
         text = m.message.conversation;
       } else if (m.message?.extendedTextMessage?.text) {
         text = m.message.extendedTextMessage.text;
+      } else if (m.message?.locationMessage) {
+        const loc = m.message.locationMessage;
+        const name = loc.name || "";
+        const address = loc.address || "";
+        const lat = loc.degreesLatitude;
+        const lng = loc.degreesLongitude;
+        const parts = [];
+        if (name) parts.push(name);
+        if (address) parts.push(address);
+        if (lat !== undefined && lng !== undefined) {
+          parts.push(`(${lat},${lng})`);
+        }
+        text = parts.join(" ") || "[location shared]";
       } else if (m.message?.buttonsResponseMessage?.selectedButtonId) {
-        // Interactive button reply
         text = m.message.buttonsResponseMessage.selectedButtonId;
       } else if (
         m.message?.listResponseMessage?.singleSelectReply?.selectedRowId
       ) {
-        // List reply
         text = m.message.listResponseMessage.singleSelectReply.selectedRowId;
       }
 

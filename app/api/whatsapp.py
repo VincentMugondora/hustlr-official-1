@@ -78,9 +78,10 @@ async def receive_whatsapp_message(
                 messages = value.get("messages", [])
                 if messages:
                     msg_data = messages[0]
+                    msg_type = msg_data.get("type", "N/A")
                     logger.info(f"Message ID: {msg_data.get('id', 'N/A')}")
                     logger.info(f"Message timestamp: {msg_data.get('timestamp', 'N/A')}")
-                    logger.info(f"Message type: {msg_data.get('type', 'N/A')}")
+                    logger.info(f"Message type: {msg_type}")
                     
                     # Log contact info if present
                     contacts = value.get("contacts", [])
@@ -94,6 +95,24 @@ async def receive_whatsapp_message(
                     if metadata:
                         logger.info(f"Phone number ID: {metadata.get('phone_number_id', 'N/A')}")
                         logger.info(f"Display phone number: {metadata.get('display_phone_number', 'N/A')}")
+                    # Normalize WhatsApp location messages into text so the
+                    # downstream handler can treat them like typed locations.
+                    if msg_type == "location":
+                        loc = msg_data.get("location", {})
+                        lat = loc.get("latitude")
+                        lng = loc.get("longitude")
+                        name = loc.get("name") or ""
+                        address = loc.get("address") or ""
+                        parts = []
+                        if name:
+                            parts.append(name)
+                        if address:
+                            parts.append(address)
+                        if lat is not None and lng is not None:
+                            parts.append(f"({lat},{lng})")
+                        location_text = " ".join(parts) or "[location shared]"
+                        message.text = location_text
+                        logger.info(f"Normalized location text: {location_text}")
     except Exception as e:
         logger.error(f"Error parsing payload details: {e}")
     
