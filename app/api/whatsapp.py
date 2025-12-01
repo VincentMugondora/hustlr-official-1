@@ -6,6 +6,7 @@ from app.utils.whatsapp_cloud_api import WhatsAppCloudAPI
 from app.utils.message_handler import MessageHandler
 from app.utils.aws_lambda import AWSLambdaService
 from app.utils.dynamodb_service import DynamoDBService
+from app.utils.baileys_client import BaileysClient
 from config import settings
 import logging
 import json
@@ -18,6 +19,10 @@ whatsapp_api = WhatsAppCloudAPI()
 dynamodb_service = DynamoDBService()
 lambda_service = AWSLambdaService()
 message_handler = MessageHandler(whatsapp_api, dynamodb_service, lambda_service)
+
+# Baileys-based transport (WhatsApp Web via Node service)
+baileys_client = BaileysClient()
+baileys_message_handler = MessageHandler(baileys_client, dynamodb_service, lambda_service)
 
 @router.get("/webhook")
 async def verify_whatsapp_webhook(
@@ -117,4 +122,51 @@ async def receive_whatsapp_message(
             logger.error(f"Failed to send error message: {send_error}")
 
     # Respond to WhatsApp so Meta knows you received successfully
+    return {"status": "success"}
+
+
+@router.post("/baileys-webhook")
+async def receive_baileys_message(
+    payload: dict = Body(...),
+):
+    """Webhook endpoint for the local Baileys Node service.
+
+    Expects a simple JSON body: {"from": "<number>", "text": "<message>", "rawMessage": {...}}
+    and forwards it into the shared MessageHandler using the BaileysClient transport.
+    """
+
+    logger = logging.getLogger(__name__)
+    timestamp = datetime.utcnow().isoformat()
+
+    logger.info(f"[{timestamp}] Baileys webhook received")
+    try:
+        logger.info(f"Baileys payload: {json.dumps(payload, indent=2, default=str)}")
+    except Exception:
+        logger.info("Baileys payload could not be JSON-encoded for logging")
+
+    from_number = (payload.get("from") or "").strip()
+    text = (payload.get("text") or "").strip()
+
+    message = WhatsAppMessage(from_number, text)
+
+    logger.info(f"Baileys message from: {message.from_number}")
+    logger.info(f"Baileys text: '{message.text}'")
+
+    try:
+        if message.text:
+            await baileys_message_handler.handle_message(message)
+            logger.info(f"Baileys message processed successfully for {message.from_number}")
+        else:
+            logger.info(f"Baileys webhook received non-text/empty message from {message.from_number}, skipping")
+    except Exception as e:
+        logger.error(f"Error handling Baileys message from {message.from_number}: {e}")
+        # Best-effort error notification via Baileys transport
+        try:
+            await baileys_client.send_text_message(
+                message.from_number,
+                "❌ Sorry, I'm having trouble processing your message. Please try again later.",
+            )
+        except Exception as send_error:
+            logger.error(f"Failed to send Baileys error message: {send_error}")
+
     return {"status": "success"}
