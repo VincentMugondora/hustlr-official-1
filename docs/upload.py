@@ -2,10 +2,17 @@ import json
 import re
 from datetime import datetime, timezone
 from typing import Any, Dict, List
+import os
+import sys
+from pathlib import Path
 
 import requests
 from bs4 import BeautifulSoup
 from pymongo import MongoClient
+
+ROOT_DIR = Path(__file__).resolve().parents[1]
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
 
 from config import settings
 
@@ -50,8 +57,29 @@ def _extract_website(text: str) -> str:
 
 def scrape_classifieds(service_type: str, location_hint: str, url: str) -> List[Dict[str, Any]]:
     providers: List[Dict[str, Any]] = []
-    response = requests.get(url, timeout=15)
-    response.raise_for_status()
+    headers = {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/120.0 Safari/537.36"
+        ),
+        "Accept-Language": "en-US,en;q=0.9",
+    }
+
+    try:
+        response = requests.get(url, headers=headers, timeout=15)
+    except Exception as exc:
+        print(f"Error fetching {url}: {exc}")
+        return providers
+
+    if response.status_code == 403:
+        print(f"Skipping classifieds scrape; got 403 Forbidden for {url}")
+        return providers
+
+    if not response.ok:
+        print(f"Skipping classifieds scrape; HTTP {response.status_code} for {url}")
+        return providers
+
     soup = BeautifulSoup(response.text, "html.parser")
 
     cards = soup.select(".listing, .card, article, .item")
@@ -165,7 +193,7 @@ def main() -> None:
     pindula_url = "https://www.pindula.co.zw/services"
 
     all_providers: List[Dict[str, Any]] = []
-    all_providers.extend(scrape_classifieds(service_type, location_hint, classifieds_url))
+    # all_providers.extend(scrape_classifieds(service_type, location_hint, classifieds_url))
     all_providers.extend(scrape_pindula(service_type, location_hint, pindula_url))
 
     print(json.dumps(all_providers, indent=2))
