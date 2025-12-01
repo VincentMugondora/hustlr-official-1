@@ -18,10 +18,12 @@ class DynamoDBService:
         self.users_table = self.dynamodb.Table(os.getenv('AWS_DYNAMODB_USERS_TABLE', 'hustlr-users'))
         self.providers_table = self.dynamodb.Table(os.getenv('AWS_DYNAMODB_PROVIDERS_TABLE', 'hustlr-providers'))
         self.bookings_table = self.dynamodb.Table(os.getenv('AWS_DYNAMODB_BOOKINGS_TABLE', 'hustlr-bookings'))
+        self.sessions_table = self.dynamodb.Table(os.getenv('AWS_DYNAMODB_SESSIONS_TABLE', 'hustlr-sessions'))
         
         self._fallback_users = {}
         self._fallback_providers = []
         self._fallback_bookings = []
+        self._fallback_sessions = {}
     
     # User operations
     async def get_user(self, whatsapp_number: str) -> Optional[Dict]:
@@ -156,3 +158,36 @@ class DynamoDBService:
                     booking['status'] = status
                     return True
             return False
+    
+    # Session operations
+    async def get_session(self, whatsapp_number: str) -> Optional[Dict]:
+        """Get user session"""
+        try:
+            response = self.sessions_table.get_item(Key={'whatsapp_number': whatsapp_number})
+            return response.get('Item')
+        except ClientError as e:
+            print(f"Error getting session: {e}")
+            return self._fallback_sessions.get(whatsapp_number)
+    
+    async def save_session(self, whatsapp_number: str, session_data: Dict) -> bool:
+        """Save user session"""
+        try:
+            session_data['whatsapp_number'] = whatsapp_number
+            session_data['updated_at'] = datetime.utcnow().isoformat()
+            self.sessions_table.put_item(Item=session_data)
+            return True
+        except ClientError as e:
+            print(f"Error saving session: {e}")
+            self._fallback_sessions[whatsapp_number] = session_data
+            return True
+    
+    async def delete_session(self, whatsapp_number: str) -> bool:
+        """Delete user session"""
+        try:
+            self.sessions_table.delete_item(Key={'whatsapp_number': whatsapp_number})
+            return True
+        except ClientError as e:
+            print(f"Error deleting session: {e}")
+            if whatsapp_number in self._fallback_sessions:
+                del self._fallback_sessions[whatsapp_number]
+            return True
