@@ -58,30 +58,34 @@ class MessageHandler:
         state = session['state']
         
         if state == ConversationState.NEW:
-            # Start onboarding
+            # Start onboarding with combined name + location
             await self.whatsapp_api.send_text_message(
                 user_number,
                 "👋 Welcome to Hustlr! I'll help you find local service providers.\n\n"
-                "Let's get you set up. What's your name?"
+                "To get you set up quickly, please send your *name* and *area* in one message.\n"
+                "Example: 'Vincent, Avondale'"
             )
             session['state'] = ConversationState.ONBOARDING_NAME
         
         elif state == ConversationState.ONBOARDING_NAME:
-            # Collect name
-            name = message_text.title()
-            session['data']['name'] = name
+            # Collect name and location from a single message
+            raw = message_text.strip()
+            parts = re.split(r'[,\n\-]+', raw)
+            parts = [p.strip() for p in parts if p.strip()]
             
-            await self.whatsapp_api.send_text_message(
-                user_number,
-                f"Nice to meet you, {name}! 📍\n\n"
-                "What's your location or neighborhood? This helps me find providers near you."
-            )
-            session['state'] = ConversationState.ONBOARDING_LOCATION
-        
-        elif state == ConversationState.ONBOARDING_LOCATION:
-            # Collect location
-            location = message_text.title()
-            session['data']['location'] = location
+            if len(parts) >= 2:
+                name = parts[0].title()
+                location = parts[1].title()
+                session['data']['name'] = name
+                session['data']['location'] = location
+            else:
+                # If we can't clearly extract both, ask once more with an example
+                await self.whatsapp_api.send_text_message(
+                    user_number,
+                    "Please send both your *name* and *area* in one message.\n"
+                    "Example: 'Vincent, Avondale'"
+                )
+                return
             
             # Present privacy policy
             privacy_text = (
@@ -149,6 +153,12 @@ class MessageHandler:
             await self.send_help_menu(user_number)
             return
         
+        # Try fast booking when the message already includes service + time
+        if state == ConversationState.SERVICE_SEARCH:
+            handled_fast = await self.try_fast_booking(user_number, message_text, session, user)
+            if handled_fast:
+                return
+        
         # Handle service search
         if state == ConversationState.SERVICE_SEARCH:
             await self.handle_service_search(user_number, message_text, session, user)
@@ -159,6 +169,58 @@ class MessageHandler:
         else:
             # Use AI to understand the message
             await self.handle_ai_response(user_number, message_text, user)
+    
+    async def try_fast_booking(self, user_number: str, message_text: str, session: Dict, user: Dict) -> bool:
+        """Attempt to create a booking directly when message has service + time"""
+        service_type = self.extract_service_type(message_text)
+        if not service_type:
+            return False
+
+        if not self._message_contains_time_hint(message_text):
+            return False
+
+        user_location = user.get('location', '')
+        providers = await self.db.get_providers_by_service(service_type, user_location)
+        
+        if not providers:
+            await self.whatsapp_api.send_text_message(
+                user_number,
+                f"❌ No {service_type} found in your area. Try a different service or area."
+            )
+            return True
+
+        selected_provider = providers[0]
+        booking_time = self.parse_datetime(message_text)
+
+        booking_data = {
+            'booking_id': f"booking_{datetime.utcnow().timestamp()}",
+            'user_whatsapp_number': user_number,
+            'provider_whatsapp_number': selected_provider['whatsapp_number'],
+            'service_type': service_type,
+            'date_time': booking_time,
+            'status': 'pending'
+        }
+
+        success = await self.db.create_booking(booking_data)
+
+        if success:
+            await self.whatsapp_api.send_text_message(
+                user_number,
+                f"✅ **Booking Request Sent!**\n\n"
+                f"Service: {service_type.title()}\n"
+                f"Provider: {selected_provider['name']}\n"
+                f"Time: {booking_time}\n\n"
+                f"If this looks wrong, just reply with the correct details."
+            )
+            session['state'] = ConversationState.SERVICE_SEARCH
+            session['data'] = {}
+        else:
+            await self.whatsapp_api.send_text_message(
+                user_number,
+                "❌ Sorry, there was an issue creating your booking. Please try again."
+            )
+
+        return True
     
     async def handle_service_search(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
         """Handle service provider search"""
@@ -441,3 +503,17 @@ class MessageHandler:
         
         # Return the original text if we can't parse it
         return message_text
+
+    def _message_contains_time_hint(self, message_text: str) -> bool:
+        """Heuristic check for time-related words/patterns in a message"""
+        text = message_text.lower()
+        keywords = [
+            'today', 'tomorrow', 'tonight', 'morning', 'afternoon', 'evening',
+            'next ', 'am', 'pm'
+        ]
+        if any(k in text for k in keywords):
+            return True
+        # Simple time pattern like 10, 10am, 10:00, 10:00am
+        if re.search(r"\b\d{1,2}(:\d{2})?\s*(am|pm)?\b", text):
+            return True
+        return False
