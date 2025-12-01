@@ -57,6 +57,12 @@ class MessageHandler:
         db_session = await self.db.get_session(user_number)
         if db_session:
             session = db_session
+            # Convert state string back to enum
+            if isinstance(session.get('state'), str):
+                try:
+                    session['state'] = ConversationState(session['state'])
+                except ValueError:
+                    session['state'] = ConversationState.NEW
         else:
             session = self.user_sessions.get(user_number, {
                 'state': ConversationState.NEW,
