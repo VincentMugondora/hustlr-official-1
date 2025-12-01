@@ -4254,3 +4254,163 @@ Bathroom
 2025-12-01 14:05:35,577 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_response, Message: Hi Vincent! I'd be happy to help you find a reliable plumber near your location in Bulawayo, Zimbabw...
 2025-12-01 14:05:36,629 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2025-12-01 14:05:36,631 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-01 14:11:21,389 - app.api.whatsapp - INFO - [2025-12-01T12:11:21.389870] Baileys webhook received
+2025-12-01 14:11:21,390 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A520871D1F5E2BA7A3B4B1254FC0BABE",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764591081,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-01 14:11:21,390 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-01 14:11:21,390 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-01 14:11:21,390 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-01 14:11:27,275 - app.api.whatsapp - INFO - [2025-12-01T12:11:27.275192] Baileys webhook received
+2025-12-01 14:11:27,276 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A520871D1F5E2BA7A3B4B1254FC0BABE",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764591087,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-01 14:11:27,276 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-01 14:11:27,276 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-01 14:11:27,276 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-01 14:11:28,938 - app.api.whatsapp - INFO - [2025-12-01T12:11:28.938081] Baileys webhook received
+2025-12-01 14:11:28,938 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "Hello",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A520871D1F5E2BA7A3B4B1254FC0BABE",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764591087,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "conversation": "Hello",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderTimestamp": "1764140775",
+          "recipientKeyHash": "/T956n6fmdF6bA==",
+          "recipientTimestamp": "1764575501"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "z2ofA6MQUgVwN9R3yix/52SQvrD1dEzj5mv5bm1+HUU="
+      }
+    }
+  }
+}
+2025-12-01 14:11:28,939 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-01 14:11:28,939 - app.api.whatsapp - INFO - Baileys text: 'Hello'
+2025-12-01 14:11:28,939 - app.api.whatsapp - ERROR - Error handling Baileys message from 263777530322: 'MongoService' object has no attribute 'get_session'
+2025-12-01 14:11:30,244 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-01 14:11:35,416 - app.api.whatsapp - INFO - [2025-12-01T12:11:35.416480] Baileys webhook received
+2025-12-01 14:11:35,418 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A59A2806A6C14BCD4F467AA26BF49F63",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764591095,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-01 14:11:35,419 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-01 14:11:35,419 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-01 14:11:35,419 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-01 14:11:41,238 - app.api.whatsapp - INFO - [2025-12-01T12:11:41.238352] Baileys webhook received
+2025-12-01 14:11:41,239 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A59A2806A6C14BCD4F467AA26BF49F63",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764591101,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-01 14:11:41,240 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-01 14:11:41,240 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-01 14:11:41,240 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-01 14:11:42,893 - app.api.whatsapp - INFO - [2025-12-01T12:11:42.893354] Baileys webhook received
+2025-12-01 14:11:42,893 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "Hello",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A59A2806A6C14BCD4F467AA26BF49F63",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764591101,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "conversation": "Hello",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderTimestamp": "1764140775",
+          "recipientKeyHash": "/T956n6fmdF6bA==",
+          "recipientTimestamp": "1764575501"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "M5Bj6juI4+jTXzKd/Y1FOg11F3Gbqrd41XtADnqwhW4="
+      }
+    }
+  }
+}
+2025-12-01 14:11:42,894 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-01 14:11:42,894 - app.api.whatsapp - INFO - Baileys text: 'Hello'
+2025-12-01 14:11:42,894 - app.api.whatsapp - ERROR - Error handling Baileys message from 263777530322: 'MongoService' object has no attribute 'get_session'
+2025-12-01 14:11:43,946 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"

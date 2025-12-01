@@ -70,3 +70,28 @@ class MongoService:
             {"$set": {"status": status}},
         )
         return result.matched_count > 0
+
+    # Session operations
+    async def get_session(self, whatsapp_number: str) -> Optional[Dict[str, Any]]:
+        """Get user session"""
+        db = get_database()
+        return await db.sessions.find_one({"whatsapp_number": whatsapp_number})
+
+    async def save_session(self, whatsapp_number: str, session_data: Dict[str, Any]) -> bool:
+        """Save user session"""
+        db = get_database()
+        session_data = dict(session_data)
+        session_data["whatsapp_number"] = whatsapp_number
+        session_data["updated_at"] = datetime.utcnow()
+        result = await db.sessions.update_one(
+            {"whatsapp_number": whatsapp_number},
+            {"$set": session_data},
+            upsert=True,
+        )
+        return result.matched_count > 0 or result.upserted_id is not None
+
+    async def delete_session(self, whatsapp_number: str) -> bool:
+        """Delete user session"""
+        db = get_database()
+        result = await db.sessions.delete_one({"whatsapp_number": whatsapp_number})
+        return result.deleted_count > 0
