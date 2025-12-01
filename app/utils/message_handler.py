@@ -22,6 +22,7 @@ class ConversationState(Enum):
     BOOKING_LOCATION = "booking_location"  # Confirm location for service
     PROVIDER_SELECTION = "provider_selection"
     BOOKING_CONFIRM = "booking_confirm"  # Final confirmation before booking
+    BOOKING_PENDING_PROVIDER = "booking_pending_provider"  # Waiting for provider response
     
     # Provider registration states
     PROVIDER_REGISTER = "provider_register"
@@ -214,6 +215,8 @@ class MessageHandler:
             await self.handle_provider_selection(user_number, message_text, session, user)
         elif state == ConversationState.BOOKING_CONFIRM:
             await self.handle_booking_confirmation(user_number, message_text, session, user)
+        elif state == ConversationState.BOOKING_PENDING_PROVIDER:
+            await self.handle_provider_response(user_number, message_text, session, user)
         else:
             # Use AI to understand the message
             await self.handle_ai_response(user_number, message_text, user)
@@ -512,7 +515,9 @@ class MessageHandler:
             'service_type': session['data']['service_type'],
             'date_time': session['data']['booking_time'],
             'issue': session['data'].get('issue', ''),
-            'status': 'pending'
+            'status': 'pending',
+            'customer_number': user_number,  # Store for provider response handling
+            'customer_name': user.get('name', 'Customer')
         }
         
         success = await self.db.create_booking(booking_data)
@@ -552,14 +557,90 @@ class MessageHandler:
                 "booking_request_to_provider"
             )
             
-            # Reset session
-            session['state'] = ConversationState.SERVICE_SEARCH
-            session['data'] = {}
+            # Store booking data for provider response handling
+            session['data']['booking_id'] = booking_id
+            session['state'] = ConversationState.BOOKING_PENDING_PROVIDER
         else:
             await self._log_and_send_response(
                 user_number,
                 "Oops! Something went wrong. Please try again.",
                 "booking_error"
+            )
+    
+    async def handle_provider_response(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
+        """Handle provider's accept/deny response to booking request"""
+        booking_id = session['data'].get('booking_id')
+        
+        if message_text.lower() in ['accept', 'yes', 'confirm', 'ok']:
+            # Provider accepted the booking
+            # Update booking status to confirmed
+            await self.db.update_booking_status(booking_id, 'confirmed')
+            
+            # Get booking details to notify customer
+            booking_data = session['data']
+            customer_number = booking_data.get('customer_number')
+            provider_name = user.get('name', 'Provider')
+            
+            # Send confirmation to provider
+            await self._log_and_send_response(
+                user_number,
+                f"✅ **Booking Confirmed!**\n\n"
+                f"Reference: {booking_id}\n\n"
+                f"You've accepted this booking. Contact the customer to arrange details.",
+                "provider_booking_accepted"
+            )
+            
+            # Send confirmation to customer
+            if customer_number:
+                await self._log_and_send_response(
+                    customer_number,
+                    f"✅ **Booking Confirmed!**\n\n"
+                    f"{provider_name} has accepted your booking!\n"
+                    f"Reference: {booking_id}\n\n"
+                    f"They will contact you shortly to confirm details.",
+                    "customer_booking_confirmed"
+                )
+            
+            # Reset provider session
+            session['state'] = ConversationState.SERVICE_SEARCH
+            session['data'] = {}
+            
+        elif message_text.lower() in ['deny', 'no', 'decline', 'reject']:
+            # Provider declined the booking
+            # Update booking status to declined
+            await self.db.update_booking_status(booking_id, 'declined')
+            
+            # Get customer number from booking data
+            customer_number = session['data'].get('customer_number')
+            provider_name = user.get('name', 'Provider')
+            
+            # Send response to provider
+            await self._log_and_send_response(
+                user_number,
+                f"❌ You've declined booking {booking_id}.\n\n"
+                f"The customer will be notified and can book with another provider.",
+                "provider_booking_declined"
+            )
+            
+            # Notify customer
+            if customer_number:
+                await self._log_and_send_response(
+                    customer_number,
+                    f"❌ Sorry, {provider_name} is unable to take this booking.\n\n"
+                    f"Reference: {booking_id}\n\n"
+                    f"Would you like to try another provider?",
+                    "customer_booking_declined"
+                )
+            
+            # Reset provider session
+            session['state'] = ConversationState.SERVICE_SEARCH
+            session['data'] = {}
+        else:
+            # Invalid response
+            await self._log_and_send_response(
+                user_number,
+                "Please reply with 'accept' or 'deny' to respond to the booking request.",
+                "invalid_provider_response"
             )
     
     async def handle_provider_registration(self, user_number: str, message_text: str, session: Dict) -> None:
