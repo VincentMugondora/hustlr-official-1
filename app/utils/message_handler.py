@@ -559,6 +559,7 @@ class MessageHandler:
             
             # Store booking data for provider response handling
             session['data']['booking_id'] = booking_id
+            session['data']['customer_number'] = user_number
             session['state'] = ConversationState.BOOKING_PENDING_PROVIDER
         else:
             await self._log_and_send_response(
