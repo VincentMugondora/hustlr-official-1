@@ -173,7 +173,7 @@ class MessageHandler:
             else:
                 await self._log_and_send_response(
                     user_number,
-                    "❌ You need to agree to the privacy policy to use Hustlr.\n\n"
+                    "You need to agree to the privacy policy to use Hustlr.\n\n"
                     "Type 'yes' to agree, or 'no' to decline.",
                     "privacy_policy_decline"
                 )
@@ -693,10 +693,10 @@ class MessageHandler:
             if success:
                 await self._log_and_send_response(
                     user_number,
-                    f"✅ **Registration Submitted!**\n\n"
-                    f"👨‍🔧 Name: {session['data']['name']}\n"
-                    f"🛠️ Service: {session['data']['service_type']}\n"
-                    f"📍 Area: {message_text.title()}\n\n"
+                    f"Registration Submitted!\n\n"
+                    f"Name: {session['data']['name']}\n"
+                    f"Service: {session['data']['service_type']}\n"
+                    f"Area: {message_text.title()}\n\n"
                     f"Your registration is pending review. We'll notify you once approved!\n\n"
                     f"You can start receiving bookings once approved.",
                     "provider_registration_complete"
@@ -708,7 +708,7 @@ class MessageHandler:
             else:
                 await self._log_and_send_response(
                     user_number,
-                    "❌ Sorry, there was an issue with your registration. Please try again.",
+                    "Sorry, there was an issue with your registration. Please try again.",
                     "provider_registration_error"
                 )
     
