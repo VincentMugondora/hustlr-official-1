@@ -187,3 +187,50 @@ class AWSLambdaService:
                 }
             ],
         }
+    
+    def _generate_local_response(self, user_message: str, user_context: Dict[str, Any]) -> str:
+        """
+        Generate a response locally without external AI services.
+        Handles common questions and steers toward booking.
+        """
+        user_message_lower = user_message.lower().strip()
+        user_name = user_context.get('name', 'there').split()[0] if user_context.get('name') else 'there'
+        
+        # Who are you / What are you
+        if any(phrase in user_message_lower for phrase in ['who are you', 'what are you', 'who is hustlr', 'what is hustlr']):
+            return f"I'm Hustlr, your friendly service booking assistant! I help you find and book local service providers like plumbers, electricians, carpenters, and more. What service can I help you find today, {user_name}?"
+        
+        # How do you work / How does it work
+        if any(phrase in user_message_lower for phrase in ['how do you work', 'how does it work', 'how can you help']):
+            return "It's simple! Just tell me what service you need (like 'I need a plumber'), and I'll show you available providers in your area. You can then book directly through me. What service do you need?"
+        
+        # What can you do
+        if any(phrase in user_message_lower for phrase in ['what can you do', 'what services', 'what do you offer']):
+            return "I can help you find and book: plumbers, electricians, carpenters, cleaners, painters, mechanics, locksmiths, and many more services. Just tell me what you need!"
+        
+        # Where are you from / Location questions
+        if any(phrase in user_message_lower for phrase in ['where are you', 'where are you from', 'what country']):
+            return "I operate in Zimbabwe, helping people find local service providers. I can help you find services in Harare, Bulawayo, and other areas. What service do you need?"
+        
+        # Cost / Price questions
+        if any(phrase in user_message_lower for phrase in ['how much', 'cost', 'price', 'expensive', 'charge']):
+            return "Prices vary by service provider and the specific work needed. Once you tell me what service you need, I can show you available providers and you can discuss pricing with them directly. What service do you need?"
+        
+        # Time / Availability questions
+        if any(phrase in user_message_lower for phrase in ['how long', 'how fast', 'when can', 'available', 'urgent']):
+            return "It depends on the service and provider availability. I can help you find providers and book appointments. What service do you need, and when would you like it?"
+        
+        # Greeting variations
+        if any(phrase in user_message_lower for phrase in ['hello', 'hi', 'hey', 'morning', 'afternoon', 'evening', 'good day']):
+            return f"Hey {user_name}! Great to hear from you. What service can I help you find today?"
+        
+        # Small talk
+        if any(phrase in user_message_lower for phrase in ['how are you', 'how are you doing', 'how you been', 'whats up']):
+            return f"Doing great, thanks for asking! By the way, do you need any service help? I can find you plumbers, electricians, carpenters, and more."
+        
+        # Thanks / Appreciation
+        if any(phrase in user_message_lower for phrase in ['thank', 'thanks', 'appreciate', 'thanks for']):
+            return "You're welcome! Happy to help. Is there any service I can find for you?"
+        
+        # Default helpful response that steers to booking
+        return f"Good question! Speaking of which, if you need any service provider, I'm here to help. What service are you looking for? I can find you plumbers, electricians, carpenters, cleaners, and more!"
