@@ -120,15 +120,3 @@ class GeminiService:
         )
 
         return text
-                text = str(response)
-
-        if not text:
-            raise RuntimeError("Gemini did not return any text content.")
-
-        logger.info(
-            "[GEMINI RESPONSE] Question: %s..., Answer: %s...",
-            user_message[:120],
-            text[:200],
-        )
-
-        return text
