@@ -26,5 +26,10 @@ class Settings(BaseSettings):
     BEDROCK_MODEL_ID: str = ""
     AWS_LAMBDA_QUESTION_ANSWERER_FUNCTION_NAME: str = ""
 
+    # Gemini (Google Generative AI) testing configuration
+    GEMINI_API_KEY: str = ""
+    GEMINI_MODEL_NAME: str = "gemini-1.5-flash"
+    USE_GEMINI_INTENT: bool = False
+
 
 settings = Settings()
