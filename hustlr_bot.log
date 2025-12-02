@@ -6175,3 +6175,45 @@ What kind of ...
 2025-12-02 11:03:53,014 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_response, Message: Good question! Speaking of which, if you need any service provider, I'm here to help. What service a...
 2025-12-02 11:03:54,052 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2025-12-02 11:03:54,108 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-02 11:26:24,042 - app.api.whatsapp - INFO - [2025-12-02T09:26:24.042206] Baileys webhook received
+2025-12-02 11:26:24,058 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "whatsup",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F687DE0279309B1AABB",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764667582,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "whatsup",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "+9HjEBIos+s+WA==",
+          "senderTimestamp": "1764663951",
+          "recipientKeyHash": "/T956n6fmdF6bA==",
+          "recipientTimestamp": "1764575501"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-02 11:26:24,061 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-02 11:26:24,061 - app.api.whatsapp - INFO - Baileys text: 'whatsup'
+2025-12-02 11:26:27,684 - app.api.whatsapp - ERROR - Error handling Baileys message from 263777530322: An error occurred (AccessDeniedException) when calling the InvokeModel operation: User: arn:aws:iam::081809265215:user/Vincent is not authorized to perform: bedrock:InvokeModel on resource: arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-3-sonnet-20240229-v1:0 with an explicit deny in an identity-based policy
+2025-12-02 11:26:28,880 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
