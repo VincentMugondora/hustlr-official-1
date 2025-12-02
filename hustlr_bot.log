@@ -5909,3 +5909,46 @@ What kind of ...
 2025-12-02 10:27:01,473 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: greeting, Message: Hey Vincent! How can I help you find a service today?...
 2025-12-02 10:27:02,215 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2025-12-02 10:27:02,271 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-02 10:35:07,306 - app.api.whatsapp - INFO - [2025-12-02T08:35:07.306109] Baileys webhook received
+2025-12-02 10:35:07,308 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "who am l talking to",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F5428FFEC9364DE2734",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764664505,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "who am l talking to",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "+9HjEBIos+s+WA==",
+          "senderTimestamp": "1764663951",
+          "recipientKeyHash": "/T956n6fmdF6bA==",
+          "recipientTimestamp": "1764575501"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-02 10:35:07,308 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-02 10:35:07,308 - app.api.whatsapp - INFO - Baileys text: 'who am l talking to'
+2025-12-02 10:35:09,698 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_response, Message: Good question! Speaking of which, if you need any service provider, I'm here to help. What service a...
+2025-12-02 10:35:11,064 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-02 10:35:11,123 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
