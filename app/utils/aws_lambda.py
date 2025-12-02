@@ -254,6 +254,15 @@ class AWSLambdaService:
         # Thanks / Appreciation
         if any(phrase in user_message_lower for phrase in ['thank', 'thanks', 'appreciate', 'thanks for']):
             return "You're welcome! Happy to help. Is there any service I can find for you?"
+
+        # Negative / no-interest replies
+        if user_message_lower in [
+            'no', 'no thanks', 'no thank you', 'not now', "i'm good", 'im good', 'nothing', 'nah', 'nope'
+        ]:
+            return (
+                "No problem at all. If you ever need help finding a service provider, "
+                "just message me something like 'I need a plumber' or 'I need an electrician' and I'll help you out."
+            )
         
         # Default helpful response that steers to booking
         return f"Good question! Speaking of which, if you need any service provider, I'm here to help. What service are you looking for? I can find you plumbers, electricians, carpenters, cleaners, and more!"
