@@ -718,7 +718,13 @@ class MessageHandler:
                 )
     
     async def handle_ai_response(self, user_number: str, message_text: str, user: Dict) -> None:
-        """Use AI to handle complex queries"""
+        """Handle general queries with helpful menu"""
+        # For simple greetings or unclear messages, show help menu
+        if message_text in ['hi', 'hello', 'hey', 'help', 'menu', 'options', 'start']:
+            await self.send_help_menu(user_number)
+            return
+        
+        # Try AI for complex queries
         ai_response = await self.lambda_service.invoke_question_answerer(
             message_text,
             {
@@ -727,6 +733,11 @@ class MessageHandler:
                 'booking_history': await self.db.get_user_bookings(user_number)
             }
         )
+        
+        # If AI fails or returns error message, show help menu
+        if "technical difficulties" in ai_response.lower() or "error" in ai_response.lower():
+            await self.send_help_menu(user_number)
+            return
         
         await self._log_and_send_response(user_number, ai_response, "ai_response")
     
