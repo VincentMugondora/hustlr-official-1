@@ -119,10 +119,12 @@ class AWSLambdaService:
             return "I apologize, but I cannot help with that request."
         except ClientError as e:
             print(f"Bedrock invocation error: {e}")
-            return "I'm experiencing technical difficulties. Please try again later."
+            # Fall back to local response generator so the bot still answers usefully
+            return self._generate_local_response(user_message, user_context or {})
         except Exception as e:
             print(f"Unexpected error in Bedrock service: {e}")
-            return "An unexpected error occurred. Please try again."
+            # Fall back to local response generator on any unexpected error
+            return self._generate_local_response(user_message, user_context or {})
 
     def _build_bedrock_body(self, user_message: str, user_context: Dict[str, Any]) -> Dict[str, Any]:
         context_parts = []
