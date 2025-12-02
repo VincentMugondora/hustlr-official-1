@@ -265,4 +265,8 @@ class AWSLambdaService:
             )
         
         # Default helpful response that steers to booking
-        return f"Good question! Speaking of which, if you need any service provider, I'm here to help. What service are you looking for? I can find you plumbers, electricians, carpenters, cleaners, and more!"
+        return (
+            "I'm here to help you find local service providers. "
+            "If you tell me what you need (for example, 'I need a plumber' or 'I need an electrician'), "
+            "I can show you providers in your area."
+        )
