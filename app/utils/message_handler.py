@@ -158,12 +158,9 @@ class MessageHandler:
                 if success:
                     await self._log_and_send_response(
                         user_number,
-                        f"✅ Perfect! You're all set up, {session['data']['name']}!\n\n"
-                        "Now you can:\n"
-                        "• Search for service providers\n"
-                        "• Book appointments\n"
-                        "• Get reminders\n\n"
-                        "What service are you looking for today?",
+                        f"Great! You're all set, {session['data']['name']}!\n\n"
+                        "You can now search for service providers and book appointments.\n\n"
+                        "What service are you looking for?",
                         "onboarding_complete"
                     )
                     session['state'] = ConversationState.SERVICE_SEARCH
@@ -481,12 +478,12 @@ class MessageHandler:
         provider_location = session['data'].get('selected_provider', {}).get('location', location)
         
         confirmation_msg = (
-            f"Perfect! Here's your booking:\n\n"
-            f"🛠 Service: {service_type}\n"
-            f"📝 Issue: {issue}\n"
-            f"📅 Date & Time: {booking_time}\n"
-            f"📍 Location: {provider_location}\n"
-            f"\n✅ Reply \"Yes\" to confirm or \"No\" to edit."
+            f"Here's your booking:\n\n"
+            f"Service: {service_type}\n"
+            f"Issue: {issue}\n"
+            f"Date & Time: {booking_time}\n"
+            f"Location: {provider_location}\n"
+            f"\nReply \"Yes\" to confirm or \"No\" to edit."
         )
         
         await self._log_and_send_response(
@@ -533,24 +530,22 @@ class MessageHandler:
             # Send message to customer: booking sent, waiting for confirmation
             await self._log_and_send_response(
                 user_number,
-                f"✅ Your booking was sent to {provider_name}!\n\n"
+                f"Your booking was sent to {provider_name}!\n\n"
                 f"We're waiting for their confirmation.\n"
                 f"Reference: {booking_id}\n\n"
-                f"You'll receive a message once they respond.",
+                f"You'll get a message once they respond.",
                 "booking_sent_waiting"
             )
             
             # Send message to provider: ask to accept/deny booking
             provider_message = (
-                f"📋 **New Booking Request**\n\n"
+                f"New Booking Request\n\n"
                 f"Customer: {customer_name}\n"
                 f"Service: {session['data']['service_type']}\n"
                 f"Issue: {session['data'].get('issue', 'Not specified')}\n"
                 f"Time: {session['data']['booking_time']}\n"
                 f"Reference: {booking_id}\n\n"
-                f"Reply with:\n"
-                f"• 'accept' to confirm\n"
-                f"• 'deny' to decline"
+                f"Reply with 'accept' to confirm or 'deny' to decline"
             )
             
             await self._log_and_send_response(
@@ -587,7 +582,7 @@ class MessageHandler:
             # Send confirmation to provider
             await self._log_and_send_response(
                 user_number,
-                f"✅ **Booking Confirmed!**\n\n"
+                f"Booking Confirmed!\n\n"
                 f"Reference: {booking_id}\n\n"
                 f"You've accepted this booking. Contact the customer to arrange details.",
                 "provider_booking_accepted"
@@ -597,7 +592,7 @@ class MessageHandler:
             if customer_number:
                 await self._log_and_send_response(
                     customer_number,
-                    f"✅ **Booking Confirmed!**\n\n"
+                    f"Booking Confirmed!\n\n"
                     f"{provider_name} has accepted your booking!\n"
                     f"Reference: {booking_id}\n\n"
                     f"They will contact you shortly to confirm details.",
@@ -620,7 +615,7 @@ class MessageHandler:
             # Send response to provider
             await self._log_and_send_response(
                 user_number,
-                f"❌ You've declined booking {booking_id}.\n\n"
+                f"You've declined booking {booking_id}.\n\n"
                 f"The customer will be notified and can book with another provider.",
                 "provider_booking_declined"
             )
@@ -629,7 +624,7 @@ class MessageHandler:
             if customer_number:
                 await self._log_and_send_response(
                     customer_number,
-                    f"❌ Sorry, {provider_name} is unable to take this booking.\n\n"
+                    f"Sorry, {provider_name} is unable to take this booking.\n\n"
                     f"Reference: {booking_id}\n\n"
                     f"Would you like to try another provider?",
                     "customer_booking_declined"
@@ -653,7 +648,7 @@ class MessageHandler:
         if state == ConversationState.PROVIDER_REGISTER:
             await self._log_and_send_response(
                 user_number,
-                "👨‍🔧 **Provider Registration**\n\n"
+                "Provider Registration\n\n"
                 "Let's get you registered as a service provider.\n\n"
                 "What's your full name?",
                 "provider_registration_start"
@@ -664,7 +659,7 @@ class MessageHandler:
             session['data']['name'] = message_text.title()
             await self._log_and_send_response(
                 user_number,
-                f"Great, {session['data']['name']}! 🛠️\n\n"
+                f"Great, {session['data']['name']}!\n\n"
                 "What service do you provide? (e.g., plumber, electrician, carpenter, etc.)",
                 "provider_registration_service_prompt"
             )
@@ -676,7 +671,7 @@ class MessageHandler:
             
             await self._log_and_send_response(
                 user_number,
-                f"Perfect! 📍\n\n"
+                f"Perfect!\n\n"
                 "What area or neighborhood do you serve?",
                 "provider_registration_location_prompt"
             )
