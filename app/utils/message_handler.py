@@ -99,8 +99,8 @@ class MessageHandler:
             # Start onboarding with combined name + location
             await self._log_and_send_response(
                 user_number,
-                "👋 Welcome to Hustlr! I'll help you find local service providers.\n\n"
-                "To get you set up quickly, please send your *name* and *area* in one message.\n"
+                "Welcome to Hustlr! I'll help you find local service providers.\n\n"
+                "To get started, send your name and area in one message.\n"
                 "Example: 'Vincent, Avondale'",
                 "onboarding_welcome"
             )
@@ -129,12 +129,12 @@ class MessageHandler:
             
             # Present privacy policy
             privacy_text = (
-                "🔒 **Privacy Policy Summary:**\n\n"
-                "• We store your name, location, and booking history\n"
-                "• We share your info with service providers you choose\n"
-                "• We never sell your data to third parties\n"
-                "• You can request data deletion anytime\n\n"
-                "Do you agree to this privacy policy? (Yes/No)"
+                "Privacy Policy:\n\n"
+                "- We store your name, location, and booking history\n"
+                "- We share your info with service providers you choose\n"
+                "- We never sell your data to third parties\n"
+                "- You can request data deletion anytime\n\n"
+                "Do you agree? (Yes/No)"
             )
             
             await self._log_and_send_response(user_number, privacy_text, "privacy_policy")
@@ -718,9 +718,24 @@ class MessageHandler:
                 )
     
     async def handle_ai_response(self, user_number: str, message_text: str, user: Dict) -> None:
-        """Handle general queries with helpful menu"""
-        # For simple greetings or unclear messages, show help menu
-        if message_text in ['hi', 'hello', 'hey', 'help', 'menu', 'options', 'start']:
+        """Handle general queries conversationally"""
+        # Handle simple greetings naturally
+        greetings = ['hi', 'hello', 'hey', 'morning', 'good morning', 'good afternoon', 'good evening', 'howdy', 'sup', 'yo']
+        if message_text in greetings:
+            user_name = user.get('name', 'there').split()[0]  # Get first name
+            responses = [
+                f"Hey {user_name}! How can I help you find a service today?",
+                f"Hi {user_name}! What service are you looking for?",
+                f"Morning {user_name}! Need to book something?",
+                f"Hey! What can I help you with today?"
+            ]
+            import random
+            response = random.choice(responses)
+            await self._log_and_send_response(user_number, response, "greeting")
+            return
+        
+        # Handle help requests
+        if message_text in ['help', 'menu', 'options', 'what can you do', 'commands']:
             await self.send_help_menu(user_number)
             return
         
@@ -734,9 +749,16 @@ class MessageHandler:
             }
         )
         
-        # If AI fails or returns error message, show help menu
+        # If AI fails, respond naturally
         if "technical difficulties" in ai_response.lower() or "error" in ai_response.lower():
-            await self.send_help_menu(user_number)
+            fallback_responses = [
+                "Sorry, I'm having trouble with that right now. Try asking for a specific service like 'plumber' or 'electrician'.",
+                "I didn't quite get that. What service do you need? (plumber, electrician, carpenter, etc.)",
+                "Let me help you find a service provider. What do you need?"
+            ]
+            import random
+            response = random.choice(fallback_responses)
+            await self._log_and_send_response(user_number, response, "fallback")
             return
         
         await self._log_and_send_response(user_number, ai_response, "ai_response")
@@ -744,21 +766,16 @@ class MessageHandler:
     async def send_help_menu(self, user_number: str) -> None:
         """Send help menu with options"""
         help_text = (
-            "🤖 **Hustlr Bot Help**\n\n"
-            "**What I can do:**\n"
-            "🔧 Find service providers (plumbers, electricians, etc.)\n"
-            "📅 Book appointments\n"
-            "⏰ Send booking reminders\n"
-            "👨‍🔧 Register as a service provider\n\n"
-            "**Commands:**\n"
-            "• 'plumber', 'electrician', etc. - Search providers\n"
-            "• 'register' - Become a provider\n"
-            "• 'help' - Show this menu\n"
-            "• Just type what you need!\n\n"
-            "**Example:**\n"
-            "\"I need a plumber in downtown\"\n"
-            "\"Book electrician for tomorrow\"\n\n"
-            "How can I help you today?"
+            "Here's what I can help you with:\n\n"
+            "- Find service providers (plumbers, electricians, carpenters, etc.)\n"
+            "- Book appointments\n"
+            "- Get booking reminders\n"
+            "- Register as a service provider\n\n"
+            "Just tell me what you need! For example:\n"
+            "\"I need a plumber\"\n"
+            "\"Book electrician for tomorrow\"\n"
+            "\"Find a carpenter in Harare\"\n\n"
+            "What can I help you with?"
         )
         
         await self._log_and_send_response(user_number, help_text, "help_menu")
