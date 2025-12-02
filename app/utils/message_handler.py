@@ -713,28 +713,12 @@ class MessageHandler:
                 )
     
     async def handle_ai_response(self, user_number: str, message_text: str, user: Dict) -> None:
-        """Handle general queries conversationally"""
-        # Handle simple greetings naturally
-        greetings = ['hi', 'hello', 'hey', 'morning', 'good morning', 'good afternoon', 'good evening', 'howdy', 'sup', 'yo']
-        if message_text in greetings:
-            user_name = user.get('name', 'there').split()[0]  # Get first name
-            responses = [
-                f"Hey {user_name}! How can I help you find a service today?",
-                f"Hi {user_name}! What service are you looking for?",
-                f"Morning {user_name}! Need to book something?",
-                f"Hey! What can I help you with today?"
-            ]
-            import random
-            response = random.choice(responses)
-            await self._log_and_send_response(user_number, response, "greeting")
-            return
-        
-        # Handle help requests
-        if message_text in ['help', 'menu', 'options', 'what can you do', 'commands']:
-            await self.send_help_menu(user_number)
-            return
-        
-        # Try AI for complex queries
+        """Delegate general queries to Claude via AWSLambdaService.
+
+        All conversational logic and wording comes from the LLM. This method
+        simply forwards the message (and basic user context) and returns the
+        raw Claude response to the user.
+        """
         ai_response = await self.lambda_service.invoke_question_answerer(
             message_text,
             {
@@ -743,20 +727,7 @@ class MessageHandler:
                 'booking_history': await self.db.get_user_bookings(user_number)
             }
         )
-        
-        # If AI fails, respond naturally with helpful guidance
-        if "technical difficulties" in ai_response.lower() or "error" in ai_response.lower():
-            fallback_responses = [
-                "I'm having a quick technical hiccup. What service are you looking for? I can help you find plumbers, electricians, carpenters, and more!",
-                "Let me help you find a service provider. What do you need? (plumber, electrician, carpenter, cleaner, etc.)",
-                "I'm here to help! What service can I find for you today?",
-                "Sorry about that! Tell me what service you need and I'll show you available providers in your area."
-            ]
-            import random
-            response = random.choice(fallback_responses)
-            await self._log_and_send_response(user_number, response, "fallback")
-            return
-        
+
         await self._log_and_send_response(user_number, ai_response, "ai_response")
     
     async def send_help_menu(self, user_number: str) -> None:
