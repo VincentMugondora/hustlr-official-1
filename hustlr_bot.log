@@ -5952,3 +5952,93 @@ What kind of ...
 2025-12-02 10:35:09,698 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_response, Message: Good question! Speaking of which, if you need any service provider, I'm here to help. What service a...
 2025-12-02 10:35:11,064 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2025-12-02 10:35:11,123 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-02 10:57:38,752 - app.api.whatsapp - INFO - [2025-12-02T08:57:38.752958] Baileys webhook received
+2025-12-02 10:57:38,754 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F936CB6A4DD5FDB8D5A",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764665857,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-02 10:57:38,756 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-02 10:57:38,756 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-02 10:57:38,757 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-02 10:57:44,402 - app.api.whatsapp - INFO - [2025-12-02T08:57:44.402075] Baileys webhook received
+2025-12-02 10:57:44,404 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F936CB6A4DD5FDB8D5A",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764665863,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-02 10:57:44,404 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-02 10:57:44,406 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-02 10:57:44,406 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-02 10:57:45,814 - app.api.whatsapp - INFO - [2025-12-02T08:57:45.814287] Baileys webhook received
+2025-12-02 10:57:45,817 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "who are yo",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F936CB6A4DD5FDB8D5A",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764665864,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "extendedTextMessage": {
+        "text": "who are yo",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "+9HjEBIos+s+WA==",
+          "senderTimestamp": "1764663951",
+          "recipientKeyHash": "/T956n6fmdF6bA==",
+          "recipientTimestamp": "1764575501"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  }
+}
+2025-12-02 10:57:45,818 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-02 10:57:45,819 - app.api.whatsapp - INFO - Baileys text: 'who are yo'
+2025-12-02 10:57:49,153 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_response, Message: Good question! Speaking of which, if you need any service provider, I'm here to help. What service a...
+2025-12-02 10:57:50,141 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-02 10:57:50,213 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322

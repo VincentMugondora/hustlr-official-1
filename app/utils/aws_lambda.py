@@ -1,9 +1,12 @@
 import os
 import boto3
 import json
+import logging
 from typing import Dict, Any, Optional
 from botocore.exceptions import ClientError
 from config import settings
+
+logger = logging.getLogger(__name__)
 
 class AWSLambdaService:
     """Service for interacting with AWS Lambda functions"""
@@ -103,6 +106,10 @@ class AWSLambdaService:
                 parsed = json.loads(raw_body.read())
             else:
                 parsed = json.loads(raw_body)
+
+            # Extract main text from Claude response
+            final_text: Optional[str] = None
+
             content = parsed.get("content")
             if isinstance(content, list):
                 texts = []
@@ -112,11 +119,25 @@ class AWSLambdaService:
                         if t:
                             texts.append(t)
                 if texts:
-                    return "\n".join(texts).strip()
-            text = parsed.get("output_text") or parsed.get("completion") or ""
-            if text:
-                return str(text).strip()
-            return "I apologize, but I cannot help with that request."
+                    final_text = "\n".join(texts).strip()
+
+            if not final_text:
+                text = parsed.get("output_text") or parsed.get("completion") or ""
+                if text:
+                    final_text = str(text).strip()
+
+            if not final_text:
+                return "I apologize, but I cannot help with that request."
+
+            # Log whenever Claude successfully answers a customer
+            safe_user = (user_context or {}).get("name") or "unknown user"
+            logger.info(
+                f"[CLAUDE RESPONSE] User: {safe_user}, "
+                f"Question: {user_message[:120]}..., "
+                f"Answer: {final_text[:200]}..."
+            )
+
+            return final_text
         except ClientError as e:
             print(f"Bedrock invocation error: {e}")
             # Fall back to local response generator so the bot still answers usefully
