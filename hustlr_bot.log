@@ -7540,3 +7540,92 @@ Now that we have that sorted, what kind of service are you looking for today? Wh
 Now that we have th...
 2025-12-02 13:52:41,551 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2025-12-02 13:52:41,597 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-02 14:20:52,481 - app.api.whatsapp - INFO - [2025-12-02T12:20:52.481792] Baileys webhook received
+2025-12-02 14:20:52,482 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F1C473E941F5574AD13",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764678051,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-02 14:20:52,482 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-02 14:20:52,483 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-02 14:20:52,483 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-02 14:20:58,181 - app.api.whatsapp - INFO - [2025-12-02T12:20:58.181440] Baileys webhook received
+2025-12-02 14:20:58,182 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F1C473E941F5574AD13",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764678057,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-02 14:20:58,182 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-02 14:20:58,182 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-02 14:20:58,182 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-02 14:20:59,770 - app.api.whatsapp - INFO - [2025-12-02T12:20:59.770957] Baileys webhook received
+2025-12-02 14:20:59,771 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hello",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F1C473E941F5574AD13",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764678058,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "extendedTextMessage": {
+        "text": "hello",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "+9HjEBIos+s+WA==",
+          "senderTimestamp": "1764663951",
+          "recipientKeyHash": "/T956n6fmdF6bA==",
+          "recipientTimestamp": "1764575501"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  }
+}
+2025-12-02 14:20:59,771 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-02 14:20:59,773 - app.api.whatsapp - INFO - Baileys text: 'hello'
+2025-12-02 14:21:01,762 - app.api.whatsapp - ERROR - Error handling Baileys message from 263777530322: GeminiService._invoke_sync() missing 1 required positional argument: 'conversation_history'
+2025-12-02 14:21:03,630 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"

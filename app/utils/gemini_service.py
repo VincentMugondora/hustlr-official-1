@@ -34,7 +34,7 @@ class GeminiService:
         context = user_context or {}
         return await run_in_threadpool(self._invoke_sync, user_message, context)
 
-    def _invoke_sync(self, user_message: str, user_context: Dict[str, Any], conversation_history: list) -> str:
+    def _invoke_sync(self, user_message: str, user_context: Dict[str, Any], conversation_history: list = None) -> str:
         # Build a system prompt similar to the Claude Bedrock prompt
         system_prompt = (
             "You are Hustlr, a WhatsApp assistant that helps users find and book local service providers "
