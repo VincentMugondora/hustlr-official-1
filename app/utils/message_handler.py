@@ -744,12 +744,13 @@ class MessageHandler:
             }
         )
         
-        # If AI fails, respond naturally
+        # If AI fails, respond naturally with helpful guidance
         if "technical difficulties" in ai_response.lower() or "error" in ai_response.lower():
             fallback_responses = [
-                "Sorry, I'm having trouble with that right now. Try asking for a specific service like 'plumber' or 'electrician'.",
-                "I didn't quite get that. What service do you need? (plumber, electrician, carpenter, etc.)",
-                "Let me help you find a service provider. What do you need?"
+                "I'm having a quick technical hiccup. What service are you looking for? I can help you find plumbers, electricians, carpenters, and more!",
+                "Let me help you find a service provider. What do you need? (plumber, electrician, carpenter, cleaner, etc.)",
+                "I'm here to help! What service can I find for you today?",
+                "Sorry about that! Tell me what service you need and I'll show you available providers in your area."
             ]
             import random
             response = random.choice(fallback_responses)
