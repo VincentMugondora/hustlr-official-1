@@ -6217,3 +6217,84 @@ What kind of ...
 2025-12-02 11:26:24,061 - app.api.whatsapp - INFO - Baileys text: 'whatsup'
 2025-12-02 11:26:27,684 - app.api.whatsapp - ERROR - Error handling Baileys message from 263777530322: An error occurred (AccessDeniedException) when calling the InvokeModel operation: User: arn:aws:iam::081809265215:user/Vincent is not authorized to perform: bedrock:InvokeModel on resource: arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-3-sonnet-20240229-v1:0 with an explicit deny in an identity-based policy
 2025-12-02 11:26:28,880 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-02 11:56:45,081 - app.api.whatsapp - INFO - [2025-12-02T09:56:45.081467] Baileys webhook received
+2025-12-02 11:56:45,081 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A54687A328517801FA17BAD55BA57196",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764669393,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-02 11:56:45,083 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-02 11:56:45,083 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-02 11:56:45,083 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-02 11:56:51,043 - app.api.whatsapp - INFO - [2025-12-02T09:56:51.043024] Baileys webhook received
+2025-12-02 11:56:51,043 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A54687A328517801FA17BAD55BA57196",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764669410,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-02 11:56:51,044 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-02 11:56:51,044 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-02 11:56:51,044 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-02 11:56:52,674 - app.api.whatsapp - INFO - [2025-12-02T09:56:52.674059] Baileys webhook received
+2025-12-02 11:56:52,674 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "Hello",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A54687A328517801FA17BAD55BA57196",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764669410,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "conversation": "Hello",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "+9HjEBIos+s+WA==",
+          "senderTimestamp": "1764663951",
+          "recipientKeyHash": "/T956n6fmdF6bA==",
+          "recipientTimestamp": "1764575501"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "PBgPO74xaBoCErBsMg4DaaC4Y/pxPwPjUldoYjHtu2Q="
+      }
+    }
+  }
+}
+2025-12-02 11:56:52,675 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-02 11:56:52,675 - app.api.whatsapp - INFO - Baileys text: 'Hello'
+2025-12-02 11:56:54,984 - app.api.whatsapp - ERROR - Error handling Baileys message from 263777530322: 404 models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+2025-12-02 11:56:55,992 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
