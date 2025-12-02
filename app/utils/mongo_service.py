@@ -95,3 +95,44 @@ class MongoService:
         db = get_database()
         result = await db.sessions.delete_one({"whatsapp_number": whatsapp_number})
         return result.deleted_count > 0
+
+    # Conversation history operations
+    async def store_message(self, whatsapp_number: str, role: str, text: str) -> bool:
+        """Store a single message in conversation history.
+        
+        Args:
+            whatsapp_number: User's WhatsApp number
+            role: "user" or "assistant"
+            text: Message text
+        """
+        db = get_database()
+        message = {
+            "whatsapp_number": whatsapp_number,
+            "role": role,
+            "text": text,
+            "timestamp": datetime.utcnow(),
+        }
+        await db.conversation_history.insert_one(message)
+        return True
+
+    async def get_conversation_history(self, whatsapp_number: str, limit: int = 10) -> List[Dict[str, Any]]:
+        """Retrieve recent conversation history for a user.
+        
+        Args:
+            whatsapp_number: User's WhatsApp number
+            limit: Maximum number of messages to retrieve
+            
+        Returns:
+            List of messages in format [{"role": "user"/"assistant", "text": "..."}]
+        """
+        db = get_database()
+        cursor = db.conversation_history.find(
+            {"whatsapp_number": whatsapp_number}
+        ).sort("timestamp", -1).limit(limit)
+        
+        messages = [doc async for doc in cursor]
+        # Reverse to get chronological order (oldest first)
+        messages.reverse()
+        
+        # Return in the format expected by GeminiService
+        return [{"role": msg["role"], "text": msg["text"]} for msg in messages]

@@ -43,6 +43,12 @@ class MessageHandler:
         """Log bot response and send it to user"""
         logger.info(f"[BOT RESPONSE] To: {user_number}, Type: {response_type}, Message: {message[:100]}...")
         await self.whatsapp_api.send_text_message(user_number, message)
+        
+        # Store bot response in conversation history for context
+        try:
+            await self.db.store_message(user_number, "assistant", message)
+        except Exception as e:
+            logger.warning(f"Could not store bot message in history for {user_number}: {e}")
     
     async def _log_and_send_interactive(self, user_number: str, header: str, body: str, buttons: List[Dict], footer: str = None) -> None:
         """Log interactive response and send it to user"""
@@ -73,6 +79,12 @@ class MessageHandler:
         
         # Get user from database
         user = await self.db.get_user(user_number)
+        
+        # Store user message in conversation history for context
+        try:
+            await self.db.store_message(user_number, "user", message_text)
+        except Exception as e:
+            logger.warning(f"Could not store user message in history for {user_number}: {e}")
         
         # Route based on conversation state
         if not user or not user.get('onboarding_completed', False):
@@ -718,15 +730,42 @@ class MessageHandler:
         All conversational logic and wording comes from the LLM. This method
         simply forwards the message (and basic user context) and returns the
         raw Claude response to the user.
+        
+        Also fetches conversation history so the LLM has full context and
+        doesn't ask the same questions repeatedly.
         """
-        ai_response = await self.lambda_service.invoke_question_answerer(
-            message_text,
-            {
-                'name': user.get('name'),
-                'location': user.get('location'),
-                'booking_history': await self.db.get_user_bookings(user_number)
-            }
-        )
+        # Fetch conversation history for this user (if available)
+        conversation_history = []
+        try:
+            # Try to get recent messages from the database
+            # This assumes db has a method to fetch conversation history
+            if hasattr(self.db, 'get_conversation_history'):
+                conversation_history = await self.db.get_conversation_history(user_number, limit=10)
+        except Exception as e:
+            logger.warning(f"Could not fetch conversation history for {user_number}: {e}")
+        
+        # Check if the lambda_service (could be GeminiService) accepts conversation_history
+        # For now, pass it if the method signature supports it
+        try:
+            ai_response = await self.lambda_service.invoke_question_answerer(
+                message_text,
+                {
+                    'name': user.get('name'),
+                    'location': user.get('location'),
+                    'booking_history': await self.db.get_user_bookings(user_number)
+                },
+                conversation_history=conversation_history
+            )
+        except TypeError:
+            # Fallback for services that don't support conversation_history
+            ai_response = await self.lambda_service.invoke_question_answerer(
+                message_text,
+                {
+                    'name': user.get('name'),
+                    'location': user.get('location'),
+                    'booking_history': await self.db.get_user_bookings(user_number)
+                }
+            )
 
         await self._log_and_send_response(user_number, ai_response, "ai_response")
     
