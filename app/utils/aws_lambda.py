@@ -35,64 +35,21 @@ class AWSLambdaService:
             )
     
     async def invoke_question_answerer(self, user_message: str, user_context: Optional[Dict] = None) -> str:
+        """Invoke Claude Sonnet via Bedrock for AI-powered question answering.
+
+        All conversational logic and reasoning is delegated to Claude. This method
+        simply forwards the user message (and optional context) to Bedrock and
+        returns Claude's raw text response.
         """
-        Invoke Lambda function for AI-powered question answering
-        
-        Args:
-            user_message: The message from the user
-            user_context: Optional user context (name, location, booking history)
-            
-        Returns:
-            AI-generated response
-        """
-        # Try Bedrock first if enabled
-        if self.use_bedrock_intent and self.bedrock_client and self.bedrock_model_id:
-            try:
-                return await self._invoke_bedrock(user_message, user_context or {})
-            except Exception as e:
-                print(f"Bedrock failed, falling back to local handler: {e}")
-                return self._generate_local_response(user_message, user_context or {})
-        
-        # Try Lambda if configured
-        if self.question_answerer_function:
-            try:
-                return await self._invoke_lambda(user_message, user_context or {})
-            except Exception as e:
-                print(f"Lambda failed, falling back to local handler: {e}")
-                return self._generate_local_response(user_message, user_context or {})
-        
-        # Default to local response generation
-        return self._generate_local_response(user_message, user_context or {})
-        
-        try:
-            payload = {
-                'user_message': user_message,
-                'user_context': user_context or {}
-            }
-            
-            response = self.lambda_client.invoke(
-                FunctionName=self.question_answerer_function,
-                InvocationType='RequestResponse',
-                Payload=json.dumps(payload)
-            )
-            
-            result = json.loads(response['Payload'].read())
-            
-            if 'errorMessage' in result:
-                return f"Sorry, I'm having trouble understanding. Could you try rephrasing?"
-            
-            return result.get('response', 'I apologize, but I cannot help with that request.')
-            
-        except ClientError as e:
-            print(f"Lambda invocation error: {e}")
-            return "I'm experiencing technical difficulties. Please try again later."
-        except Exception as e:
-            print(f"Unexpected error in Lambda service: {e}")
-            return "An unexpected error occurred. Please try again."
+        if not (self.use_bedrock_intent and self.bedrock_client and self.bedrock_model_id):
+            raise RuntimeError("Bedrock intent model is not configured.")
+
+        return await self._invoke_bedrock(user_message, user_context or {})
 
     async def _invoke_bedrock(self, user_message: str, user_context: Optional[Dict[str, Any]] = None) -> str:
         if not self.bedrock_client or not self.bedrock_model_id:
-            return "AI service not configured. Please contact support."
+            raise RuntimeError("Bedrock client or model ID is not configured.")
+
         try:
             body = self._build_bedrock_body(user_message, user_context or {})
             response = self.bedrock_client.invoke_model(
@@ -127,7 +84,7 @@ class AWSLambdaService:
                     final_text = str(text).strip()
 
             if not final_text:
-                return "I apologize, but I cannot help with that request."
+                raise RuntimeError("Claude response did not contain any text content.")
 
             # Log whenever Claude successfully answers a customer
             safe_user = (user_context or {}).get("name") or "unknown user"
@@ -139,13 +96,13 @@ class AWSLambdaService:
 
             return final_text
         except ClientError as e:
+            # Surface Bedrock errors to the caller; do not generate local responses
             print(f"Bedrock invocation error: {e}")
-            # Fall back to local response generator so the bot still answers usefully
-            return self._generate_local_response(user_message, user_context or {})
+            raise
         except Exception as e:
+            # Surface unexpected errors to the caller
             print(f"Unexpected error in Bedrock service: {e}")
-            # Fall back to local response generator on any unexpected error
-            return self._generate_local_response(user_message, user_context or {})
+            raise
 
     def _build_bedrock_body(self, user_message: str, user_context: Dict[str, Any]) -> Dict[str, Any]:
         context_parts = []
@@ -210,63 +167,3 @@ class AWSLambdaService:
                 }
             ],
         }
-    
-    def _generate_local_response(self, user_message: str, user_context: Dict[str, Any]) -> str:
-        """
-        Generate a response locally without external AI services.
-        Handles common questions and steers toward booking.
-        """
-        user_message_lower = user_message.lower().strip()
-        user_name = user_context.get('name', 'there').split()[0] if user_context.get('name') else 'there'
-        
-        # Who are you / What are you
-        if any(phrase in user_message_lower for phrase in ['who are you', 'what are you', 'who is hustlr', 'what is hustlr']):
-            return f"I'm Hustlr, your friendly service booking assistant! I help you find and book local service providers like plumbers, electricians, carpenters, and more. What service can I help you find today, {user_name}?"
-        
-        # How do you work / How does it work
-        if any(phrase in user_message_lower for phrase in ['how do you work', 'how does it work', 'how can you help']):
-            return "It's simple! Just tell me what service you need (like 'I need a plumber'), and I'll show you available providers in your area. You can then book directly through me. What service do you need?"
-        
-        # What can you do
-        if any(phrase in user_message_lower for phrase in ['what can you do', 'what services', 'what do you offer']):
-            return "I can help you find and book: plumbers, electricians, carpenters, cleaners, painters, mechanics, locksmiths, and many more services. Just tell me what you need!"
-        
-        # Where are you from / Location questions
-        if any(phrase in user_message_lower for phrase in ['where are you', 'where are you from', 'what country']):
-            return "I operate in Zimbabwe, helping people find local service providers. I can help you find services in Harare, Bulawayo, and other areas. What service do you need?"
-        
-        # Cost / Price questions
-        if any(phrase in user_message_lower for phrase in ['how much', 'cost', 'price', 'expensive', 'charge']):
-            return "Prices vary by service provider and the specific work needed. Once you tell me what service you need, I can show you available providers and you can discuss pricing with them directly. What service do you need?"
-        
-        # Time / Availability questions
-        if any(phrase in user_message_lower for phrase in ['how long', 'how fast', 'when can', 'available', 'urgent']):
-            return "It depends on the service and provider availability. I can help you find providers and book appointments. What service do you need, and when would you like it?"
-        
-        # Greeting variations
-        if any(phrase in user_message_lower for phrase in ['hello', 'hi', 'hey', 'morning', 'afternoon', 'evening', 'good day']):
-            return f"Hey {user_name}! Great to hear from you. What service can I help you find today?"
-        
-        # Small talk
-        if any(phrase in user_message_lower for phrase in ['how are you', 'how are you doing', 'how you been', 'whats up']):
-            return f"Doing great, thanks for asking! By the way, do you need any service help? I can find you plumbers, electricians, carpenters, and more."
-        
-        # Thanks / Appreciation
-        if any(phrase in user_message_lower for phrase in ['thank', 'thanks', 'appreciate', 'thanks for']):
-            return "You're welcome! Happy to help. Is there any service I can find for you?"
-
-        # Negative / no-interest replies
-        if user_message_lower in [
-            'no', 'no thanks', 'no thank you', 'not now', "i'm good", 'im good', 'nothing', 'nah', 'nope'
-        ]:
-            return (
-                "No problem at all. If you ever need help finding a service provider, "
-                "just message me something like 'I need a plumber' or 'I need an electrician' and I'll help you out."
-            )
-        
-        # Default helpful response that steers to booking
-        return (
-            "I'm here to help you find local service providers. "
-            "If you tell me what you need (for example, 'I need a plumber' or 'I need an electrician'), "
-            "I can show you providers in your area."
-        )
