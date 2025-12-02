@@ -34,7 +34,7 @@ class GeminiService:
         context = user_context or {}
         return await run_in_threadpool(self._invoke_sync, user_message, context)
 
-    def _invoke_sync(self, user_message: str, user_context: Dict[str, Any]) -> str:
+    def _invoke_sync(self, user_message: str, user_context: Dict[str, Any], conversation_history: list) -> str:
         # Build a system prompt similar to the Claude Bedrock prompt
         system_prompt = (
             "You are Hustlr, a WhatsApp assistant that helps users find and book local service providers "
@@ -65,13 +65,30 @@ class GeminiService:
         else:
             user_text = f"User message: {user_message}"
 
-        model = genai.GenerativeModel(self.model_name)
-        response = model.generate_content(
-            [
-                {"role": "system", "parts": [system_prompt]},
-                {"role": "user", "parts": [user_text]},
-            ]
+        # Configure the model with a system instruction. The content we send
+        # is a single user message; Gemini roles must be either "user" or
+        # "model", so we do not send an explicit "system" role.
+        model = genai.GenerativeModel(
+            self.model_name,
+            system_instruction=system_prompt,
         )
+
+        # Build the message history for Gemini.
+        # If conversation_history is provided, convert it to Gemini format and append current message.
+        messages = []
+        if conversation_history:
+            for msg in conversation_history:
+                role = msg.get("role", "user")
+                text = msg.get("text", "")
+                # Gemini expects "user" or "model" roles
+                gemini_role = "model" if role == "assistant" else "user"
+                messages.append({"role": gemini_role, "parts": [text]})
+        
+        # Append the current user message
+        messages.append({"role": "user", "parts": [user_text]})
+
+        # Send all messages to Gemini so it has full context
+        response = model.generate_content(messages)
 
         text: Optional[str] = getattr(response, "text", None)
 
@@ -91,6 +108,18 @@ class GeminiService:
                     text = "\n".join(fragments)
             except Exception:
                 # If we cannot parse structured content, fall back to string repr
+                text = str(response)
+
+        if not text:
+            raise RuntimeError("Gemini did not return any text content.")
+
+        logger.info(
+            "[GEMINI RESPONSE] Question: %s..., Answer: %s...",
+            user_message[:120],
+            text[:200],
+        )
+
+        return text
                 text = str(response)
 
         if not text:
