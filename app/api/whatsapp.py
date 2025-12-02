@@ -5,6 +5,7 @@ from app.models.message import WhatsAppMessage
 from app.utils.whatsapp_cloud_api import WhatsAppCloudAPI
 from app.utils.message_handler import MessageHandler
 from app.utils.aws_lambda import AWSLambdaService
+from app.utils.gemini_service import GeminiService
 from app.utils.mongo_service import MongoService
 from app.utils.baileys_client import BaileysClient
 from app.utils.location_service import get_location_service
@@ -18,12 +19,18 @@ router = APIRouter()
 # Initialize services
 whatsapp_api = WhatsAppCloudAPI()
 mongo_service = MongoService()
-lambda_service = AWSLambdaService()
-message_handler = MessageHandler(whatsapp_api, mongo_service, lambda_service)
+
+# Choose AI backend: Gemini for testing, otherwise Bedrock
+if settings.USE_GEMINI_INTENT:
+    ai_service = GeminiService()
+else:
+    ai_service = AWSLambdaService()
+
+message_handler = MessageHandler(whatsapp_api, mongo_service, ai_service)
 
 # Baileys-based transport (WhatsApp Web via Node service)
 baileys_client = BaileysClient()
-baileys_message_handler = MessageHandler(baileys_client, mongo_service, lambda_service)
+baileys_message_handler = MessageHandler(baileys_client, mongo_service, ai_service)
 
 @router.get("/webhook")
 async def verify_whatsapp_webhook(
