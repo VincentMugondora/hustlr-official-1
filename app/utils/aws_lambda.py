@@ -42,11 +42,24 @@ class AWSLambdaService:
         Returns:
             AI-generated response
         """
+        # Try Bedrock first if enabled
         if self.use_bedrock_intent and self.bedrock_client and self.bedrock_model_id:
-            return await self._invoke_bedrock(user_message, user_context or {})
+            try:
+                return await self._invoke_bedrock(user_message, user_context or {})
+            except Exception as e:
+                print(f"Bedrock failed, falling back to local handler: {e}")
+                return self._generate_local_response(user_message, user_context or {})
         
-        if not self.question_answerer_function:
-            return "AI service not configured. Please contact support."
+        # Try Lambda if configured
+        if self.question_answerer_function:
+            try:
+                return await self._invoke_lambda(user_message, user_context or {})
+            except Exception as e:
+                print(f"Lambda failed, falling back to local handler: {e}")
+                return self._generate_local_response(user_message, user_context or {})
+        
+        # Default to local response generation
+        return self._generate_local_response(user_message, user_context or {})
         
         try:
             payload = {
