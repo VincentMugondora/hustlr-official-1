@@ -167,7 +167,7 @@ class MessageHandler:
                 else:
                     await self._log_and_send_response(
                         user_number,
-                        "❌ Sorry, there was an issue setting up your account. Please try again later.",
+                        "Sorry, there was an issue setting up your account. Please try again later.",
                         "onboarding_error"
                     )
             else:
