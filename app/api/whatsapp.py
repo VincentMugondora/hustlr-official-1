@@ -87,8 +87,10 @@ async def receive_whatsapp_message(
                 if messages:
                     msg_data = messages[0]
                     msg_type = msg_data.get("type", "N/A")
-                    logger.info(f"Message ID: {msg_data.get('id', 'N/A')}")
-                    logger.info(f"Message timestamp: {msg_data.get('timestamp', 'N/A')}")
+                    message_id = msg_data.get("id")
+                    msg_timestamp = msg_data.get("timestamp")
+                    logger.info(f"Message ID: {message_id or 'N/A'}")
+                    logger.info(f"Message timestamp: {msg_timestamp or 'N/A'}")
                     logger.info(f"Message type: {msg_type}")
                     
                     # Log contact info if present
@@ -137,17 +139,42 @@ async def receive_whatsapp_message(
     except Exception as e:
         logger.error(f"Error parsing payload details: {e}")
     
+    incoming_doc_id = None
+    try:
+        created_at = None
+        if msg_timestamp and str(msg_timestamp).isdigit():
+            try:
+                created_at = datetime.utcfromtimestamp(int(msg_timestamp))
+            except Exception:
+                created_at = None
+        if created_at is None:
+            created_at = datetime.utcnow()
+        incoming_doc_id = await mongo_service.store_incoming_message({
+            "from_number": message.from_number,
+            "text": message.text,
+            "message_id": message_id,
+            "source": "cloud",
+            "created_at": created_at,
+        })
+    except Exception as e:
+        logger.warning(f"Failed to store incoming message for {message.from_number}: {e}")
+    
     # Console output for immediate visibility
-    print(f"[{timestamp}] 📱 WhatsApp Message Received")
-    print(f"👤 From: {message.from_number}")
-    print(f"💬 Message: '{message.text}'")
-    print(f"📊 Full payload logged to application logs")
+    print(f"[{timestamp}] WhatsApp Message Received")
+    print(f"From: {message.from_number}")
+    print(f"Message: '{message.text}'")
+    print(f"Full payload logged to application logs")
 
     # Handle message with enhanced handler
     try:
         if message.text:  # Only process text messages for now
             await message_handler.handle_message(message)
             logger.info(f"Message processed successfully for {message.from_number}")
+            if incoming_doc_id is not None:
+                try:
+                    await mongo_service.mark_incoming_message_processed(incoming_doc_id)
+                except Exception as mark_error:
+                    logger.warning(f"Failed to mark incoming message as processed: {mark_error}")
         else:
             logger.info(f"Non-text message received from {message.from_number}, skipping")
     except Exception as e:
@@ -156,7 +183,7 @@ async def receive_whatsapp_message(
         try:
             await whatsapp_api.send_text_message(
                 message.from_number,
-                "❌ Sorry, I'm having trouble processing your message. Please try again later."
+                "Sorry, I'm having trouble processing your message. Please try again later."
             )
         except Exception as send_error:
             logger.error(f"Failed to send error message: {send_error}")
@@ -222,10 +249,25 @@ async def receive_baileys_message(
     logger.info(f"Baileys message from: {message.from_number}")
     logger.info(f"Baileys text: '{message.text}'")
 
+    incoming_doc_id = None
+    try:
+        incoming_doc_id = await mongo_service.store_incoming_message({
+            "from_number": message.from_number,
+            "text": message.text,
+            "source": "baileys",
+        })
+    except Exception as e:
+        logger.warning(f"Failed to store Baileys incoming message for {message.from_number}: {e}")
+
     try:
         if message.text:
             await baileys_message_handler.handle_message(message)
             logger.info(f"Baileys message processed successfully for {message.from_number}")
+            if incoming_doc_id is not None:
+                try:
+                    await mongo_service.mark_incoming_message_processed(incoming_doc_id)
+                except Exception as mark_error:
+                    logger.warning(f"Failed to mark Baileys incoming message as processed: {mark_error}")
         else:
             logger.info(f"Baileys webhook received non-text/empty message from {message.from_number}, skipping")
     except Exception as e:
@@ -234,9 +276,48 @@ async def receive_baileys_message(
         try:
             await baileys_client.send_text_message(
                 message.from_number,
-                "❌ Sorry, I'm having trouble processing your message. Please try again later.",
+                "Sorry, I'm having trouble processing your message. Please try again later.",
             )
         except Exception as send_error:
             logger.error(f"Failed to send Baileys error message: {send_error}")
 
     return {"status": "success"}
+
+@router.post("/process-pending")
+async def process_pending_messages(limit: int = 100):
+    logger = logging.getLogger(__name__)
+    timestamp = datetime.utcnow().isoformat()
+    logger.info(f"[{timestamp}] Processing up to {limit} unprocessed incoming messages")
+    docs = await mongo_service.get_unprocessed_incoming_messages(limit=limit)
+    processed = 0
+    errors = 0
+
+    for doc in docs:
+        try:
+            from_number = (doc.get("from_number") or "").strip()
+            text = (doc.get("text") or "").strip()
+            if not from_number or not text:
+                await mongo_service.mark_incoming_message_processed(doc["_id"])
+                continue
+
+            pending_message = WhatsAppMessage(from_number, text)
+            source = (doc.get("source") or "cloud").lower()
+            if source == "baileys":
+                await baileys_message_handler.handle_message(pending_message)
+            else:
+                await message_handler.handle_message(pending_message)
+
+            await mongo_service.mark_incoming_message_processed(doc["_id"])
+            processed += 1
+        except Exception as e:
+            errors += 1
+            logger.error(f"Error processing pending message {doc.get('_id')}: {e}")
+
+    remaining_docs = await mongo_service.get_unprocessed_incoming_messages(limit=1)
+    remaining = len(remaining_docs)
+    return {
+        "status": "success",
+        "processed": processed,
+        "errors": errors,
+        "remaining_unprocessed": remaining,
+    }

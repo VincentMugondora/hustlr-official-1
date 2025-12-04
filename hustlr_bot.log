@@ -9900,3 +9900,37 @@ How can I help you today with finding a local service prov...
 2025-12-04 15:19:26,545 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263789109882, Type: invalid_provider_selection, Message: Please pick a provider from the list above....
 2025-12-04 15:19:27,295 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2025-12-04 15:19:27,469 - app.api.whatsapp - INFO - Baileys message processed successfully for 263789109882
+2025-12-04 15:20:30,027 - app.api.whatsapp - INFO - [2025-12-04T13:20:30.027608] Baileys webhook received
+2025-12-04 15:20:30,027 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263789109882",
+  "text": "Jonh Hook and Son Pvt LTD -26 George Avenue, Harare",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "263789109882@s.whatsapp.net",
+      "fromMe": false,
+      "id": "ACED61AE8198CD07977C05C4E4174A5F",
+      "senderLid": "243615091675308@lid"
+    },
+    "messageTimestamp": 1764854428,
+    "pushName": "Tynoe\ud83d\ude08",
+    "broadcast": false,
+    "message": {
+      "conversation": "Jonh Hook and Son Pvt LTD -26 George Avenue, Harare",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "vC46xRRvzLtfPA==",
+          "senderTimestamp": "1763905376",
+          "recipientKeyHash": "sKUZHCMQA4zS9g==",
+          "recipientTimestamp": "1764849621"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "sC9vmzwJSlKfTDfDA4blauQYMBFg7cEG3AO372P3pU8="
+      }
+    }
+  }
+}
+2025-12-04 15:20:30,029 - app.api.whatsapp - INFO - Baileys message from: 263789109882
+2025-12-04 15:20:30,030 - app.api.whatsapp - INFO - Baileys text: 'Jonh Hook and Son Pvt LTD -26 George Avenue, Harare'
+2025-12-04 15:20:30,219 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263789109882, Type: invalid_provider_selection, Message: Please pick a provider from the list above....
+2025-12-04 15:20:31,327 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-04 15:20:31,476 - app.api.whatsapp - INFO - Baileys message processed successfully for 263789109882

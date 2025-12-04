@@ -136,3 +136,27 @@ class MongoService:
         
         # Return in the format expected by GeminiService
         return [{"role": msg["role"], "text": msg["text"]} for msg in messages]
+
+    async def store_incoming_message(self, message_data: Dict[str, Any]) -> Any:
+        db = get_database()
+        data = dict(message_data)
+        now = datetime.utcnow()
+        data.setdefault("created_at", now)
+        data.setdefault("timestamp", now)
+        if "processed" not in data:
+            data["processed"] = False
+        result = await db.incoming_messages.insert_one(data)
+        return result.inserted_id
+
+    async def mark_incoming_message_processed(self, document_id: Any) -> bool:
+        db = get_database()
+        result = await db.incoming_messages.update_one(
+            {"_id": document_id},
+            {"$set": {"processed": True, "processed_at": datetime.utcnow()}},
+        )
+        return result.matched_count > 0
+
+    async def get_unprocessed_incoming_messages(self, limit: int = 100) -> List[Dict[str, Any]]:
+        db = get_database()
+        cursor = db.incoming_messages.find({"processed": False}).sort("created_at", 1).limit(limit)
+        return [doc async for doc in cursor]
