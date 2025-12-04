@@ -88,9 +88,14 @@ class MessageHandler:
             logger.warning(f"Could not store user message in history for {user_number}: {e}")
         
         # Route based on conversation state
-        if not user or not user.get('onboarding_completed', False):
+        current_state = session['state']
+        if current_state == ConversationState.BOOKING_PENDING_PROVIDER:
+            # Allow providers to respond to booking requests even if they
+            # haven't gone through user onboarding
+            await self.handle_main_menu(user_number, message_text, session, user or {})
+        elif not user or not user.get('onboarding_completed', False):
             await self.handle_onboarding(user_number, message_text, session)
-        elif session['state'] == ConversationState.PROVIDER_REGISTER:
+        elif current_state == ConversationState.PROVIDER_REGISTER:
             await self.handle_provider_registration(user_number, message_text, session)
         else:
             await self.handle_main_menu(user_number, message_text, session, user)
