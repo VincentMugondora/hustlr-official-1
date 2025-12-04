@@ -9296,3 +9296,346 @@ Great to hear from you. How can I help you find or book a service provider ...
 2025-12-04 15:05:41,658 - app.api.whatsapp - INFO - Baileys message from: 263718275163
 2025-12-04 15:05:41,658 - app.api.whatsapp - INFO - Baileys text: 'What do you want us to do'
 2025-12-04 15:05:41,986 - app.api.whatsapp - INFO - Baileys message processed successfully for 263718275163
+2025-12-04 15:10:36,444 - app.api.whatsapp - INFO - [2025-12-04T13:10:36.444311] Baileys webhook received
+2025-12-04 15:10:36,445 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263789109882",
+  "text": "Hie",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "263789109882@s.whatsapp.net",
+      "fromMe": false,
+      "id": "ACDE59C788D96221CDC0F84748F72EF7",
+      "senderLid": "243615091675308@lid"
+    },
+    "messageTimestamp": 1764853834,
+    "pushName": "Tynoe\ud83d\ude08",
+    "broadcast": false,
+    "message": {
+      "conversation": "Hie",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "vC46xRRvzLtfPA==",
+          "senderTimestamp": "1763905376",
+          "recipientKeyHash": "sKUZHCMQA4zS9g==",
+          "recipientTimestamp": "1764849621"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "mQC6eq0BXQXIYr/MIWKPJ/VFJRdWz9mTwu0PG10jZsM="
+      }
+    }
+  }
+}
+2025-12-04 15:10:36,447 - app.api.whatsapp - INFO - Baileys message from: 263789109882
+2025-12-04 15:10:36,448 - app.api.whatsapp - INFO - Baileys text: 'Hie'
+2025-12-04 15:10:39,058 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263789109882, Type: onboarding_welcome, Message: Welcome to Hustlr! I'll help you find local service providers.
+
+To get started, send your name and a...
+2025-12-04 15:10:41,197 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-04 15:10:41,349 - app.api.whatsapp - INFO - Baileys message processed successfully for 263789109882
+2025-12-04 15:11:29,552 - app.api.whatsapp - INFO - [2025-12-04T13:11:29.552922] Baileys webhook received
+2025-12-04 15:11:29,554 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263789109882",
+  "text": "Shantel , Aspindale",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "263789109882@s.whatsapp.net",
+      "fromMe": false,
+      "id": "AC9201CB33F6A5875070BE2974DEF381",
+      "senderLid": "243615091675308@lid"
+    },
+    "messageTimestamp": 1764853888,
+    "pushName": "Tynoe\ud83d\ude08",
+    "broadcast": false,
+    "message": {
+      "conversation": "Shantel , Aspindale",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "vC46xRRvzLtfPA==",
+          "senderTimestamp": "1763905376",
+          "recipientKeyHash": "sKUZHCMQA4zS9g==",
+          "recipientTimestamp": "1764849621"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "69M4gTOBE+vAJG9Kd3s5HWEff2hWdiCRyLEpNvHJ1Bs="
+      }
+    }
+  }
+}
+2025-12-04 15:11:29,554 - app.api.whatsapp - INFO - Baileys message from: 263789109882
+2025-12-04 15:11:29,554 - app.api.whatsapp - INFO - Baileys text: 'Shantel , Aspindale'
+2025-12-04 15:11:29,786 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263789109882, Type: privacy_policy, Message: Privacy Policy:
+
+- We store your name, location, and booking history
+- We share your info with servi...
+2025-12-04 15:11:30,694 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-04 15:11:30,829 - app.api.whatsapp - INFO - Baileys message processed successfully for 263789109882
+2025-12-04 15:11:58,737 - app.api.whatsapp - INFO - [2025-12-04T13:11:58.737891] Baileys webhook received
+2025-12-04 15:11:58,738 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263789109882",
+  "text": "No",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "263789109882@s.whatsapp.net",
+      "fromMe": false,
+      "id": "AC9AEF76B9F0D71E2E49A01DF5A6A0C6",
+      "senderLid": "243615091675308@lid"
+    },
+    "messageTimestamp": 1764853917,
+    "pushName": "Tynoe\ud83d\ude08",
+    "broadcast": false,
+    "message": {
+      "conversation": "No",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "vC46xRRvzLtfPA==",
+          "senderTimestamp": "1763905376",
+          "recipientKeyHash": "sKUZHCMQA4zS9g==",
+          "recipientTimestamp": "1764849621"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "/b4d1PPQj0Z5AuRqZ4WgyvfApZPN+WPiYpgMwpPe3Qo="
+      }
+    }
+  }
+}
+2025-12-04 15:11:58,738 - app.api.whatsapp - INFO - Baileys message from: 263789109882
+2025-12-04 15:11:58,739 - app.api.whatsapp - INFO - Baileys text: 'No'
+2025-12-04 15:11:58,949 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263789109882, Type: privacy_policy_decline, Message: You need to agree to the privacy policy to use Hustlr.
+
+Type 'yes' to agree, or 'no' to decline....
+2025-12-04 15:11:59,788 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-04 15:11:59,921 - app.api.whatsapp - INFO - Baileys message processed successfully for 263789109882
+2025-12-04 15:12:28,565 - app.api.whatsapp - INFO - [2025-12-04T13:12:28.565725] Baileys webhook received
+2025-12-04 15:12:28,565 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263789109882",
+  "text": "Agree",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "263789109882@s.whatsapp.net",
+      "fromMe": false,
+      "id": "AC07EA2072177B185B99AE88AE158918",
+      "senderLid": "243615091675308@lid"
+    },
+    "messageTimestamp": 1764853947,
+    "pushName": "Tynoe\ud83d\ude08",
+    "broadcast": false,
+    "message": {
+      "conversation": "Agree",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "vC46xRRvzLtfPA==",
+          "senderTimestamp": "1763905376",
+          "recipientKeyHash": "sKUZHCMQA4zS9g==",
+          "recipientTimestamp": "1764849621"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "RQ+c1HrDhhmvtnBC+ReZZ9kObyXzSk1AH8N8MYLTbCk="
+      }
+    }
+  }
+}
+2025-12-04 15:12:28,565 - app.api.whatsapp - INFO - Baileys message from: 263789109882
+2025-12-04 15:12:28,565 - app.api.whatsapp - INFO - Baileys text: 'Agree'
+2025-12-04 15:12:28,835 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263789109882, Type: onboarding_complete, Message: Great! You're all set, Shantel!
+
+You can now search for service providers and book appointments.
+
+Wh...
+2025-12-04 15:12:29,592 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-04 15:12:29,736 - app.api.whatsapp - INFO - Baileys message processed successfully for 263789109882
+2025-12-04 15:14:09,964 - app.api.whatsapp - INFO - [2025-12-04T13:14:09.964191] Baileys webhook received
+2025-12-04 15:14:09,966 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263789109882",
+  "text": "Doctors appointment",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "263789109882@s.whatsapp.net",
+      "fromMe": false,
+      "id": "AC9C0BF633630BDE88B61914ED54E344",
+      "senderLid": "243615091675308@lid"
+    },
+    "messageTimestamp": 1764854000,
+    "pushName": "Tynoe\ud83d\ude08",
+    "broadcast": false,
+    "message": {
+      "conversation": "Doctors appointment",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "vC46xRRvzLtfPA==",
+          "senderTimestamp": "1763905376",
+          "recipientKeyHash": "sKUZHCMQA4zS9g==",
+          "recipientTimestamp": "1764849621"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "/s32CZIM3MJ22yCUwjiPSdzu2iR6KKzjHLdamXUFW/w="
+      }
+    },
+    "status": 4
+  }
+}
+2025-12-04 15:14:09,968 - app.api.whatsapp - INFO - Baileys message from: 263789109882
+2025-12-04 15:14:09,969 - app.api.whatsapp - INFO - Baileys text: 'Doctors appointment'
+2025-12-04 15:14:16,898 - app.utils.gemini_service - INFO - [GEMINI RESPONSE] Question: doctors appointment..., Answer: Hi Shantel! Thanks for reaching out.
+
+While I mostly help with services like plumbers, electricians, cleaners, and carpenters, I'm here to help you find the right local service you need.
+
+Are you look...
+2025-12-04 15:14:16,899 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263789109882, Type: ai_response, Message: Hi Shantel! Thanks for reaching out.
+
+While I mostly help with services like plumbers, electricians,...
+2025-12-04 15:14:17,909 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-04 15:14:18,060 - app.api.whatsapp - INFO - Baileys message processed successfully for 263789109882
+2025-12-04 15:15:00,497 - app.api.whatsapp - INFO - [2025-12-04T13:15:00.497373] Baileys webhook received
+2025-12-04 15:15:00,497 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263789109882",
+  "text": "I want a plumber",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "263789109882@s.whatsapp.net",
+      "fromMe": false,
+      "id": "ACFB2A64121412A4A053A48A85E2D073",
+      "senderLid": "243615091675308@lid"
+    },
+    "messageTimestamp": 1764854099,
+    "pushName": "Tynoe\ud83d\ude08",
+    "broadcast": false,
+    "message": {
+      "conversation": "I want a plumber",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "vC46xRRvzLtfPA==",
+          "senderTimestamp": "1763905376",
+          "recipientKeyHash": "sKUZHCMQA4zS9g==",
+          "recipientTimestamp": "1764849621"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "kG4grzmK6OZMzQtGQn3IFauYnohHtGFHLzC14Y0wE9c="
+      }
+    }
+  }
+}
+2025-12-04 15:15:00,497 - app.api.whatsapp - INFO - Baileys message from: 263789109882
+2025-12-04 15:15:00,497 - app.api.whatsapp - INFO - Baileys text: 'I want a plumber'
+2025-12-04 15:15:00,813 - app.utils.location_extractor - INFO - Available cities/towns: ['Harare']
+2025-12-04 15:15:00,814 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263789109882, Type: interactive_buttons, Header: Select Your Area, Body: Where would you like the plumber? Choose from avai...
+2025-12-04 15:15:01,514 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-04 15:15:01,624 - app.api.whatsapp - INFO - Baileys message processed successfully for 263789109882
+2025-12-04 15:15:25,619 - app.api.whatsapp - INFO - [2025-12-04T13:15:25.619418] Baileys webhook received
+2025-12-04 15:15:25,620 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A5B62FD2355595536DD6BF3E11DD5E1C",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764854124,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No session record"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-04 15:15:25,620 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-04 15:15:25,620 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-04 15:15:25,620 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-04 15:15:31,295 - app.api.whatsapp - INFO - [2025-12-04T13:15:31.295739] Baileys webhook received
+2025-12-04 15:15:31,295 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A5B62FD2355595536DD6BF3E11DD5E1C",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764854129,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No session record"
+    ]
+  }
+}
+2025-12-04 15:15:31,295 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-04 15:15:31,297 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-04 15:15:31,297 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-04 15:15:31,804 - app.api.whatsapp - INFO - [2025-12-04T13:15:31.804539] Baileys webhook received
+2025-12-04 15:15:31,804 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "245943215608017",
+  "text": "I want to register as a service provider",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A5B62FD2355595536DD6BF3E11DD5E1C"
+    },
+    "message": {
+      "conversation": "I want to register as a service provider",
+      "messageContextInfo": {
+        "messageSecret": "s2tb/nquGN7NnMr1CP4TfU+Ccqo9U6KH5MyCKIuRM/8="
+      }
+    },
+    "messageTimestamp": "1764854124",
+    "messageSecret": "s2tb/nquGN7NnMr1CP4TfU+Ccqo9U6KH5MyCKIuRM/8=",
+    "reportingTokenInfo": {
+      "reportingTag": "AQ0auyA1oFXWclSzYxCZrPLoqXA="
+    },
+    "isMentionedInStatus": false
+  }
+}
+2025-12-04 15:15:31,806 - app.api.whatsapp - INFO - Baileys message from: 245943215608017
+2025-12-04 15:15:31,806 - app.api.whatsapp - INFO - Baileys text: 'I want to register as a service provider'
+2025-12-04 15:15:32,001 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 245943215608017, Type: provider_registration_start, Message: Provider Registration
+
+Let's get you registered as a service provider.
+
+What's your full name?...
+2025-12-04 15:15:32,824 - app.api.whatsapp - INFO - [2025-12-04T13:15:32.824097] Baileys webhook received
+2025-12-04 15:15:32,835 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "I want to register as a service provider",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "A5B62FD2355595536DD6BF3E11DD5E1C",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764854130,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "conversation": "I want to register as a service provider",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "+9HjEBIos+s+WA==",
+          "senderTimestamp": "1764663951",
+          "recipientKeyHash": "sKUZHCMQA4zS9g==",
+          "recipientTimestamp": "1764849621"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "s2tb/nquGN7NnMr1CP4TfU+Ccqo9U6KH5MyCKIuRM/8="
+      }
+    }
+  }
+}
+2025-12-04 15:15:32,835 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-04 15:15:32,837 - app.api.whatsapp - INFO - Baileys text: 'I want to register as a service provider'
+2025-12-04 15:15:32,874 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-04 15:15:33,065 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: provider_registration_start, Message: Provider Registration
+
+Let's get you registered as a service provider.
+
+What's your full name?...
+2025-12-04 15:15:33,801 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-04 15:15:33,877 - app.api.whatsapp - INFO - Baileys message processed successfully for 245943215608017
+2025-12-04 15:15:33,947 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
