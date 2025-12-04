@@ -23,6 +23,7 @@ class ConversationState(Enum):
     PROVIDER_SELECTION = "provider_selection"
     BOOKING_CONFIRM = "booking_confirm"  # Final confirmation before booking
     BOOKING_PENDING_PROVIDER = "booking_pending_provider"  # Waiting for provider response
+    BOOKING_RESUME_DECISION = "booking_resume_decision"
     
     # Provider registration states
     PROVIDER_REGISTER = "provider_register"
@@ -193,6 +194,36 @@ class MessageHandler:
     async def handle_main_menu(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
         """Handle main menu and service search"""
         state = session['state']
+        
+        if state == ConversationState.BOOKING_RESUME_DECISION:
+            await self.handle_booking_resume_decision(user_number, message_text, session, user)
+            return
+        
+        booking_progress_states = {
+            ConversationState.BOOKING_SERVICE_DETAILS,
+            ConversationState.BOOKING_LOCATION,
+            ConversationState.PROVIDER_SELECTION,
+            ConversationState.BOOKING_TIME,
+            ConversationState.BOOKING_CONFIRM,
+        }
+        
+        if state in booking_progress_states:
+            last_activity_str = session.get('last_activity')
+            if last_activity_str:
+                try:
+                    last_activity = datetime.fromisoformat(last_activity_str)
+                    if (datetime.utcnow() - last_activity).total_seconds() > 600:
+                        session.setdefault('data', {})
+                        session['data']['previous_state'] = state.value if isinstance(state, ConversationState) else state
+                        session['state'] = ConversationState.BOOKING_RESUME_DECISION
+                        await self._log_and_send_response(
+                            user_number,
+                            "You still have a booking in progress. Do you want to continue it? Reply 'yes' to continue or 'no' to start a new booking.",
+                            "booking_resume_prompt"
+                        )
+                        return
+                except Exception:
+                    pass
         
         # Check for register command
         if message_text in ['register', 'become provider', 'join', 'provider']:
@@ -505,6 +536,42 @@ class MessageHandler:
         )
         
         session['state'] = ConversationState.BOOKING_CONFIRM
+    
+    async def handle_booking_resume_decision(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
+        text = message_text.strip().lower()
+        if text in ['yes', 'y', 'continue', 'resume', 'ok', 'sure']:
+            previous_state_str = None
+            data = session.get('data') or {}
+            if 'previous_state' in data:
+                previous_state_str = data.pop('previous_state')
+            if previous_state_str:
+                try:
+                    previous_state = ConversationState(previous_state_str)
+                except ValueError:
+                    previous_state = ConversationState.SERVICE_SEARCH
+            else:
+                previous_state = ConversationState.SERVICE_SEARCH
+            session['state'] = previous_state
+            await self._log_and_send_response(
+                user_number,
+                "Okay, let's continue your last booking. You can answer my last question to carry on.",
+                "booking_resume_continue"
+            )
+            return
+        if text in ['no', 'n', 'cancel', 'start over', 'restart', 'new']:
+            session['state'] = ConversationState.SERVICE_SEARCH
+            session['data'] = {}
+            await self._log_and_send_response(
+                user_number,
+                "No problem. Let's start a new booking. What service do you need?",
+                "booking_resume_start_over"
+            )
+            return
+        await self._log_and_send_response(
+            user_number,
+            "Please reply with 'yes' to continue your last booking or 'no' to start a new one.",
+            "booking_resume_invalid"
+        )
     
     async def handle_booking_confirmation(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
         """Handle final booking confirmation"""
