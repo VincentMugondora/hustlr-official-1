@@ -9866,3 +9866,37 @@ How can I help you today with finding a local service prov...
 2025-12-04 15:18:49,529 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263789109882, Type: invalid_provider_selection, Message: Please pick a provider from the list above....
 2025-12-04 15:18:50,399 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2025-12-04 15:18:50,579 - app.api.whatsapp - INFO - Baileys message processed successfully for 263789109882
+2025-12-04 15:19:26,362 - app.api.whatsapp - INFO - [2025-12-04T13:19:26.362956] Baileys webhook received
+2025-12-04 15:19:26,364 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263789109882",
+  "text": "Jonh Hook and Son Pvt",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "263789109882@s.whatsapp.net",
+      "fromMe": false,
+      "id": "ACEA4A31FE86F2B09E45FCEB4411F23F",
+      "senderLid": "243615091675308@lid"
+    },
+    "messageTimestamp": 1764854365,
+    "pushName": "Tynoe\ud83d\ude08",
+    "broadcast": false,
+    "message": {
+      "conversation": "Jonh Hook and Son Pvt",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "vC46xRRvzLtfPA==",
+          "senderTimestamp": "1763905376",
+          "recipientKeyHash": "sKUZHCMQA4zS9g==",
+          "recipientTimestamp": "1764849621"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "y3x1prTHzDZUikZhfyZ42BLfUQdS/R2NXJrQn5blWmw="
+      }
+    }
+  }
+}
+2025-12-04 15:19:26,364 - app.api.whatsapp - INFO - Baileys message from: 263789109882
+2025-12-04 15:19:26,364 - app.api.whatsapp - INFO - Baileys text: 'Jonh Hook and Son Pvt'
+2025-12-04 15:19:26,545 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263789109882, Type: invalid_provider_selection, Message: Please pick a provider from the list above....
+2025-12-04 15:19:27,295 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-04 15:19:27,469 - app.api.whatsapp - INFO - Baileys message processed successfully for 263789109882
