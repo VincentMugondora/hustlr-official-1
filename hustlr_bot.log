@@ -9762,3 +9762,38 @@ How can I help you today with finding a local service provider? Are you looking 
 How can I help you today with finding a local service prov...
 2025-12-04 15:16:02,092 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2025-12-04 15:16:02,247 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-04 15:17:27,088 - app.api.whatsapp - INFO - [2025-12-04T13:17:27.088879] Baileys webhook received
+2025-12-04 15:17:27,091 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263789109882",
+  "text": "Aspindale",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "263789109882@s.whatsapp.net",
+      "fromMe": false,
+      "id": "AC8B0F805405A44D05CA44D1F3369CED",
+      "senderLid": "243615091675308@lid"
+    },
+    "messageTimestamp": 1764854245,
+    "pushName": "Tynoe\ud83d\ude08",
+    "broadcast": false,
+    "message": {
+      "conversation": "Aspindale",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "vC46xRRvzLtfPA==",
+          "senderTimestamp": "1763905376",
+          "recipientKeyHash": "sKUZHCMQA4zS9g==",
+          "recipientTimestamp": "1764849621"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "e0hRe9ayOGSAzN1bgxoiBaKawJFEwV8jXOm9mWUU09g="
+      }
+    }
+  }
+}
+2025-12-04 15:17:27,092 - app.api.whatsapp - INFO - Baileys message from: 263789109882
+2025-12-04 15:17:27,092 - app.api.whatsapp - INFO - Baileys text: 'Aspindale'
+2025-12-04 15:17:27,304 - app.utils.location_extractor - INFO - Available cities/towns: ['Harare']
+2025-12-04 15:17:27,305 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263789109882, Type: location_not_recognized, Message: I didn't recognize 'aspindale'. Available areas are: Harare...
+2025-12-04 15:17:28,611 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-04 15:17:28,739 - app.api.whatsapp - INFO - Baileys message processed successfully for 263789109882
