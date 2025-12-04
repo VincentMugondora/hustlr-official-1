@@ -198,12 +198,23 @@ async def receive_baileys_message(
             name = loc.get("name") or ""
             address = loc.get("address") or ""
             parts = []
-            if name:
+            location_name = None
+            if lat is not None and lng is not None:
+                location_service = get_location_service()
+                location_name = await location_service.reverse_geocode(lat, lng)
+                logger.info(f"Reverse geocoded coordinates ({lat}, {lng}) to: {location_name}")
+
+            # Priority: reverse geocoded name > provided name > address > coordinates
+            if location_name:
+                parts.append(location_name)
+            elif name:
                 parts.append(name)
-            if address:
+            elif address:
                 parts.append(address)
+
             if lat is not None and lng is not None:
                 parts.append(f"({lat},{lng})")
+
             text = " ".join(parts) or "[location shared]"
 
     message = WhatsAppMessage(from_number, text)

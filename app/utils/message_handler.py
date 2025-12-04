@@ -966,16 +966,30 @@ class MessageHandler:
         
         message_lower = message_text.lower()
         
-        # Handle simple cases
+        # Handle simple cases and common combinations
+        if 'tomorrow' in message_lower and 'morning' in message_lower:
+            return "Tomorrow morning"
+        if 'tomorrow' in message_lower and 'afternoon' in message_lower:
+            return "Tomorrow afternoon"
+        if 'tomorrow' in message_lower and 'evening' in message_lower:
+            return "Tomorrow evening"
+        
+        if 'today' in message_lower and 'morning' in message_lower:
+            return "Today morning"
+        if 'today' in message_lower and 'afternoon' in message_lower:
+            return "Today afternoon"
+        if 'today' in message_lower and 'evening' in message_lower:
+            return "Today evening"
+        
         if 'tomorrow' in message_lower:
             return "Tomorrow"
-        elif 'today' in message_lower:
+        if 'today' in message_lower:
             return "Today"
-        elif 'morning' in message_lower:
+        if 'morning' in message_lower:
             return "Morning"
-        elif 'afternoon' in message_lower:
+        if 'afternoon' in message_lower:
             return "Afternoon"
-        elif 'evening' in message_lower:
+        if 'evening' in message_lower:
             return "Evening"
         
         # Return the original text if we can't parse it

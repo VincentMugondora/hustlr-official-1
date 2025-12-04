@@ -9182,3 +9182,117 @@ C...
 Thanks for reaching out! While our primary focus right now is helping you find and book...
 2025-12-04 14:58:20,419 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2025-12-04 14:58:20,570 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-04 15:02:56,787 - app.api.whatsapp - INFO - [2025-12-04T13:02:56.787583] Baileys webhook received
+2025-12-04 15:02:56,787 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263718275163",
+  "text": "Good afternoon",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "263718275163@s.whatsapp.net",
+      "fromMe": false,
+      "id": "2A0447FFF1222290E113",
+      "senderLid": "245496505458780@lid"
+    },
+    "messageTimestamp": 1764853375,
+    "pushName": "SeaGate Plumbers",
+    "broadcast": false,
+    "message": {
+      "conversation": "Good afternoon",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "lGPI71xjS3DiGw==",
+          "senderTimestamp": "1764662693",
+          "recipientKeyHash": "sKUZHCMQA4zS9g==",
+          "recipientTimestamp": "1764849621"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "PLo/Y6BPiJEE+4o1L4j0yRcq35K1HOj0YC6HnSdTdTQ="
+      }
+    },
+    "verifiedBizName": "SeaGate Plumbers"
+  }
+}
+2025-12-04 15:02:56,787 - app.api.whatsapp - INFO - Baileys message from: 263718275163
+2025-12-04 15:02:56,787 - app.api.whatsapp - INFO - Baileys text: 'Good afternoon'
+2025-12-04 15:02:59,118 - app.api.whatsapp - INFO - Baileys message processed successfully for 263718275163
+2025-12-04 15:04:33,727 - app.api.whatsapp - INFO - [2025-12-04T13:04:33.727475] Baileys webhook received
+2025-12-04 15:04:33,728 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "good afternoon",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F69CC954C5818D1FF8D",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764853471,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "good afternoon",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "+9HjEBIos+s+WA==",
+          "senderTimestamp": "1764663951",
+          "recipientKeyHash": "sKUZHCMQA4zS9g==",
+          "recipientTimestamp": "1764849621"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-04 15:04:33,729 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-04 15:04:33,729 - app.api.whatsapp - INFO - Baileys text: 'good afternoon'
+2025-12-04 15:04:35,869 - app.utils.gemini_service - INFO - [GEMINI RESPONSE] Question: good afternoon..., Answer: Good afternoon Vincent!
+
+Great to hear from you. How can I help you find or book a service provider this afternoon? Are you looking for a plumber, an electrician, a cleaner, or something else? Just le...
+2025-12-04 15:04:35,870 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_response, Message: Good afternoon Vincent!
+
+Great to hear from you. How can I help you find or book a service provider ...
+2025-12-04 15:04:37,006 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-04 15:04:37,159 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-04 15:05:41,656 - app.api.whatsapp - INFO - [2025-12-04T13:05:41.656817] Baileys webhook received
+2025-12-04 15:05:41,658 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263718275163",
+  "text": "What do you want us to do",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "263718275163@s.whatsapp.net",
+      "fromMe": false,
+      "id": "2A4F308A567858FF71D4",
+      "senderLid": "245496505458780@lid"
+    },
+    "messageTimestamp": 1764853540,
+    "pushName": "SeaGate Plumbers",
+    "broadcast": false,
+    "message": {
+      "conversation": "What do you want us to do",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "lGPI71xjS3DiGw==",
+          "senderTimestamp": "1764662693",
+          "recipientKeyHash": "sKUZHCMQA4zS9g==",
+          "recipientTimestamp": "1764849621"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "uALq09zggOQhorDCkfmzuhAclqEg37W+1UDyvM9Wk6w="
+      }
+    },
+    "verifiedBizName": "SeaGate Plumbers"
+  }
+}
+2025-12-04 15:05:41,658 - app.api.whatsapp - INFO - Baileys message from: 263718275163
+2025-12-04 15:05:41,658 - app.api.whatsapp - INFO - Baileys text: 'What do you want us to do'
+2025-12-04 15:05:41,986 - app.api.whatsapp - INFO - Baileys message processed successfully for 263718275163
