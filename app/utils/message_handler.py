@@ -801,12 +801,44 @@ class MessageHandler:
             session['state'] = ConversationState.PROVIDER_REGISTER_LOCATION
         
         elif state == ConversationState.PROVIDER_REGISTER_LOCATION:
-            # Complete registration
+            # Store location and ask for optional business name
+            session['data']['location'] = message_text.title()
+            await self._log_and_send_response(
+                user_number,
+                "Nice! If you have a business name, send it now.\n\nIf not, reply with 'skip'.",
+                "provider_registration_business_prompt"
+            )
+            session['state'] = ConversationState.PROVIDER_REGISTER_BUSINESS
+        
+        elif state == ConversationState.PROVIDER_REGISTER_BUSINESS:
+            text = message_text.strip()
+            if text.lower() not in ['skip', 'none', '-'] and text:
+                session['data']['business_name'] = text.title()
+            else:
+                session['data']['business_name'] = None
+            await self._log_and_send_response(
+                user_number,
+                "Great! Finally, what contact details should customers use? (e.g., phone number or email).\n\nReply with 'skip' to use this WhatsApp number only.",
+                "provider_registration_contact_prompt"
+            )
+            session['state'] = ConversationState.PROVIDER_REGISTER_CONTACT
+        
+        elif state == ConversationState.PROVIDER_REGISTER_CONTACT:
+            text = message_text.strip()
+            if text.lower() not in ['skip', 'none', '-'] and text:
+                contact_value = text
+            else:
+                contact_value = user_number
+            session['data']['contact'] = contact_value
+            
+            # Complete registration with all collected fields
             provider_data = {
                 'whatsapp_number': user_number,
                 'name': session['data']['name'],
                 'service_type': session['data']['service_type'],
-                'location': message_text.title(),
+                'location': session['data']['location'],
+                'business_name': session['data'].get('business_name'),
+                'contact': session['data'].get('contact'),
                 'status': 'pending',  # Requires approval
                 'registered_at': datetime.utcnow().isoformat()
             }
@@ -819,7 +851,9 @@ class MessageHandler:
                     f"Registration Submitted!\n\n"
                     f"Name: {session['data']['name']}\n"
                     f"Service: {session['data']['service_type']}\n"
-                    f"Area: {message_text.title()}\n\n"
+                    f"Area: {session['data']['location']}\n"
+                    f"Business: {session['data'].get('business_name') or 'N/A'}\n"
+                    f"Contact: {session['data'].get('contact')}\n\n"
                     f"Your registration is pending review. We'll notify you once approved!\n\n"
                     f"You can start receiving bookings once approved.",
                     "provider_registration_complete"
