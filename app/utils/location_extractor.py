@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 class LocationExtractor:
     """Extract and manage available cities/towns from provider locations"""
     
-    # Zimbabwe major cities and towns
+    # Zimbabwe major cities and towns (canonical display names)
     ZIMBABWE_CITIES = {
         'harare': 'Harare',
         'bulawayo': 'Bulawayo',
@@ -22,24 +22,55 @@ class LocationExtractor:
         'masvingo': 'Masvingo',
         'chinhoyi': 'Chinhoyi',
         'kariba': 'Kariba',
+        # Additional common towns / growth points
+        'ruwa': 'Ruwa',
+        'epworth': 'Epworth',
+        'bindura': 'Bindura',
+        'marondera': 'Marondera',
+        'kadoma': 'Kadoma',
+        'chegutu': 'Chegutu',
+        'zvishavane': 'Zvishavane',
+        'redcliff': 'Redcliff',
+        'victoria falls': 'Victoria Falls',
+        'hwange': 'Hwange',
+        'gokwe': 'Gokwe',
+        'chipinge': 'Chipinge',
+        'rusape': 'Rusape',
+        'beitbridge': 'Beitbridge',
     }
     
-    # Harare suburbs/areas
+    # Harare suburbs/areas.
+    # We normalize these to the Harare city location so that
+    # user inputs like "Aspindale" or "Mufakose" are treated as
+    # Harare for provider filtering, while the full provider
+    # address (which usually includes the suburb) is still shown
+    # back to the user.
     HARARE_SUBURBS = {
-        'avondale': 'Avondale',
-        'borrowdale': 'Borrowdale',
-        'belvedere': 'Belvedere',
-        'greendale': 'Greendale',
-        'graniteside': 'Graniteside',
-        'msasa': 'Msasa',
-        'strathaven': 'Strathaven',
-        'vainona': 'Vainona',
-        'milton park': 'Milton Park',
-        'mufakose': 'Mufakose',
-        'emerald hill': 'Emerald Hill',
-        'highlands': 'Highlands',
-        'downtown': 'Downtown',
-        'city centre': 'City Centre',
+        'avondale': 'Harare',
+        'borrowdale': 'Harare',
+        'belvedere': 'Harare',
+        'greendale': 'Harare',
+        'graniteside': 'Harare',
+        'msasa': 'Harare',
+        'strathaven': 'Harare',
+        'vainona': 'Harare',
+        'milton park': 'Harare',
+        'mufakose': 'Harare',
+        'emerald hill': 'Harare',
+        'highlands': 'Harare',
+        'downtown': 'Harare',
+        'city centre': 'Harare',
+        'warren park': 'Harare',
+        'glen view': 'Harare',
+        'glen norah': 'Harare',
+        'waterfalls': 'Harare',
+        'mabvuku': 'Harare',
+        'tafara': 'Harare',
+        'dzivarasekwa': 'Harare',
+        'aspindale': 'Harare',
+        'marimba park': 'Harare',
+        'arcadia': 'Harare',
+        'hatfield': 'Harare',
     }
     
     def __init__(self):

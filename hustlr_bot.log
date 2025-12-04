@@ -9958,3 +9958,220 @@ How can I help you today with finding a local service prov...
 2025-12-04 15:25:41,391 - app.api.whatsapp - INFO - Baileys message from: 263777530322
 2025-12-04 15:25:41,393 - app.api.whatsapp - INFO - Baileys text: ''
 2025-12-04 15:25:44,466 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-04 15:25:48,210 - app.api.whatsapp - INFO - [2025-12-04T13:25:48.209423] Baileys webhook received
+2025-12-04 15:25:48,211 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F7D848517165567AA63",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764854745,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-04 15:25:48,212 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-04 15:25:48,212 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-04 15:25:48,431 - app.api.whatsapp - INFO - [2025-12-04T13:25:48.431895] Baileys webhook received
+2025-12-04 15:25:48,431 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "so are there any service providers available in Gweru",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F7D848517165567AA63",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764854746,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "extendedTextMessage": {
+        "text": "so are there any service providers available in Gweru",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "+9HjEBIos+s+WA==",
+          "senderTimestamp": "1764663951",
+          "recipientKeyHash": "sKUZHCMQA4zS9g==",
+          "recipientTimestamp": "1764849621"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  }
+}
+2025-12-04 15:25:48,433 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-04 15:25:48,433 - app.api.whatsapp - INFO - Baileys text: 'so are there any service providers available in Gweru'
+2025-12-04 15:25:50,189 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-04 15:25:50,417 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: provider_registration_start, Message: Provider Registration
+
+Let's get you registered as a service provider.
+
+What's your full name?...
+2025-12-04 15:25:51,456 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-04 15:25:51,610 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-04 15:26:06,538 - app.api.whatsapp - INFO - [2025-12-04T13:26:06.538139] Baileys webhook received
+2025-12-04 15:26:06,538 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "Vincent Mugondora",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F00F634D226E84BEBB9",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764854764,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "Vincent Mugondora",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "+9HjEBIos+s+WA==",
+          "senderTimestamp": "1764663951",
+          "recipientKeyHash": "sKUZHCMQA4zS9g==",
+          "recipientTimestamp": "1764849621"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-04 15:26:06,538 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-04 15:26:06,538 - app.api.whatsapp - INFO - Baileys text: 'Vincent Mugondora'
+2025-12-04 15:26:09,015 - app.utils.gemini_service - INFO - [GEMINI RESPONSE] Question: vincent mugondora..., Answer: Hi Vincent, great to hear from you!
+
+I hope your plumbing issue was sorted out well last time. What can Hustlr help you with today? Are you looking for another service like an electrician, cleaner, or...
+2025-12-04 15:26:09,015 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_response, Message: Hi Vincent, great to hear from you!
+
+I hope your plumbing issue was sorted out well last time. What ...
+2025-12-04 15:26:10,016 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-04 15:26:10,165 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-04 15:26:51,001 - app.api.whatsapp - INFO - [2025-12-04T13:26:51.001030] Baileys webhook received
+2025-12-04 15:26:51,001 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F5463596EDA8AC5B5A7",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764854809,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-04 15:26:51,001 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-04 15:26:51,001 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-04 15:26:51,152 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-04 15:26:56,774 - app.api.whatsapp - INFO - [2025-12-04T13:26:56.774044] Baileys webhook received
+2025-12-04 15:26:56,775 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F5463596EDA8AC5B5A7",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764854815,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-04 15:26:56,777 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-04 15:26:56,777 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-04 15:26:56,902 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-04 15:26:58,318 - app.api.whatsapp - INFO - [2025-12-04T13:26:58.318215] Baileys webhook received
+2025-12-04 15:26:58,318 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "yes they are sorted just wanted to hear from you",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F5463596EDA8AC5B5A7",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764854816,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "extendedTextMessage": {
+        "text": "yes they are sorted just wanted to hear from you",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "+9HjEBIos+s+WA==",
+          "senderTimestamp": "1764663951",
+          "recipientKeyHash": "sKUZHCMQA4zS9g==",
+          "recipientTimestamp": "1764849621"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  }
+}
+2025-12-04 15:26:58,319 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-04 15:26:58,319 - app.api.whatsapp - INFO - Baileys text: 'yes they are sorted just wanted to hear from you'
+2025-12-04 15:27:02,378 - app.utils.gemini_service - INFO - [GEMINI RESPONSE] Question: yes they are sorted just wanted to hear from you..., Answer: Hello Vincent, it's great to hear from you!
+
+I'm glad to know things are sorted on your end.
+
+If you ever need a hand with anything else, like finding a great electrician, a carpenter, or even a clean...
+2025-12-04 15:27:02,378 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_response, Message: Hello Vincent, it's great to hear from you!
+
+I'm glad to know things are sorted on your end.
+
+If you...
+2025-12-04 15:27:03,372 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-04 15:27:03,542 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322

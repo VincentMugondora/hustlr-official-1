@@ -134,7 +134,15 @@ class MessageHandler:
             
             if len(parts) >= 2:
                 name = parts[0].title()
-                location = parts[1].title()
+                location_raw = parts[1]
+                # Normalize user location so suburbs/towns map to the
+                # nearest known service area (e.g. Aspindale -> Harare).
+                location_extractor = get_location_extractor()
+                normalized_location = location_extractor.normalize_user_location(location_raw)
+                if normalized_location:
+                    location = normalized_location
+                else:
+                    location = location_raw.title()
                 session['data']['name'] = name
                 session['data']['location'] = location
             else:
