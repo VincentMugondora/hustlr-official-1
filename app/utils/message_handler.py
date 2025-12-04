@@ -238,7 +238,21 @@ class MessageHandler:
                     pass
         
         # Check for register command
-        if message_text in ['register', 'become provider', 'join', 'provider']:
+        provider_intent_phrases = [
+            'register as provider',
+            'register as a provider',
+            'register as a service provider',
+            'become provider',
+            'become a provider',
+            'become a service provider',
+            'service provider',
+            'join as provider',
+            'join as a provider',
+        ]
+        if (
+            message_text in ['register', 'become provider', 'join', 'provider']
+            or any(phrase in message_text for phrase in provider_intent_phrases)
+        ):
             session['state'] = ConversationState.PROVIDER_REGISTER
             await self.handle_provider_registration(user_number, message_text, session)
             return
