@@ -76,6 +76,8 @@ async def receive_whatsapp_message(
     logger.info(f"Message text: '{message.text}'")
     logger.info(f"Message length: {len(message.text)} characters")
     
+    message_id = None
+    msg_timestamp = None
     # Additional payload analysis
     try:
         entry = payload.get("entry", [])

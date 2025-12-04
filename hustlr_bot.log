@@ -9934,3 +9934,27 @@ How can I help you today with finding a local service prov...
 2025-12-04 15:20:30,219 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263789109882, Type: invalid_provider_selection, Message: Please pick a provider from the list above....
 2025-12-04 15:20:31,327 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2025-12-04 15:20:31,476 - app.api.whatsapp - INFO - Baileys message processed successfully for 263789109882
+2025-12-04 15:25:41,388 - app.api.whatsapp - INFO - [2025-12-04T13:25:41.388281] Baileys webhook received
+2025-12-04 15:25:41,390 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F7D848517165567AA63",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764854740,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-04 15:25:41,391 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-04 15:25:41,393 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-04 15:25:44,466 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
