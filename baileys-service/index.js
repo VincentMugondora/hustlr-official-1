@@ -14,7 +14,6 @@ async function startBaileys() {
   const sock = makeWASocket({
     version,
     auth: state,
-    printQRInTerminal: true,
     logger: pino({ level: "silent" }),
     browser: ["HustlrBot", "Chrome", "1.0.0"],
   });
@@ -36,6 +35,20 @@ async function startBaileys() {
 
     if (connection === "close") {
       const statusCode = lastDisconnect?.error?.output?.statusCode;
+      const payload = lastDisconnect?.error?.output?.payload;
+
+      console.log(
+        "connection.update close:",
+        JSON.stringify(
+          {
+            statusCode,
+            payload,
+          },
+          null,
+          2
+        )
+      );
+
       const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
       console.log("connection closed. reconnect:", shouldReconnect, "status:", statusCode);
       if (shouldReconnect) {
