@@ -9085,3 +9085,100 @@ My role here at Hustlr is primarily to help users like yourse...
 2025-12-04 14:56:33,535 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_response, Message: Hello Vincent, that's fantastic that you're interested in becoming a service provider! It's great to...
 2025-12-04 14:56:34,449 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2025-12-04 14:56:34,576 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-04 14:58:09,628 - app.api.whatsapp - INFO - [2025-12-04T12:58:09.628990] Baileys webhook received
+2025-12-04 14:58:09,631 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3FB5E9B80212B001A67C",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764853088,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-04 14:58:09,631 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-04 14:58:09,631 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-04 14:58:09,635 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-04 14:58:15,413 - app.api.whatsapp - INFO - [2025-12-04T12:58:15.413268] Baileys webhook received
+2025-12-04 14:58:15,414 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3FB5E9B80212B001A67C",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764853093,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-04 14:58:15,414 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-04 14:58:15,415 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-04 14:58:15,415 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-04 14:58:16,963 - app.api.whatsapp - INFO - [2025-12-04T12:58:16.963097] Baileys webhook received
+2025-12-04 14:58:16,963 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "can l track my bookings",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3FB5E9B80212B001A67C",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764853094,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "extendedTextMessage": {
+        "text": "can l track my bookings",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "+9HjEBIos+s+WA==",
+          "senderTimestamp": "1764663951",
+          "recipientKeyHash": "sKUZHCMQA4zS9g==",
+          "recipientTimestamp": "1764849621"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  }
+}
+2025-12-04 14:58:16,963 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-04 14:58:16,963 - app.api.whatsapp - INFO - Baileys text: 'can l track my bookings'
+2025-12-04 14:58:19,268 - app.utils.gemini_service - INFO - [GEMINI RESPONSE] Question: can l track my bookings..., Answer: Hi Vincent!
+
+Thanks for reaching out! While our primary focus right now is helping you find and book the best local service providers quickly, we're always working to improve the Hustlr experience.
+
+C...
+2025-12-04 14:58:19,268 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_response, Message: Hi Vincent!
+
+Thanks for reaching out! While our primary focus right now is helping you find and book...
+2025-12-04 14:58:20,419 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-04 14:58:20,570 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322

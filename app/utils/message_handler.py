@@ -30,6 +30,8 @@ class ConversationState(Enum):
     PROVIDER_REGISTER_NAME = "provider_register_name"
     PROVIDER_REGISTER_SERVICE = "provider_register_service"
     PROVIDER_REGISTER_LOCATION = "provider_register_location"
+    PROVIDER_REGISTER_BUSINESS = "provider_register_business"
+    PROVIDER_REGISTER_CONTACT = "provider_register_contact"
 
 class MessageHandler:
     """Advanced message handler for WhatsApp conversations"""
