@@ -9797,3 +9797,72 @@ How can I help you today with finding a local service prov...
 2025-12-04 15:17:27,305 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263789109882, Type: location_not_recognized, Message: I didn't recognize 'aspindale'. Available areas are: Harare...
 2025-12-04 15:17:28,611 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2025-12-04 15:17:28,739 - app.api.whatsapp - INFO - Baileys message processed successfully for 263789109882
+2025-12-04 15:17:57,578 - app.api.whatsapp - INFO - [2025-12-04T13:17:57.578745] Baileys webhook received
+2025-12-04 15:17:57,578 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263789109882",
+  "text": "Harare",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "263789109882@s.whatsapp.net",
+      "fromMe": false,
+      "id": "ACAB7353F3EAF734731369DC47AF08A7",
+      "senderLid": "243615091675308@lid"
+    },
+    "messageTimestamp": 1764854276,
+    "pushName": "Tynoe\ud83d\ude08",
+    "broadcast": false,
+    "message": {
+      "conversation": "Harare",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "vC46xRRvzLtfPA==",
+          "senderTimestamp": "1763905376",
+          "recipientKeyHash": "sKUZHCMQA4zS9g==",
+          "recipientTimestamp": "1764849621"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "G4om3RVyxGlXMJEguC3x9+0r0nOC4J1UADBMFVNOLe4="
+      }
+    }
+  }
+}
+2025-12-04 15:17:57,578 - app.api.whatsapp - INFO - Baileys message from: 263789109882
+2025-12-04 15:17:57,578 - app.api.whatsapp - INFO - Baileys text: 'Harare'
+2025-12-04 15:17:57,891 - app.utils.message_handler - INFO - Updated user location from Aspindale to Harare
+2025-12-04 15:17:57,891 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263789109882, Type: interactive_buttons, Header: Available plumbers in Harare, Body: Found 12 provider(s). Pick one:...
+2025-12-04 15:17:58,736 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-04 15:17:58,840 - app.api.whatsapp - INFO - Baileys message processed successfully for 263789109882
+2025-12-04 15:18:49,308 - app.api.whatsapp - INFO - [2025-12-04T13:18:49.308347] Baileys webhook received
+2025-12-04 15:18:49,309 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263789109882",
+  "text": "Number 3",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "263789109882@s.whatsapp.net",
+      "fromMe": false,
+      "id": "AC7892AC5F27FE66559535AAADA20FEC",
+      "senderLid": "243615091675308@lid"
+    },
+    "messageTimestamp": 1764854327,
+    "pushName": "Tynoe\ud83d\ude08",
+    "broadcast": false,
+    "message": {
+      "conversation": "Number 3",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "vC46xRRvzLtfPA==",
+          "senderTimestamp": "1763905376",
+          "recipientKeyHash": "sKUZHCMQA4zS9g==",
+          "recipientTimestamp": "1764849621"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "4vSLEeCshqm0WRATrWWQ/I7YM+aJVdRoKYSPsYJp7jY="
+      }
+    }
+  }
+}
+2025-12-04 15:18:49,309 - app.api.whatsapp - INFO - Baileys message from: 263789109882
+2025-12-04 15:18:49,309 - app.api.whatsapp - INFO - Baileys text: 'Number 3'
+2025-12-04 15:18:49,529 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263789109882, Type: invalid_provider_selection, Message: Please pick a provider from the list above....
+2025-12-04 15:18:50,399 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-04 15:18:50,579 - app.api.whatsapp - INFO - Baileys message processed successfully for 263789109882
