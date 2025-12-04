@@ -195,6 +195,11 @@ class MessageHandler:
         """Handle main menu and service search"""
         state = session['state']
         
+        # Default any legacy/"new" state for onboarded users into service search
+        if state == ConversationState.NEW:
+            session['state'] = ConversationState.SERVICE_SEARCH
+            state = session['state']
+        
         if state == ConversationState.BOOKING_RESUME_DECISION:
             await self.handle_booking_resume_decision(user_number, message_text, session, user)
             return
