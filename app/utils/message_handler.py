@@ -643,10 +643,28 @@ class MessageHandler:
                 "booking_request_to_provider"
             )
             
-            # Store booking data for provider response handling
-            session['data']['booking_id'] = booking_id
-            session['data']['customer_number'] = user_number
-            session['state'] = ConversationState.BOOKING_PENDING_PROVIDER
+            # Store booking data for provider response handling in provider session
+            provider_session = await self.db.get_session(provider_number) or {
+                'state': ConversationState.BOOKING_PENDING_PROVIDER,
+                'data': {},
+                'last_activity': datetime.utcnow().isoformat()
+            }
+            provider_session.setdefault('data', {})
+            provider_session['data']['booking_id'] = booking_id
+            provider_session['data']['customer_number'] = user_number
+            provider_session['data']['service_type'] = session['data']['service_type']
+            provider_session['data']['issue'] = session['data'].get('issue', 'Not specified')
+            provider_session['data']['booking_time'] = session['data']['booking_time']
+            provider_session['state'] = ConversationState.BOOKING_PENDING_PROVIDER
+
+            provider_session_to_save = provider_session.copy()
+            if isinstance(provider_session_to_save.get('state'), ConversationState):
+                provider_session_to_save['state'] = provider_session_to_save['state'].value
+            await self.db.save_session(provider_number, provider_session_to_save)
+            
+            # Reset customer session back to service search after sending booking request
+            session['state'] = ConversationState.SERVICE_SEARCH
+            session['data'] = {}
         else:
             await self._log_and_send_response(
                 user_number,
