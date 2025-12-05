@@ -295,6 +295,50 @@ class MessageHandler:
             # Use AI to understand the message
             await self.handle_ai_response(user_number, message_text, user)
     
+    def detect_problem_statement(self, message_text: str) -> Optional[str]:
+        """
+        Detect problem statements like 'I have a leaking pipe' and map to service type.
+        
+        Returns:
+            Service type (e.g., 'plumber') or None if no problem detected.
+        """
+        problem_keywords = {
+            'plumber': [
+                'leaking pipe', 'burst pipe', 'blocked drain', 'burst tap', 'leaking tap',
+                'water leak', 'burst water', 'clogged drain', 'blocked toilet', 'leaking toilet',
+                'plumbing issue', 'plumbing problem', 'water problem', 'drainage', 'sewage',
+            ],
+            'electrician': [
+                'electrical fault', 'power cut', 'no electricity', 'broken outlet', 'broken socket',
+                'electrical problem', 'electrical issue', 'power issue', 'light not working',
+                'switch not working', 'electrical wiring', 'electrical damage',
+            ],
+            'cleaner': [
+                'need cleaning', 'need a clean', 'house dirty', 'office dirty', 'place dirty',
+                'cleaning needed', 'need to clean', 'dirty house', 'dirty office',
+            ],
+            'carpenter': [
+                'broken door', 'broken window', 'broken furniture', 'furniture broken',
+                'door broken', 'window broken', 'wood damage', 'carpentry', 'woodwork',
+                'cabinet broken', 'shelf broken', 'table broken',
+            ],
+            'painter': [
+                'need painting', 'need paint', 'walls need paint', 'house needs paint',
+                'repainting', 'paint job', 'painting needed', 'paint damage',
+            ],
+        }
+        
+        message_lower = message_text.lower()
+        
+        # Check each service type's keywords
+        for service_type, keywords in problem_keywords.items():
+            for keyword in keywords:
+                if keyword in message_lower:
+                    logger.info(f"Problem detected: '{keyword}' → service type: {service_type}")
+                    return service_type
+        
+        return None
+    
     async def try_fast_booking(self, user_number: str, message_text: str, session: Dict, user: Dict) -> bool:
         """Attempt to create a booking directly when message has service + time"""
         service_type = self.extract_service_type(message_text)
@@ -350,6 +394,10 @@ class MessageHandler:
         """Handle service provider search"""
         # Extract service type from message
         service_type = self.extract_service_type(message_text)
+        
+        # If no explicit service type, try to detect problem statements
+        if not service_type:
+            service_type = self.detect_problem_statement(message_text)
         
         if not service_type:
             # Use AI to understand the request
