@@ -14721,3 +14721,71 @@ Time: Tomo...
 2025-12-05 14:35:08,978 - app.api.whatsapp - INFO - Baileys message from: 263777530322
 2025-12-05 14:35:08,978 - app.api.whatsapp - INFO - Baileys text: ''
 2025-12-05 14:35:09,022 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-05 14:36:32,910 - app.api.whatsapp - INFO - [2025-12-05T12:36:32.910891] Baileys webhook received
+2025-12-05 14:36:32,911 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F06DE0A6F4E4EC4BAC8",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764938192,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-05 14:36:32,911 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-05 14:36:32,911 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-05 14:36:33,644 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-05 14:37:52,991 - app.api.whatsapp - INFO - [2025-12-05T12:37:52.991507] Baileys webhook received
+2025-12-05 14:37:52,992 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "can l see my bookings",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F06DE0A6F4E4EC4BAC8",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764938272,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "extendedTextMessage": {
+        "text": "can l see my bookings",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "+9HjEBIos+s+WA==",
+          "senderTimestamp": "1764663951",
+          "recipientKeyHash": "sKUZHCMQA4zS9g==",
+          "recipientTimestamp": "1764849621"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  }
+}
+2025-12-05 14:37:52,992 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-05 14:37:52,993 - app.api.whatsapp - INFO - Baileys text: 'can l see my bookings'
+2025-12-05 14:37:53,337 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: interactive_buttons, Header: Your bookings, Body: Here are your recent bookings:
+
+1) Suburban Medica...
+2025-12-05 14:37:54,030 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-05 14:37:54,082 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322

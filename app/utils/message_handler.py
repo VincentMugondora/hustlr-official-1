@@ -72,13 +72,13 @@ class MessageHandler:
             issue_snippet = issue
             if len(issue_snippet) > 120:
                 issue_snippet = issue_snippet[:117] + '...'
-            prefix = f"Sorry you're going through this. For your issue — {issue_snippet} — I can connect you with Hustlr {service_type}s in {location}."
+            prefix = f"For {issue_snippet} — {providers_count} {service_type}s in {location}. Pick one:"
         else:
-            prefix = f"Sorry you're going through this. I can connect you with Hustlr {service_type}s in {location}."
-        return f"{prefix}\n\nFound {providers_count} provider(s). Please pick one:"
+            prefix = f"I can connect you with {service_type}s in {location}."
+        return f"{prefix}\n\n{providers_count} available. Pick one:"
 
     def _friendly_footer(self) -> str:
-        return "Tap a provider or reply with the number — we will handle the rest"
+        return "Tap or reply with number"
     
     async def handle_message(self, message: WhatsAppMessage) -> None:
         """Main message handler - routes to appropriate handlers"""
@@ -141,9 +141,7 @@ class MessageHandler:
             # Start onboarding with combined name + location
             await self._log_and_send_response(
                 user_number,
-                "Welcome to Hustlr! I'll help you find local service providers.\n\n"
-                "To get started, send your name and area in one message.\n"
-                "Example: 'Vincent, Avondale'",
+                "Welcome to Hustlr! 👋\n\nSend your name and area (e.g., 'Vincent, Avondale')",
                 "onboarding_welcome"
             )
             session['state'] = ConversationState.ONBOARDING_NAME
@@ -171,20 +169,15 @@ class MessageHandler:
                 # If we can't clearly extract both, ask once more with an example
                 await self._log_and_send_response(
                     user_number,
-                    "Please send both your *name* and *area* in one message.\n"
-                    "Example: 'Vincent, Avondale'",
+                    "Send name and area together (e.g., 'Vincent, Avondale')",
                     "onboarding_retry"
                 )
                 return
             
             # Present privacy policy
             privacy_text = (
-                "Privacy Policy:\n\n"
-                "- We store your name, location, and booking history\n"
-                "- We share your info with service providers you choose\n"
-                "- We never sell your data to third parties\n"
-                "- You can request data deletion anytime\n\n"
-                "Do you agree? (Yes/No)"
+                "We store your name, location & bookings. Share with providers you choose. Never sell data.\n\n"
+                "Agree? (Yes/No)"
             )
             
             await self._log_and_send_response(user_number, privacy_text, "privacy_policy")
@@ -208,23 +201,20 @@ class MessageHandler:
                 if success:
                     await self._log_and_send_response(
                         user_number,
-                        f"Great! You're all set, {session['data']['name']}!\n\n"
-                        "You can now search for service providers and book appointments.\n\n"
-                        "What service are you looking for?",
+                        f"All set, {session['data']['name']}! 🎉\n\nWhat service do you need?",
                         "onboarding_complete"
                     )
                     session['state'] = ConversationState.SERVICE_SEARCH
                 else:
                     await self._log_and_send_response(
                         user_number,
-                        "Sorry, there was an issue setting up your account. Please try again later.",
+                        "Setup failed. Try again later.",
                         "onboarding_error"
                     )
             else:
                 await self._log_and_send_response(
                     user_number,
-                    "You need to agree to the privacy policy to use Hustlr.\n\n"
-                    "Type 'yes' to agree, or 'no' to decline.",
+                    "Reply 'yes' to agree or 'no' to decline.",
                     "privacy_policy_decline"
                 )
     
@@ -260,7 +250,7 @@ class MessageHandler:
                         session['state'] = ConversationState.BOOKING_RESUME_DECISION
                         await self._log_and_send_response(
                             user_number,
-                            "You still have a booking in progress. Do you want to continue it? Reply 'yes' to continue or 'no' to start a new booking.",
+                            "You have a booking in progress. Continue? (yes/no)",
                             "booking_resume_prompt"
                         )
                         return
@@ -330,7 +320,7 @@ class MessageHandler:
             session['data'] = {}
             await self._log_and_send_response(
                 user_number,
-                "Okay, let's start fresh. What service do you need?",
+                "What service do you need?",
                 "session_reset"
             )
             return
@@ -459,7 +449,7 @@ class MessageHandler:
         if not user_location:
             await self._log_and_send_response(
                 user_number,
-                "Please tell me your area or location (e.g., 'Harare', 'Borrowdale', or 'Bulawayo') so I can book the right provider.",
+                "Your area? (e.g., Harare, Borrowdale)",
                 "ask_location_for_fast_booking"
             )
             session['data']['service_type'] = service_type
@@ -480,7 +470,7 @@ class MessageHandler:
         if not providers:
             await self._log_and_send_response(
                 user_number,
-                f"Sorry, no {service_type}s available in your area right now. Try a different service or area.",
+                f"No {service_type}s in your area. Try another.",
                 "no_providers_found"
             )
             return True
@@ -489,7 +479,7 @@ class MessageHandler:
         if not booking_time:
             await self._log_and_send_response(
                 user_number,
-                "When do you want the service? (e.g., 'tomorrow at 10am', 'today 2pm')",
+                "When? (e.g., 'tomorrow 10am')",
                 "ask_time_for_fast_booking"
             )
             session['data']['service_type'] = service_type
@@ -556,7 +546,7 @@ class MessageHandler:
         if not all_providers:
             await self._log_and_send_response(
                 user_number,
-                f"Sorry, no {service_type}s available right now.",
+                f"No {service_type}s available.",
                 "no_providers_found"
             )
             return
@@ -644,7 +634,7 @@ class MessageHandler:
             
             await self._log_and_send_response(
                 user_number,
-                f"I didn't recognize '{message_text}'. Available areas are: {', '.join(available_locations[:5])}",
+                f"Try: {', '.join(available_locations[:5])}",
                 "location_not_recognized"
             )
             return
@@ -655,7 +645,7 @@ class MessageHandler:
         if not providers:
             await self._log_and_send_response(
                 user_number,
-                f"Sorry, no {service_type}s available in {normalized_location} right now. Try a different area.",
+                f"No {service_type}s in {normalized_location}. Try another area.",
                 "no_providers_found"
             )
             session['state'] = ConversationState.SERVICE_SEARCH
@@ -718,7 +708,7 @@ class MessageHandler:
         
         await self._log_and_send_response(
             user_number,
-            f"Great! You've selected {selected_provider['name']}.\n\nWhen would you like the service? (e.g., 'tomorrow morning', 'Dec 15 at 2pm')",
+            f"Selected: {selected_provider['name']}\n\nWhen? (e.g., 'tomorrow 10am')",
             "provider_selected"
         )
     
@@ -730,7 +720,7 @@ class MessageHandler:
         if not booking_time:
             await self._log_and_send_response(
                 user_number,
-                "I didn't catch that. Try 'tomorrow morning', 'Dec 15 at 2pm', or 'next Monday'.",
+                "Try 'tomorrow 10am', 'Dec 15 2pm', or 'next Monday'.",
                 "invalid_time_format"
             )
             return
@@ -779,7 +769,7 @@ class MessageHandler:
             session['state'] = previous_state
             await self._log_and_send_response(
                 user_number,
-                "Okay, let's continue your last booking. You can answer my last question to carry on.",
+                "Continuing your booking...",
                 "booking_resume_continue"
             )
             return
@@ -788,13 +778,13 @@ class MessageHandler:
             session['data'] = {}
             await self._log_and_send_response(
                 user_number,
-                "No problem. Let's start a new booking. What service do you need?",
+                "Starting fresh. What service do you need?",
                 "booking_resume_start_over"
             )
             return
         await self._log_and_send_response(
             user_number,
-            "Please reply with 'yes' to continue your last booking or 'no' to start a new one.",
+            "Reply 'yes' to continue or 'no' to start fresh.",
             "booking_resume_invalid"
         )
     
@@ -803,7 +793,7 @@ class MessageHandler:
         if message_text.lower() not in ['yes', 'y', 'confirm', 'ok', 'sure']:
             await self._log_and_send_response(
                 user_number,
-                "No problem! Let's start over. What service do you need?",
+                "What service do you need?",
                 "booking_cancelled"
             )
             session['state'] = ConversationState.SERVICE_SEARCH
@@ -841,10 +831,7 @@ class MessageHandler:
             # Send message to customer: booking sent, waiting for confirmation
             await self._log_and_send_response(
                 user_number,
-                f"Your booking was sent to {provider_name}!\n\n"
-                f"We're waiting for their confirmation.\n"
-                f"Reference: {booking_id}\n\n"
-                f"You'll get a message once they respond.",
+                f"Sent to {provider_name}! Ref: {booking_id}\n\nWaiting for confirmation...",
                 "booking_sent_waiting"
             )
             
@@ -1288,7 +1275,7 @@ class MessageHandler:
         except Exception:
             bookings = []
         if not bookings:
-            await self._log_and_send_response(user_number, "You have no bookings yet.", "no_bookings")
+            await self._log_and_send_response(user_number, "No bookings yet.", "no_bookings")
             return
         try:
             bookings.sort(key=lambda b: b.get('created_at') or b.get('date_time') or '', reverse=True)
@@ -1349,7 +1336,7 @@ class MessageHandler:
             await self.show_user_bookings(user_number, session, user, mode="reschedule")
             session['state'] = ConversationState.RESCHEDULE_BOOKING_SELECT
             return
-        await self._log_and_send_response(user_number, "Say 'cancel booking' to cancel one, or tell me what service you need.", "view_bookings_hint")
+        await self._log_and_send_response(user_number, "Say 'cancel booking' or tell me what service you need.", "view_bookings_hint")
         session['state'] = ConversationState.SERVICE_SEARCH
 
     async def handle_cancel_booking_select(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
@@ -1362,10 +1349,10 @@ class MessageHandler:
             if 1 <= i <= len(items):
                 selected = items[i-1]
         if not selected:
-            await self._log_and_send_response(user_number, "Please reply with the number of the booking to cancel.", "cancel_booking_select_invalid")
+            await self._log_and_send_response(user_number, "Reply with the booking number.", "cancel_booking_select_invalid")
             return
         session['data']['_cancel_booking_id'] = selected['id']
-        await self._log_and_send_response(user_number, f"Cancel booking {selected['id']} with {selected['provider']} at {selected['time']}? Reply 'yes' to confirm or 'no' to keep it.", "cancel_booking_confirm")
+        await self._log_and_send_response(user_number, f"Cancel {selected['provider']} at {selected['time']}? (yes/no)", "cancel_booking_confirm")
         session['state'] = ConversationState.CANCEL_BOOKING_CONFIRM
 
     async def handle_cancel_booking_confirm(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
@@ -1377,9 +1364,9 @@ class MessageHandler:
                     await self.db.update_booking_status(bid, 'cancelled')
                 except Exception:
                     pass
-            await self._log_and_send_response(user_number, "Your booking has been cancelled.", "booking_cancelled_success")
+            await self._log_and_send_response(user_number, "Cancelled. ✓", "booking_cancelled_success")
         else:
-            await self._log_and_send_response(user_number, "Okay, I will keep your booking.", "booking_cancelled_aborted")
+            await self._log_and_send_response(user_number, "Keeping your booking.", "booking_cancelled_aborted")
         session['state'] = ConversationState.SERVICE_SEARCH
         session['data'].pop('_cancel_booking_id', None)
         session['data'].pop('_bookings_list', None)
@@ -1393,10 +1380,10 @@ class MessageHandler:
             if 1 <= i <= len(items):
                 selected = items[i-1]
         if not selected:
-            await self._log_and_send_response(user_number, "Please reply with the number of the booking to reschedule.", "reschedule_booking_select_invalid")
+            await self._log_and_send_response(user_number, "Reply with the booking number.", "reschedule_booking_select_invalid")
             return
         session['data']['_reschedule_booking_id'] = selected['id']
-        await self._log_and_send_response(user_number, "What new date/time would you like? (e.g., 'tomorrow 10am', 'Dec 20 14:30')", "reschedule_booking_ask_time")
+        await self._log_and_send_response(user_number, "New date/time? (e.g., 'tomorrow 10am')", "reschedule_booking_ask_time")
         session['state'] = ConversationState.RESCHEDULE_BOOKING_NEW_TIME
 
     async def handle_reschedule_booking_new_time(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
@@ -1407,11 +1394,11 @@ class MessageHandler:
         except Exception:
             new_dt = None
         if not new_dt:
-            await self._log_and_send_response(user_number, "I couldn't understand that time. Try 'tomorrow at 10am' or 'Dec 20 14:30'.", "reschedule_time_invalid")
+            await self._log_and_send_response(user_number, "Try 'tomorrow 10am' or 'Dec 20 2pm'.", "reschedule_time_invalid")
             return
         new_iso = new_dt.strftime('%Y-%m-%d %H:%M')
         session['data']['_reschedule_new_time'] = new_iso
-        await self._log_and_send_response(user_number, f"Reschedule to {new_iso}? Reply 'yes' to confirm or 'no' to keep the original time.", "reschedule_booking_confirm")
+        await self._log_and_send_response(user_number, f"Reschedule to {new_iso}? (yes/no)", "reschedule_booking_confirm")
         session['state'] = ConversationState.RESCHEDULE_BOOKING_CONFIRM
 
     async def handle_reschedule_booking_confirm(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
@@ -1423,9 +1410,9 @@ class MessageHandler:
                 await self.db.update_booking_time(bid, new_iso, set_status='pending')
             except Exception:
                 pass
-            await self._log_and_send_response(user_number, f"Your booking has been rescheduled to {new_iso}.", "booking_rescheduled_success")
+            await self._log_and_send_response(user_number, f"Rescheduled to {new_iso}. ✓", "booking_rescheduled_success")
         else:
-            await self._log_and_send_response(user_number, "Okay, I will keep your original booking time.", "booking_rescheduled_aborted")
+            await self._log_and_send_response(user_number, "Keeping original time.", "booking_rescheduled_aborted")
         session['state'] = ConversationState.SERVICE_SEARCH
         session['data'].pop('_reschedule_booking_id', None)
         session['data'].pop('_reschedule_new_time', None)
