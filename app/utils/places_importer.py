@@ -4,6 +4,7 @@ import re
 from typing import Any, Dict, List, Optional, Tuple
 
 import httpx
+from urllib.parse import urlparse, parse_qs, unquote
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
 from config import settings
@@ -139,3 +140,44 @@ async def import_places_to_db(
         "sample": items[:5],
         "total_processed": len(items) + skipped,
     }
+
+
+async def extract_query_from_maps_link(maps_url: str) -> Optional[str]:
+    """Resolve a Google Maps short link and extract a text query suitable for Places Text Search.
+
+    Supports patterns like:
+    - https://maps.app.goo.gl/...
+    - https://goo.gl/maps/...
+    - https://www.google.com/maps/search/<query>
+    - https://www.google.com/maps?q=<query>
+    """
+    try:
+        async with httpx.AsyncClient(follow_redirects=True, timeout=20) as client:
+            resp = await client.get(maps_url)
+            resp.raise_for_status()
+            final_url = str(resp.url)
+
+        parsed = urlparse(final_url)
+        # If query param 'q' present, prefer it
+        q = parse_qs(parsed.query).get('q')
+        if q and q[0]:
+            return unquote(q[0]).replace('+', ' ').strip()
+
+        # If path contains /maps/search/<query>
+        # Example: /maps/search/doctors+in+zimbabwe/@-17.87,30.90,13z
+        if '/maps/search/' in parsed.path:
+            after = parsed.path.split('/maps/search/', 1)[1]
+            # Stop at next slash or use full remainder
+            query_part = after.split('/', 1)[0]
+            return unquote(query_part).replace('+', ' ').strip()
+
+        # If path is /maps and query contains 'query=' param (some variants)
+        qp = parse_qs(parsed.query).get('query')
+        if qp and qp[0]:
+            return unquote(qp[0]).replace('+', ' ').strip()
+
+        # Fallback: try to use the whole path part as best-effort
+        return None
+    except Exception as e:
+        logger.warning(f"Failed to extract query from maps link: {e}")
+        return None
