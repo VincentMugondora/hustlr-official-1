@@ -314,23 +314,43 @@ class MessageHandler:
         Returns:
             Service type (e.g., 'plumber') or None if no problem detected.
         """
+        # Heuristic combinations first (order matters)
+        message_lower = message_text.lower()
+        if (
+            'blocked' in message_lower and any(w in message_lower for w in ['drain', 'sink', 'toilet'])
+        ) or (
+            'leak' in message_lower and any(w in message_lower for w in ['water', 'pipe', 'tap'])
+        ):
+            return 'plumber'
+        if (
+            ('light' in message_lower or 'lights' in message_lower)
+            and any(w in message_lower for w in ['not', "won't", 'wont', 'refus', 'no'])
+        ) or 'refusing to come on' in message_lower:
+            return 'electrician'
+        if 'clean' in message_lower:
+            return 'cleaner'
+
+        # Keyword lists fallback
         problem_keywords = {
             'plumber': [
                 'leaking pipe', 'burst pipe', 'blocked drain', 'burst tap', 'leaking tap',
                 'water leak', 'burst water', 'clogged drain', 'blocked toilet', 'leaking toilet',
                 'plumbing issue', 'plumbing problem', 'water problem', 'drainage', 'sewage',
-                'headache',
+                'sink blocked', 'blocked sink', 'toilet blocked', 'no water',
             ],
             'doctor': [
                 'heart problem', 'heart attack', 'chest pain', 'difficulty breathing', 'doctor', 'medical emergency',
                 'fever', 'sick', 'ill', 'unwell', 'pain', 'hospital', 'clinic', 'ambulance', 'medical help',
                 'diabetes', 'hypertension', 'high blood pressure', 'low blood pressure', 'stroke',
                 'injury', 'bleeding', 'faint', 'collapse', 'unconscious', 'medical issue',
+                'headache', 'head is aching', 'head aching', 'migraine',
             ],
             'electrician': [
                 'electrical fault', 'power cut', 'no electricity', 'broken outlet', 'broken socket',
                 'electrical problem', 'electrical issue', 'power issue', 'light not working',
                 'switch not working', 'electrical wiring', 'electrical damage',
+                'lights not turning on', 'no lights', 'lights out', 'lights refusing to come on', 'refusing to come on',
+                'bulb not working', 'socket sparking', 'breaker tripping', 'power tripping',
             ],
             'cleaner': [
                 'need cleaning', 'need a clean', 'house dirty', 'office dirty', 'place dirty',
@@ -346,20 +366,20 @@ class MessageHandler:
                 'repainting', 'paint job', 'painting needed', 'paint damage',
             ],
         }
-        
-        message_lower = message_text.lower()
-        
+
         # Check each service type's keywords
         for service_type, keywords in problem_keywords.items():
             for keyword in keywords:
                 if keyword in message_lower:
                     logger.info(f"Problem detected: '{keyword}' → service type: {service_type}")
                     return service_type
-        
+
         return None
     
     async def try_fast_booking(self, user_number: str, message_text: str, session: Dict, user: Dict) -> bool:
-        """Attempt to create a booking directly when message has service + time. If location is present, confirm booking instantly."""
+        """Fast path: if service + time found, prefer provider selection first.
+        Stores the parsed time, shows providers filtered by user's saved location, then proceeds.
+        """
         service_type = self.extract_service_type(message_text)
         if not service_type:
             service_type = self.detect_problem_statement(message_text)
@@ -389,7 +409,6 @@ class MessageHandler:
             )
             return True
 
-        selected_provider = providers[0]
         booking_time = self.parse_datetime(message_text)
         if not booking_time:
             await self._log_and_send_response(
@@ -401,33 +420,28 @@ class MessageHandler:
             session['data']['providers'] = providers
             session['state'] = ConversationState.BOOKING_TIME
             return True
+        # Store parsed time and present provider choices (don't auto-pick)
+        session['data']['service_type'] = service_type
+        session['data']['booking_time'] = booking_time
+        session['data']['location'] = user_location
+        session['data']['providers'] = providers
 
-        booking_data = {
-            'booking_id': f"booking_{datetime.utcnow().timestamp()}",
-            'user_whatsapp_number': user_number,
-            'provider_whatsapp_number': selected_provider['whatsapp_number'],
-            'service_type': service_type,
-            'date_time': booking_time,
-            'status': 'pending'
-        }
+        buttons = []
+        for provider in providers[:3]:
+            buttons.append({
+                'id': f"provider_{provider['whatsapp_number']}",
+                'title': f"{provider['name']}"
+            })
 
-        success = await self.db.create_booking(booking_data)
+        await self._log_and_send_interactive(
+            user_number,
+            f"Available {service_type}s in {user_location}",
+            f"Found {len(providers)} provider(s). Pick one:",
+            buttons,
+            "Tap a provider or reply with the number"
+        )
 
-        if success:
-            await self._log_and_send_response(
-                user_number,
-                f"Booking confirmed! {selected_provider['name']} will help you {service_type} on {booking_time}. We'll send you a reminder.",
-                "booking_created"
-            )
-            session['state'] = ConversationState.SERVICE_SEARCH
-            session['data'] = {}
-        else:
-            await self._log_and_send_response(
-                user_number,
-                "Oops! Something went wrong. Please try again.",
-                "booking_error"
-            )
-
+        session['state'] = ConversationState.PROVIDER_SELECTION
         return True
 
     
