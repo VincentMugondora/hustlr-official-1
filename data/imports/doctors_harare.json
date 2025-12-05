@@ -1,15 +1,5 @@
 [
   {
-    "whatsapp_number": "text:share:18704",
-    "name": "Share",
-    "service_type": "doctor",
-    "location": "",
-    "business_name": "Share",
-    "contact": null,
-    "status": "pending",
-    "registered_at": "2025-12-05T10:00:51.116005"
-  },
-  {
     "whatsapp_number": "2634792195",
     "name": "Medical and Dental Practitioners council of Zimbabwe",
     "service_type": "doctor",
@@ -17,7 +7,7 @@
     "business_name": "Medical and Dental Practitioners council of Zimbabwe",
     "contact": "04 792 195",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263783072110",
@@ -27,7 +17,7 @@
     "business_name": "Klosad Medical Clinic Dr Mushawatu D T(The GP)",
     "contact": "078 307 2110",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263712023155",
@@ -37,7 +27,7 @@
     "business_name": "Uzima Haven Medical and Maternity Clinic",
     "contact": "071 202 3155",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263782582333",
@@ -47,7 +37,7 @@
     "business_name": "Medisure Clinic",
     "contact": "078 258 2333",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263785745795",
@@ -57,7 +47,7 @@
     "business_name": "Health First Family Clinic (Dr J Chagonda)",
     "contact": "078 574 5795",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263712147011",
@@ -67,7 +57,7 @@
     "business_name": "Uplands Medical Clinic",
     "contact": "071 214 7011",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263774358471",
@@ -77,7 +67,7 @@
     "business_name": "Selous Avenue Clinic",
     "contact": "077 435 8471",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263788804985",
@@ -87,7 +77,7 @@
     "business_name": "GLAUDINA 24HR MEDICAL CENTRE",
     "contact": "078 880 4985",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263787978876",
@@ -97,7 +87,7 @@
     "business_name": "WATERFALLS MEDICAL CENTRE",
     "contact": "078 797 8876",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263242252077",
@@ -107,7 +97,7 @@
     "business_name": "Dr Godfrey Mungwadzi",
     "contact": "024) 2252077",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263783187035",
@@ -117,7 +107,7 @@
     "business_name": "Garden City Clinic",
     "contact": "078 318 7035",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "2634706281",
@@ -127,7 +117,7 @@
     "business_name": "Dr Billy Rigava",
     "contact": "04 706 281",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263242781649",
@@ -137,7 +127,7 @@
     "business_name": "Daylight Medical Group",
     "contact": "024) 2781649",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263242227946",
@@ -147,7 +137,7 @@
     "business_name": "Suburban Medical Centre",
     "contact": "024) 2227946",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263772904751",
@@ -157,7 +147,7 @@
     "business_name": "The Family clinic",
     "contact": "077 290 4751",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "2638677008873",
@@ -167,7 +157,7 @@
     "business_name": "Santé 24hr Medical Centre",
     "contact": "08677 008873",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "2638612000250",
@@ -177,7 +167,7 @@
     "business_name": "Medical Specialists Centre (MSC)",
     "contact": "08612 000250",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "2638677188522",
@@ -187,7 +177,7 @@
     "business_name": "Milton Park Medical Centre",
     "contact": "08677 188522",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263712700629",
@@ -197,7 +187,7 @@
     "business_name": "Kirkman Family Health Centre",
     "contact": "071 270 0629",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263717377495",
@@ -207,7 +197,7 @@
     "business_name": "Matherhurst Clinic - Dr H Shumba",
     "contact": "071 737 7495",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263781187152",
@@ -217,7 +207,7 @@
     "business_name": "Cleveland Medical Center",
     "contact": "078 118 7152",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263780253619",
@@ -227,7 +217,7 @@
     "business_name": "Colenbrander Medical Centre",
     "contact": "078 025 3619",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263785745795",
@@ -237,7 +227,7 @@
     "business_name": "Health First Family Clinic (Dr J Chagonda)",
     "contact": "078 574 5795",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263242706216",
@@ -247,7 +237,7 @@
     "business_name": "West End Clinic",
     "contact": "024) 2706216",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263242252780",
@@ -257,7 +247,7 @@
     "business_name": "Samuel Leon Children's Casualty & Emergency Centre",
     "contact": "024) 2252780",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263773735109",
@@ -267,7 +257,7 @@
     "business_name": "Marimba Medical Centre",
     "contact": "077 373 5109",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263782768280",
@@ -277,7 +267,7 @@
     "business_name": "MSF - Doctors Without Borders Adolescent Clinic",
     "contact": "078 276 8280",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263780905791",
@@ -287,7 +277,7 @@
     "business_name": "Westgate Med Clinic Harare",
     "contact": "078 090 5791",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "2634781857",
@@ -297,7 +287,7 @@
     "business_name": "Arcadia Medical Centre",
     "contact": "04 781 857",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263242741079",
@@ -307,7 +297,7 @@
     "business_name": "HEENT Institute",
     "contact": "024) 2741079",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263717377495",
@@ -317,17 +307,17 @@
     "business_name": "Matherhurst Clinic - Dr H Shumba",
     "contact": "071 737 7495",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
-    "whatsapp_number": "text:medical chambers:40249",
+    "whatsapp_number": "text:medical chambers:39861",
     "name": "Medical Chambers",
     "service_type": "doctor",
     "location": "60 Baines Ave",
     "business_name": "Medical Chambers",
     "contact": null,
     "status": "pending",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263772904751",
@@ -337,7 +327,7 @@
     "business_name": "The Family clinic",
     "contact": "077 290 4751",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263780028392",
@@ -347,7 +337,7 @@
     "business_name": "Dr Prudance Mushayavanhu",
     "contact": "078 002 8392",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263242257086",
@@ -357,7 +347,7 @@
     "business_name": "Dr Nyakanda Obstetrics & Gynaecology Rooms",
     "contact": "024) 2257086",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263785854522",
@@ -367,7 +357,7 @@
     "business_name": "Divine Health Centre (Dr Chenai Maunze)",
     "contact": "078 585 4522",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "2638677006175",
@@ -377,7 +367,7 @@
     "business_name": "The Avenues Clinic",
     "contact": "08677 006175",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263242772509",
@@ -387,7 +377,7 @@
     "business_name": "Red Cross Clinic",
     "contact": "024) 2772509",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263242254220",
@@ -397,7 +387,7 @@
     "business_name": "Ascot Health and Wellness Medical Centre",
     "contact": "024) 2254220",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263242251133",
@@ -407,7 +397,7 @@
     "business_name": "Dr M P Ndiweni",
     "contact": "024) 2251133",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263787831864",
@@ -417,7 +407,7 @@
     "business_name": "Zimani Medical Group ( DR. N.H.S ZIMANI & DR. PRISCILLA ZIMANI )",
     "contact": "078 783 1864",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263242702428",
@@ -427,7 +417,7 @@
     "business_name": "Metropolitan Clinic",
     "contact": "024) 2702428",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263777139001",
@@ -437,7 +427,7 @@
     "business_name": "Dr Zimunhu, Dr Mbuwayesango & Dr Gonouya - Paediatric Surgical Consultants",
     "contact": "077 713 9001",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263242700670",
@@ -447,7 +437,7 @@
     "business_name": "Dr Mutangadura",
     "contact": "024) 2700670",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263786286454",
@@ -457,7 +447,7 @@
     "business_name": "Orthosure Clinic",
     "contact": "078 628 6454",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263715717417",
@@ -467,17 +457,17 @@
     "business_name": "WEST WING HEALTH CENTRE 24 HOUR",
     "contact": "071 571 7417",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
-    "whatsapp_number": "text:southlea hospital:32175",
+    "whatsapp_number": "text:southlea hospital:36544",
     "name": "Southlea Hospital",
     "service_type": "doctor",
     "location": "2XPP+574",
     "business_name": "Southlea Hospital",
     "contact": null,
     "status": "pending",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263778037920",
@@ -487,7 +477,7 @@
     "business_name": "Liyandra Medical Rooms",
     "contact": "077 803 7920",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263775354043",
@@ -497,7 +487,7 @@
     "business_name": "THE NEUROSCIENCES CENTRE- DR A MUSARA",
     "contact": "077 535 4043",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263242250538",
@@ -507,7 +497,7 @@
     "business_name": "Corporate 24 Medical Centre",
     "contact": "024) 2250538",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263242793904",
@@ -517,7 +507,7 @@
     "business_name": "Dr Douie's Rooms",
     "contact": "024) 2793904",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "2634706281",
@@ -527,7 +517,7 @@
     "business_name": "Dr Billy Rigava",
     "contact": "04 706 281",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263772101460",
@@ -537,7 +527,7 @@
     "business_name": "The Sigma Healthcare - Dr Maticha",
     "contact": "077 210 1460",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   },
   {
     "whatsapp_number": "263242790780",
@@ -547,6 +537,6 @@
     "business_name": "Rowland Square Medical Associates",
     "contact": "024) 2790780",
     "status": "active",
-    "registered_at": "2025-12-05T10:00:51.116005"
+    "registered_at": "2025-12-05T10:23:05.730697+00:00"
   }
 ]
