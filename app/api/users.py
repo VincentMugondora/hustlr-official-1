@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from motor.motor_asyncio import AsyncIOMotorDatabase
@@ -46,3 +47,13 @@ async def onboard_user(
     result = await db.users.insert_one(doc)
     created = await db.users.find_one({"_id": result.inserted_id})
     return _serialize_user(created)
+
+
+@router.get("/", response_model=List[User])
+async def list_users(
+    skip: int = 0,
+    limit: int = 100,
+    db: AsyncIOMotorDatabase = Depends(get_database),
+):
+    docs = await db.users.find({}).sort("registered_at", -1).skip(skip).limit(limit).to_list(length=limit or 100)
+    return [_serialize_user(doc) for doc in docs]

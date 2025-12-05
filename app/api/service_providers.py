@@ -50,6 +50,42 @@ async def register_provider(
     return _serialize_provider(created)
 
 
+@router.get("/")
+async def list_providers(
+    skip: int = 0,
+    limit: int = 100,
+    service_type: Optional[str] = None,
+    status_filter: Optional[str] = None,
+    db: AsyncIOMotorDatabase = Depends(get_database),
+):
+    query = {}
+    if service_type:
+        query["service_type"] = service_type
+    if status_filter:
+        query["status"] = status_filter
+    cursor = (
+        db.providers.find(query)
+        .sort("registered_at", -1)
+        .skip(skip)
+        .limit(limit)
+    )
+    docs = await cursor.to_list(length=limit or 100)
+    return [
+        {
+            "id": str(doc.get("_id")),
+            "whatsapp_number": doc.get("whatsapp_number"),
+            "name": doc.get("name"),
+            "service_type": doc.get("service_type"),
+            "location": doc.get("location"),
+            "business_name": doc.get("business_name"),
+            "contact": doc.get("contact"),
+            "status": doc.get("status", "active"),
+            "registered_at": doc.get("registered_at"),
+        }
+        for doc in docs
+    ]
+
+
 class PlacesImportRequest(BaseModel):
     query: str
     service_type: Optional[str] = None
