@@ -10901,3 +10901,100 @@ Or, if you're looking to book a...
 Are you looking to set the specific time for your plumbing app...
 2025-12-05 09:42:27,424 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2025-12-05 09:42:27,646 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-05 09:45:38,060 - app.api.whatsapp - INFO - [2025-12-05T07:45:38.060665] Baileys webhook received
+2025-12-05 09:45:38,060 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F76D219DE368D385FE7",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764920714,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-05 09:45:38,060 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-05 09:45:38,062 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-05 09:45:40,014 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-05 09:45:43,551 - app.api.whatsapp - INFO - [2025-12-05T07:45:43.551792] Baileys webhook received
+2025-12-05 09:45:43,552 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F76D219DE368D385FE7",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764920743,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-05 09:45:43,553 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-05 09:45:43,553 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-05 09:45:43,613 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-05 09:45:45,123 - app.api.whatsapp - INFO - [2025-12-05T07:45:45.123799] Baileys webhook received
+2025-12-05 09:45:45,125 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "yes 6:00AM",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F76D219DE368D385FE7",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764920744,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "extendedTextMessage": {
+        "text": "yes 6:00AM",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "+9HjEBIos+s+WA==",
+          "senderTimestamp": "1764663951",
+          "recipientKeyHash": "sKUZHCMQA4zS9g==",
+          "recipientTimestamp": "1764849621"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  }
+}
+2025-12-05 09:45:45,126 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-05 09:45:45,127 - app.api.whatsapp - INFO - Baileys text: 'yes 6:00AM'
+2025-12-05 09:45:48,793 - app.utils.gemini_service - INFO - [GEMINI RESPONSE] Question: yes 6:00am..., Answer: Hi Vincent! Thanks for letting me know the time.
+
+Are you looking to book a new service for 6:00 AM, or is this time for an existing booking, perhaps your upcoming plumbing service?
+
+Just tell me what...
+2025-12-05 09:45:48,793 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_response, Message: Hi Vincent! Thanks for letting me know the time.
+
+Are you looking to book a new service for 6:00 AM,...
+2025-12-05 09:45:49,900 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-05 09:45:50,074 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
