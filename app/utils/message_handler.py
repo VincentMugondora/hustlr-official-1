@@ -268,13 +268,31 @@ class MessageHandler:
                     pass
 
         text_cmd = message_text.strip().lower()
+        text_cmd_compact = re.sub(r"\s+", " ", text_cmd)
+        # View bookings intents (singular/plural, various verbs)
         if any(k in text_cmd for k in ["my bookings", "view bookings", "show bookings", "see bookings", "bookings"]):
+            await self.show_user_bookings(user_number, session, user, mode="view")
+            session['state'] = ConversationState.VIEW_BOOKINGS
+            return
+        # More flexible patterns like "see my booking" / "can i see my booking"
+        if re.search(r"\b(see|view|show)\b.*\bbooking(s)?\b", text_cmd):
+            await self.show_user_bookings(user_number, session, user, mode="view")
+            session['state'] = ConversationState.VIEW_BOOKINGS
+            return
+        if "my booking" in text_cmd:
             await self.show_user_bookings(user_number, session, user, mode="view")
             session['state'] = ConversationState.VIEW_BOOKINGS
             return
         if any(k in text_cmd for k in ["cancel booking", "cancel my booking", "cancel a booking"]):
             await self.show_user_bookings(user_number, session, user, mode="cancel")
             session['state'] = ConversationState.CANCEL_BOOKING_SELECT
+            return
+        # Inline cancel with number: "cancel booking 2" (tolerate extra spaces)
+        m_cancel_inline = re.search(r"\bcancel\s+booking\s+(\d+)\b", text_cmd_compact)
+        if m_cancel_inline:
+            await self.show_user_bookings(user_number, session, user, mode="cancel")
+            session['state'] = ConversationState.CANCEL_BOOKING_SELECT
+            await self.handle_cancel_booking_select(user_number, m_cancel_inline.group(1), session, user)
             return
         if any(k in text_cmd for k in ["reschedule", "reschedule booking", "postpone", "postpone booking", "move booking", "change time", "change booking time", "shift booking"]):
             await self.show_user_bookings(user_number, session, user, mode="reschedule")
@@ -1320,6 +1338,13 @@ class MessageHandler:
             await self.show_user_bookings(user_number, session, user, mode="cancel")
             session['state'] = ConversationState.CANCEL_BOOKING_SELECT
             return
+        # Inline: "cancel booking 2" while viewing list
+        m_cancel_inline = re.search(r"\bcancel\s+booking\s+(\d+)\b", re.sub(r"\s+", " ", text))
+        if m_cancel_inline:
+            await self.show_user_bookings(user_number, session, user, mode="cancel")
+            session['state'] = ConversationState.CANCEL_BOOKING_SELECT
+            await self.handle_cancel_booking_select(user_number, m_cancel_inline.group(1), session, user)
+            return
         if any(k in text for k in ["reschedule", "postpone", "change time", "move booking", "reschedule booking"]):
             await self.show_user_bookings(user_number, session, user, mode="reschedule")
             session['state'] = ConversationState.RESCHEDULE_BOOKING_SELECT
@@ -1330,8 +1355,10 @@ class MessageHandler:
     async def handle_cancel_booking_select(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
         items = session.get('data', {}).get('_bookings_list') or []
         selected = None
-        if message_text.isdigit():
-            i = int(message_text)
+        # Accept number anywhere in text
+        num_match = re.search(r"\b(\d+)\b", str(message_text))
+        if num_match:
+            i = int(num_match.group(1))
             if 1 <= i <= len(items):
                 selected = items[i-1]
         if not selected:
@@ -1360,8 +1387,9 @@ class MessageHandler:
     async def handle_reschedule_booking_select(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
         items = session.get('data', {}).get('_bookings_list') or []
         selected = None
-        if message_text.isdigit():
-            i = int(message_text)
+        num_match = re.search(r"\b(\d+)\b", str(message_text))
+        if num_match:
+            i = int(num_match.group(1))
             if 1 <= i <= len(items):
                 selected = items[i-1]
         if not selected:
