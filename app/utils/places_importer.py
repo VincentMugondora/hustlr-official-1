@@ -211,7 +211,9 @@ def parse_text_providers(text: str) -> List[Dict[str, Any]]:
             items.append(buf)
         buf = {}
 
-    skip_markers = {"results", "share", "website", "directions", "", ""}
+    # UI artifacts to skip from pasted Google Maps pages
+    skip_markers_text = {"results", "share", "website", "directions"}
+    skip_markers_icons = {"", "", ""}
 
     i = 0
     while i < len(lines):
@@ -223,8 +225,14 @@ def parse_text_providers(text: str) -> List[Dict[str, Any]]:
                 flush()
             i += 1
             continue
-        # skip obvious UI markers
-        if any(m == low for m in skip_markers):
+        # skip obvious UI markers (icons and their text forms)
+        normalized = re.sub(r"[^a-z]+", "", low)
+        if (
+            line in skip_markers_icons
+            or low in skip_markers_icons
+            or low in skip_markers_text
+            or normalized in skip_markers_text
+        ):
             i += 1
             continue
         # quoted review
@@ -266,6 +274,11 @@ def parse_text_providers(text: str) -> List[Dict[str, Any]]:
         if buf.get("name"):
             # start of a new entry
             flush()
+        # guard against UI artifacts being treated as names
+        name_norm = re.sub(r"[^a-z]+", "", low)
+        if name_norm in skip_markers_text or line in skip_markers_icons:
+            i += 1
+            continue
         buf["name"] = line
         i += 1
 
