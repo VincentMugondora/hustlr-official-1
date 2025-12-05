@@ -4,6 +4,7 @@ import json
 import logging
 from typing import Dict, Any, Optional
 from botocore.exceptions import ClientError
+from botocore.config import Config
 from config import settings
 
 logger = logging.getLogger(__name__)
@@ -16,11 +17,14 @@ class AWSLambdaService:
         aws_secret_access_key = settings.AWS_SECRET_ACCESS_KEY
         aws_region = settings.AWS_REGION
 
+        client_config = Config(read_timeout=5, connect_timeout=3, retries={"max_attempts": 2})
+
         self.lambda_client = boto3.client(
             'lambda',
             aws_access_key_id=aws_access_key_id,
             aws_secret_access_key=aws_secret_access_key,
             region_name=aws_region,
+            config=client_config,
         )
         self.question_answerer_function = settings.AWS_LAMBDA_QUESTION_ANSWERER_FUNCTION_NAME or None
         self.use_bedrock_intent = bool(getattr(settings, 'USE_BEDROCK_INTENT', False))
@@ -32,6 +36,7 @@ class AWSLambdaService:
                 aws_access_key_id=aws_access_key_id,
                 aws_secret_access_key=aws_secret_access_key,
                 region_name=aws_region,
+                config=client_config,
             )
     
     async def invoke_question_answerer(self, user_message: str, user_context: Optional[Dict] = None) -> str:
@@ -150,8 +155,8 @@ class AWSLambdaService:
         )
         return {
             "anthropic_version": "bedrock-2023-05-31",
-            "max_tokens": 512,
-            "temperature": 0.4,
+            "max_tokens": 200,
+            "temperature": 0.3,
             "system": system_prompt,
             "messages": [
                 {
