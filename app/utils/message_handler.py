@@ -24,6 +24,9 @@ class ConversationState(Enum):
     BOOKING_CONFIRM = "booking_confirm"  # Final confirmation before booking
     BOOKING_PENDING_PROVIDER = "booking_pending_provider"  # Waiting for provider response
     BOOKING_RESUME_DECISION = "booking_resume_decision"
+    VIEW_BOOKINGS = "view_bookings"
+    CANCEL_BOOKING_SELECT = "cancel_booking_select"
+    CANCEL_BOOKING_CONFIRM = "cancel_booking_confirm"
     
     # Provider registration states
     PROVIDER_REGISTER = "provider_register"
@@ -259,6 +262,16 @@ class MessageHandler:
                         return
                 except Exception:
                     pass
+
+        text_cmd = message_text.strip().lower()
+        if any(k in text_cmd for k in ["my bookings", "view bookings", "show bookings", "see bookings", "bookings"]):
+            await self.show_user_bookings(user_number, session, user, cancel_mode=False)
+            session['state'] = ConversationState.VIEW_BOOKINGS
+            return
+        if any(k in text_cmd for k in ["cancel booking", "cancel my booking", "cancel a booking"]):
+            await self.show_user_bookings(user_number, session, user, cancel_mode=True)
+            session['state'] = ConversationState.CANCEL_BOOKING_SELECT
+            return
         
         # Check for register command
         provider_intent_phrases = [
@@ -305,6 +318,12 @@ class MessageHandler:
         # Handle booking flow states
         if state == ConversationState.SERVICE_SEARCH:
             await self.handle_service_search(user_number, message_text, session, user)
+        elif state == ConversationState.VIEW_BOOKINGS:
+            await self.handle_view_bookings_state(user_number, message_text, session, user)
+        elif state == ConversationState.CANCEL_BOOKING_SELECT:
+            await self.handle_cancel_booking_select(user_number, message_text, session, user)
+        elif state == ConversationState.CANCEL_BOOKING_CONFIRM:
+            await self.handle_cancel_booking_confirm(user_number, message_text, session, user)
         elif state == ConversationState.BOOKING_SERVICE_DETAILS:
             await self.handle_booking_service_details(user_number, message_text, session, user)
         elif state == ConversationState.BOOKING_LOCATION:
@@ -1154,3 +1173,90 @@ class MessageHandler:
         if re.search(r"\b\d{1,2}(:\d{2})?\s*(am|pm)?\b", text):
             return True
         return False
+
+    async def show_user_bookings(self, user_number: str, session: Dict, user: Dict, cancel_mode: bool) -> None:
+        bookings = []
+        try:
+            bookings = await self.db.get_user_bookings(user_number)
+        except Exception:
+            bookings = []
+        if not bookings:
+            await self._log_and_send_response(user_number, "You have no bookings yet.", "no_bookings")
+            return
+        try:
+            bookings.sort(key=lambda b: b.get('created_at') or b.get('date_time') or '', reverse=True)
+        except Exception:
+            pass
+        enriched = []
+        for b in bookings:
+            pnum = b.get('provider_whatsapp_number')
+            pname = None
+            if pnum and hasattr(self.db, 'get_provider_by_whatsapp'):
+                try:
+                    pdoc = await self.db.get_provider_by_whatsapp(pnum)
+                    if pdoc:
+                        pname = pdoc.get('name')
+                except Exception:
+                    pass
+            enriched.append({
+                'id': b.get('booking_id') or '',
+                'provider': pname or pnum or 'Provider',
+                'time': b.get('date_time') or 'Time not set',
+                'status': b.get('status') or 'pending',
+            })
+        lines = []
+        for idx, e in enumerate(enriched[:10], start=1):
+            lines.append(f"{idx}) {e['provider']} — {e['time']} [{e['status']}]\nRef: {e['id']}")
+        header = "Your bookings"
+        if cancel_mode:
+            body = "Select a booking to cancel:\n\n" + "\n".join(lines)
+            footer = "Reply with the number to cancel"
+        else:
+            body = "Here are your recent bookings:\n\n" + "\n".join(lines)
+            footer = None
+        buttons = []
+        for idx, e in enumerate(enriched[:3], start=1):
+            title = f"{e['provider']}"
+            buttons.append({'id': f"b_{e['id']}", 'title': title})
+        await self._log_and_send_interactive(user_number, header, body, buttons, footer)
+        session.setdefault('data', {})
+        session['data']['_bookings_list'] = enriched
+
+    async def handle_view_bookings_state(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
+        text = message_text.strip().lower()
+        if any(k in text for k in ["cancel", "cancel booking"]):
+            await self.show_user_bookings(user_number, session, user, cancel_mode=True)
+            session['state'] = ConversationState.CANCEL_BOOKING_SELECT
+            return
+        await self._log_and_send_response(user_number, "Say 'cancel booking' to cancel one, or tell me what service you need.", "view_bookings_hint")
+        session['state'] = ConversationState.SERVICE_SEARCH
+
+    async def handle_cancel_booking_select(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
+        items = session.get('data', {}).get('_bookings_list') or []
+        selected = None
+        if message_text.isdigit():
+            i = int(message_text)
+            if 1 <= i <= len(items):
+                selected = items[i-1]
+        if not selected:
+            await self._log_and_send_response(user_number, "Please reply with the number of the booking to cancel.", "cancel_booking_select_invalid")
+            return
+        session['data']['_cancel_booking_id'] = selected['id']
+        await self._log_and_send_response(user_number, f"Cancel booking {selected['id']} with {selected['provider']} at {selected['time']}? Reply 'yes' to confirm or 'no' to keep it.", "cancel_booking_confirm")
+        session['state'] = ConversationState.CANCEL_BOOKING_CONFIRM
+
+    async def handle_cancel_booking_confirm(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
+        text = message_text.strip().lower()
+        if text in ['yes', 'y', 'confirm', 'ok', 'sure']:
+            bid = session.get('data', {}).get('_cancel_booking_id')
+            if bid:
+                try:
+                    await self.db.update_booking_status(bid, 'cancelled')
+                except Exception:
+                    pass
+            await self._log_and_send_response(user_number, "Your booking has been cancelled.", "booking_cancelled_success")
+        else:
+            await self._log_and_send_response(user_number, "Okay, I will keep your booking.", "booking_cancelled_aborted")
+        session['state'] = ConversationState.SERVICE_SEARCH
+        session['data'].pop('_cancel_booking_id', None)
+        session['data'].pop('_bookings_list', None)
