@@ -3,7 +3,7 @@ import asyncio
 import json
 import os
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import List, Dict, Any
 
@@ -39,7 +39,7 @@ def build_provider_docs(items: List[Dict[str, Any]], service_type: str, default_
             "business_name": name,
             "contact": phone or None,
             "status": status,
-            "registered_at": datetime.utcnow().isoformat(),
+            "registered_at": datetime.now(timezone.utc).isoformat(),
         })
     return docs
 
