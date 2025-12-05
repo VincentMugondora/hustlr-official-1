@@ -13871,3 +13871,46 @@ Time: Tomo...
 2025-12-05 13:46:10,442 - app.api.whatsapp - INFO - Baileys message from: 263777530322
 2025-12-05 13:46:10,444 - app.api.whatsapp - INFO - Baileys text: ''
 2025-12-05 13:46:10,492 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-05 13:46:58,743 - app.api.whatsapp - INFO - [2025-12-05T11:46:58.743536] Baileys webhook received
+2025-12-05 13:46:58,747 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "l want to postpone the booking Seagate plumbers",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3FF1CEA4DB86C45F462F",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764935217,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "extendedTextMessage": {
+        "text": "l want to postpone the booking Seagate plumbers",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "+9HjEBIos+s+WA==",
+          "senderTimestamp": "1764663951",
+          "recipientKeyHash": "sKUZHCMQA4zS9g==",
+          "recipientTimestamp": "1764849621"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  }
+}
+2025-12-05 13:46:58,748 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-05 13:46:58,751 - app.api.whatsapp - INFO - Baileys text: 'l want to postpone the booking Seagate plumbers'
+2025-12-05 13:47:00,193 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: view_bookings_hint, Message: Say 'cancel booking' to cancel one, or tell me what service you need....
+2025-12-05 13:47:02,297 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-05 13:47:02,415 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322

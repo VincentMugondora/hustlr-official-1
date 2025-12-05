@@ -27,6 +27,9 @@ class ConversationState(Enum):
     VIEW_BOOKINGS = "view_bookings"
     CANCEL_BOOKING_SELECT = "cancel_booking_select"
     CANCEL_BOOKING_CONFIRM = "cancel_booking_confirm"
+    RESCHEDULE_BOOKING_SELECT = "reschedule_booking_select"
+    RESCHEDULE_BOOKING_NEW_TIME = "reschedule_booking_new_time"
+    RESCHEDULE_BOOKING_CONFIRM = "reschedule_booking_confirm"
     
     # Provider registration states
     PROVIDER_REGISTER = "provider_register"
@@ -265,12 +268,16 @@ class MessageHandler:
 
         text_cmd = message_text.strip().lower()
         if any(k in text_cmd for k in ["my bookings", "view bookings", "show bookings", "see bookings", "bookings"]):
-            await self.show_user_bookings(user_number, session, user, cancel_mode=False)
+            await self.show_user_bookings(user_number, session, user, mode="view")
             session['state'] = ConversationState.VIEW_BOOKINGS
             return
         if any(k in text_cmd for k in ["cancel booking", "cancel my booking", "cancel a booking"]):
-            await self.show_user_bookings(user_number, session, user, cancel_mode=True)
+            await self.show_user_bookings(user_number, session, user, mode="cancel")
             session['state'] = ConversationState.CANCEL_BOOKING_SELECT
+            return
+        if any(k in text_cmd for k in ["reschedule", "reschedule booking", "postpone", "postpone booking", "move booking", "change time", "change booking time", "shift booking"]):
+            await self.show_user_bookings(user_number, session, user, mode="reschedule")
+            session['state'] = ConversationState.RESCHEDULE_BOOKING_SELECT
             return
         
         # Check for register command
@@ -324,6 +331,12 @@ class MessageHandler:
             await self.handle_cancel_booking_select(user_number, message_text, session, user)
         elif state == ConversationState.CANCEL_BOOKING_CONFIRM:
             await self.handle_cancel_booking_confirm(user_number, message_text, session, user)
+        elif state == ConversationState.RESCHEDULE_BOOKING_SELECT:
+            await self.handle_reschedule_booking_select(user_number, message_text, session, user)
+        elif state == ConversationState.RESCHEDULE_BOOKING_NEW_TIME:
+            await self.handle_reschedule_booking_new_time(user_number, message_text, session, user)
+        elif state == ConversationState.RESCHEDULE_BOOKING_CONFIRM:
+            await self.handle_reschedule_booking_confirm(user_number, message_text, session, user)
         elif state == ConversationState.BOOKING_SERVICE_DETAILS:
             await self.handle_booking_service_details(user_number, message_text, session, user)
         elif state == ConversationState.BOOKING_LOCATION:
@@ -1247,7 +1260,7 @@ class MessageHandler:
             pass
         return s
 
-    async def show_user_bookings(self, user_number: str, session: Dict, user: Dict, cancel_mode: bool) -> None:
+    async def show_user_bookings(self, user_number: str, session: Dict, user: Dict, mode: str = "view") -> None:
         bookings = []
         try:
             bookings = await self.db.get_user_bookings(user_number)
@@ -1281,9 +1294,12 @@ class MessageHandler:
         for idx, e in enumerate(enriched[:10], start=1):
             lines.append(f"{idx}) {e['provider']} — {e['time']} [{e['status']}]\nRef: {e['id']}")
         header = "Your bookings"
-        if cancel_mode:
+        if mode == "cancel":
             body = "Select a booking to cancel:\n\n" + "\n".join(lines)
             footer = "Reply with the number to cancel"
+        elif mode == "reschedule":
+            body = "Select a booking to reschedule:\n\n" + "\n".join(lines)
+            footer = "Reply with the number to reschedule"
         else:
             body = "Here are your recent bookings:\n\n" + "\n".join(lines)
             footer = None
@@ -1298,8 +1314,12 @@ class MessageHandler:
     async def handle_view_bookings_state(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
         text = message_text.strip().lower()
         if any(k in text for k in ["cancel", "cancel booking"]):
-            await self.show_user_bookings(user_number, session, user, cancel_mode=True)
+            await self.show_user_bookings(user_number, session, user, mode="cancel")
             session['state'] = ConversationState.CANCEL_BOOKING_SELECT
+            return
+        if any(k in text for k in ["reschedule", "postpone", "change time", "move booking", "reschedule booking"]):
+            await self.show_user_bookings(user_number, session, user, mode="reschedule")
+            session['state'] = ConversationState.RESCHEDULE_BOOKING_SELECT
             return
         await self._log_and_send_response(user_number, "Say 'cancel booking' to cancel one, or tell me what service you need.", "view_bookings_hint")
         session['state'] = ConversationState.SERVICE_SEARCH
@@ -1332,4 +1352,50 @@ class MessageHandler:
             await self._log_and_send_response(user_number, "Okay, I will keep your booking.", "booking_cancelled_aborted")
         session['state'] = ConversationState.SERVICE_SEARCH
         session['data'].pop('_cancel_booking_id', None)
+        session['data'].pop('_bookings_list', None)
+
+    async def handle_reschedule_booking_select(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
+        items = session.get('data', {}).get('_bookings_list') or []
+        selected = None
+        if message_text.isdigit():
+            i = int(message_text)
+            if 1 <= i <= len(items):
+                selected = items[i-1]
+        if not selected:
+            await self._log_and_send_response(user_number, "Please reply with the number of the booking to reschedule.", "reschedule_booking_select_invalid")
+            return
+        session['data']['_reschedule_booking_id'] = selected['id']
+        await self._log_and_send_response(user_number, "What new date/time would you like? (e.g., 'tomorrow 10am', 'Dec 20 14:30')", "reschedule_booking_ask_time")
+        session['state'] = ConversationState.RESCHEDULE_BOOKING_NEW_TIME
+
+    async def handle_reschedule_booking_new_time(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
+        # Canonicalize new time
+        new_dt = None
+        try:
+            new_dt = self._canonicalize_booking_time(message_text)
+        except Exception:
+            new_dt = None
+        if not new_dt:
+            await self._log_and_send_response(user_number, "I couldn't understand that time. Try 'tomorrow at 10am' or 'Dec 20 14:30'.", "reschedule_time_invalid")
+            return
+        new_iso = new_dt.strftime('%Y-%m-%d %H:%M')
+        session['data']['_reschedule_new_time'] = new_iso
+        await self._log_and_send_response(user_number, f"Reschedule to {new_iso}? Reply 'yes' to confirm or 'no' to keep the original time.", "reschedule_booking_confirm")
+        session['state'] = ConversationState.RESCHEDULE_BOOKING_CONFIRM
+
+    async def handle_reschedule_booking_confirm(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
+        text = message_text.strip().lower()
+        bid = session.get('data', {}).get('_reschedule_booking_id')
+        new_iso = session.get('data', {}).get('_reschedule_new_time')
+        if text in ['yes', 'y', 'confirm', 'ok', 'sure'] and bid and new_iso:
+            try:
+                await self.db.update_booking_time(bid, new_iso, set_status='pending')
+            except Exception:
+                pass
+            await self._log_and_send_response(user_number, f"Your booking has been rescheduled to {new_iso}.", "booking_rescheduled_success")
+        else:
+            await self._log_and_send_response(user_number, "Okay, I will keep your original booking time.", "booking_rescheduled_aborted")
+        session['state'] = ConversationState.SERVICE_SEARCH
+        session['data'].pop('_reschedule_booking_id', None)
+        session['data'].pop('_reschedule_new_time', None)
         session['data'].pop('_bookings_list', None)
