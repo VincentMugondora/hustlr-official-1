@@ -1,5 +1,6 @@
 from typing import Dict, Any, List, Optional
 from datetime import datetime, timedelta
+from dateutil.parser import parse as du_parse
 from enum import Enum
 import re
 import logging
@@ -1145,40 +1146,10 @@ class MessageHandler:
         return None
     
     def parse_datetime(self, message_text: str) -> Optional[str]:
-        """Simple datetime parsing (would need enhancement for production)"""
-        # This is a simplified implementation
-        # In production, you'd want a more robust date parser
-        
-        message_lower = message_text.lower()
-        
-        # Handle simple cases and common combinations
-        if 'tomorrow' in message_lower and 'morning' in message_lower:
-            return "Tomorrow morning"
-        if 'tomorrow' in message_lower and 'afternoon' in message_lower:
-            return "Tomorrow afternoon"
-        if 'tomorrow' in message_lower and 'evening' in message_lower:
-            return "Tomorrow evening"
-        
-        if 'today' in message_lower and 'morning' in message_lower:
-            return "Today morning"
-        if 'today' in message_lower and 'afternoon' in message_lower:
-            return "Today afternoon"
-        if 'today' in message_lower and 'evening' in message_lower:
-            return "Today evening"
-        
-        if 'tomorrow' in message_lower:
-            return "Tomorrow"
-        if 'today' in message_lower:
-            return "Today"
-        if 'morning' in message_lower:
-            return "Morning"
-        if 'afternoon' in message_lower:
-            return "Afternoon"
-        if 'evening' in message_lower:
-            return "Evening"
-        
-        # Return the original text if we can't parse it
-        return message_text
+        dt = self._parse_natural_datetime(message_text)
+        if dt:
+            return dt.strftime('%Y-%m-%d %H:%M')
+        return None
 
     def _message_contains_time_hint(self, message_text: str) -> bool:
         """Heuristic check for time-related words/patterns in a message"""
@@ -1195,51 +1166,83 @@ class MessageHandler:
         return False
 
     def _canonicalize_booking_time(self, text: str) -> Optional[datetime]:
-        t = (text or '').strip().lower()
-        if not t:
+        dt = self._parse_natural_datetime(text)
+        if dt:
+            return dt
+        return None
+
+    def _parse_natural_datetime(self, text: str) -> Optional[datetime]:
+        t_raw = (text or '').strip()
+        if not t_raw:
             return None
+        t = t_raw.lower()
         now = datetime.utcnow()
-        # Base day
-        base = now
+
+        # Relative offsets: "in 2 hours", "in 30 minutes", "in 3 days", "in 1 week"
+        m = re.match(r"^\s*in\s+(\d+)\s*(minute|minutes|min|hour|hours|hr|hrs|day|days|week|weeks)\s*$", t, re.IGNORECASE)
+        if m:
+            n = int(m.group(1))
+            unit = m.group(2).lower()
+            if unit.startswith('min'):
+                return now + timedelta(minutes=n)
+            if unit in ('hour', 'hours', 'hr', 'hrs'):
+                return now + timedelta(hours=n)
+            if unit.startswith('day'):
+                return now + timedelta(days=n)
+            if unit.startswith('week'):
+                return now + timedelta(weeks=n)
+
+        # Keywords today/tomorrow/tonight with optional time after
+        def parse_with_base(remove_word: str, base: datetime, default_hour: int = 9) -> Optional[datetime]:
+            remainder = re.sub(fr"(?i)\b{remove_word}\b", '', t_raw).strip()
+            if remainder:
+                try:
+                    return du_parse(remainder, fuzzy=True, default=base.replace(hour=default_hour, minute=0, second=0, microsecond=0))
+                except Exception:
+                    return base.replace(hour=default_hour, minute=0, second=0, microsecond=0)
+            return base.replace(hour=default_hour, minute=0, second=0, microsecond=0)
+
         if 'tomorrow' in t:
-            base = now + timedelta(days=1)
-        elif 'today' in t:
-            base = now
-        elif 'now' in t:
+            return parse_with_base('tomorrow', now + timedelta(days=1), 9)
+        if 'today' in t:
+            return parse_with_base('today', now, 9)
+        if 'tonight' in t:
+            return parse_with_base('tonight', now, 18)
+        if 'now' in t:
             return now
 
-        # Day-of-week handling: next monday, tuesday, ... (basic)
+        # "next monday 3pm"
         weekdays = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday']
         for idx, name in enumerate(weekdays):
             if f'next {name}' in t:
-                days_ahead = (idx - base.weekday() + 7) % 7
+                days_ahead = (idx - now.weekday() + 7) % 7
                 days_ahead = days_ahead if days_ahead != 0 else 7
-                base = base + timedelta(days=days_ahead)
-                break
+                base = now + timedelta(days=days_ahead)
+                return parse_with_base(f'next {name}', base, 9)
+            if f'this {name}' in t:
+                days_ahead = (idx - now.weekday() + 7) % 7
+                base = now + timedelta(days=days_ahead)
+                return parse_with_base(f'this {name}', base, 9)
 
-        # Default times for parts of day
-        hour = base.hour
-        minute = 0
-        if 'morning' in t:
-            hour = 9
-        elif 'afternoon' in t:
-            hour = 14
-        elif 'evening' in t or 'tonight' in t:
-            hour = 18
+        # Generic parse attempts (covers: "Dec 31 15:00", "2025-12-31 15:00", "31/12/2025 15:00", "3pm")
+        def try_du(s: str, **kwargs) -> Optional[datetime]:
+            try:
+                return du_parse(s, fuzzy=True, default=now, **kwargs)
+            except Exception:
+                return None
 
-        # Explicit time like 10, 10am, 10:30, 10:30am
-        m = re.search(r"\b(\d{1,2})(?::(\d{2}))?\s*(am|pm)?\b", t)
-        if m:
-            h = int(m.group(1))
-            mm = int(m.group(2)) if m.group(2) else 0
-            ampm = (m.group(3) or '').lower()
-            if ampm == 'pm' and h < 12:
-                h += 12
-            if ampm == 'am' and h == 12:
-                h = 0
-            hour, minute = h, mm
+        dt = try_du(t_raw)
+        if not dt:
+            dt = try_du(t_raw, dayfirst=True)
+        if not dt:
+            return None
 
-        return base.replace(hour=hour, minute=minute, second=0, microsecond=0)
+        # If only time was provided and it's already passed today, roll to next day
+        has_date_hint = bool(re.search(r"\b\d{4}[-/]\d{1,2}[-/]\d{1,2}\b", t)) or bool(re.search(r"\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\b", t, re.I)) or bool(re.search(r"\b\d{1,2}/\d{1,2}\b", t))
+        if not has_date_hint and dt <= now:
+            dt = dt + timedelta(days=1)
+
+        return dt
 
     def _format_booking_time_for_display(self, dt_text: str) -> str:
         s = (dt_text or '').strip()
