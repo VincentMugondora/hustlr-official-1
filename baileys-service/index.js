@@ -29,6 +29,8 @@ async function startBaileys() {
     const { connection, lastDisconnect, qr } = update;
 
     if (qr) {
+      latestQR = qr;
+      lastQRTime = Date.now();
       console.log("Scan this QR to connect WhatsApp:");
       qrcode.generate(qr, { small: true });
     }
@@ -57,6 +59,8 @@ async function startBaileys() {
       }
     } else if (connection === "open") {
       console.log("✅ Baileys connected to WhatsApp");
+      latestQR = null;
+      lastQRTime = 0;
     }
   });
 
@@ -118,6 +122,8 @@ async function startBaileys() {
 }
 
 let sockRef;
+let latestQR = null;
+let lastQRTime = 0;
 
 async function startServer() {
   sockRef = await startBaileys();
@@ -143,6 +149,73 @@ async function startServer() {
 
   app.get("/health", (req, res) => {
     res.json({ status: "ok" });
+  });
+
+  app.get("/", (req, res) => {
+    res.redirect("/qr");
+  });
+
+  app.get("/qr-data", (req, res) => {
+    res.json({ qr: latestQR, ageMs: latestQR ? Date.now() - lastQRTime : null });
+  });
+
+  app.get("/qr", (req, res) => {
+    res.type("html").send(`<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>WhatsApp QR</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; padding: 20px; display: flex; align-items: center; justify-content: center; min-height: 100vh; background:#0b1020; color:#eaeef7; }
+    .card { background: #121933; border: 1px solid #1f2a4d; border-radius: 12px; padding: 24px; width: min(420px, 92vw); box-shadow: 0 12px 30px rgba(0,0,0,.25); }
+    h1 { font-size: 18px; margin: 0 0 12px; }
+    #qr { display:flex; align-items:center; justify-content:center; background:#fff; padding:12px; border-radius:10px; }
+    .muted { color:#9fb2d9; font-size: 12px; margin-top: 10px; }
+    button { margin-top: 12px; background: #2b6ff6; color: #fff; border: 0; padding: 10px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+    .badge { display:inline-block; background:#1f2a4d; color:#9fb2d9; padding:4px 8px; border-radius:6px; font-size:12px; margin-left:8px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Scan WhatsApp QR <span class="badge">auto-refresh</span></h1>
+    <div id="qr" style="min-height: 320px; min-width: 320px;"></div>
+    <div class="muted" id="status">Waiting for QR...</div>
+    <button id="refresh">Refresh now</button>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script>
+    const qrEl = document.getElementById('qr');
+    const statusEl = document.getElementById('status');
+    const refreshBtn = document.getElementById('refresh');
+    let qrcodeObj = null;
+
+    function renderQR(data) {
+      qrEl.innerHTML = '';
+      if (!data) {
+        statusEl.textContent = 'No QR yet. If you are connected, no QR will be shown.';
+        return;
+      }
+      qrcodeObj = new QRCode(qrEl, { text: data, width: 300, height: 300, correctLevel: QRCode.CorrectLevel.M });
+      statusEl.textContent = 'Open WhatsApp → Linked Devices → Link a device';
+    }
+
+    async function fetchQR() {
+      try {
+        const res = await fetch('/qr-data', { cache: 'no-store' });
+        const { qr } = await res.json();
+        renderQR(qr);
+      } catch (e) {
+        statusEl.textContent = 'Failed to load QR. Retrying...';
+      }
+    }
+
+    refreshBtn.addEventListener('click', fetchQR);
+    setInterval(fetchQR, 3000);
+    fetchQR();
+  </script>
+</body>
+</html>`);
   });
 
   app.listen(PORT, () => {
