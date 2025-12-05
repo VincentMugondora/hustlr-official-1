@@ -1,0 +1,552 @@
+[
+  {
+    "whatsapp_number": "text:share:18704",
+    "name": "Share",
+    "service_type": "doctor",
+    "location": "",
+    "business_name": "Share",
+    "contact": null,
+    "status": "pending",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "2634792195",
+    "name": "Medical and Dental Practitioners council of Zimbabwe",
+    "service_type": "doctor",
+    "location": "8 Harvey Brown Ave",
+    "business_name": "Medical and Dental Practitioners council of Zimbabwe",
+    "contact": "04 792 195",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263783072110",
+    "name": "Klosad Medical Clinic Dr Mushawatu D T(The GP)",
+    "service_type": "doctor",
+    "location": "20 Lanark Rd",
+    "business_name": "Klosad Medical Clinic Dr Mushawatu D T(The GP)",
+    "contact": "078 307 2110",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263712023155",
+    "name": "Uzima Haven Medical and Maternity Clinic",
+    "service_type": "doctor",
+    "location": "36th St",
+    "business_name": "Uzima Haven Medical and Maternity Clinic",
+    "contact": "071 202 3155",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263782582333",
+    "name": "Medisure Clinic",
+    "service_type": "doctor",
+    "location": "9 Windermere Lodge, Corner Fife &, Mazowe St",
+    "business_name": "Medisure Clinic",
+    "contact": "078 258 2333",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263785745795",
+    "name": "Health First Family Clinic (Dr J Chagonda)",
+    "service_type": "doctor",
+    "location": "24 Basset Cres",
+    "business_name": "Health First Family Clinic (Dr J Chagonda)",
+    "contact": "078 574 5795",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263712147011",
+    "name": "Uplands Medical Clinic",
+    "service_type": "doctor",
+    "location": "984 Forbes Road,Uplands",
+    "business_name": "Uplands Medical Clinic",
+    "contact": "071 214 7011",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263774358471",
+    "name": "Selous Avenue Clinic",
+    "service_type": "doctor",
+    "location": "Opposite Dominican Convent, 19 Selous Ave",
+    "business_name": "Selous Avenue Clinic",
+    "contact": "077 435 8471",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263788804985",
+    "name": "GLAUDINA 24HR MEDICAL CENTRE",
+    "service_type": "doctor",
+    "location": "MUSHAMBAHURO COMPLEX GLAUDINA, 95 MARWEDE RD",
+    "business_name": "GLAUDINA 24HR MEDICAL CENTRE",
+    "contact": "078 880 4985",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263787978876",
+    "name": "WATERFALLS MEDICAL CENTRE",
+    "service_type": "doctor",
+    "location": "2164 Second Ave",
+    "business_name": "WATERFALLS MEDICAL CENTRE",
+    "contact": "078 797 8876",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263242252077",
+    "name": "Dr Godfrey Mungwadzi",
+    "service_type": "doctor",
+    "location": "52 Josiah Chinamano Ave",
+    "business_name": "Dr Godfrey Mungwadzi",
+    "contact": "024) 2252077",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263783187035",
+    "name": "Garden City Clinic",
+    "service_type": "doctor",
+    "location": "383, Engineering Highfields Machipisa",
+    "business_name": "Garden City Clinic",
+    "contact": "078 318 7035",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "2634706281",
+    "name": "Dr Billy Rigava",
+    "service_type": "doctor",
+    "location": "Africa House Medical Centre 100 Jason Moyo Avenue B/w 3rd & 4th St (S.V Muzenda",
+    "business_name": "Dr Billy Rigava",
+    "contact": "04 706 281",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263242781649",
+    "name": "Daylight Medical Group",
+    "service_type": "doctor",
+    "location": "104 Leopold Takawira St",
+    "business_name": "Daylight Medical Group",
+    "contact": "024) 2781649",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263242227946",
+    "name": "Suburban Medical Centre",
+    "service_type": "doctor",
+    "location": "Warren Park Shopping Centre, 3489",
+    "business_name": "Suburban Medical Centre",
+    "contact": "024) 2227946",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263772904751",
+    "name": "The Family clinic",
+    "service_type": "doctor",
+    "location": "69 Josiah Chinamano Ave",
+    "business_name": "The Family clinic",
+    "contact": "077 290 4751",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "2638677008873",
+    "name": "Santé 24hr Medical Centre",
+    "service_type": "doctor",
+    "location": "Southerton Shopping Centre, St, Johns Way",
+    "business_name": "Santé 24hr Medical Centre",
+    "contact": "08677 008873",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "2638612000250",
+    "name": "Medical Specialists Centre (MSC)",
+    "service_type": "doctor",
+    "location": "8 Elsworth Ave",
+    "business_name": "Medical Specialists Centre (MSC)",
+    "contact": "08612 000250",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "2638677188522",
+    "name": "Milton Park Medical Centre",
+    "service_type": "doctor",
+    "location": "2 Harvey Brown Ave",
+    "business_name": "Milton Park Medical Centre",
+    "contact": "08677 188522",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263712700629",
+    "name": "Kirkman Family Health Centre",
+    "service_type": "doctor",
+    "location": "11881 Tynwald Dr",
+    "business_name": "Kirkman Family Health Centre",
+    "contact": "071 270 0629",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263717377495",
+    "name": "Matherhurst Clinic - Dr H Shumba",
+    "service_type": "doctor",
+    "location": "99 Josiah Chinamano Ave",
+    "business_name": "Matherhurst Clinic - Dr H Shumba",
+    "contact": "071 737 7495",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263781187152",
+    "name": "Cleveland Medical Center",
+    "service_type": "doctor",
+    "location": "24 Cleveland Ave",
+    "business_name": "Cleveland Medical Center",
+    "contact": "078 118 7152",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263780253619",
+    "name": "Colenbrander Medical Centre",
+    "service_type": "doctor",
+    "location": "19 Colenbrander Rd",
+    "business_name": "Colenbrander Medical Centre",
+    "contact": "078 025 3619",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263785745795",
+    "name": "Health First Family Clinic (Dr J Chagonda)",
+    "service_type": "doctor",
+    "location": "24 Basset Cres",
+    "business_name": "Health First Family Clinic (Dr J Chagonda)",
+    "contact": "078 574 5795",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263242706216",
+    "name": "West End Clinic",
+    "service_type": "doctor",
+    "location": "13 Baines Ave",
+    "business_name": "West End Clinic",
+    "contact": "024) 2706216",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263242252780",
+    "name": "Samuel Leon Children's Casualty & Emergency Centre",
+    "service_type": "doctor",
+    "location": "52 Josiah Chinamano Ave",
+    "business_name": "Samuel Leon Children's Casualty & Emergency Centre",
+    "contact": "024) 2252780",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263773735109",
+    "name": "Marimba Medical Centre",
+    "service_type": "doctor",
+    "location": "Unit 4, Samora Machel Shopping Centre, Samora Machel Avenue West",
+    "business_name": "Marimba Medical Centre",
+    "contact": "077 373 5109",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263782768280",
+    "name": "MSF - Doctors Without Borders Adolescent Clinic",
+    "service_type": "doctor",
+    "location": "42QP+W6J",
+    "business_name": "MSF - Doctors Without Borders Adolescent Clinic",
+    "contact": "078 276 8280",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263780905791",
+    "name": "Westgate Med Clinic Harare",
+    "service_type": "doctor",
+    "location": "Shop FC2 Ground Floor Fountain Court Westgate Shopping Center",
+    "business_name": "Westgate Med Clinic Harare",
+    "contact": "078 090 5791",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "2634781857",
+    "name": "Arcadia Medical Centre",
+    "service_type": "doctor",
+    "location": "5335+R8F, Bardia Dr",
+    "business_name": "Arcadia Medical Centre",
+    "contact": "04 781 857",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263242741079",
+    "name": "HEENT Institute",
+    "service_type": "doctor",
+    "location": "5 Weale Road, Milton Park",
+    "business_name": "HEENT Institute",
+    "contact": "024) 2741079",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263717377495",
+    "name": "Matherhurst Clinic - Dr H Shumba",
+    "service_type": "doctor",
+    "location": "99 Josiah Chinamano Ave",
+    "business_name": "Matherhurst Clinic - Dr H Shumba",
+    "contact": "071 737 7495",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "text:medical chambers:40249",
+    "name": "Medical Chambers",
+    "service_type": "doctor",
+    "location": "60 Baines Ave",
+    "business_name": "Medical Chambers",
+    "contact": null,
+    "status": "pending",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263772904751",
+    "name": "The Family clinic",
+    "service_type": "doctor",
+    "location": "69 Josiah Chinamano Ave",
+    "business_name": "The Family clinic",
+    "contact": "077 290 4751",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263780028392",
+    "name": "Dr Prudance Mushayavanhu",
+    "service_type": "doctor",
+    "location": "196 Samora Machel Ave W",
+    "business_name": "Dr Prudance Mushayavanhu",
+    "contact": "078 002 8392",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263242257086",
+    "name": "Dr Nyakanda Obstetrics & Gynaecology Rooms",
+    "service_type": "doctor",
+    "location": "24 Rowland Square",
+    "business_name": "Dr Nyakanda Obstetrics & Gynaecology Rooms",
+    "contact": "024) 2257086",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263785854522",
+    "name": "Divine Health Centre (Dr Chenai Maunze)",
+    "service_type": "doctor",
+    "location": "50 Harvey Brown Ave",
+    "business_name": "Divine Health Centre (Dr Chenai Maunze)",
+    "contact": "078 585 4522",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "2638677006175",
+    "name": "The Avenues Clinic",
+    "service_type": "doctor",
+    "location": "Corner Baines, and Mazowe St",
+    "business_name": "The Avenues Clinic",
+    "contact": "08677 006175",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263242772509",
+    "name": "Red Cross Clinic",
+    "service_type": "doctor",
+    "location": "98 Cameron St",
+    "business_name": "Red Cross Clinic",
+    "contact": "024) 2772509",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263242254220",
+    "name": "Ascot Health and Wellness Medical Centre",
+    "service_type": "doctor",
+    "location": "58 Ascot Rd",
+    "business_name": "Ascot Health and Wellness Medical Centre",
+    "contact": "024) 2254220",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263242251133",
+    "name": "Dr M P Ndiweni",
+    "service_type": "doctor",
+    "location": "82 George Silundika Ave",
+    "business_name": "Dr M P Ndiweni",
+    "contact": "024) 2251133",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263787831864",
+    "name": "Zimani Medical Group ( DR. N.H.S ZIMANI & DR. PRISCILLA ZIMANI )",
+    "service_type": "doctor",
+    "location": "Milton Park, 19 Lezard Avenue, 3 Borrowdale Ln",
+    "business_name": "Zimani Medical Group ( DR. N.H.S ZIMANI & DR. PRISCILLA ZIMANI )",
+    "contact": "078 783 1864",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263242702428",
+    "name": "Metropolitan Clinic",
+    "service_type": "doctor",
+    "location": "53C5+PHX, 82 George Silundika Ave",
+    "business_name": "Metropolitan Clinic",
+    "contact": "024) 2702428",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263777139001",
+    "name": "Dr Zimunhu, Dr Mbuwayesango & Dr Gonouya - Paediatric Surgical Consultants",
+    "service_type": "doctor",
+    "location": "155 King George Rd",
+    "business_name": "Dr Zimunhu, Dr Mbuwayesango & Dr Gonouya - Paediatric Surgical Consultants",
+    "contact": "077 713 9001",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263242700670",
+    "name": "Dr Mutangadura",
+    "service_type": "doctor",
+    "location": "18 Phillips Ave",
+    "business_name": "Dr Mutangadura",
+    "contact": "024) 2700670",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263786286454",
+    "name": "Orthosure Clinic",
+    "service_type": "doctor",
+    "location": "3 Cherlynn Court, The Avenues Clinic 83, Josiah Chinamano Ave",
+    "business_name": "Orthosure Clinic",
+    "contact": "078 628 6454",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263715717417",
+    "name": "WEST WING HEALTH CENTRE 24 HOUR",
+    "service_type": "doctor",
+    "location": "No: 8 Jason Moyo Ave / Cnr, Kaguvi St",
+    "business_name": "WEST WING HEALTH CENTRE 24 HOUR",
+    "contact": "071 571 7417",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "text:southlea hospital:32175",
+    "name": "Southlea Hospital",
+    "service_type": "doctor",
+    "location": "2XPP+574",
+    "business_name": "Southlea Hospital",
+    "contact": null,
+    "status": "pending",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263778037920",
+    "name": "Liyandra Medical Rooms",
+    "service_type": "doctor",
+    "location": "45 Fife Ave",
+    "business_name": "Liyandra Medical Rooms",
+    "contact": "077 803 7920",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263775354043",
+    "name": "THE NEUROSCIENCES CENTRE- DR A MUSARA",
+    "service_type": "doctor",
+    "location": "Westend Clinic Extension, 7 Baines Ave",
+    "business_name": "THE NEUROSCIENCES CENTRE- DR A MUSARA",
+    "contact": "077 535 4043",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263242250538",
+    "name": "Corporate 24 Medical Centre",
+    "service_type": "doctor",
+    "location": "https://maps.app.goo.gl/wJJ4YmdXwDL3FYzh8, https://maps.app.goo.gl/GBkpi5koqP6BQqtV8, 6 Bath Rd",
+    "business_name": "Corporate 24 Medical Centre",
+    "contact": "024) 2250538",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263242793904",
+    "name": "Dr Douie's Rooms",
+    "service_type": "doctor",
+    "location": "106 Prince Edward St",
+    "business_name": "Dr Douie's Rooms",
+    "contact": "024) 2793904",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "2634706281",
+    "name": "Dr Billy Rigava",
+    "service_type": "doctor",
+    "location": "Africa House Medical Centre 100 Jason Moyo Avenue B/w 3rd & 4th St (S.V Muzenda",
+    "business_name": "Dr Billy Rigava",
+    "contact": "04 706 281",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263772101460",
+    "name": "The Sigma Healthcare - Dr Maticha",
+    "service_type": "doctor",
+    "location": "Haematology Center, 26 Blakiston St",
+    "business_name": "The Sigma Healthcare - Dr Maticha",
+    "contact": "077 210 1460",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  },
+  {
+    "whatsapp_number": "263242790780",
+    "name": "Rowland Square Medical Associates",
+    "service_type": "doctor",
+    "location": "21 Rowland Square",
+    "business_name": "Rowland Square Medical Associates",
+    "contact": "024) 2790780",
+    "status": "active",
+    "registered_at": "2025-12-05T10:00:51.116005"
+  }
+]
