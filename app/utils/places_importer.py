@@ -181,3 +181,158 @@ async def extract_query_from_maps_link(maps_url: str) -> Optional[str]:
     except Exception as e:
         logger.warning(f"Failed to extract query from maps link: {e}")
         return None
+
+
+def _safe_strip(s: Optional[str]) -> str:
+    return (s or "").strip()
+
+
+def parse_text_providers(text: str) -> List[Dict[str, Any]]:
+    """Parse a pasted Google Maps results text dump into provider dicts.
+
+    Expected patterns per entry (flexible):
+      Name
+      4.8(10)
+      Category · address
+      Open · Closes 5 pm · <phone>    OR   Open 24 hours · <phone>
+      [Website]
+      [Directions]
+      ["Quoted review"]
+
+    Returns list of dicts with keys: name, category, address, phone, rating, review_count, note
+    """
+    lines = [l.strip() for l in (text or "").splitlines()]
+    items: List[Dict[str, Any]] = []
+    buf: Dict[str, Any] = {}
+
+    def flush():
+        nonlocal buf
+        if buf.get("name"):
+            items.append(buf)
+        buf = {}
+
+    skip_markers = {"results", "share", "website", "directions", "", ""}
+
+    i = 0
+    while i < len(lines):
+        line = lines[i].strip()
+        low = line.lower()
+        if not line:
+            # blank line as separator
+            if buf.get("name"):
+                flush()
+            i += 1
+            continue
+        # skip obvious UI markers
+        if any(m == low for m in skip_markers):
+            i += 1
+            continue
+        # quoted review
+        if (low.startswith("\"") and low.endswith("\"")) or (low.startswith("“") and low.endswith("”")):
+            buf["note"] = line.strip('"“”')
+            i += 1
+            continue
+
+        # rating pattern like 4.5(10)
+        m = re.match(r"^(?P<rating>[0-9]+(?:\.[0-9]+)?)\((?P<count>\d+)\)$", line)
+        if m:
+            buf["rating"] = float(m.group("rating"))
+            buf["review_count"] = int(m.group("count"))
+            i += 1
+            continue
+
+        # open/hours + phone line e.g. "Open · Closes 5 pm · 078 307 2110" or "Open 24 hours · 08677 ..."
+        if low.startswith("open ") or low.startswith("open"):
+            # extract phone by digits
+            phone_digits = re.findall(r"[+]?\d[\d\s\-()]{5,}\d", line)
+            if phone_digits:
+                buf["phone"] = phone_digits[-1]
+            buf["hours"] = line
+            i += 1
+            continue
+
+        # category and address: often "Medical clinic · 20 Lanark Rd" with star marker variants removed
+        if "·" in line and not buf.get("category"):
+            parts = [p.strip(" ·\u272e\u2605\u273f\u2730") for p in line.split("·") if p.strip()]
+            if parts:
+                buf["category"] = parts[0]
+                if len(parts) >= 2:
+                    buf["address"] = parts[-1]
+            i += 1
+            continue
+
+        # assume any other non-empty line that is not captured is a new Name
+        # if there's already a name and we hit another strong name, flush
+        if buf.get("name"):
+            # start of a new entry
+            flush()
+        buf["name"] = line
+        i += 1
+
+    # final flush
+    if buf.get("name"):
+        flush()
+
+    return items
+
+
+async def import_text_to_db(
+    db: AsyncIOMotorDatabase,
+    text: str,
+    service_type_override: Optional[str] = None,
+    status: str = "active",
+) -> Dict[str, Any]:
+    """Parse provided text and upsert into providers collection.
+
+    If phone cannot be normalized to WhatsApp number, mark status 'pending'.
+    """
+    parsed = parse_text_providers(text)
+    inserted = 0
+    updated = 0
+    skipped = 0
+    sample: List[Dict[str, Any]] = []
+
+    for it in parsed:
+        name = _safe_strip(it.get("name"))
+        if not name:
+            skipped += 1
+            continue
+        phone = _safe_strip(it.get("phone"))
+        whatsapp = _normalize_phone_to_whatsapp(phone)
+        address = _safe_strip(it.get("address"))
+        category = (_safe_strip(it.get("category")) or "").lower()
+        # choose service type
+        s_type = service_type_override or ("doctor" if category else "service")
+        eff_status = status if whatsapp else "pending"
+        doc = {
+            "whatsapp_number": whatsapp or f"text:{name.lower()}:{hash(name) & 0xffff}",
+            "name": name,
+            "service_type": s_type,
+            "location": address,
+            "business_name": name,
+            "contact": phone or None,
+            "status": eff_status,
+            "registered_at": __import__("datetime").datetime.utcnow(),
+            "meta": {
+                "category": it.get("category"),
+                "rating": it.get("rating"),
+                "review_count": it.get("review_count"),
+                "hours": it.get("hours"),
+                "note": it.get("note"),
+                "source": "text_import",
+            },
+        }
+
+        unique = {"whatsapp_number": doc["whatsapp_number"]}
+        existing = await db.providers.find_one(unique)
+        if existing:
+            await db.providers.update_one({"_id": existing["_id"]}, {"$set": doc})
+            updated += 1
+        else:
+            await db.providers.insert_one(doc)
+            inserted += 1
+
+        if len(sample) < 5:
+            sample.append({"name": doc["name"], "whatsapp_number": doc["whatsapp_number"], "service_type": doc["service_type"]})
+
+    return {"inserted": inserted, "updated": updated, "skipped": skipped, "sample": sample, "total_processed": len(parsed)}
