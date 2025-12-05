@@ -1,5 +1,5 @@
 from typing import Dict, Any, List, Optional
-from datetime import datetime
+from datetime import datetime, timedelta
 from enum import Enum
 import re
 import logging
@@ -778,13 +778,20 @@ class MessageHandler:
             session['data'] = {}
             return
         
-        # Create the booking
+        # Create the booking (store canonical ISO date-time when possible)
+        bt_text = session['data']['booking_time']
+        try:
+            bt_dt = self._canonicalize_booking_time(bt_text)
+            bt_iso = bt_dt.strftime('%Y-%m-%d %H:%M') if bt_dt else bt_text
+        except Exception:
+            bt_iso = bt_text
+
         booking_data = {
             'booking_id': f"booking_{datetime.utcnow().timestamp()}",
             'user_whatsapp_number': user_number,
             'provider_whatsapp_number': session['data']['selected_provider']['whatsapp_number'],
             'service_type': session['data']['service_type'],
-            'date_time': session['data']['booking_time'],
+            'date_time': bt_iso,
             'issue': session['data'].get('issue', ''),
             'status': 'pending',
             'customer_number': user_number,  # Store for provider response handling
@@ -1174,6 +1181,72 @@ class MessageHandler:
             return True
         return False
 
+    def _canonicalize_booking_time(self, text: str) -> Optional[datetime]:
+        t = (text or '').strip().lower()
+        if not t:
+            return None
+        now = datetime.utcnow()
+        # Base day
+        base = now
+        if 'tomorrow' in t:
+            base = now + timedelta(days=1)
+        elif 'today' in t:
+            base = now
+        elif 'now' in t:
+            return now
+
+        # Day-of-week handling: next monday, tuesday, ... (basic)
+        weekdays = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday']
+        for idx, name in enumerate(weekdays):
+            if f'next {name}' in t:
+                days_ahead = (idx - base.weekday() + 7) % 7
+                days_ahead = days_ahead if days_ahead != 0 else 7
+                base = base + timedelta(days=days_ahead)
+                break
+
+        # Default times for parts of day
+        hour = base.hour
+        minute = 0
+        if 'morning' in t:
+            hour = 9
+        elif 'afternoon' in t:
+            hour = 14
+        elif 'evening' in t or 'tonight' in t:
+            hour = 18
+
+        # Explicit time like 10, 10am, 10:30, 10:30am
+        m = re.search(r"\b(\d{1,2})(?::(\d{2}))?\s*(am|pm)?\b", t)
+        if m:
+            h = int(m.group(1))
+            mm = int(m.group(2)) if m.group(2) else 0
+            ampm = (m.group(3) or '').lower()
+            if ampm == 'pm' and h < 12:
+                h += 12
+            if ampm == 'am' and h == 12:
+                h = 0
+            hour, minute = h, mm
+
+        return base.replace(hour=hour, minute=minute, second=0, microsecond=0)
+
+    def _format_booking_time_for_display(self, dt_text: str) -> str:
+        s = (dt_text or '').strip()
+        if not s:
+            return 'Time not set'
+        # Try parse ISO
+        try:
+            dt = datetime.fromisoformat(s.replace('Z', '+00:00'))
+            return dt.strftime('%Y-%m-%d %H:%M')
+        except Exception:
+            pass
+        # Try canonicalize from natural text
+        try:
+            dt2 = self._canonicalize_booking_time(s)
+            if dt2:
+                return dt2.strftime('%Y-%m-%d %H:%M')
+        except Exception:
+            pass
+        return s
+
     async def show_user_bookings(self, user_number: str, session: Dict, user: Dict, cancel_mode: bool) -> None:
         bookings = []
         try:
@@ -1201,7 +1274,7 @@ class MessageHandler:
             enriched.append({
                 'id': b.get('booking_id') or '',
                 'provider': pname or pnum or 'Provider',
-                'time': b.get('date_time') or 'Time not set',
+                'time': self._format_booking_time_for_display(b.get('date_time') or ''),
                 'status': b.get('status') or 'pending',
             })
         lines = []

@@ -13687,3 +13687,95 @@ Time: Tomo...
 2025-12-05 13:28:01,004 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_response, Message: You're welcome!...
 2025-12-05 13:28:02,537 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2025-12-05 13:28:02,659 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-05 13:37:34,493 - app.api.whatsapp - INFO - [2025-12-05T11:37:34.493558] Baileys webhook received
+2025-12-05 13:37:34,495 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F61B108A1BE2AA103D6",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764934654,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-05 13:37:34,496 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-05 13:37:34,496 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-05 13:37:35,890 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-05 13:38:15,103 - app.api.whatsapp - INFO - [2025-12-05T11:38:15.103032] Baileys webhook received
+2025-12-05 13:38:15,103 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F61B108A1BE2AA103D6",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764934694,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-05 13:38:15,103 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-05 13:38:15,106 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-05 13:38:15,151 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-05 13:38:58,358 - app.api.whatsapp - INFO - [2025-12-05T11:38:58.358387] Baileys webhook received
+2025-12-05 13:38:58,361 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "can l see my bookings",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F61B108A1BE2AA103D6",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764934737,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "extendedTextMessage": {
+        "text": "can l see my bookings",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "+9HjEBIos+s+WA==",
+          "senderTimestamp": "1764663951",
+          "recipientKeyHash": "sKUZHCMQA4zS9g==",
+          "recipientTimestamp": "1764849621"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  }
+}
+2025-12-05 13:38:58,361 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-05 13:38:58,361 - app.api.whatsapp - INFO - Baileys text: 'can l see my bookings'
+2025-12-05 13:38:58,710 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: interactive_buttons, Header: Your bookings, Body: Here are your recent bookings:
+
+1) Suburban Medica...
+2025-12-05 13:39:00,184 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-05 13:39:00,232 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
