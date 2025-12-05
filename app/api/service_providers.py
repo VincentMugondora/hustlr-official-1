@@ -76,6 +76,31 @@ async def import_places(
         raise HTTPException(status_code=400, detail=str(e))
 
 
+class TextImportRequest(BaseModel):
+    text: str
+    service_type: Optional[str] = None
+    status: Optional[str] = "active"
+
+
+@router.post("/import-text")
+async def import_text(
+    data: TextImportRequest,
+    db: AsyncIOMotorDatabase = Depends(get_database),
+):
+    try:
+        from app.utils.places_importer import parse_text_providers, import_text_to_db
+        items = parse_text_providers(data.text)
+        stats = await import_text_to_db(
+            db,
+            text=data.text,
+            service_type_override=data.service_type,
+            status=data.status or "active",
+        )
+        return {"items": items, "stats": stats}
+    except RuntimeError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
 class PlacesImportFromLink(BaseModel):
     maps_url: str
     service_type: Optional[str] = None
