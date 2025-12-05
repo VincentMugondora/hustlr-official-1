@@ -10998,3 +10998,49 @@ Just tell me what...
 Are you looking to book a new service for 6:00 AM,...
 2025-12-05 09:45:49,900 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2025-12-05 09:45:50,074 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-05 10:03:01,566 - app.api.whatsapp - INFO - [2025-12-05T08:03:01.566183] Baileys webhook received
+2025-12-05 10:03:01,567 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "l am having heart problems",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F3B2D368B4F2796E695",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764921780,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "l am having heart problems",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "+9HjEBIos+s+WA==",
+          "senderTimestamp": "1764663951",
+          "recipientKeyHash": "sKUZHCMQA4zS9g==",
+          "recipientTimestamp": "1764849621"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-05 10:03:01,568 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-05 10:03:01,569 - app.api.whatsapp - INFO - Baileys text: 'l am having heart problems'
+2025-12-05 10:03:07,250 - app.utils.gemini_service - INFO - [GEMINI RESPONSE] Question: l am having heart problems..., Answer: Hi Vincent, I'm really sorry to hear you're having heart problems. That sounds very serious, and your health is the most important thing.
+
+Please know that Hustlr helps with local home services like p...
+2025-12-05 10:03:07,254 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_response, Message: Hi Vincent, I'm really sorry to hear you're having heart problems. That sounds very serious, and you...
+2025-12-05 10:03:08,308 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-05 10:03:08,440 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322

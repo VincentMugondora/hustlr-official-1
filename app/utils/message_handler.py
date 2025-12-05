@@ -307,8 +307,13 @@ class MessageHandler:
                 'leaking pipe', 'burst pipe', 'blocked drain', 'burst tap', 'leaking tap',
                 'water leak', 'burst water', 'clogged drain', 'blocked toilet', 'leaking toilet',
                 'plumbing issue', 'plumbing problem', 'water problem', 'drainage', 'sewage',
-                # Treat headache-related messages as needing a plumber, per user request
                 'headache',
+            ],
+            'doctor': [
+                'heart problem', 'heart attack', 'chest pain', 'difficulty breathing', 'doctor', 'medical emergency',
+                'fever', 'sick', 'ill', 'unwell', 'pain', 'hospital', 'clinic', 'ambulance', 'medical help',
+                'diabetes', 'hypertension', 'high blood pressure', 'low blood pressure', 'stroke',
+                'injury', 'bleeding', 'faint', 'collapse', 'unconscious', 'medical issue',
             ],
             'electrician': [
                 'electrical fault', 'power cut', 'no electricity', 'broken outlet', 'broken socket',
