@@ -12825,3 +12825,47 @@ Time: now...
 2025-12-05 11:00:04,060 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_response, Message: You're welcome!...
 2025-12-05 11:00:04,947 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2025-12-05 11:00:05,216 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-05 11:05:48,171 - app.api.whatsapp - INFO - [2025-12-05T09:05:48.171269] Baileys webhook received
+2025-12-05 11:05:48,171 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "status",
+  "text": "Ndinogamuchira nekuti ndozvamanemba",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "status@broadcast",
+      "fromMe": false,
+      "id": "AC9D6B085566DE8AA2A2197B7485F47F",
+      "participant": "263715526238@s.whatsapp.net",
+      "participantLid": "194111650947169@lid"
+    },
+    "messageTimestamp": 1764925547,
+    "pushName": "King",
+    "broadcast": true,
+    "message": {
+      "extendedTextMessage": {
+        "text": "Ndinogamuchira nekuti ndozvamanemba",
+        "textArgb": 4294967295,
+        "backgroundArgb": 4285818730,
+        "font": 5,
+        "previewType": "NONE",
+        "contextInfo": {
+          "forwardingScore": 0,
+          "featureEligibilities": {
+            "canBeReshared": true
+          },
+          "statusSourceType": "TEXT"
+        },
+        "inviteLinkGroupTypeV2": "DEFAULT"
+      },
+      "messageContextInfo": {
+        "messageSecret": "6WwE0Vlk5WLxhISHkJHOuY+wyfng6yDMD4iO1DE78Ms="
+      }
+    }
+  }
+}
+2025-12-05 11:05:48,171 - app.api.whatsapp - INFO - Baileys message from: status
+2025-12-05 11:05:48,171 - app.api.whatsapp - INFO - Baileys text: 'Ndinogamuchira nekuti ndozvamanemba'
+2025-12-05 11:05:49,505 - app.utils.message_handler - INFO - [BOT RESPONSE] To: status, Type: onboarding_welcome, Message: Welcome to Hustlr! I'll help you find local service providers.
+
+To get started, send your name and a...
+2025-12-05 11:06:19,942 - app.api.whatsapp - ERROR - Error handling Baileys message from status: 
+2025-12-05 11:06:50,300 - app.api.whatsapp - ERROR - Failed to send Baileys error message: 

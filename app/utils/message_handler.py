@@ -676,14 +676,15 @@ class MessageHandler:
         service_type = session['data'].get('service_type', 'service').title()
         issue = session['data'].get('issue', 'Not specified')
         location = session['data'].get('location', 'Not specified')
-        provider_location = session['data'].get('selected_provider', {}).get('location', location)
+        # Always show user's saved location from DB if present; fallback to session location
+        location_display = (user or {}).get('location') or location
         
         confirmation_msg = (
             f"Here's your booking:\n\n"
             f"Service: {service_type}\n"
             f"Issue: {issue}\n"
             f"Date & Time: {booking_time}\n"
-            f"Location: {provider_location}\n"
+            f"Location: {location_display}\n"
             f"\nReply \"Yes\" to confirm or \"No\" to edit."
         )
         
