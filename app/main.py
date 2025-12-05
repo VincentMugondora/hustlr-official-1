@@ -3,6 +3,7 @@ from app.api import whatsapp, service_providers, bookings, users
 from app.db import connect_to_mongo, close_mongo_connection
 import logging
 import sys
+import warnings
 
 # Configure logging
 logging.basicConfig(
@@ -12,6 +13,13 @@ logging.basicConfig(
         logging.StreamHandler(sys.stdout),  # Console output
         logging.FileHandler('hustlr_bot.log', mode='a')  # File output
     ]
+)
+
+# Silence specific Pydantic v2 config warning about schema_extra/json_schema_extra
+warnings.filterwarnings(
+    "ignore",
+    message="Valid config keys have changed in V2:",
+    category=UserWarning,
 )
 
 # Create FastAPI app

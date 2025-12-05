@@ -10758,3 +10758,146 @@ While I can't help with medical advice, if there's anything else you need taken 
 2025-12-05 09:28:18,294 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_response, Message: Oh no, Vincent! I'm really sorry to hear you have a headache. I hope you feel better very soon and c...
 2025-12-05 09:28:19,939 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2025-12-05 09:28:20,101 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-05 09:41:47,769 - app.api.whatsapp - INFO - [2025-12-05T07:41:47.769804] Baileys webhook received
+2025-12-05 09:41:47,818 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3FF7A0486A69B755096C",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764920507,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-05 09:41:47,847 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-05 09:41:47,882 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-05 09:41:50,607 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-05 09:41:53,466 - app.api.whatsapp - INFO - [2025-12-05T07:41:53.466444] Baileys webhook received
+2025-12-05 09:41:53,472 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3FF7A0486A69B755096C",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764920513,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-05 09:41:53,473 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-05 09:41:53,476 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-05 09:41:53,555 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-05 09:41:54,917 - app.api.whatsapp - INFO - [2025-12-05T07:41:54.917215] Baileys webhook received
+2025-12-05 09:41:54,917 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "l have a blocked drain",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3FF7A0486A69B755096C",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764920513,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "extendedTextMessage": {
+        "text": "l have a blocked drain",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "+9HjEBIos+s+WA==",
+          "senderTimestamp": "1764663951",
+          "recipientKeyHash": "sKUZHCMQA4zS9g==",
+          "recipientTimestamp": "1764849621"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  }
+}
+2025-12-05 09:41:54,918 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-05 09:41:54,918 - app.api.whatsapp - INFO - Baileys text: 'l have a blocked drain'
+2025-12-05 09:41:57,739 - app.utils.gemini_service - INFO - [GEMINI RESPONSE] Question: l have a blocked drain..., Answer: Hi Vincent! A blocked drain sounds like a real hassle, but don't worry, I can definitely help you find a great plumber in Harare to get that sorted out for you.
+
+To help me find the best plumber, coul...
+2025-12-05 09:41:57,741 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_response, Message: Hi Vincent! A blocked drain sounds like a real hassle, but don't worry, I can definitely help you fi...
+2025-12-05 09:41:58,715 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-05 09:41:58,863 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-05 09:42:23,431 - app.api.whatsapp - INFO - [2025-12-05T07:42:23.431849] Baileys webhook received
+2025-12-05 09:42:23,433 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "tomorrow at 600am",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3FF5B2910BE560C244A2",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764920542,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "tomorrow at 600am",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "+9HjEBIos+s+WA==",
+          "senderTimestamp": "1764663951",
+          "recipientKeyHash": "sKUZHCMQA4zS9g==",
+          "recipientTimestamp": "1764849621"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-05 09:42:23,433 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-05 09:42:23,433 - app.api.whatsapp - INFO - Baileys text: 'tomorrow at 600am'
+2025-12-05 09:42:26,464 - app.utils.gemini_service - INFO - [GEMINI RESPONSE] Question: tomorrow at 600am..., Answer: Hi Vincent, thanks for reaching out!
+
+Are you looking to set the specific time for your plumbing appointment tomorrow at 6:00 AM? I can definitely update that for you.
+
+Or, if you're looking to book a...
+2025-12-05 09:42:26,465 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_response, Message: Hi Vincent, thanks for reaching out!
+
+Are you looking to set the specific time for your plumbing app...
+2025-12-05 09:42:27,424 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-05 09:42:27,646 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
