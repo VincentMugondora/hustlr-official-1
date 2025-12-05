@@ -49,6 +49,10 @@ class MongoService:
         await db.providers.insert_one(provider_data)
         return True
 
+    async def get_provider_by_whatsapp(self, whatsapp_number: str) -> Optional[Dict[str, Any]]:
+        db = get_database()
+        return await db.providers.find_one({"whatsapp_number": whatsapp_number})
+
     # Booking operations
     async def create_booking(self, booking_data: Dict[str, Any]) -> bool:
         db = get_database()
