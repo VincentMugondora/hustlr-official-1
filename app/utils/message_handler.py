@@ -347,17 +347,28 @@ class MessageHandler:
         return None
     
     async def try_fast_booking(self, user_number: str, message_text: str, session: Dict, user: Dict) -> bool:
-        """Attempt to create a booking directly when message has service + time"""
+        """Attempt to create a booking directly when message has service + time. If location is present, confirm booking instantly."""
         service_type = self.extract_service_type(message_text)
         if not service_type:
-            return False
+            service_type = self.detect_problem_statement(message_text)
+            if not service_type:
+                return False
 
         if not self._message_contains_time_hint(message_text):
             return False
 
         user_location = user.get('location', '')
+        if not user_location:
+            await self._log_and_send_response(
+                user_number,
+                "Please tell me your area or location (e.g., 'Harare', 'Borrowdale', or 'Bulawayo') so I can book the right provider.",
+                "ask_location_for_fast_booking"
+            )
+            session['data']['service_type'] = service_type
+            session['state'] = ConversationState.BOOKING_LOCATION
+            return True
+
         providers = await self.db.get_providers_by_service(service_type, user_location)
-        
         if not providers:
             await self._log_and_send_response(
                 user_number,
@@ -368,6 +379,16 @@ class MessageHandler:
 
         selected_provider = providers[0]
         booking_time = self.parse_datetime(message_text)
+        if not booking_time:
+            await self._log_and_send_response(
+                user_number,
+                "When do you want the service? (e.g., 'tomorrow at 10am', 'today 2pm')",
+                "ask_time_for_fast_booking"
+            )
+            session['data']['service_type'] = service_type
+            session['data']['providers'] = providers
+            session['state'] = ConversationState.BOOKING_TIME
+            return True
 
         booking_data = {
             'booking_id': f"booking_{datetime.utcnow().timestamp()}",
@@ -396,6 +417,7 @@ class MessageHandler:
             )
 
         return True
+
     
     async def handle_service_search(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
         """Handle service provider search"""
