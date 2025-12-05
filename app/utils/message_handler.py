@@ -58,6 +58,21 @@ class MessageHandler:
         logger.info(f"[BOT RESPONSE] To: {user_number}, Type: interactive_buttons, Header: {header}, Body: {body[:50]}...")
         await self.whatsapp_api.send_interactive_buttons(user_number, header, body, buttons, footer)
     
+    def _build_friendly_provider_body(self, service_type: str, location: str, providers_count: int, session: Dict) -> str:
+        data = (session or {}).get('data') or {}
+        issue = (data.get('issue') or '').strip()
+        if issue:
+            issue_snippet = issue
+            if len(issue_snippet) > 120:
+                issue_snippet = issue_snippet[:117] + '...'
+            prefix = f"Sorry you're going through this. For your issue — {issue_snippet} — I can connect you with Hustlr {service_type}s in {location}."
+        else:
+            prefix = f"Sorry you're going through this. I can connect you with Hustlr {service_type}s in {location}."
+        return f"{prefix}\n\nFound {providers_count} provider(s). Please pick one:"
+
+    def _friendly_footer(self) -> str:
+        return "Tap a provider or reply with the number — we will handle the rest"
+    
     async def handle_message(self, message: WhatsAppMessage) -> None:
         """Main message handler - routes to appropriate handlers"""
         user_number = message.from_number
@@ -446,9 +461,9 @@ class MessageHandler:
         await self._log_and_send_interactive(
             user_number,
             f"Available {service_type}s in {user_location}",
-            f"Found {len(providers)} provider(s). Pick one:",
+            self._build_friendly_provider_body(service_type, user_location, len(providers), session),
             buttons,
-            "Tap a provider or reply with the number"
+            self._friendly_footer()
         )
 
         session['state'] = ConversationState.PROVIDER_SELECTION
@@ -520,9 +535,9 @@ class MessageHandler:
                     await self._log_and_send_interactive(
                         user_number,
                         f"Available {service_type}s in {normalized_location}",
-                        f"Found {len(providers)} provider(s). Pick one:",
+                        self._build_friendly_provider_body(service_type, normalized_location, len(providers), session),
                         buttons,
-                        "Tap a provider or reply with the number"
+                        self._friendly_footer()
                     )
                     
                     session['data']['service_type'] = service_type
@@ -612,9 +627,9 @@ class MessageHandler:
         await self._log_and_send_interactive(
             user_number,
             f"Available {service_type}s in {normalized_location}",
-            f"Found {len(providers)} provider(s). Pick one:",
+            self._build_friendly_provider_body(service_type, normalized_location, len(providers), session),
             buttons,
-            "Tap a provider or reply with the number"
+            self._friendly_footer()
         )
         
         session['data']['location'] = normalized_location

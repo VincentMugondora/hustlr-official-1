@@ -12959,3 +12959,47 @@ To get started, send your name and a...
 2025-12-05 11:10:20,433 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: no_providers_found, Message: Sorry, no doctors available right now....
 2025-12-05 11:10:21,391 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2025-12-05 11:10:21,491 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-05 12:36:57,396 - app.api.whatsapp - INFO - [2025-12-05T10:36:57.396802] Baileys webhook received
+2025-12-05 12:36:57,398 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "l have a headache",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F0A855A875410A11A3B",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764931016,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "l have a headache",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "+9HjEBIos+s+WA==",
+          "senderTimestamp": "1764663951",
+          "recipientKeyHash": "sKUZHCMQA4zS9g==",
+          "recipientTimestamp": "1764849621"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-05 12:36:57,399 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-05 12:36:57,400 - app.api.whatsapp - INFO - Baileys text: 'l have a headache'
+2025-12-05 12:36:57,682 - app.utils.location_extractor - INFO - Available cities/towns: ['Harare']
+2025-12-05 12:36:57,685 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: interactive_buttons, Header: Available doctors in Harare, Body: Found 3 provider(s). Pick one:...
+2025-12-05 12:36:58,672 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-05 12:36:58,728 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
