@@ -82,3 +82,4 @@ baileys_sessions/
 local_settings.py
 *.pem
 *.key
+hustlr_bot.log

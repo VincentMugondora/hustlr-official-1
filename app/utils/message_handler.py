@@ -307,6 +307,8 @@ class MessageHandler:
                 'leaking pipe', 'burst pipe', 'blocked drain', 'burst tap', 'leaking tap',
                 'water leak', 'burst water', 'clogged drain', 'blocked toilet', 'leaking toilet',
                 'plumbing issue', 'plumbing problem', 'water problem', 'drainage', 'sewage',
+                # Treat headache-related messages as needing a plumber, per user request
+                'headache',
             ],
             'electrician': [
                 'electrical fault', 'power cut', 'no electricity', 'broken outlet', 'broken socket',
