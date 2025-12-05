@@ -10712,3 +10712,49 @@ Sometimes we just need a little guidance to get started. Are you looking for a s
 Sometimes we just need a lit...
 2025-12-05 09:18:02,101 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2025-12-05 09:18:02,308 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-05 09:28:11,605 - app.api.whatsapp - INFO - [2025-12-05T07:28:11.605548] Baileys webhook received
+2025-12-05 09:28:11,605 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "l have a headache",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3FD7B25A9AF2777B1A25",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764919690,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "l have a headache",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "+9HjEBIos+s+WA==",
+          "senderTimestamp": "1764663951",
+          "recipientKeyHash": "sKUZHCMQA4zS9g==",
+          "recipientTimestamp": "1764849621"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-05 09:28:11,606 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-05 09:28:11,606 - app.api.whatsapp - INFO - Baileys text: 'l have a headache'
+2025-12-05 09:28:18,293 - app.utils.gemini_service - INFO - [GEMINI RESPONSE] Question: l have a headache..., Answer: Oh no, Vincent! I'm really sorry to hear you have a headache. I hope you feel better very soon and can get some rest.
+
+While I can't help with medical advice, if there's anything else you need taken c...
+2025-12-05 09:28:18,294 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_response, Message: Oh no, Vincent! I'm really sorry to hear you have a headache. I hope you feel better very soon and c...
+2025-12-05 09:28:19,939 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-05 09:28:20,101 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
