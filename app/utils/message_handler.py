@@ -153,9 +153,12 @@ class MessageHandler:
             # Start onboarding with combined name + location
             await self._log_and_send_response(
                 user_number,
-                "Welcome to Hustlr! I'll help you find local service providers.\n\n"
-                "To get started, send your name and area in one message.\n"
-                "Example: 'Vincent, Avondale'",
+                self._short(
+                    "Welcome to Hustlr! I'll help you find local service providers.\n\n"
+                    "To get started, send your name and area in one message.\n"
+                    "Example: 'Vincent, Avondale'",
+                    "Welcome to Hustlr! Send: 'Name, Area'"
+                ),
                 "onboarding_welcome"
             )
             session['state'] = ConversationState.ONBOARDING_NAME
@@ -183,20 +186,24 @@ class MessageHandler:
                 # If we can't clearly extract both, ask once more with an example
                 await self._log_and_send_response(
                     user_number,
-                    "Please send both your *name* and *area* in one message.\n"
-                    "Example: 'Vincent, Avondale'",
+                    self._short(
+                        "Please send both your *name* and *area* in one message.\n"
+                        "Example: 'Vincent, Avondale'",
+                        "Please send: 'Name, Area'"
+                    ),
                     "onboarding_retry"
                 )
                 return
             
             # Present privacy policy
-            privacy_text = (
+            privacy_text = self._short(
                 "Privacy Policy:\n\n"
                 "- We store your name, location, and booking history\n"
                 "- We share your info with service providers you choose\n"
                 "- We never sell your data to third parties\n"
                 "- You can request data deletion anytime\n\n"
-                "Do you agree? (Yes/No)"
+                "Do you agree? (Yes/No)",
+                "Privacy: we store name/location to help bookings. Agree? (Yes/No)"
             )
             
             await self._log_and_send_response(user_number, privacy_text, "privacy_policy")
@@ -220,9 +227,12 @@ class MessageHandler:
                 if success:
                     await self._log_and_send_response(
                         user_number,
-                        f"Great! You're all set, {session['data']['name']}!\n\n"
-                        "You can now search for service providers and book appointments.\n\n"
-                        "What service are you looking for?",
+                        self._short(
+                            f"Great! You're all set, {session['data']['name']}!\n\n"
+                            "You can now search for service providers and book appointments.\n\n"
+                            "What service are you looking for?",
+                            f"All set, {session['data']['name']}! What service do you need?"
+                        ),
                         "onboarding_complete"
                     )
                     session['state'] = ConversationState.SERVICE_SEARCH
@@ -342,7 +352,7 @@ class MessageHandler:
             session['data'] = {}
             await self._log_and_send_response(
                 user_number,
-                "Okay, let's start fresh. What service do you need?",
+                self._short("Okay, let's start fresh. What service do you need?", "Starting new. What service?"),
                 "session_reset"
             )
             return
@@ -471,7 +481,10 @@ class MessageHandler:
         if not user_location:
             await self._log_and_send_response(
                 user_number,
-                "Please tell me your area or location (e.g., 'Harare', 'Borrowdale', or 'Bulawayo') so I can book the right provider.",
+                self._short(
+                    "Please tell me your area or location (e.g., 'Harare', 'Borrowdale', or 'Bulawayo') so I can book the right provider.",
+                    "Your area? (e.g., Harare)"
+                ),
                 "ask_location_for_fast_booking"
             )
             session['data']['service_type'] = service_type
@@ -492,7 +505,10 @@ class MessageHandler:
         if not providers:
             await self._log_and_send_response(
                 user_number,
-                f"Sorry, no {service_type}s available in your area right now. Try a different service or area.",
+                self._short(
+                    f"Sorry, no {service_type}s available in your area right now. Try a different service or area.",
+                    f"Sorry, no {service_type}s in your area."
+                ),
                 "no_providers_found"
             )
             return True
@@ -501,7 +517,7 @@ class MessageHandler:
         if not booking_time:
             await self._log_and_send_response(
                 user_number,
-                "When do you want the service? (e.g., 'tomorrow at 10am', 'today 2pm')",
+                self._short("When do you want the service? (e.g., 'tomorrow at 10am', 'today 2pm')", "When? (e.g., tomorrow 10am)"),
                 "ask_time_for_fast_booking"
             )
             session['data']['service_type'] = service_type
@@ -568,7 +584,7 @@ class MessageHandler:
         if not all_providers:
             await self._log_and_send_response(
                 user_number,
-                f"Sorry, no {service_type}s available right now.",
+                self._short(f"Sorry, no {service_type}s available right now.", f"Sorry, no {service_type}s right now."),
                 "no_providers_found"
             )
             return
@@ -656,7 +672,10 @@ class MessageHandler:
             
             await self._log_and_send_response(
                 user_number,
-                f"I didn't recognize '{message_text}'. Available areas are: {', '.join(available_locations[:5])}",
+                self._short(
+                    f"I didn't recognize '{message_text}'. Available areas are: {', '.join(available_locations[:5])}",
+                    f"Didn't recognize '{message_text}'. Try: {', '.join(available_locations[:5])}"
+                ),
                 "location_not_recognized"
             )
             return
@@ -730,7 +749,10 @@ class MessageHandler:
         
         await self._log_and_send_response(
             user_number,
-            f"Great! You've selected {selected_provider['name']}.\n\nWhen would you like the service? (e.g., 'tomorrow morning', 'Dec 15 at 2pm')",
+            self._short(
+                f"Great! You've selected {selected_provider['name']}.\n\nWhen would you like the service? (e.g., 'tomorrow morning', 'Dec 15 at 2pm')",
+                f"Great choice. When?"
+            ),
             "provider_selected"
         )
     
@@ -742,7 +764,8 @@ class MessageHandler:
         if not booking_time:
             await self._log_and_send_response(
                 user_number,
-                "I didn't catch that. Try 'tomorrow morning', 'Dec 15 at 2pm', or 'next Monday'.",
+                self._short("I didn't catch that. Try 'tomorrow morning', 'Dec 15 at 2pm', or 'next Monday'.",
+                            "Didn't get the time. Try 'tomorrow 10am' or 'Dec 15 14:00'."),
                 "invalid_time_format"
             )
             return
@@ -757,13 +780,14 @@ class MessageHandler:
         # Always show user's saved location from DB if present; fallback to session location
         location_display = (user or {}).get('location') or location
         
-        confirmation_msg = (
+        confirmation_msg = self._short(
             f"Here's your booking:\n\n"
             f"Service: {service_type}\n"
             f"Issue: {issue}\n"
             f"Date & Time: {booking_time}\n"
             f"Location: {location_display}\n"
-            f"\nReply \"Yes\" to confirm or \"No\" to edit."
+            f"\nReply \"Yes\" to confirm or \"No\" to edit.",
+            f"Confirm: {service_type} | {issue} | {booking_time} | {location_display}. Reply Yes/No."
         )
         
         await self._log_and_send_response(
@@ -853,10 +877,13 @@ class MessageHandler:
             # Send message to customer: booking sent, waiting for confirmation
             await self._log_and_send_response(
                 user_number,
-                f"Your booking was sent to {provider_name}!\n\n"
-                f"We're waiting for their confirmation.\n"
-                f"Reference: {booking_id}\n\n"
-                f"You'll get a message once they respond.",
+                self._short(
+                    f"Your booking was sent to {provider_name}!\n\n"
+                    f"We're waiting for their confirmation.\n"
+                    f"Reference: {booking_id}\n\n"
+                    f"You'll get a message once they respond.",
+                    f"Sent to {provider_name}. Waiting for confirmation. Ref: {booking_id}"
+                ),
                 "booking_sent_waiting"
             )
             
@@ -923,9 +950,12 @@ class MessageHandler:
             # Send confirmation to provider
             await self._log_and_send_response(
                 user_number,
-                f"Booking Confirmed!\n\n"
-                f"Reference: {booking_id}\n\n"
-                f"You've accepted this booking. Contact the customer to arrange details.",
+                self._short(
+                    f"Booking Confirmed!\n\n"
+                    f"Reference: {booking_id}\n\n"
+                    f"You've accepted this booking. Contact the customer to arrange details.",
+                    f"Confirmed. Ref: {booking_id}."
+                ),
                 "provider_booking_accepted"
             )
             
@@ -933,10 +963,13 @@ class MessageHandler:
             if customer_number:
                 await self._log_and_send_response(
                     customer_number,
-                    f"Booking Confirmed!\n\n"
-                    f"{provider_name} has accepted your booking!\n"
-                    f"Reference: {booking_id}\n\n"
-                    f"They will contact you shortly to confirm details.",
+                    self._short(
+                        f"Booking Confirmed!\n\n"
+                        f"{provider_name} has accepted your booking!\n"
+                        f"Reference: {booking_id}\n\n"
+                        f"They will contact you shortly to confirm details.",
+                        f"Confirmed by {provider_name}. Ref: {booking_id}."
+                    ),
                     "customer_booking_confirmed"
                 )
             
@@ -956,8 +989,11 @@ class MessageHandler:
             # Send response to provider
             await self._log_and_send_response(
                 user_number,
-                f"You've declined booking {booking_id}.\n\n"
-                f"The customer will be notified and can book with another provider.",
+                self._short(
+                    f"You've declined booking {booking_id}.\n\n"
+                    f"The customer will be notified and can book with another provider.",
+                    f"Declined. Ref: {booking_id}."
+                ),
                 "provider_booking_declined"
             )
             
@@ -965,9 +1001,12 @@ class MessageHandler:
             if customer_number:
                 await self._log_and_send_response(
                     customer_number,
-                    f"Sorry, {provider_name} is unable to take this booking.\n\n"
-                    f"Reference: {booking_id}\n\n"
-                    f"Would you like to try another provider?",
+                    self._short(
+                        f"Sorry, {provider_name} is unable to take this booking.\n\n"
+                        f"Reference: {booking_id}\n\n"
+                        f"Would you like to try another provider?",
+                        f"{provider_name} declined. Ref: {booking_id}. Try another provider?"
+                    ),
                     "customer_booking_declined"
                 )
             
@@ -1145,7 +1184,14 @@ class MessageHandler:
             "What can I help you with?"
         )
         
-        await self._log_and_send_response(user_number, help_text, "help_menu")
+        await self._log_and_send_response(
+            user_number,
+            self._short(
+                help_text,
+                "Options: find providers, book, reminders, register provider. What do you need?"
+            ),
+            "help_menu"
+        )
     
     def extract_service_type(self, message_text: str) -> Optional[str]:
         """Extract service type from message"""
