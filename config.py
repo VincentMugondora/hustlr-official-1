@@ -34,5 +34,8 @@ class Settings(BaseSettings):
     # Google Places API (for importing providers)
     GOOGLE_PLACES_API_KEY: str = ""
 
+    # Bot response style
+    USE_CONCISE_RESPONSES: bool = False
+
 
 settings = Settings()

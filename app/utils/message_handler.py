@@ -6,6 +6,7 @@ import re
 import logging
 from app.models.message import WhatsAppMessage
 from app.utils.location_extractor import get_location_extractor
+from config import settings
 
 logger = logging.getLogger(__name__)
 
@@ -65,7 +66,18 @@ class MessageHandler:
         logger.info(f"[BOT RESPONSE] To: {user_number}, Type: interactive_buttons, Header: {header}, Body: {body[:50]}...")
         await self.whatsapp_api.send_interactive_buttons(user_number, header, body, buttons, footer)
     
+    def _is_concise(self) -> bool:
+        try:
+            return bool(getattr(settings, 'USE_CONCISE_RESPONSES', False))
+        except Exception:
+            return False
+
+    def _short(self, long_text: str, short_text: str) -> str:
+        return short_text if self._is_concise() else long_text
+
     def _build_friendly_provider_body(self, service_type: str, location: str, providers_count: int, session: Dict) -> str:
+        if self._is_concise():
+            return f"Found {providers_count} {service_type}s in {location}. Pick one:"
         data = (session or {}).get('data') or {}
         issue = (data.get('issue') or '').strip()
         if issue:
@@ -78,7 +90,7 @@ class MessageHandler:
         return f"{prefix}\n\nFound {providers_count} provider(s). Please pick one:"
 
     def _friendly_footer(self) -> str:
-        return "Tap a provider or reply with the number — we will handle the rest"
+        return "Tap or reply 1-3" if self._is_concise() else "Tap a provider or reply with the number — we will handle the rest"
     
     async def handle_message(self, message: WhatsAppMessage) -> None:
         """Main message handler - routes to appropriate handlers"""
