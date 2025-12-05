@@ -980,28 +980,27 @@ class MessageHandler:
                     "provider_registration_error"
                 )
     
-    async def handle_ai_response(self, user_number: str, message_text: str, user: Dict) -> None:
-        """Delegate general queries to Claude via AWSLambdaService.
+    async def handle_ai_response(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
+        """Delegate general queries to Claude via AI service.
 
-        All conversational logic and wording comes from the LLM. This method
-        simply forwards the message (and basic user context) and returns the
-        raw Claude response to the user.
-        
-        Also fetches conversation history so the LLM has full context and
-        doesn't ask the same questions repeatedly.
+        If the message contains a service intent, route back into the
+        structured booking flow instead of letting the LLM invent providers.
         """
-        # Fetch conversation history for this user (if available)
+        # First: if a service intent is detected, route to booking flow
+        inferred_service = self.extract_service_type(message_text) or self.detect_problem_statement(message_text)
+        if inferred_service:
+            session['state'] = ConversationState.SERVICE_SEARCH
+            await self.handle_service_search(user_number, message_text, session, user)
+            return
+
+        # Otherwise, use the AI for general chat
         conversation_history = []
         try:
-            # Try to get recent messages from the database
-            # This assumes db has a method to fetch conversation history
             if hasattr(self.db, 'get_conversation_history'):
                 conversation_history = await self.db.get_conversation_history(user_number, limit=10)
         except Exception as e:
             logger.warning(f"Could not fetch conversation history for {user_number}: {e}")
-        
-        # Check if the lambda_service (could be GeminiService) accepts conversation_history
-        # For now, pass it if the method signature supports it
+
         try:
             ai_response = await self.lambda_service.invoke_question_answerer(
                 message_text,
@@ -1013,7 +1012,6 @@ class MessageHandler:
                 conversation_history=conversation_history
             )
         except TypeError:
-            # Fallback for services that don't support conversation_history
             ai_response = await self.lambda_service.invoke_question_answerer(
                 message_text,
                 {
