@@ -75,6 +75,21 @@ class MongoService:
         )
         return result.matched_count > 0
 
+    async def get_booking_by_id(self, booking_id: str) -> Optional[Dict[str, Any]]:
+        db = get_database()
+        return await db.bookings.find_one({"booking_id": booking_id})
+
+    async def update_booking_time(self, booking_id: str, new_time_text: str, set_status: Optional[str] = None) -> bool:
+        db = get_database()
+        update: Dict[str, Any] = {"date_time": new_time_text, "updated_at": datetime.utcnow()}
+        if set_status:
+            update["status"] = set_status
+        result = await db.bookings.update_one(
+            {"booking_id": booking_id},
+            {"$set": update},
+        )
+        return result.matched_count > 0
+
     # Session operations
     async def get_session(self, whatsapp_number: str) -> Optional[Dict[str, Any]]:
         """Get user session"""
