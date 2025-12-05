@@ -14049,3 +14049,46 @@ Time: Tomo...
 2025-12-05 14:11:51,552 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: reschedule_booking_ask_time, Message: What new date/time would you like? (e.g., 'tomorrow 10am', 'Dec 20 14:30')...
 2025-12-05 14:11:52,593 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2025-12-05 14:11:52,696 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-05 14:12:13,293 - app.api.whatsapp - INFO - [2025-12-05T12:12:13.293362] Baileys webhook received
+2025-12-05 14:12:13,295 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "Dec 31 15:00",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F06E530DFC5D72A9EEF",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1764936732,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "Dec 31 15:00",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "+9HjEBIos+s+WA==",
+          "senderTimestamp": "1764663951",
+          "recipientKeyHash": "sKUZHCMQA4zS9g==",
+          "recipientTimestamp": "1764849621"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-05 14:12:13,298 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-05 14:12:13,298 - app.api.whatsapp - INFO - Baileys text: 'Dec 31 15:00'
+2025-12-05 14:12:15,395 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: reschedule_time_invalid, Message: I couldn't understand that time. Try 'tomorrow at 10am' or 'Dec 20 14:30'....
+2025-12-05 14:12:16,398 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-05 14:12:16,513 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
