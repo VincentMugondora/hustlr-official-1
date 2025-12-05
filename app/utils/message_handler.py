@@ -269,6 +269,17 @@ class MessageHandler:
         if message_text in ['help', 'menu', 'options']:
             await self.send_help_menu(user_number)
             return
+
+        # Reset conversation to fresh booking search
+        if message_text in ['reset', 'restart', 'start over', 'new']:
+            session['state'] = ConversationState.SERVICE_SEARCH
+            session['data'] = {}
+            await self._log_and_send_response(
+                user_number,
+                "Okay, let's start fresh. What service do you need?",
+                "session_reset"
+            )
+            return
         
         # Try fast booking when the message already includes service + time
         if state == ConversationState.SERVICE_SEARCH:
@@ -292,8 +303,9 @@ class MessageHandler:
         elif state == ConversationState.BOOKING_PENDING_PROVIDER:
             await self.handle_provider_response(user_number, message_text, session, user)
         else:
-            # Use AI to understand the message
-            await self.handle_ai_response(user_number, message_text, user)
+            # Use AI only for general chat; if the message contains a service intent,
+            # the AI handler will route it back into the structured booking flow.
+            await self.handle_ai_response(user_number, message_text, session, user)
     
     def detect_problem_statement(self, message_text: str) -> Optional[str]:
         """
