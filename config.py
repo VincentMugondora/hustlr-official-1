@@ -31,5 +31,8 @@ class Settings(BaseSettings):
     GEMINI_MODEL_NAME: str = "gemini-1.5-flash"
     USE_GEMINI_INTENT: bool = False
 
+    # Google Places API (for importing providers)
+    GOOGLE_PLACES_API_KEY: str = ""
+
 
 settings = Settings()
