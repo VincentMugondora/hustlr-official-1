@@ -118,7 +118,7 @@ async def import_places_to_db(
                 "business_name": name,
                 "contact": phone,
                 "status": effective_status,
-                "registered_at": __import__("datetime").datetime.utcnow(),
+                "registered_at": __import__("datetime").datetime.now(__import__("datetime").timezone.utc),
             }
 
             # Upsert by whatsapp_number (or place_id fallback) + name
@@ -310,6 +310,10 @@ async def import_text_to_db(
         if not name:
             skipped += 1
             continue
+        # Secondary guard against UI artifacts slipping through parser
+        if re.sub(r"[^a-z]+", "", name.lower()) in {"results", "share", "website", "directions"}:
+            skipped += 1
+            continue
         phone = _safe_strip(it.get("phone"))
         whatsapp = _normalize_phone_to_whatsapp(phone)
         address = _safe_strip(it.get("address"))
@@ -325,7 +329,7 @@ async def import_text_to_db(
             "business_name": name,
             "contact": phone or None,
             "status": eff_status,
-            "registered_at": __import__("datetime").datetime.utcnow(),
+            "registered_at": __import__("datetime").datetime.now(__import__("datetime").timezone.utc),
             "meta": {
                 "category": it.get("category"),
                 "rating": it.get("rating"),
