@@ -400,6 +400,16 @@ class MessageHandler:
             session['state'] = ConversationState.BOOKING_LOCATION
             return True
 
+        # Capture issue from problem statement if applicable
+        try:
+            if 'issue' not in session.get('data', {}):
+                inferred = self.detect_problem_statement(message_text)
+                if inferred == service_type:
+                    session.setdefault('data', {})
+                    session['data']['issue'] = message_text
+        except Exception:
+            pass
+
         providers = await self.db.get_providers_by_service(service_type, user_location)
         if not providers:
             await self._log_and_send_response(
@@ -454,6 +464,17 @@ class MessageHandler:
         if not service_type:
             service_type = self.detect_problem_statement(message_text)
         
+        # If message looks like a problem statement for this service, capture it as issue
+        if service_type:
+            try:
+                if 'issue' not in session.get('data', {}):
+                    inferred = self.detect_problem_statement(message_text)
+                    if inferred == service_type:
+                        session.setdefault('data', {})
+                        session['data']['issue'] = message_text
+            except Exception:
+                pass
+
         if not service_type:
             # Use AI to understand the request
             ai_response = await self.lambda_service.invoke_question_answerer(
