@@ -174,9 +174,10 @@ class AWSLambdaService:
         if getattr(settings, 'LLM_CONTROLLED_CONVERSATION', False):
             system_prompt = (
                 "You are the Hustlr booking and service-provider onboarding assistant.\n"
+                "CRITICAL: You MUST respond ONLY with valid JSON. NO natural language, NO explanations, NO text outside JSON.\n"
                 "You must fully control the conversation and collect ONLY the required fields.\n"
                 "You must NEVER hallucinate data about users or service providers.\n"
-                "If information is missing, always ask for it.\n\n"
+                "If information is missing, always ask for it in JSON format.\n\n"
                 "RULES\n"
                 "1. If user-specific info exists in MongoDB (e.g., location, phone, name, client_id), ALWAYS use it instead of asking again.\n"
                 "2. If a service provider list exists in MongoDB, NEVER generate or guess providers. Only use the exact list provided in context (provider_options).\n"
@@ -186,7 +187,8 @@ class AWSLambdaService:
                 "6. After collecting all required fields, return a JSON object following the schema below.\n"
                 "7. Never store or return extra fields.\n"
                 "8. For dates and times, convert and return them as ISO where applicable (date as ISO 8601).\n"
-                "9. You must decide the next question — the user should not control flow.\n\n"
+                "9. You must decide the next question — the user should not control flow.\n"
+                "10. ALWAYS respond with ONLY JSON. Do not include any text, markdown, or natural language.\n\n"
                 "BOOKING FIELDS REQUIRED:\n"
                 "- service_type\n"
                 "- service_provider_id\n"
@@ -207,12 +209,12 @@ class AWSLambdaService:
                 "- If the latest user message contains a date/time, parse it and fill date/time; do not ask again.\n"
                 "- If the user provided additional notes (problem description), set additional_notes.\n"
                 "- Always leverage known_fields to avoid asking for already known information.\n\n"
-                "OUTPUT FORMAT (must return ONLY JSON, no extra text):\n"
+                "OUTPUT FORMAT (MUST be valid JSON, nothing else):\n"
                 "If complete:\n"
-                "{\n  \"status\": \"COMPLETE\",\n  \"type\": \"booking\" | \"provider_registration\",\n  \"data\": { ...fields }\n}\n"
+                "{\"status\": \"COMPLETE\", \"type\": \"booking\" | \"provider_registration\", \"data\": {...fields}}\n"
                 "If not complete:\n"
-                "{\n  \"status\": \"IN_PROGRESS\",\n  \"next_question\": \"string\"\n}\n"
-                "Never return natural language outside of these rules.\n"
+                "{\"status\": \"IN_PROGRESS\", \"next_question\": \"string\"}\n"
+                "RESPOND ONLY WITH JSON. NO OTHER TEXT ALLOWED.\n"
             )
         else:
             system_prompt = (

@@ -17493,3 +17493,47 @@ botocore.exceptions.ReadTimeoutError: Read timeout on endpoint URL: "https://bed
 2025-12-08 14:09:34,171 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_invoke_error, Message: I'm having trouble connecting right now. Please try again in a moment....
 2025-12-08 14:09:35,094 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2025-12-08 14:09:35,228 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-08 14:11:13,816 - app.api.whatsapp - INFO - [2025-12-08T12:11:13.816821] Baileys webhook received
+2025-12-08 14:11:13,818 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hello",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3FBCE112A25B10DFED00",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765195871,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "hello",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "+9HjEBIos+s+WA==",
+          "senderTimestamp": "1764663951",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-08 14:11:13,818 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-08 14:11:13,818 - app.api.whatsapp - INFO - Baileys text: 'hello'
+2025-12-08 14:11:22,173 - app.utils.aws_lambda - INFO - [CLAUDE RESPONSE] User: Vincent Mugondora, Question: hello..., Answer: Hello Vincent! Welcome back to Hustlr. How can I assist you today? Are you looking to book a service? I can help you with booking a plumber, electrician, doctor, or other service providers. What type ...
+2025-12-08 14:11:22,173 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_parse_error, Message: Sorry, I couldn't process that. Please try again....
+2025-12-08 14:11:23,581 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-08 14:11:23,845 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
