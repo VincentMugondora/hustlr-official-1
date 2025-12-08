@@ -4,6 +4,7 @@ from dateutil.parser import parse as du_parse
 from enum import Enum
 import re
 import logging
+import json
 from app.models.message import WhatsAppMessage
 from app.utils.location_extractor import get_location_extractor
 from config import settings
@@ -364,33 +365,11 @@ class MessageHandler:
             return
         
         # LLM-controlled mode: if enabled and we're not mid critical flow,
-        # let the AI lead general chat/triage unless it's clearly a booking request.
+        # let the AI lead general chat/triage.
         if self._is_llm_controlled():
-            guarded_states = {
-                ConversationState.BOOKING_SERVICE_DETAILS,
-                ConversationState.BOOKING_LOCATION,
-                ConversationState.PROVIDER_SELECTION,
-                ConversationState.BOOKING_TIME,
-                ConversationState.BOOKING_CONFIRM,
-                ConversationState.BOOKING_PENDING_PROVIDER,
-                ConversationState.VIEW_BOOKINGS,
-                ConversationState.CANCEL_BOOKING_SELECT,
-                ConversationState.CANCEL_BOOKING_CONFIRM,
-                ConversationState.RESCHEDULE_BOOKING_SELECT,
-                ConversationState.RESCHEDULE_BOOKING_NEW_TIME,
-                ConversationState.RESCHEDULE_BOOKING_CONFIRM,
-                ConversationState.PROVIDER_REGISTER,
-                ConversationState.PROVIDER_REGISTER_NAME,
-                ConversationState.PROVIDER_REGISTER_SERVICE,
-                ConversationState.PROVIDER_REGISTER_LOCATION,
-                ConversationState.PROVIDER_REGISTER_BUSINESS,
-                ConversationState.PROVIDER_REGISTER_CONTACT,
-            }
-            if state not in guarded_states:
-                inferred_service = self.extract_service_type(message_text) or self.detect_problem_statement(message_text)
-                if not inferred_service and not self._message_contains_time_hint(message_text):
-                    await self.handle_ai_response(user_number, message_text, session, user)
-                    return
+            if state != ConversationState.BOOKING_PENDING_PROVIDER:
+                await self.handle_ai_response(user_number, message_text, session, user)
+                return
 
         # Try fast booking when the message already includes service + time
         if state == ConversationState.SERVICE_SEARCH:
@@ -1162,19 +1141,20 @@ class MessageHandler:
                 )
     
     async def handle_ai_response(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
-        """Delegate general queries to Claude via AI service.
+        """Delegate conversation to Claude via AI service.
 
-        If the message contains a service intent, route back into the
-        structured booking flow instead of letting the LLM invent providers.
+        In LLM-controlled mode, parse optional action directive at the end of the
+        assistant message (format: a final line starting with '>>> ' followed by JSON)
+        and execute it.
         """
-        # First: if a service intent is detected, route to booking flow
-        inferred_service = self.extract_service_type(message_text) or self.detect_problem_statement(message_text)
-        if inferred_service:
-            session['state'] = ConversationState.SERVICE_SEARCH
-            await self.handle_service_search(user_number, message_text, session, user)
-            return
+        # In non-LLM-controlled mode, keep the old fast route for clear booking intents
+        if not self._is_llm_controlled():
+            inferred_service = self.extract_service_type(message_text) or self.detect_problem_statement(message_text)
+            if inferred_service:
+                session['state'] = ConversationState.SERVICE_SEARCH
+                await self.handle_service_search(user_number, message_text, session, user)
+                return
 
-        # Otherwise, use the AI for general chat
         conversation_history = []
         try:
             if hasattr(self.db, 'get_conversation_history'):
@@ -1188,7 +1168,8 @@ class MessageHandler:
                 {
                     'name': user.get('name'),
                     'location': user.get('location'),
-                    'booking_history': await self.db.get_user_bookings(user_number)
+                    'booking_history': await self.db.get_user_bookings(user_number),
+                    'tool_result': (session.get('data', {}) or {}).get('last_tool_result'),
                 },
                 conversation_history=conversation_history
             )
@@ -1198,11 +1179,201 @@ class MessageHandler:
                 {
                     'name': user.get('name'),
                     'location': user.get('location'),
-                    'booking_history': await self.db.get_user_bookings(user_number)
+                    'booking_history': await self.db.get_user_bookings(user_number),
+                    'tool_result': (session.get('data', {}) or {}).get('last_tool_result'),
                 }
             )
+        # Split out optional action directive line
+        action_payload: Optional[Dict[str, Any]] = None
+        text_for_user = (ai_response or '').strip()
+        if text_for_user:
+            parts = text_for_user.splitlines()
+            if parts and parts[-1].lstrip().startswith('>>>'):
+                directive = parts[-1].lstrip()[3:].strip()
+                try:
+                    action_payload = json.loads(directive)
+                    text_for_user = '\n'.join(parts[:-1]).strip()
+                except Exception:
+                    action_payload = None
 
-        await self._log_and_send_response(user_number, ai_response, "ai_response")
+        if text_for_user:
+            await self._log_and_send_response(user_number, text_for_user, "ai_response")
+
+        if action_payload and isinstance(action_payload, dict):
+            await self._perform_ai_action(user_number, action_payload, session, user)
+
+    async def _perform_ai_action(self, user_number: str, action: Dict[str, Any], session: Dict, user: Dict) -> None:
+        act = (action.get('action') or '').lower()
+        if act == 'list_providers':
+            await self._ai_action_list_providers(user_number, action, session, user)
+        elif act == 'create_booking':
+            await self._ai_action_create_booking(user_number, action, session, user)
+        elif act == 'register_provider':
+            await self._ai_action_register_provider(user_number, action, session)
+        else:
+            # Unknown action; ignore silently
+            return
+
+    async def _ai_action_list_providers(self, user_number: str, payload: Dict[str, Any], session: Dict, user: Dict) -> None:
+        service_type = (payload.get('service_type') or '').strip().lower()
+        if not service_type:
+            await self._log_and_send_response(user_number, "Which service do you need? (e.g., plumber, electrician)", "ai_need_service")
+            return
+        user_loc = user.get('location') or ''
+        location_extractor = get_location_extractor()
+        normalized_location = location_extractor.normalize_user_location(user_loc) if user_loc else ''
+        providers = await self.db.get_providers_by_service(service_type, normalized_location or None)
+        if not providers:
+            await self._log_and_send_response(user_number, self._short(f"Sorry, no {service_type}s available in your area right now.", f"Sorry, no {service_type}s in your area."), "no_providers_found")
+            return
+
+        # Build buttons from top 3 providers
+        buttons = []
+        for provider in providers[:3]:
+            buttons.append({
+                'id': f"provider_{provider['whatsapp_number']}",
+                'title': f"{provider['name']}"
+            })
+        header = f"Available {service_type}s in {normalized_location or user_loc or 'your area'}"
+        await self._log_and_send_interactive(
+            user_number,
+            header,
+            self._build_friendly_provider_body(service_type, normalized_location or user_loc or 'your area', len(providers), session),
+            buttons,
+            self._friendly_footer()
+        )
+        # Persist context for the LLM and for backend mapping
+        session.setdefault('data', {})
+        session['data']['service_type'] = service_type
+        session['data']['providers'] = providers
+        session['data']['location'] = normalized_location or user_loc
+        # Summarize tool result for LLM context
+        try:
+            summary = {
+                'providers': [
+                    {'index': i + 1, 'name': p.get('name'), 'whatsapp_number': p.get('whatsapp_number')}
+                    for i, p in enumerate(providers[:5])
+                ],
+                'location': session['data']['location'],
+                'service_type': service_type,
+            }
+            session['data']['last_tool_result'] = json.dumps(summary)
+        except Exception:
+            session['data']['last_tool_result'] = None
+
+    async def _ai_action_create_booking(self, user_number: str, payload: Dict[str, Any], session: Dict, user: Dict) -> None:
+        service_type = (payload.get('service_type') or session.get('data', {}).get('service_type') or '').strip().lower()
+        issue = (payload.get('issue') or '').strip()
+        time_text = (payload.get('time_text') or '').strip()
+        provider_index = payload.get('provider_index')
+
+        providers = (session.get('data', {}) or {}).get('providers') or []
+        if not providers or not isinstance(provider_index, int) or provider_index < 1 or provider_index > len(providers):
+            await self._log_and_send_response(user_number, "Please pick a provider from the list (reply with 1, 2, or 3).", "provider_pick_missing")
+            return
+        selected_provider = providers[provider_index - 1]
+
+        if not time_text:
+            await self._log_and_send_response(user_number, self._short("When do you want the service? (e.g., 'tomorrow at 10am')", "When? (e.g., tomorrow 10am)"), "ask_time_for_booking")
+            return
+        try:
+            bt_dt = self._canonicalize_booking_time(time_text)
+            bt_iso = bt_dt.strftime('%Y-%m-%d %H:%M') if bt_dt else time_text
+        except Exception:
+            bt_iso = time_text
+
+        booking_id = f"booking_{datetime.utcnow().timestamp()}"
+        booking_data = {
+            'booking_id': booking_id,
+            'user_whatsapp_number': user_number,
+            'provider_whatsapp_number': selected_provider.get('whatsapp_number'),
+            'service_type': service_type or (session.get('data', {}).get('service_type') or ''),
+            'date_time': bt_iso,
+            'issue': issue,
+            'status': 'pending',
+            'customer_number': user_number,
+            'customer_name': user.get('name', 'Customer'),
+        }
+
+        success = await self.db.create_booking(booking_data)
+        if not success:
+            await self._log_and_send_response(user_number, "Oops! Something went wrong. Please try again.", "booking_error")
+            return
+
+        provider_name = selected_provider.get('name') or 'Provider'
+        provider_number = selected_provider.get('whatsapp_number')
+
+        await self._log_and_send_response(
+            user_number,
+            self._short(
+                f"Your booking was sent to {provider_name}!\n\nWe're waiting for their confirmation.\nReference: {booking_id}\n\nYou'll get a message once they respond.",
+                f"Sent to {provider_name}. Waiting for confirmation. Ref: {booking_id}"
+            ),
+            "booking_sent_waiting"
+        )
+
+        provider_message = (
+            f"New Booking Request\n\n"
+            f"Customer: {user.get('name', 'Customer')}\n"
+            f"Service: {service_type or session.get('data', {}).get('service_type') or ''}\n"
+            f"Issue: {issue or 'Not specified'}\n"
+            f"Time: {bt_iso}\n"
+            f"Reference: {booking_id}\n\n"
+            f"Reply with 'accept' to confirm or 'deny' to decline"
+        )
+        if provider_number:
+            await self._log_and_send_response(provider_number, provider_message, "booking_request_to_provider")
+
+            # Prepare provider session for response
+            provider_session = await self.db.get_session(provider_number) or {
+                'state': ConversationState.BOOKING_PENDING_PROVIDER,
+                'data': {},
+                'last_activity': datetime.utcnow().isoformat(),
+            }
+            provider_session.setdefault('data', {})
+            provider_session['data']['booking_id'] = booking_id
+            provider_session['data']['customer_number'] = user_number
+            provider_session['data']['service_type'] = service_type
+            provider_session['data']['issue'] = issue or 'Not specified'
+            provider_session['data']['booking_time'] = bt_iso
+            provider_session['state'] = ConversationState.BOOKING_PENDING_PROVIDER
+            provider_session_to_save = provider_session.copy()
+            if isinstance(provider_session_to_save.get('state'), ConversationState):
+                provider_session_to_save['state'] = provider_session_to_save['state'].value
+            await self.db.save_session(provider_number, provider_session_to_save)
+
+        # Reset customer session
+        session['state'] = ConversationState.SERVICE_SEARCH
+        session['data'] = {}
+
+    async def _ai_action_register_provider(self, user_number: str, payload: Dict[str, Any], session: Dict) -> None:
+        name = (payload.get('name') or '').strip()
+        service_type = (payload.get('service_type') or '').strip().lower()
+        location = (payload.get('location') or '').strip()
+        business_name = (payload.get('business_name') or '').strip() or None
+        contact = (payload.get('contact') or '').strip()
+
+        missing = [k for k, v in [('name', name), ('service_type', service_type), ('location', location), ('contact', contact)] if not v]
+        if missing:
+            await self._log_and_send_response(user_number, f"Missing: {', '.join(missing)}. Please provide these to complete registration.", "provider_registration_missing")
+            return
+
+        provider_data = {
+            'whatsapp_number': contact,
+            'name': name,
+            'service_type': service_type,
+            'location': location,
+            'business_name': business_name,
+            'contact': contact,
+            'status': 'pending',
+        }
+        success = await self.db.create_provider(provider_data)
+        if success:
+            await self._log_and_send_response(user_number, self._short("Registration received. We'll review and notify you soon.", "Registration submitted. We'll notify you."), "provider_registration_complete")
+            session['state'] = ConversationState.SERVICE_SEARCH
+            session['data'] = {}
+        else:
+            await self._log_and_send_response(user_number, "Sorry, there was an issue with your registration. Please try again.", "provider_registration_error")
     
     async def send_help_menu(self, user_number: str) -> None:
         """Send help menu with options"""
