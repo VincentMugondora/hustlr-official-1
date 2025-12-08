@@ -356,6 +356,14 @@ class MessageHandler:
             await self.send_help_menu(user_number)
             return
 
+        # Check for admin approval/denial commands
+        approve_match = re.match(r'approve\s+(\+?[\d\s\-\(\)]+)', text_cmd)
+        deny_match = re.match(r'deny\s+(\+?[\d\s\-\(\)]+)', text_cmd)
+        
+        if approve_match or deny_match:
+            await self.handle_admin_approval(user_number, message_text, session)
+            return
+
         # Reset conversation to fresh booking search
         if message_text in ['reset', 'restart', 'start over', 'new']:
             session['state'] = ConversationState.SERVICE_SEARCH
@@ -1143,6 +1151,116 @@ class MessageHandler:
                     "provider_registration_error"
                 )
     
+    async def handle_admin_approval(self, user_number: str, message_text: str, session: Dict) -> None:
+        """Handle admin approval/denial of provider registrations"""
+        text_cmd = message_text.strip().lower()
+        
+        # Extract phone number and action
+        approve_match = re.match(r'approve\s+(\+?[\d\s\-\(\)]+)', text_cmd)
+        deny_match = re.match(r'deny\s+(\+?[\d\s\-\(\)]+)', text_cmd)
+        
+        if not (approve_match or deny_match):
+            await self._log_and_send_response(
+                user_number,
+                "Please use format: 'approve +263777530322' or 'deny +263777530322'",
+                "admin_invalid_format"
+            )
+            return
+        
+        # Extract and normalize phone number
+        phone_raw = approve_match.group(1) if approve_match else deny_match.group(1)
+        # Remove spaces, dashes, parentheses
+        phone = re.sub(r'[\s\-\(\)]', '', phone_raw).strip()
+        # Ensure it starts with +
+        if not phone.startswith('+'):
+            phone = '+' + phone
+        
+        action = 'approve' if approve_match else 'deny'
+        
+        # Get provider by phone
+        provider = await self.db.get_provider_by_phone(phone)
+        if not provider:
+            await self._log_and_send_response(
+                user_number,
+                f"No pending provider found with phone {phone}",
+                "admin_provider_not_found"
+            )
+            return
+        
+        # Update provider status
+        provider_id = provider.get('_id')
+        new_status = 'approved' if action == 'approve' else 'rejected'
+        
+        success = await self.db.update_provider_status(provider_id, new_status)
+        if not success:
+            await self._log_and_send_response(
+                user_number,
+                f"Failed to update provider status. Please try again.",
+                "admin_update_error"
+            )
+            return
+        
+        # Notify admin
+        admin_confirmation = (
+            f"✅ Provider {action.upper()}ED\n\n"
+            f"Name: {provider.get('name')}\n"
+            f"Phone: {phone}\n"
+            f"Service: {provider.get('service_type')}\n"
+            f"Status: {new_status.upper()}\n\n"
+            f"Timestamp: {datetime.utcnow().isoformat()}"
+        )
+        await self._log_and_send_response(user_number, admin_confirmation, f"admin_{action}_confirmation")
+        
+        # Notify provider
+        provider_whatsapp = provider.get('whatsapp_number') or phone
+        if action == 'approve':
+            provider_message = (
+                f"🎉 Great news!\n\n"
+                f"Your Hustlr provider registration has been APPROVED!\n\n"
+                f"You can now start receiving booking requests from customers.\n\n"
+                f"Service: {provider.get('service_type')}\n"
+                f"Location: {provider.get('location')}\n"
+                f"Hours: {provider.get('availability_hours')}\n\n"
+                f"Welcome to Hustlr! 🚀"
+            )
+        else:
+            provider_message = (
+                f"❌ Provider Registration Status\n\n"
+                f"Your Hustlr provider registration has been REJECTED.\n\n"
+                f"If you believe this is a mistake, please contact our support team.\n\n"
+                f"Contact: support@hustlr.co.zw"
+            )
+        
+        try:
+            await self._log_and_send_response(provider_whatsapp, provider_message, f"provider_{action}_notification")
+        except Exception as e:
+            logger.error(f"Failed to notify provider {provider_whatsapp}: {e}")
+        
+        # Notify all admins of the decision
+        admin_numbers = [
+            '+263783961640',
+            '+263775251636',
+            '+263777530322',
+            '+16509965727'
+        ]
+        
+        decision_message = (
+            f"📢 PROVIDER REGISTRATION DECISION\n\n"
+            f"Status: {action.upper()}ED\n"
+            f"Name: {provider.get('name')}\n"
+            f"Phone: {phone}\n"
+            f"Service: {provider.get('service_type')}\n"
+            f"Decision by: {user_number}\n"
+            f"Time: {datetime.utcnow().isoformat()}"
+        )
+        
+        for admin_num in admin_numbers:
+            if admin_num != user_number:  # Don't send to the admin who made the decision
+                try:
+                    await self._log_and_send_response(admin_num, decision_message, f"admin_{action}_notification")
+                except Exception as e:
+                    logger.error(f"Failed to notify admin {admin_num}: {e}")
+    
     async def handle_ai_response(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
         """Delegate conversation to Claude via AI service using JSON-only contract.
 
@@ -1392,6 +1510,19 @@ class MessageHandler:
                     await self._log_and_send_response(user_number, "Missing registration fields. Please provide the required info.", "provider_registration_missing")
                     return
 
+                # Check if phone number is already registered
+                existing_provider = await self.db.get_provider_by_phone(phone)
+                if existing_provider:
+                    await self._log_and_send_response(
+                        user_number,
+                        self._short(
+                            f"This phone number ({phone}) is already registered. If you need to update your information, please contact our support team.",
+                            f"Phone number already registered."
+                        ),
+                        "provider_already_registered"
+                    )
+                    return
+
                 provider_data = {
                     'whatsapp_number': phone,
                     'name': full_name,
@@ -1404,10 +1535,50 @@ class MessageHandler:
                     'national_id': national_id,
                     'availability_days': availability_days,
                     'availability_hours': availability_hours,
+                    'registered_by_number': user_number,
+                    'registered_at': datetime.utcnow().isoformat(),
                 }
                 success = await self.db.create_provider(provider_data)
                 if success:
-                    await self._log_and_send_response(user_number, self._short("Registration received. We'll review and notify you soon.", "Registration submitted."), "provider_registration_complete")
+                    await self._log_and_send_response(
+                        user_number,
+                        self._short(
+                            "Registration received. We'll review your information and notify you soon.",
+                            "Registration submitted."
+                        ),
+                        "provider_registration_complete"
+                    )
+                    
+                    # Send registration details to admin numbers
+                    admin_numbers = [
+                        '+263783961640',
+                        '+263775251636',
+                        '+263777530322',
+                        '+16509965727'
+                    ]
+                    
+                    admin_message = (
+                        f"📋 NEW PROVIDER REGISTRATION REQUEST\n\n"
+                        f"Name: {full_name}\n"
+                        f"Phone: {phone}\n"
+                        f"Service: {service_category}\n"
+                        f"Experience: {years_experience} years\n"
+                        f"National ID: {national_id}\n"
+                        f"Location: {location}\n"
+                        f"Available: {', '.join(availability_days) if availability_days else 'Not specified'}\n"
+                        f"Hours: {availability_hours}\n"
+                        f"Registered by: {user_number}\n\n"
+                        f"Reply with:\n"
+                        f"'approve {phone}' to approve\n"
+                        f"'deny {phone}' to deny"
+                    )
+                    
+                    for admin_num in admin_numbers:
+                        try:
+                            await self._log_and_send_response(admin_num, admin_message, "provider_registration_admin_notification")
+                        except Exception as e:
+                            logger.error(f"Failed to send admin notification to {admin_num}: {e}")
+                    
                     session['state'] = ConversationState.SERVICE_SEARCH
                     session['data'] = {}
                 else:

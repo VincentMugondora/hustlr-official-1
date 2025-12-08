@@ -62,6 +62,22 @@ class MongoService:
             return None
         return await db.providers.find_one({"_id": oid})
 
+    async def get_provider_by_phone(self, phone: str) -> Optional[Dict[str, Any]]:
+        db = get_database()
+        return await db.providers.find_one({"whatsapp_number": phone})
+
+    async def update_provider_status(self, provider_id: str, status: str) -> bool:
+        db = get_database()
+        try:
+            oid = ObjectId(provider_id)
+        except Exception:
+            return False
+        result = await db.providers.update_one(
+            {"_id": oid},
+            {"$set": {"status": status, "updated_at": datetime.utcnow()}},
+        )
+        return result.matched_count > 0
+
     # Booking operations
     async def create_booking(self, booking_data: Dict[str, Any]) -> bool:
         db = get_database()
