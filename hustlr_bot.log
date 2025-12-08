@@ -20253,3 +20253,17 @@ Traceback (most recent call last):
   File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
     raise mapped_exc(message) from exc
 httpx.ReadTimeout
+2025-12-08 15:09:45,085 - app.main - INFO - ================================================================================
+2025-12-08 15:09:45,086 - app.main - INFO - ADMIN NOTIFICATION REQUIRED
+2025-12-08 15:09:45,086 - app.main - INFO - ================================================================================
+2025-12-08 15:09:45,087 - app.main - INFO - Please send the following message to these 4 admin numbers:
+2025-12-08 15:09:45,087 - app.main - INFO - 
+2025-12-08 15:09:45,087 - app.main - INFO -   • +263783961640
+2025-12-08 15:09:45,087 - app.main - INFO -   • +263775251636
+2025-12-08 15:09:45,088 - app.main - INFO -   • +263777530322
+2025-12-08 15:09:45,088 - app.main - INFO -   • +16509965727
+2025-12-08 15:09:45,088 - app.main - INFO - 
+2025-12-08 15:09:45,088 - app.main - INFO - MESSAGE:
+2025-12-08 15:09:45,088 - app.main - INFO - --------------------------------------------------------------------------------
+2025-12-08 15:09:45,097 - app.main - INFO - --------------------------------------------------------------------------------
+2025-12-08 15:09:45,097 - app.main - INFO - 
