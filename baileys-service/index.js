@@ -29,6 +29,7 @@ async function startBaileys() {
     const { connection, lastDisconnect, qr } = update;
 
     if (qr) {
+      latestQR = qr;
       console.log("Scan this QR to connect WhatsApp:");
       qrcode.generate(qr, { small: true });
     }
@@ -56,6 +57,7 @@ async function startBaileys() {
         startBaileys().catch((err) => console.error("reconnect failed", err));
       }
     } else if (connection === "open") {
+      latestQR = null;
       console.log("✅ Baileys connected to WhatsApp");
     }
   });
@@ -118,6 +120,7 @@ async function startBaileys() {
 }
 
 let sockRef;
+let latestQR = null;
 
 async function startServer() {
   sockRef = await startBaileys();
@@ -143,6 +146,15 @@ async function startServer() {
 
   app.get("/health", (req, res) => {
     res.json({ status: "ok" });
+  });
+
+  app.get("/qr", (req, res) => {
+    res.setHeader("Content-Type", "text/html; charset=utf-8");
+    if (!latestQR) {
+      return res.send(`<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>WhatsApp QR</title></head><body style="font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; padding: 24px;"><h2>No QR available</h2><p>Already connected, or QR not generated yet. Keep this page open and refresh after restarting or unlink to regenerate.</p><button onclick="location.reload()">Refresh</button></body></html>`);
+    }
+    const html = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>WhatsApp QR</title></head><body style="font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; padding: 24px;"><h2>Scan to link WhatsApp</h2><canvas id="qr" style="max-width: 320px; width: 100%; height: auto;"></canvas><p>On your phone: WhatsApp > Linked devices > Link a device.</p><script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script><script>const val = ${JSON.stringify(latestQR)};QRCode.toCanvas(document.getElementById('qr'), val, { width: 320 }, function (error) { if (error) console.error(error); });</script></body></html>`;
+    res.send(html);
   });
 
   app.listen(PORT, () => {

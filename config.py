@@ -36,6 +36,8 @@ class Settings(BaseSettings):
 
     # Bot response style
     USE_CONCISE_RESPONSES: bool = False
+    # AI conversation control
+    USE_LLM_FIRST_MODE: bool = False
 
 
 settings = Settings()
