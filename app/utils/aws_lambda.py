@@ -17,7 +17,7 @@ class AWSLambdaService:
         aws_secret_access_key = settings.AWS_SECRET_ACCESS_KEY
         aws_region = settings.AWS_REGION
 
-        client_config = Config(read_timeout=5, connect_timeout=3, retries={"max_attempts": 2})
+        client_config = Config(read_timeout=30, connect_timeout=10, retries={"max_attempts": 3})
 
         lambda_kwargs = {
             'region_name': aws_region,
