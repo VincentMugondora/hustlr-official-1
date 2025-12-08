@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import Any, Dict, List, Optional
+from bson import ObjectId
 
 from app.db import get_database
 
@@ -52,6 +53,14 @@ class MongoService:
     async def get_provider_by_whatsapp(self, whatsapp_number: str) -> Optional[Dict[str, Any]]:
         db = get_database()
         return await db.providers.find_one({"whatsapp_number": whatsapp_number})
+
+    async def get_provider_by_id(self, provider_id: str) -> Optional[Dict[str, Any]]:
+        db = get_database()
+        try:
+            oid = ObjectId(provider_id)
+        except Exception:
+            return None
+        return await db.providers.find_one({"_id": oid})
 
     # Booking operations
     async def create_booking(self, booking_data: Dict[str, Any]) -> bool:

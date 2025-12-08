@@ -117,19 +117,9 @@ class AWSLambdaService:
         location = user_context.get('location')
         if location:
             context_parts.append(f"User location: {location}")
-        # Rich context blocks for the model
-        try:
-            user_profile = user_context.get('user_profile')
-            if user_profile:
-                context_parts.append("User profile JSON:\n" + json.dumps(user_profile))
-        except Exception:
-            pass
-        try:
-            provider_catalog = user_context.get('provider_catalog')
-            if provider_catalog:
-                context_parts.append("Provider catalog JSON:\n" + json.dumps(provider_catalog))
-        except Exception:
-            pass
+        client_id = user_context.get('client_id')
+        if client_id:
+            context_parts.append(f"User client_id: {client_id}")
         history = user_context.get('booking_history')
         if history:
             context_parts.append(f"Booking history: {history}")
@@ -158,7 +148,9 @@ class AWSLambdaService:
         # Include last tool result (e.g., provider list) so the model can reason on it
         tool_result = user_context.get('tool_result')
         tool_text = f"Tool result available:\n{tool_result}" if tool_result else ""
-        context_text = "\n".join([p for p in ["\n".join(context_parts), history_text, tool_text] if p])
+        provider_options = user_context.get('provider_options')
+        providers_text = f"Provider options (JSON):\n{json.dumps(provider_options)}" if provider_options else ""
+        context_text = "\n".join([p for p in ["\n".join(context_parts), history_text, tool_text, providers_text] if p])
         user_text = f"User message: {user_message}"
         if context_text:
             combined = context_text + "\n" + user_text
@@ -167,24 +159,24 @@ class AWSLambdaService:
         # Choose system prompt based on LLM-controlled mode
         if getattr(settings, 'LLM_CONTROLLED_CONVERSATION', False):
             system_prompt = (
-                "You are the Hustlr booking and service-provider onboarding assistant. \n"
-                "You must fully control the conversation and collect ONLY the required fields. \n"
-                "You must NEVER hallucinate data about users or service providers. \n"
+                "You are the Hustlr booking and service-provider onboarding assistant.\n"
+                "You must fully control the conversation and collect ONLY the required fields.\n"
+                "You must NEVER hallucinate data about users or service providers.\n"
                 "If information is missing, always ask for it.\n\n"
-                "### RULES\n"
-                "1. IMPORTANT: If user-specific info exists in MongoDB (e.g., location, phone, name), ALWAYS fetch it instead of asking the user again.\n"
-                "2. IMPORTANT: If a service provider list exists in MongoDB, NEVER generate or guess them. Only show what exists.\n"
-                "3. After collecting all required fields, return a JSON object following the schema provided.\n"
+                "RULES\n"
+                "1. If user-specific info exists in MongoDB (e.g., location, phone, name, client_id), ALWAYS use it instead of asking again.\n"
+                "2. If a service provider list exists in MongoDB, NEVER generate or guess providers. Only use the exact list provided in context (provider_options).\n"
+                "3. After collecting all required fields, return a JSON object following the schema below.\n"
                 "4. Never store or return extra fields.\n"
-                "5. For dates and times, always convert and return them as ISO format.\n"
-                "6. The assistant must decide the next question—user should not control flow.\n\n"
-                "### BOOKING FIELDS REQUIRED:\n"
+                "5. For dates and times, always convert and return them as ISO where applicable (date as ISO 8601).\n"
+                "6. You must decide the next question — the user should not control flow.\n\n"
+                "BOOKING FIELDS REQUIRED:\n"
                 "- service_type\n"
                 "- service_provider_id\n"
                 "- date\n"
                 "- time\n"
                 "- additional_notes (optional)\n\n"
-                "### SERVICE PROVIDER REGISTRATION FIELDS:\n"
+                "SERVICE PROVIDER REGISTRATION FIELDS:\n"
                 "- full_name\n"
                 "- phone\n"
                 "- service_category\n"
@@ -193,20 +185,12 @@ class AWSLambdaService:
                 "- location\n"
                 "- availability_days (Array)\n"
                 "- availability_hours\n\n"
-                "### OUTPUT FORMAT\n"
-                "When all fields are ready, return ONLY:\n\n"
-                "{\n"
-                "  \"status\": \"COMPLETE\",\n"
-                "  \"type\": \"booking\" | \"provider_registration\",\n"
-                "  \"data\": { ...fields }\n"
-                "}\n\n"
-                "If not complete:\n\n"
-                "{\n"
-                "  \"status\": \"IN_PROGRESS\",\n"
-                "  \"next_question\": \"string\"\n"
-                "}\n\n"
+                "OUTPUT FORMAT (must return ONLY JSON, no extra text):\n"
+                "If complete:\n"
+                "{\n  \"status\": \"COMPLETE\",\n  \"type\": \"booking\" | \"provider_registration\",\n  \"data\": { ...fields }\n}\n"
+                "If not complete:\n"
+                "{\n  \"status\": \"IN_PROGRESS\",\n  \"next_question\": \"string\"\n}\n"
                 "Never return natural language outside of these rules.\n"
-                "You must not hallucinate. Use MongoDB data for all verifiable info.\n"
             )
         else:
             system_prompt = (
