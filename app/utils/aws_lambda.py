@@ -42,9 +42,12 @@ class AWSLambdaService:
         simply forwards the user message (and optional context) to Bedrock and
         returns Claude's raw text response.
         """
-        # Reload model ID from settings at invocation time to pick up .env changes
-        bedrock_model_id = getattr(settings, 'BEDROCK_MODEL_ID', "") or None
+        # Reload model ID from .env at invocation time to pick up changes
+        import os
+        bedrock_model_id = os.getenv('BEDROCK_MODEL_ID') or ""
+        bedrock_model_id = bedrock_model_id.strip() if bedrock_model_id else None
         if not (self.use_bedrock_intent and bedrock_model_id):
+            logger.error(f"Bedrock not configured: use_bedrock_intent={self.use_bedrock_intent}, model_id={bedrock_model_id}")
             raise RuntimeError("Bedrock intent model is not configured.")
         
         # Lazy-init Bedrock client if not already done
