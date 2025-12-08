@@ -213,8 +213,9 @@ class AWSLambdaService:
                 "If complete:\n"
                 "{\"status\": \"COMPLETE\", \"type\": \"booking\" | \"provider_registration\", \"data\": {...fields}}\n"
                 "If not complete:\n"
-                "{\"status\": \"IN_PROGRESS\", \"next_question\": \"string\"}\n"
+                "{\"status\": \"IN_PROGRESS\", \"next_question\": \"detailed question or prompt (2-3 sentences, friendly and helpful)\"}\n"
                 "RESPOND ONLY WITH JSON. NO OTHER TEXT ALLOWED.\n"
+                "Make next_question detailed, conversational, and helpful (2-3 sentences). Provide context and options when relevant.\n"
             )
         else:
             system_prompt = (
