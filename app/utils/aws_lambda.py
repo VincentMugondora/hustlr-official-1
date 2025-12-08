@@ -117,6 +117,19 @@ class AWSLambdaService:
         location = user_context.get('location')
         if location:
             context_parts.append(f"User location: {location}")
+        # Rich context blocks for the model
+        try:
+            user_profile = user_context.get('user_profile')
+            if user_profile:
+                context_parts.append("User profile JSON:\n" + json.dumps(user_profile))
+        except Exception:
+            pass
+        try:
+            provider_catalog = user_context.get('provider_catalog')
+            if provider_catalog:
+                context_parts.append("Provider catalog JSON:\n" + json.dumps(provider_catalog))
+        except Exception:
+            pass
         history = user_context.get('booking_history')
         if history:
             context_parts.append(f"Booking history: {history}")
@@ -154,18 +167,46 @@ class AWSLambdaService:
         # Choose system prompt based on LLM-controlled mode
         if getattr(settings, 'LLM_CONTROLLED_CONVERSATION', False):
             system_prompt = (
-                "You are Hustlr, a WhatsApp assistant.\n"
-                "Lead the conversation with short, helpful replies (max 2 sentences).\n"
-                "Ask one clarifying question at a time when needed. Prefer the user's saved location if available.\n"
-                "You control the flow. When you need the backend to act, emit a SINGLE line at the END of your reply starting with '>>> ' containing a JSON object describing the action.\n\n"
-                "Available actions (emit exactly one per turn when needed):\n"
-                "- list_providers: {\"action\":\"list_providers\", \"service_type\":\"plumber\"} (backend will show provider options to the user; then WAIT for the user's pick).\n"
-                "- create_booking: {\"action\":\"create_booking\", \"service_type\":\"plumber\", \"issue\":\"...\", \"time_text\":\"tomorrow 10am\", \"provider_index\":1} (provider_index corresponds to the options previously shown).\n"
-                "- register_provider: {\"action\":\"register_provider\", \"name\":\"...\", \"service_type\":\"...\", \"location\":\"...\", \"business_name\":\"...\", \"contact\":\"...\"}\n\n"
-                "Required fields you must collect before create_booking: service_type, issue (short), time_text, provider_index (from shown options). Location is the saved one if available; do not ask again.\n"
-                "Required fields for register_provider: name, service_type, location, contact; business_name optional.\n"
-                "Do not invent provider names; rely on backend provider options.\n"
-                "Return a normal human-friendly message for the user, THEN the '>>> {json}' line on the last line only when you need the backend to act.\n"
+                "You are the Hustlr booking and service-provider onboarding assistant. \n"
+                "You must fully control the conversation and collect ONLY the required fields. \n"
+                "You must NEVER hallucinate data about users or service providers. \n"
+                "If information is missing, always ask for it.\n\n"
+                "### RULES\n"
+                "1. IMPORTANT: If user-specific info exists in MongoDB (e.g., location, phone, name), ALWAYS fetch it instead of asking the user again.\n"
+                "2. IMPORTANT: If a service provider list exists in MongoDB, NEVER generate or guess them. Only show what exists.\n"
+                "3. After collecting all required fields, return a JSON object following the schema provided.\n"
+                "4. Never store or return extra fields.\n"
+                "5. For dates and times, always convert and return them as ISO format.\n"
+                "6. The assistant must decide the next question—user should not control flow.\n\n"
+                "### BOOKING FIELDS REQUIRED:\n"
+                "- service_type\n"
+                "- service_provider_id\n"
+                "- date\n"
+                "- time\n"
+                "- additional_notes (optional)\n\n"
+                "### SERVICE PROVIDER REGISTRATION FIELDS:\n"
+                "- full_name\n"
+                "- phone\n"
+                "- service_category\n"
+                "- years_experience\n"
+                "- national_id\n"
+                "- location\n"
+                "- availability_days (Array)\n"
+                "- availability_hours\n\n"
+                "### OUTPUT FORMAT\n"
+                "When all fields are ready, return ONLY:\n\n"
+                "{\n"
+                "  \"status\": \"COMPLETE\",\n"
+                "  \"type\": \"booking\" | \"provider_registration\",\n"
+                "  \"data\": { ...fields }\n"
+                "}\n\n"
+                "If not complete:\n\n"
+                "{\n"
+                "  \"status\": \"IN_PROGRESS\",\n"
+                "  \"next_question\": \"string\"\n"
+                "}\n\n"
+                "Never return natural language outside of these rules.\n"
+                "You must not hallucinate. Use MongoDB data for all verifiable info.\n"
             )
         else:
             system_prompt = (
