@@ -50,7 +50,7 @@ def root():
 
 @app.post("/admin/notify-admins")
 async def notify_admins():
-    """Send welcome message to all admin numbers"""
+    """Log admin notification info (manual sending required via WhatsApp)"""
     logger = logging.getLogger(__name__)
     admin_numbers = [
         '+263783961640',
@@ -77,16 +77,27 @@ async def notify_admins():
     )
     
     results = {}
-    baileys = BaileysClient()
     
+    # Log the admin notification for manual sending
+    logger.info("=" * 80)
+    logger.info("ADMIN NOTIFICATION REQUIRED")
+    logger.info("=" * 80)
+    logger.info(f"Please send the following message to these {len(admin_numbers)} admin numbers:")
+    logger.info("")
     for admin_num in admin_numbers:
-        try:
-            logger.info(f"Sending admin welcome message to {admin_num}")
-            response = await baileys.send_text_message(admin_num, admin_welcome_message)
-            results[admin_num] = {"status": "sent", "response": response}
-            logger.info(f"Admin welcome message sent to {admin_num}: {response}")
-        except Exception as e:
-            results[admin_num] = {"status": "failed", "error": str(e)}
-            logger.error(f"Failed to send admin welcome message to {admin_num}: {e}", exc_info=True)
+        logger.info(f"  • {admin_num}")
+    logger.info("")
+    logger.info("MESSAGE:")
+    logger.info("-" * 80)
+    logger.info(admin_welcome_message)
+    logger.info("-" * 80)
+    logger.info("")
     
-    return {"status": "completed", "results": results}
+    # Return info about what needs to be done
+    return {
+        "status": "pending_manual_send",
+        "message": "Admin welcome messages need to be sent manually via WhatsApp",
+        "admin_numbers": admin_numbers,
+        "message_content": admin_welcome_message,
+        "instructions": "Copy the message above and send it to each admin number via WhatsApp"
+    }
