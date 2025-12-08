@@ -81,7 +81,7 @@ async def notify_admins():
                 try:
                     response = await client.post(
                         "http://localhost:3000/send-text",
-                        json={"number": admin_num, "message": admin_welcome_message},
+                        json={"to": admin_num, "text": admin_welcome_message},
                         timeout=10
                     )
                     results[admin_num] = {"status": "sent", "code": response.status_code}
