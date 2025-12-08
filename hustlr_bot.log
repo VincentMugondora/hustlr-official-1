@@ -19673,3 +19673,4 @@ What's your full name?...
 2025-12-08 14:56:08,181 - app.main - INFO - Admin welcome message sent to +263777530322
 2025-12-08 14:56:08,183 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 400 Bad Request"
 2025-12-08 14:56:08,184 - app.main - INFO - Admin welcome message sent to +16509965727
+2025-12-08 14:57:39,686 - app.main - ERROR - Failed to send admin welcome message to +263783961640: 
