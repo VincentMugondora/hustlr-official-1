@@ -1157,24 +1157,40 @@ class MessageHandler:
 
         # Try to supply provider options when we can infer a service type
         provider_options = None
+        maybe_service_ctx: Optional[str] = None
         try:
             maybe_service = (session.get('data', {}) or {}).get('service_type')
             if not maybe_service:
                 maybe_service = self.extract_service_type(message_text) or self.detect_problem_statement(message_text)
-            user_loc = user.get('location')
-            if maybe_service and user_loc:
-                location_extractor = get_location_extractor()
-                normalized_location = location_extractor.normalize_user_location(user_loc) or user_loc
-                provs = await self.db.get_providers_by_service(maybe_service, normalized_location)
+            user_loc = (user or {}).get('location')
+            normalized_location = None
+            if user_loc:
+                try:
+                    location_extractor = get_location_extractor()
+                    normalized_location = location_extractor.normalize_user_location(user_loc) or user_loc
+                except Exception:
+                    normalized_location = user_loc
+            if maybe_service:
+                # Fetch by location when known, otherwise fetch by service only
+                provs = await self.db.get_providers_by_service(maybe_service, normalized_location or None)
+                # If nothing found with location filter, fall back to no location filter
+                if not provs and normalized_location:
+                    try:
+                        provs = await self.db.get_providers_by_service(maybe_service, None)
+                    except Exception:
+                        provs = []
                 if provs:
                     provider_options = [
                         {"id": str(p.get('_id')), "name": p.get('name'), "service_type": p.get('service_type'), "location": p.get('location')}
                         for p in provs[:10]
                     ]
-                    # Remember the service_type & options for later
-                    session.setdefault('data', {})
-                    session['data']['service_type'] = maybe_service
+                # Remember the service_type & options for later
+                session.setdefault('data', {})
+                session['data']['service_type'] = maybe_service
+                if provider_options:
                     session['data']['provider_options_cached'] = provider_options
+                # Keep for known_fields below even if this try block fails later
+                maybe_service_ctx = maybe_service
         except Exception as e:
             logger.warning(f"Could not build provider options: {e}")
 
@@ -1186,20 +1202,50 @@ class MessageHandler:
         except Exception:
             client_id = None
 
+        # Build known_fields to reduce repeated questions
+        known_fields: Dict[str, Any] = {}
+        if (session.get('data') or {}).get('service_type'):
+            known_fields['service_type'] = session['data']['service_type']
+        else:
+            if maybe_service_ctx:
+                known_fields['service_type'] = maybe_service_ctx
+        # Try to parse a date/time from the current message
+        try:
+            dt_text = self.parse_datetime(message_text)
+            if dt_text:
+                # Split to date and time components
+                parts = dt_text.split(" ", 1)
+                if parts:
+                    known_fields['date'] = parts[0]
+                    if len(parts) > 1:
+                        known_fields['time'] = parts[1]
+        except Exception:
+            pass
+
         user_context = {
             'name': user.get('name'),
             'location': user.get('location'),
             'client_id': client_id,
             'booking_history': await self.db.get_user_bookings(user_number),
             'provider_options': provider_options or (session.get('data', {}).get('provider_options_cached') if session.get('data') else None),
+            'known_fields': known_fields or None,
         }
 
         # Call Claude
-        ai_response = await self.lambda_service.invoke_question_answerer(
-            message_text,
-            user_context,
-            conversation_history=conversation_history,
-        )
+        try:
+            ai_response = await self.lambda_service.invoke_question_answerer(
+                message_text,
+                user_context,
+                conversation_history=conversation_history,
+            )
+        except Exception as e:
+            logger.exception("AI invocation failed")
+            await self._log_and_send_response(
+                user_number,
+                self._short("I'm having trouble connecting right now. Please try again in a moment.", "Temporary issue, try again."),
+                "ai_invoke_error",
+            )
+            return
 
         # Parse JSON response strictly
         try:
@@ -1211,6 +1257,21 @@ class MessageHandler:
         status = (payload or {}).get('status')
         if status == 'IN_PROGRESS':
             question = (payload or {}).get('next_question') or ""
+            # Guard: avoid re-asking service if it's already known
+            ql = question.lower()
+            service_known = bool((session.get('data') or {}).get('service_type')) or bool('service_type' in (user_context.get('known_fields') or {}))
+            if service_known and ('service' in ql and 'type' in ql):
+                # Prefer to list providers if possible
+                service_type = (session.get('data') or {}).get('service_type') or (user_context.get('known_fields') or {}).get('service_type') or ''
+                if service_type:
+                    try:
+                        await self._ai_action_list_providers(user_number, {'service_type': service_type}, session, user)
+                        return
+                    except Exception:
+                        pass
+                # Otherwise, ask for time next
+                await self._log_and_send_response(user_number, self._short("When do you want the service? (e.g., 'tomorrow at 10am')", "When? (e.g., tomorrow 10am)"), "ai_next_question_time")
+                return
             if not question:
                 question = self._short("What service do you need?", "What service?")
             await self._log_and_send_response(user_number, question, "ai_next_question")

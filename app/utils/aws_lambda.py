@@ -29,17 +29,11 @@ class AWSLambdaService:
         self.lambda_client = boto3.client('lambda', **lambda_kwargs)
         self.question_answerer_function = settings.AWS_LAMBDA_QUESTION_ANSWERER_FUNCTION_NAME or None
         self.use_bedrock_intent = bool(getattr(settings, 'USE_BEDROCK_INTENT', False))
-        self.bedrock_model_id = getattr(settings, 'BEDROCK_MODEL_ID', "") or None
+        self.aws_region = aws_region
+        self.aws_access_key_id = aws_access_key_id
+        self.aws_secret_access_key = aws_secret_access_key
+        self.client_config = client_config
         self.bedrock_client = None
-        if self.use_bedrock_intent and self.bedrock_model_id:
-            bedrock_kwargs = {
-                'region_name': aws_region,
-                'config': client_config,
-            }
-            if aws_access_key_id and aws_secret_access_key:
-                bedrock_kwargs['aws_access_key_id'] = aws_access_key_id
-                bedrock_kwargs['aws_secret_access_key'] = aws_secret_access_key
-            self.bedrock_client = boto3.client('bedrock-runtime', **bedrock_kwargs)
     
     async def invoke_question_answerer(self, user_message: str, user_context: Optional[Dict] = None, conversation_history: Optional[Any] = None) -> str:
         """Invoke Claude Sonnet via Bedrock for AI-powered question answering.
@@ -48,19 +42,32 @@ class AWSLambdaService:
         simply forwards the user message (and optional context) to Bedrock and
         returns Claude's raw text response.
         """
-        if not (self.use_bedrock_intent and self.bedrock_client and self.bedrock_model_id):
+        # Reload model ID from settings at invocation time to pick up .env changes
+        bedrock_model_id = getattr(settings, 'BEDROCK_MODEL_ID', "") or None
+        if not (self.use_bedrock_intent and bedrock_model_id):
             raise RuntimeError("Bedrock intent model is not configured.")
+        
+        # Lazy-init Bedrock client if not already done
+        if not self.bedrock_client:
+            bedrock_kwargs = {
+                'region_name': self.aws_region,
+                'config': self.client_config,
+            }
+            if self.aws_access_key_id and self.aws_secret_access_key:
+                bedrock_kwargs['aws_access_key_id'] = self.aws_access_key_id
+                bedrock_kwargs['aws_secret_access_key'] = self.aws_secret_access_key
+            self.bedrock_client = boto3.client('bedrock-runtime', **bedrock_kwargs)
 
-        return await self._invoke_bedrock(user_message, user_context or {}, conversation_history=conversation_history)
+        return await self._invoke_bedrock(user_message, user_context or {}, conversation_history=conversation_history, bedrock_model_id=bedrock_model_id)
 
-    async def _invoke_bedrock(self, user_message: str, user_context: Optional[Dict[str, Any]] = None, conversation_history: Optional[Any] = None) -> str:
-        if not self.bedrock_client or not self.bedrock_model_id:
+    async def _invoke_bedrock(self, user_message: str, user_context: Optional[Dict[str, Any]] = None, conversation_history: Optional[Any] = None, bedrock_model_id: Optional[str] = None) -> str:
+        if not self.bedrock_client or not bedrock_model_id:
             raise RuntimeError("Bedrock client or model ID is not configured.")
 
         try:
             body = self._build_bedrock_body(user_message, user_context or {}, conversation_history=conversation_history)
             response = self.bedrock_client.invoke_model(
-                modelId=self.bedrock_model_id,
+                modelId=bedrock_model_id,
                 body=json.dumps(body).encode("utf-8"),
                 contentType="application/json",
                 accept="application/json",
@@ -152,7 +159,9 @@ class AWSLambdaService:
         tool_text = f"Tool result available:\n{tool_result}" if tool_result else ""
         provider_options = user_context.get('provider_options')
         providers_text = f"Provider options (JSON):\n{json.dumps(provider_options)}" if provider_options else ""
-        context_text = "\n".join([p for p in ["\n".join(context_parts), history_text, tool_text, providers_text] if p])
+        known_fields = user_context.get('known_fields')
+        known_fields_text = f"Known fields (use as given; do not ask again):\n{json.dumps(known_fields)}" if known_fields else ""
+        context_text = "\n".join([p for p in ["\n".join(context_parts), history_text, tool_text, providers_text, known_fields_text] if p])
         user_text = f"User message: {user_message}"
         if context_text:
             combined = context_text + "\n" + user_text
@@ -168,10 +177,13 @@ class AWSLambdaService:
                 "RULES\n"
                 "1. If user-specific info exists in MongoDB (e.g., location, phone, name, client_id), ALWAYS use it instead of asking again.\n"
                 "2. If a service provider list exists in MongoDB, NEVER generate or guess providers. Only use the exact list provided in context (provider_options).\n"
-                "3. After collecting all required fields, return a JSON object following the schema below.\n"
-                "4. Never store or return extra fields.\n"
-                "5. For dates and times, always convert and return them as ISO where applicable (date as ISO 8601).\n"
-                "6. You must decide the next question — the user should not control flow.\n\n"
+                "3. If known_fields are provided in context, PREFILL those fields and DO NOT ask for them again.\n"
+                "4. Infer missing fields from the latest user message when possible (e.g., 'sink blocked' implies service_type=plumber; 'tomorrow 3pm' implies time).\n"
+                "5. Avoid repeating the same question multiple times; examine the conversation history and the latest user message to move the flow forward.\n"
+                "6. After collecting all required fields, return a JSON object following the schema below.\n"
+                "7. Never store or return extra fields.\n"
+                "8. For dates and times, convert and return them as ISO where applicable (date as ISO 8601).\n"
+                "9. You must decide the next question — the user should not control flow.\n\n"
                 "BOOKING FIELDS REQUIRED:\n"
                 "- service_type\n"
                 "- service_provider_id\n"
@@ -187,6 +199,11 @@ class AWSLambdaService:
                 "- location\n"
                 "- availability_days (Array)\n"
                 "- availability_hours\n\n"
+                "GUIDANCE:\n"
+                "- If provider_options are present and service_type is known, ask the user to pick one and map it to data.service_provider_id using the option's id.\n"
+                "- If the latest user message contains a date/time, parse it and fill date/time; do not ask again.\n"
+                "- If the user provided additional notes (problem description), set additional_notes.\n"
+                "- Always leverage known_fields to avoid asking for already known information.\n\n"
                 "OUTPUT FORMAT (must return ONLY JSON, no extra text):\n"
                 "If complete:\n"
                 "{\n  \"status\": \"COMPLETE\",\n  \"type\": \"booking\" | \"provider_registration\",\n  \"data\": { ...fields }\n}\n"
