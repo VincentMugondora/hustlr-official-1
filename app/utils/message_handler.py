@@ -80,6 +80,9 @@ class MessageHandler:
             return False
 
     def _short(self, long_text: str, short_text: str) -> str:
+        """Return short or long text based on concise mode. When LLM-controlled, always use long."""
+        if self._is_llm_controlled():
+            return long_text  # Always verbose for LLM mode
         return short_text if self._is_concise() else long_text
 
     def _build_friendly_provider_body(self, service_type: str, location: str, providers_count: int, session: Dict) -> str:
