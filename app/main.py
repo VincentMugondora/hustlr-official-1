@@ -12,6 +12,7 @@ from app.api import whatsapp, service_providers, bookings, users
 from app.db import connect_to_mongo, close_mongo_connection
 import logging
 import sys
+import httpx
 
 # Configure logging
 logging.basicConfig(
@@ -30,6 +31,47 @@ app = FastAPI(title="Hustlr WhatsApp Bot")
 @app.on_event("startup")
 async def on_startup():
     await connect_to_mongo()
+    
+    # Send admin welcome messages
+    logger = logging.getLogger(__name__)
+    admin_numbers = [
+        '+263783961640',
+        '+263775251636',
+        '+263777530322',
+        '+16509965727'
+    ]
+    
+    admin_welcome_message = (
+        "🎉 Welcome to Hustlr Admin Panel!\n\n"
+        "You have been designated as a Hustlr administrator.\n\n"
+        "YOUR RESPONSIBILITIES:\n"
+        "1. Review new service provider registrations\n"
+        "2. Verify provider credentials (name, ID, experience, location)\n"
+        "3. Approve or deny provider applications\n"
+        "4. Manage provider status and information\n"
+        "5. Handle provider disputes and complaints\n"
+        "6. Monitor booking quality and customer satisfaction\n\n"
+        "ADMIN COMMANDS:\n"
+        "• 'approve +263777530322' - Approve a provider registration\n"
+        "• 'deny +263777530322' - Reject a provider registration\n\n"
+        "When you receive a provider registration request, review the details carefully and respond with the appropriate command.\n\n"
+        "Thank you for helping Hustlr grow! 🚀"
+    )
+    
+    try:
+        async with httpx.AsyncClient(timeout=30) as client:
+            for admin_num in admin_numbers:
+                try:
+                    await client.post(
+                        "http://localhost:3000/send-text",
+                        json={"number": admin_num, "message": admin_welcome_message},
+                        timeout=10
+                    )
+                    logger.info(f"Admin welcome message sent to {admin_num}")
+                except Exception as e:
+                    logger.warning(f"Failed to send admin welcome message to {admin_num}: {e}")
+    except Exception as e:
+        logger.warning(f"Could not send admin welcome messages: {e}")
 
 @app.on_event("shutdown")
 async def on_shutdown():
