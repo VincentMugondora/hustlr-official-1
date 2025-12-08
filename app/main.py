@@ -10,9 +10,11 @@ warnings.filterwarnings(
 from fastapi import FastAPI
 from app.api import whatsapp, service_providers, bookings, users
 from app.db import connect_to_mongo, close_mongo_connection
+from app.utils.baileys_client import BaileysClient
 import logging
 import sys
 import httpx
+import asyncio
 
 # Configure logging
 logging.basicConfig(
@@ -75,22 +77,16 @@ async def notify_admins():
     )
     
     results = {}
-    try:
-        async with httpx.AsyncClient(timeout=30) as client:
-            for admin_num in admin_numbers:
-                try:
-                    response = await client.post(
-                        "http://localhost:3000/send-text",
-                        json={"to": admin_num, "text": admin_welcome_message},
-                        timeout=10
-                    )
-                    results[admin_num] = {"status": "sent", "code": response.status_code}
-                    logger.info(f"Admin welcome message sent to {admin_num}")
-                except Exception as e:
-                    results[admin_num] = {"status": "failed", "error": str(e)}
-                    logger.error(f"Failed to send admin welcome message to {admin_num}: {e}")
-    except Exception as e:
-        logger.error(f"Could not send admin welcome messages: {e}")
-        return {"status": "error", "message": str(e)}
+    baileys = BaileysClient()
+    
+    for admin_num in admin_numbers:
+        try:
+            logger.info(f"Sending admin welcome message to {admin_num}")
+            response = await baileys.send_text_message(admin_num, admin_welcome_message)
+            results[admin_num] = {"status": "sent", "response": response}
+            logger.info(f"Admin welcome message sent to {admin_num}: {response}")
+        except Exception as e:
+            results[admin_num] = {"status": "failed", "error": str(e)}
+            logger.error(f"Failed to send admin welcome message to {admin_num}: {e}", exc_info=True)
     
     return {"status": "completed", "results": results}

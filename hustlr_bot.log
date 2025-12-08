@@ -19675,3 +19675,13 @@ What's your full name?...
 2025-12-08 14:56:08,184 - app.main - INFO - Admin welcome message sent to +16509965727
 2025-12-08 14:57:39,686 - app.main - ERROR - Failed to send admin welcome message to +263783961640: 
 2025-12-08 14:57:49,692 - app.main - ERROR - Failed to send admin welcome message to +263775251636: 
+2025-12-08 14:57:59,701 - app.main - ERROR - Failed to send admin welcome message to +263777530322: 
+2025-12-08 14:58:09,723 - app.main - ERROR - Failed to send admin welcome message to +16509965727: 
+2025-12-08 14:58:47,969 - app.main - INFO - Sending message to +263783961640
+2025-12-08 14:58:57,994 - app.main - ERROR - Request error sending to +263783961640: 
+2025-12-08 14:58:57,996 - app.main - INFO - Sending message to +263775251636
+2025-12-08 14:59:08,010 - app.main - ERROR - Request error sending to +263775251636: 
+2025-12-08 14:59:08,010 - app.main - INFO - Sending message to +263777530322
+2025-12-08 14:59:18,015 - app.main - ERROR - Request error sending to +263777530322: 
+2025-12-08 14:59:18,015 - app.main - INFO - Sending message to +16509965727
+2025-12-08 14:59:28,021 - app.main - ERROR - Request error sending to +16509965727: 
