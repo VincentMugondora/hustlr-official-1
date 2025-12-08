@@ -142,7 +142,10 @@ class AWSLambdaService:
         except Exception:
             history_text = ""
 
-        context_text = "\n".join([p for p in ["\n".join(context_parts), history_text] if p])
+        # Include last tool result (e.g., provider list) so the model can reason on it
+        tool_result = user_context.get('tool_result')
+        tool_text = f"Tool result available:\n{tool_result}" if tool_result else ""
+        context_text = "\n".join([p for p in ["\n".join(context_parts), history_text, tool_text] if p])
         user_text = f"User message: {user_message}"
         if context_text:
             combined = context_text + "\n" + user_text
@@ -153,12 +156,16 @@ class AWSLambdaService:
             system_prompt = (
                 "You are Hustlr, a WhatsApp assistant.\n"
                 "Lead the conversation with short, helpful replies (max 2 sentences).\n"
-                "- Ask one clarifying question at a time when needed.\n"
-                "- Prefer the user's saved location if available; don't ask again if known.\n"
-                "- For booking-related chats, gather missing info (service, brief issue, time).\n"
-                "- Do not invent provider names or confirmations; backend will show real providers and perform bookings.\n"
-                "- If user asks to cancel/reschedule, ask for the booking number or clarify which booking.\n"
-                "- Never output JSON or metadata. Return only the message text.\n"
+                "Ask one clarifying question at a time when needed. Prefer the user's saved location if available.\n"
+                "You control the flow. When you need the backend to act, emit a SINGLE line at the END of your reply starting with '>>> ' containing a JSON object describing the action.\n\n"
+                "Available actions (emit exactly one per turn when needed):\n"
+                "- list_providers: {\"action\":\"list_providers\", \"service_type\":\"plumber\"} (backend will show provider options to the user; then WAIT for the user's pick).\n"
+                "- create_booking: {\"action\":\"create_booking\", \"service_type\":\"plumber\", \"issue\":\"...\", \"time_text\":\"tomorrow 10am\", \"provider_index\":1} (provider_index corresponds to the options previously shown).\n"
+                "- register_provider: {\"action\":\"register_provider\", \"name\":\"...\", \"service_type\":\"...\", \"location\":\"...\", \"business_name\":\"...\", \"contact\":\"...\"}\n\n"
+                "Required fields you must collect before create_booking: service_type, issue (short), time_text, provider_index (from shown options). Location is the saved one if available; do not ask again.\n"
+                "Required fields for register_provider: name, service_type, location, contact; business_name optional.\n"
+                "Do not invent provider names; rely on backend provider options.\n"
+                "Return a normal human-friendly message for the user, THEN the '>>> {json}' line on the last line only when you need the backend to act.\n"
             )
         else:
             system_prompt = (
