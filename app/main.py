@@ -31,8 +31,24 @@ app = FastAPI(title="Hustlr WhatsApp Bot")
 @app.on_event("startup")
 async def on_startup():
     await connect_to_mongo()
-    
-    # Send admin welcome messages
+
+@app.on_event("shutdown")
+async def on_shutdown():
+    await close_mongo_connection()
+
+# Include API routes
+app.include_router(whatsapp.router, prefix="/api/whatsapp", tags=["WhatsApp"])
+app.include_router(service_providers.router, prefix="/api/providers", tags=["Providers"])
+app.include_router(bookings.router, prefix="/api/bookings", tags=["Bookings"])
+app.include_router(users.router, prefix="/api/users", tags=["Users"])
+
+@app.get("/")
+def root():
+    return {"message": "Hustlr WhatsApp Bot is running"}
+
+@app.post("/admin/notify-admins")
+async def notify_admins():
+    """Send welcome message to all admin numbers"""
     logger = logging.getLogger(__name__)
     admin_numbers = [
         '+263783961640',
@@ -58,31 +74,23 @@ async def on_startup():
         "Thank you for helping Hustlr grow! 🚀"
     )
     
+    results = {}
     try:
         async with httpx.AsyncClient(timeout=30) as client:
             for admin_num in admin_numbers:
                 try:
-                    await client.post(
+                    response = await client.post(
                         "http://localhost:3000/send-text",
                         json={"number": admin_num, "message": admin_welcome_message},
                         timeout=10
                     )
+                    results[admin_num] = {"status": "sent", "code": response.status_code}
                     logger.info(f"Admin welcome message sent to {admin_num}")
                 except Exception as e:
-                    logger.warning(f"Failed to send admin welcome message to {admin_num}: {e}")
+                    results[admin_num] = {"status": "failed", "error": str(e)}
+                    logger.error(f"Failed to send admin welcome message to {admin_num}: {e}")
     except Exception as e:
-        logger.warning(f"Could not send admin welcome messages: {e}")
-
-@app.on_event("shutdown")
-async def on_shutdown():
-    await close_mongo_connection()
-
-# Include API routes
-app.include_router(whatsapp.router, prefix="/api/whatsapp", tags=["WhatsApp"])
-app.include_router(service_providers.router, prefix="/api/providers", tags=["Providers"])
-app.include_router(bookings.router, prefix="/api/bookings", tags=["Bookings"])
-app.include_router(users.router, prefix="/api/users", tags=["Users"])
-
-@app.get("/")
-def root():
-    return {"message": "Hustlr WhatsApp Bot is running"}
+        logger.error(f"Could not send admin welcome messages: {e}")
+        return {"status": "error", "message": str(e)}
+    
+    return {"status": "completed", "results": results}
