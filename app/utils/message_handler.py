@@ -72,6 +72,12 @@ class MessageHandler:
         except Exception:
             return False
 
+    def _is_llm_controlled(self) -> bool:
+        try:
+            return bool(getattr(settings, 'LLM_CONTROLLED_CONVERSATION', False))
+        except Exception:
+            return False
+
     def _short(self, long_text: str, short_text: str) -> str:
         return short_text if self._is_concise() else long_text
 
@@ -357,6 +363,35 @@ class MessageHandler:
             )
             return
         
+        # LLM-controlled mode: if enabled and we're not mid critical flow,
+        # let the AI lead general chat/triage unless it's clearly a booking request.
+        if self._is_llm_controlled():
+            guarded_states = {
+                ConversationState.BOOKING_SERVICE_DETAILS,
+                ConversationState.BOOKING_LOCATION,
+                ConversationState.PROVIDER_SELECTION,
+                ConversationState.BOOKING_TIME,
+                ConversationState.BOOKING_CONFIRM,
+                ConversationState.BOOKING_PENDING_PROVIDER,
+                ConversationState.VIEW_BOOKINGS,
+                ConversationState.CANCEL_BOOKING_SELECT,
+                ConversationState.CANCEL_BOOKING_CONFIRM,
+                ConversationState.RESCHEDULE_BOOKING_SELECT,
+                ConversationState.RESCHEDULE_BOOKING_NEW_TIME,
+                ConversationState.RESCHEDULE_BOOKING_CONFIRM,
+                ConversationState.PROVIDER_REGISTER,
+                ConversationState.PROVIDER_REGISTER_NAME,
+                ConversationState.PROVIDER_REGISTER_SERVICE,
+                ConversationState.PROVIDER_REGISTER_LOCATION,
+                ConversationState.PROVIDER_REGISTER_BUSINESS,
+                ConversationState.PROVIDER_REGISTER_CONTACT,
+            }
+            if state not in guarded_states:
+                inferred_service = self.extract_service_type(message_text) or self.detect_problem_statement(message_text)
+                if not inferred_service and not self._message_contains_time_hint(message_text):
+                    await self.handle_ai_response(user_number, message_text, session, user)
+                    return
+
         # Try fast booking when the message already includes service + time
         if state == ConversationState.SERVICE_SEARCH:
             handled_fast = await self.try_fast_booking(user_number, message_text, session, user)
