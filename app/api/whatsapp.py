@@ -139,7 +139,7 @@ async def receive_whatsapp_message(
                         message.text = location_text
                         logger.info(f"Normalized location text: {location_text}")
     except Exception as e:
-        logger.error(f"Error parsing payload details: {e}")
+        logger.exception("Error parsing payload details")
     
     incoming_doc_id = None
     try:
@@ -180,7 +180,7 @@ async def receive_whatsapp_message(
         else:
             logger.info(f"Non-text message received from {message.from_number}, skipping")
     except Exception as e:
-        logger.error(f"Error handling message from {message.from_number}: {e}")
+        logger.exception(f"Error handling message from {message.from_number}")
         # Send error message to user
         try:
             await whatsapp_api.send_text_message(
@@ -188,7 +188,7 @@ async def receive_whatsapp_message(
                 "Sorry, I'm having trouble processing your message. Please try again later."
             )
         except Exception as send_error:
-            logger.error(f"Failed to send error message: {send_error}")
+            logger.exception("Failed to send error message")
 
     # Respond to WhatsApp so Meta knows you received successfully
     return {"status": "success"}
@@ -273,7 +273,7 @@ async def receive_baileys_message(
         else:
             logger.info(f"Baileys webhook received non-text/empty message from {message.from_number}, skipping")
     except Exception as e:
-        logger.error(f"Error handling Baileys message from {message.from_number}: {e}")
+        logger.exception(f"Error handling Baileys message from {message.from_number}")
         # Best-effort error notification via Baileys transport
         try:
             await baileys_client.send_text_message(
@@ -281,7 +281,7 @@ async def receive_baileys_message(
                 "Sorry, I'm having trouble processing your message. Please try again later.",
             )
         except Exception as send_error:
-            logger.error(f"Failed to send Baileys error message: {send_error}")
+            logger.exception("Failed to send Baileys error message")
 
     return {"status": "success"}
 
@@ -313,7 +313,7 @@ async def process_pending_messages(limit: int = 100):
             processed += 1
         except Exception as e:
             errors += 1
-            logger.error(f"Error processing pending message {doc.get('_id')}: {e}")
+            logger.exception(f"Error processing pending message {doc.get('_id')}")
 
     remaining_docs = await mongo_service.get_unprocessed_incoming_messages(limit=1)
     remaining = len(remaining_docs)

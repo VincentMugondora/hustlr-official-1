@@ -19,25 +19,27 @@ class AWSLambdaService:
 
         client_config = Config(read_timeout=5, connect_timeout=3, retries={"max_attempts": 2})
 
-        self.lambda_client = boto3.client(
-            'lambda',
-            aws_access_key_id=aws_access_key_id,
-            aws_secret_access_key=aws_secret_access_key,
-            region_name=aws_region,
-            config=client_config,
-        )
+        lambda_kwargs = {
+            'region_name': aws_region,
+            'config': client_config,
+        }
+        if aws_access_key_id and aws_secret_access_key:
+            lambda_kwargs['aws_access_key_id'] = aws_access_key_id
+            lambda_kwargs['aws_secret_access_key'] = aws_secret_access_key
+        self.lambda_client = boto3.client('lambda', **lambda_kwargs)
         self.question_answerer_function = settings.AWS_LAMBDA_QUESTION_ANSWERER_FUNCTION_NAME or None
         self.use_bedrock_intent = bool(getattr(settings, 'USE_BEDROCK_INTENT', False))
         self.bedrock_model_id = getattr(settings, 'BEDROCK_MODEL_ID', "") or None
         self.bedrock_client = None
         if self.use_bedrock_intent and self.bedrock_model_id:
-            self.bedrock_client = boto3.client(
-                'bedrock-runtime',
-                aws_access_key_id=aws_access_key_id,
-                aws_secret_access_key=aws_secret_access_key,
-                region_name=aws_region,
-                config=client_config,
-            )
+            bedrock_kwargs = {
+                'region_name': aws_region,
+                'config': client_config,
+            }
+            if aws_access_key_id and aws_secret_access_key:
+                bedrock_kwargs['aws_access_key_id'] = aws_access_key_id
+                bedrock_kwargs['aws_secret_access_key'] = aws_secret_access_key
+            self.bedrock_client = boto3.client('bedrock-runtime', **bedrock_kwargs)
     
     async def invoke_question_answerer(self, user_message: str, user_context: Optional[Dict] = None, conversation_history: Optional[Any] = None) -> str:
         """Invoke Claude Sonnet via Bedrock for AI-powered question answering.
@@ -102,11 +104,11 @@ class AWSLambdaService:
             return final_text
         except ClientError as e:
             # Surface Bedrock errors to the caller; do not generate local responses
-            print(f"Bedrock invocation error: {e}")
+            logger.exception("Bedrock invocation error")
             raise
         except Exception as e:
             # Surface unexpected errors to the caller
-            print(f"Unexpected error in Bedrock service: {e}")
+            logger.exception("Unexpected error in Bedrock service")
             raise
 
     def _build_bedrock_body(self, user_message: str, user_context: Dict[str, Any], conversation_history: Optional[Any] = None) -> Dict[str, Any]:
