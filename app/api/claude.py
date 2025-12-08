@@ -63,7 +63,24 @@ async def process_with_claude(
 
     # Provider catalog: only include when we have a target service_type to keep context small
     provider_catalog: List[Dict[str, Any]] = []
+    # Infer service type if not provided
     normalized_st = (payload.service_type or "").strip().lower()
+    if not normalized_st:
+        msg_lower = (payload.message or "").lower()
+        svc_map = {
+            'plumber': ['plumber', 'plumbing'],
+            'electrician': ['electrician', 'electrical', 'electricity', 'lights'],
+            'carpenter': ['carpenter', 'carpentry', 'wood'],
+            'painter': ['painter', 'painting'],
+            'cleaner': ['cleaner', 'cleaning'],
+            'mechanic': ['mechanic', 'repair'],
+            'gardener': ['gardener', 'gardening', 'landscaping'],
+            'doctor': ['doctor', 'clinic', 'hospital'],
+        }
+        for svc, keys in svc_map.items():
+            if any(k in msg_lower for k in keys):
+                normalized_st = svc
+                break
     if normalized_st:
         # Filter by user's saved location if present
         query: Dict[str, Any] = {"service_type": normalized_st}

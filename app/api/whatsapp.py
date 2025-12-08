@@ -10,6 +10,8 @@ from app.utils.mongo_service import MongoService
 from app.utils.baileys_client import BaileysClient
 from app.utils.location_service import get_location_service
 from config import settings
+from app.api.claude import process_with_claude, ProcessRequest
+from app.db import get_database
 import logging
 import json
 from datetime import datetime
@@ -169,14 +171,34 @@ async def receive_whatsapp_message(
 
     # Handle message with enhanced handler
     try:
-        if message.text:  # Only process text messages for now
-            await message_handler.handle_message(message)
-            logger.info(f"Message processed successfully for {message.from_number}")
-            if incoming_doc_id is not None:
-                try:
-                    await mongo_service.mark_incoming_message_processed(incoming_doc_id)
-                except Exception as mark_error:
-                    logger.warning(f"Failed to mark incoming message as processed: {mark_error}")
+        if message.text:
+            if settings.LLM_CONTROLLED_CONVERSATION:
+                db = get_database()
+                req = ProcessRequest(user_number=message.from_number, message=message.text)
+                result = await process_with_claude(req, db)
+                if str(result.get("status")).upper() == "IN_PROGRESS":
+                    q = result.get("next_question") or ""
+                    if q:
+                        await whatsapp_api.send_text_message(message.from_number, q)
+                elif str(result.get("status")).upper() == "COMPLETE":
+                    t = result.get("type")
+                    if t == "booking":
+                        await whatsapp_api.send_text_message(message.from_number, "Booking saved. We'll update you soon.")
+                    elif t == "provider_registration":
+                        await whatsapp_api.send_text_message(message.from_number, "Registration submitted. We'll review and notify you.")
+                if incoming_doc_id is not None:
+                    try:
+                        await mongo_service.mark_incoming_message_processed(incoming_doc_id)
+                    except Exception as mark_error:
+                        logger.warning(f"Failed to mark incoming message as processed: {mark_error}")
+            else:
+                await message_handler.handle_message(message)
+                logger.info(f"Message processed successfully for {message.from_number}")
+                if incoming_doc_id is not None:
+                    try:
+                        await mongo_service.mark_incoming_message_processed(incoming_doc_id)
+                    except Exception as mark_error:
+                        logger.warning(f"Failed to mark incoming message as processed: {mark_error}")
         else:
             logger.info(f"Non-text message received from {message.from_number}, skipping")
     except Exception as e:
@@ -263,13 +285,33 @@ async def receive_baileys_message(
 
     try:
         if message.text:
-            await baileys_message_handler.handle_message(message)
-            logger.info(f"Baileys message processed successfully for {message.from_number}")
-            if incoming_doc_id is not None:
-                try:
-                    await mongo_service.mark_incoming_message_processed(incoming_doc_id)
-                except Exception as mark_error:
-                    logger.warning(f"Failed to mark Baileys incoming message as processed: {mark_error}")
+            if settings.LLM_CONTROLLED_CONVERSATION:
+                db = get_database()
+                req = ProcessRequest(user_number=message.from_number, message=message.text)
+                result = await process_with_claude(req, db)
+                if str(result.get("status")).upper() == "IN_PROGRESS":
+                    q = result.get("next_question") or ""
+                    if q:
+                        await baileys_client.send_text_message(message.from_number, q)
+                elif str(result.get("status")).upper() == "COMPLETE":
+                    t = result.get("type")
+                    if t == "booking":
+                        await baileys_client.send_text_message(message.from_number, "Booking saved. We'll update you soon.")
+                    elif t == "provider_registration":
+                        await baileys_client.send_text_message(message.from_number, "Registration submitted. We'll review and notify you.")
+                if incoming_doc_id is not None:
+                    try:
+                        await mongo_service.mark_incoming_message_processed(incoming_doc_id)
+                    except Exception as mark_error:
+                        logger.warning(f"Failed to mark Baileys incoming message as processed: {mark_error}")
+            else:
+                await baileys_message_handler.handle_message(message)
+                logger.info(f"Baileys message processed successfully for {message.from_number}")
+                if incoming_doc_id is not None:
+                    try:
+                        await mongo_service.mark_incoming_message_processed(incoming_doc_id)
+                    except Exception as mark_error:
+                        logger.warning(f"Failed to mark Baileys incoming message as processed: {mark_error}")
         else:
             logger.info(f"Baileys webhook received non-text/empty message from {message.from_number}, skipping")
     except Exception as e:
