@@ -36,6 +36,8 @@ class Settings(BaseSettings):
 
     # Bot response style
     USE_CONCISE_RESPONSES: bool = False
+    # LLM-led conversation mode
+    LLM_CONTROLLED_CONVERSATION: bool = True
 
 
 settings = Settings()
