@@ -20720,3 +20720,965 @@ RuntimeError: Bedrock intent model is not configured.
 2025-12-11 13:54:55,000 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_invoke_error, Message: I'm having trouble connecting right now. Please try again in a moment....
 2025-12-11 13:54:55,808 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2025-12-11 13:54:55,968 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-11 14:02:27,199 - app.api.whatsapp - INFO - [2025-12-11T12:02:27.199076] Baileys webhook received
+2025-12-11 14:02:27,201 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hi",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3FB3ED5739494F8A6C27",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765454541,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "hi",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-11 14:02:27,201 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 14:02:27,201 - app.api.whatsapp - INFO - Baileys text: 'hi'
+2025-12-11 14:02:34,025 - app.utils.aws_lambda - ERROR - Bedrock invocation failed after retries
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 81, in _invoke_bedrock
+    response = self.bedrock_client.invoke_model(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 602, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 1078, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the InvokeModel operation: The provided model identifier is invalid.
+2025-12-11 14:02:34,027 - app.utils.message_handler - ERROR - AI invocation failed
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\message_handler.py", line 1432, in handle_ai_response
+    ai_response = await self.lambda_service.invoke_question_answerer(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 69, in invoke_question_answerer
+    return await self._invoke_bedrock(user_message, user_context or {}, conversation_history=conversation_history, bedrock_model_id=bedrock_model_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 81, in _invoke_bedrock
+    response = self.bedrock_client.invoke_model(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 602, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 1078, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the InvokeModel operation: The provided model identifier is invalid.
+2025-12-11 14:02:34,031 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_invoke_error, Message: I'm having trouble connecting right now. Please try again in a moment....
+2025-12-11 14:02:34,825 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-11 14:02:34,987 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-11 14:03:21,211 - app.api.whatsapp - INFO - [2025-12-11T12:03:21.211157] Baileys webhook received
+2025-12-11 14:03:21,212 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F67F7C214044E75C7E3",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765454596,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-11 14:03:21,212 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 14:03:21,212 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-11 14:03:24,087 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-11 14:03:27,058 - app.api.whatsapp - INFO - [2025-12-11T12:03:27.058878] Baileys webhook received
+2025-12-11 14:03:27,058 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F67F7C214044E75C7E3",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765454602,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-11 14:03:27,060 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 14:03:27,060 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-11 14:03:27,280 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-11 14:03:28,661 - app.api.whatsapp - INFO - [2025-12-11T12:03:28.661471] Baileys webhook received
+2025-12-11 14:03:28,662 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hi",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F67F7C214044E75C7E3",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765454603,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "extendedTextMessage": {
+        "text": "hi",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  }
+}
+2025-12-11 14:03:28,662 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 14:03:28,662 - app.api.whatsapp - INFO - Baileys text: 'hi'
+2025-12-11 14:03:34,270 - app.utils.aws_lambda - ERROR - Bedrock invocation failed after retries
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 81, in _invoke_bedrock
+    response = self.bedrock_client.invoke_model(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 602, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 1078, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the InvokeModel operation: The provided model identifier is invalid.
+2025-12-11 14:03:34,274 - app.utils.message_handler - ERROR - AI invocation failed
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\message_handler.py", line 1432, in handle_ai_response
+    ai_response = await self.lambda_service.invoke_question_answerer(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 69, in invoke_question_answerer
+    return await self._invoke_bedrock(user_message, user_context or {}, conversation_history=conversation_history, bedrock_model_id=bedrock_model_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 81, in _invoke_bedrock
+    response = self.bedrock_client.invoke_model(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 602, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 1078, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the InvokeModel operation: The provided model identifier is invalid.
+2025-12-11 14:03:34,276 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_invoke_error, Message: I'm having trouble connecting right now. Please try again in a moment....
+2025-12-11 14:03:35,257 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-11 14:03:35,701 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-11 14:06:49,814 - app.api.whatsapp - INFO - [2025-12-11T12:06:49.814676] Baileys webhook received
+2025-12-11 14:06:49,816 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hi",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3FE7994EDD9854346285",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765454804,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "hi",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-11 14:06:49,818 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 14:06:49,819 - app.api.whatsapp - INFO - Baileys text: 'hi'
+2025-12-11 14:06:56,958 - app.utils.aws_lambda - ERROR - Bedrock invocation failed after retries
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 81, in _invoke_bedrock
+    response = self.bedrock_client.invoke_model(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 602, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 1078, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the InvokeModel operation: The provided model identifier is invalid.
+2025-12-11 14:06:56,962 - app.utils.message_handler - ERROR - AI invocation failed
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\message_handler.py", line 1432, in handle_ai_response
+    ai_response = await self.lambda_service.invoke_question_answerer(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 69, in invoke_question_answerer
+    return await self._invoke_bedrock(user_message, user_context or {}, conversation_history=conversation_history, bedrock_model_id=bedrock_model_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 81, in _invoke_bedrock
+    response = self.bedrock_client.invoke_model(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 602, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 1078, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the InvokeModel operation: The provided model identifier is invalid.
+2025-12-11 14:06:56,964 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_invoke_error, Message: I'm having trouble connecting right now. Please try again in a moment....
+2025-12-11 14:06:57,731 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-11 14:06:57,879 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-11 14:11:12,399 - app.api.whatsapp - INFO - [2025-12-11T12:11:12.399719] Baileys webhook received
+2025-12-11 14:11:12,399 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F04C167D15BF165FE4C",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765455067,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-11 14:11:12,399 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 14:11:12,399 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-11 14:11:14,729 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-11 14:11:18,269 - app.api.whatsapp - INFO - [2025-12-11T12:11:18.267411] Baileys webhook received
+2025-12-11 14:11:18,269 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F04C167D15BF165FE4C",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765455073,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-11 14:11:18,270 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 14:11:18,270 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-11 14:11:18,349 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-11 14:11:19,745 - app.api.whatsapp - INFO - [2025-12-11T12:11:19.744584] Baileys webhook received
+2025-12-11 14:11:19,745 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hi",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F04C167D15BF165FE4C",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765455074,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "extendedTextMessage": {
+        "text": "hi",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  }
+}
+2025-12-11 14:11:19,746 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 14:11:19,746 - app.api.whatsapp - INFO - Baileys text: 'hi'
+2025-12-11 14:11:24,583 - app.utils.aws_lambda - ERROR - Bedrock invocation failed after retries
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 81, in _invoke_bedrock
+    response = self.bedrock_client.invoke_model(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 602, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 1078, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the InvokeModel operation: The provided model identifier is invalid.
+2025-12-11 14:11:24,587 - app.utils.message_handler - ERROR - AI invocation failed
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\message_handler.py", line 1432, in handle_ai_response
+    ai_response = await self.lambda_service.invoke_question_answerer(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 69, in invoke_question_answerer
+    return await self._invoke_bedrock(user_message, user_context or {}, conversation_history=conversation_history, bedrock_model_id=bedrock_model_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 81, in _invoke_bedrock
+    response = self.bedrock_client.invoke_model(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 602, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 1078, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the InvokeModel operation: The provided model identifier is invalid.
+2025-12-11 14:11:24,588 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_invoke_error, Message: I'm having trouble connecting right now. Please try again in a moment....
+2025-12-11 14:11:25,517 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-11 14:11:25,665 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-11 14:14:28,731 - app.api.whatsapp - INFO - [2025-12-11T12:14:28.731663] Baileys webhook received
+2025-12-11 14:14:28,732 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "status",
+  "text": "I'm so tired that even my tired is also tired\n\ud83d\ude29\ud83d\udc94\ud83d\ude4c",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "status@broadcast",
+      "fromMe": false,
+      "id": "ACD3F5E15CD802EC60967FFF9E2B6D89",
+      "participant": "263784303418@s.whatsapp.net",
+      "participantLid": "60035438764077@lid"
+    },
+    "messageTimestamp": 1765455264,
+    "pushName": "Kumkanikazi \ud83c\udf39Myckeilah \ud83c\udf3a",
+    "broadcast": true,
+    "message": {
+      "senderKeyDistributionMessage": {
+        "groupId": "status@broadcast",
+        "axolotlSenderKeyDistributionMessage": "MwjNh8a+BBAAGiDye7QsHW61ibcOtJnW3DxmFUlTAtVjJfQMQj5ZOpbp1yIhBeUJM7lp7wq5cfhwJ7+8Cu+BKEihD+3xo+/bpQeq2Nsv"
+      },
+      "extendedTextMessage": {
+        "text": "I'm so tired that even my tired is also tired\n\ud83d\ude29\ud83d\udc94\ud83d\ude4c",
+        "textArgb": 4294967295,
+        "backgroundArgb": 4285408638,
+        "font": "SYSTEM",
+        "previewType": "NONE",
+        "contextInfo": {
+          "statusSourceType": "TEXT"
+        },
+        "inviteLinkGroupTypeV2": "DEFAULT"
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "aMtQfYHKpKweqyyIbh3e7HQidmA9sZs0aoRPSV0H93M="
+      }
+    }
+  }
+}
+2025-12-11 14:14:28,733 - app.api.whatsapp - INFO - Baileys message from: status
+2025-12-11 14:14:31,430 - app.utils.message_handler - INFO - [BOT RESPONSE] To: status, Type: onboarding_welcome, Message: Welcome to Hustlr! I'll help you find local service providers.
+
+To get started, send your name and a...
+2025-12-11 14:14:36,056 - app.api.whatsapp - ERROR - Error handling Baileys message from status
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\httpx\_transports\default.py", line 394, in handle_async_request
+    resp = await self._pool.handle_async_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\httpcore\_async\connection_pool.py", line 256, in handle_async_request
+    raise exc from None
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\httpcore\_async\connection_pool.py", line 236, in handle_async_request
+    response = await connection.handle_async_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\httpcore\_async\connection.py", line 103, in handle_async_request
+    return await self._connection.handle_async_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\httpcore\_async\http11.py", line 136, in handle_async_request
+    raise exc
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\httpcore\_async\http11.py", line 106, in handle_async_request
+    ) = await self._receive_response_headers(**kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\httpcore\_async\http11.py", line 177, in _receive_response_headers
+    event = await self._receive_event(timeout=timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\httpcore\_async\http11.py", line 217, in _receive_event
+    data = await self._network_stream.read(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\httpcore\_backends\anyio.py", line 32, in read
+    with map_exceptions(exc_map):
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ReadError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\api\whatsapp.py", line 264, in receive_baileys_message
+    await baileys_message_handler.handle_message(message)
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\message_handler.py", line 145, in handle_message
+    await self.handle_onboarding(user_number, message_text, session)
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\message_handler.py", line 166, in handle_onboarding
+    await self._log_and_send_response(
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\message_handler.py", line 59, in _log_and_send_response
+    await self.whatsapp_api.send_text_message(user_number, message)
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\baileys_client.py", line 25, in send_text_message
+    response = await client.post(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\httpx\_client.py", line 1859, in post
+    return await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\httpx\_client.py", line 1540, in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\httpx\_client.py", line 1629, in send
+    response = await self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\httpx\_client.py", line 1657, in _send_handling_auth
+    response = await self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\httpx\_client.py", line 1694, in _send_handling_redirects
+    response = await self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\httpx\_client.py", line 1730, in _send_single_request
+    response = await transport.handle_async_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\httpx\_transports\default.py", line 393, in handle_async_request
+    with map_httpcore_exceptions():
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ReadError
+2025-12-11 14:14:38,741 - app.api.whatsapp - ERROR - Failed to send Baileys error message
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\httpx\_transports\default.py", line 394, in handle_async_request
+    resp = await self._pool.handle_async_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\httpcore\_async\connection_pool.py", line 256, in handle_async_request
+    raise exc from None
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\httpcore\_async\connection_pool.py", line 236, in handle_async_request
+    response = await connection.handle_async_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\httpcore\_async\connection.py", line 101, in handle_async_request
+    raise exc
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\httpcore\_async\connection.py", line 78, in handle_async_request
+    stream = await self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\httpcore\_async\connection.py", line 124, in _connect
+    stream = await self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\httpcore\_backends\auto.py", line 31, in connect_tcp
+    return await self._backend.connect_tcp(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\httpcore\_backends\anyio.py", line 113, in connect_tcp
+    with map_exceptions(exc_map):
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: All connection attempts failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\api\whatsapp.py", line 277, in receive_baileys_message
+    await baileys_client.send_text_message(
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\baileys_client.py", line 25, in send_text_message
+    response = await client.post(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\httpx\_client.py", line 1859, in post
+    return await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\httpx\_client.py", line 1540, in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\httpx\_client.py", line 1629, in send
+    response = await self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\httpx\_client.py", line 1657, in _send_handling_auth
+    response = await self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\httpx\_client.py", line 1694, in _send_handling_redirects
+    response = await self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\httpx\_client.py", line 1730, in _send_single_request
+    response = await transport.handle_async_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\httpx\_transports\default.py", line 393, in handle_async_request
+    with map_httpcore_exceptions():
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: All connection attempts failed
+2025-12-11 14:14:50,338 - app.api.whatsapp - INFO - [2025-12-11T12:14:50.338507] Baileys webhook received
+2025-12-11 14:14:50,338 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hi",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F03AB93F6AD6318CECC",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765455284,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "hi",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-11 14:14:50,338 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 14:14:50,338 - app.api.whatsapp - INFO - Baileys text: 'hi'
+2025-12-11 14:14:50,758 - app.utils.message_handler - ERROR - AI invocation failed
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\message_handler.py", line 1432, in handle_ai_response
+    ai_response = await self.lambda_service.invoke_question_answerer(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: GeminiService.invoke_question_answerer() got an unexpected keyword argument 'conversation_history'
+2025-12-11 14:14:50,761 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_invoke_error, Message: I'm having trouble connecting right now. Please try again in a moment....
+2025-12-11 14:14:51,322 - app.api.whatsapp - INFO - [2025-12-11T12:14:51.322275] Baileys webhook received
+2025-12-11 14:14:51,322 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "status",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "status@broadcast",
+      "fromMe": false,
+      "id": "AC60BECE7FC27E58B9365C3A300D8BA2",
+      "participant": "263784303418@s.whatsapp.net",
+      "participantLid": "60035438764077@lid"
+    },
+    "messageTimestamp": 1765455286,
+    "pushName": "Kumkanikazi \ud83c\udf39Myckeilah \ud83c\udf3a",
+    "broadcast": true,
+    "message": {
+      "senderKeyDistributionMessage": {
+        "groupId": "status@broadcast",
+        "axolotlSenderKeyDistributionMessage": "MwjNh8a+BBAAGiDye7QsHW61ibcOtJnW3DxmFUlTAtVjJfQMQj5ZOpbp1yIhBeUJM7lp7wq5cfhwJ7+8Cu+BKEihD+3xo+/bpQeq2Nsv"
+      },
+      "imageMessage": {
+        "url": "https://mmg.whatsapp.net/o1/v/t24/f2/m269/AQPWTfhH_9XhR2rjqYvfrydIkUBgWz8NpLrKSyfYGSOcuH0Ch9c1tDyFQBtxl1HNo_QMvwD_6XmKwSBbTN6Ob5s0hXQ-lw9Ws4HBVCBHsw?ccb=9-4&oh=01_Q5Aa3QGBXXxY7lX131Yu5pnoGXS3W_Gzm3jUdjctaiUQrYakpw&oe=6962101E&_nc_sid=e6ed6c&mms3=true",
+        "mimetype": "image/jpeg",
+        "caption": "Like really \ud83d\ude05\ud83d\ude05rivalry for a day \ud83d\ude02",
+        "fileSha256": "Yf5G+izl6lQXpel0nxqQw1xl+yhSW/emGcMtzAfJKa8=",
+        "fileLength": "54903",
+        "height": 427,
+        "width": 1080,
+        "mediaKey": "LkT82/Uj2qSfgvnfX1mG6xMAFWECqiQwNqQCBDLcLR8=",
+        "fileEncSha256": "SQ9H5ul16A8JcpbNWY86XV3nd8m8UQLluarPERkOiQs=",
+        "directPath": "/o1/v/t24/f2/m269/AQPWTfhH_9XhR2rjqYvfrydIkUBgWz8NpLrKSyfYGSOcuH0Ch9c1tDyFQBtxl1HNo_QMvwD_6XmKwSBbTN6Ob5s0hXQ-lw9Ws4HBVCBHsw?ccb=9-4&oh=01_Q5Aa3QGBXXxY7lX131Yu5pnoGXS3W_Gzm3jUdjctaiUQrYakpw&oe=6962101E&_nc_sid=e6ed6c",
+        "mediaKeyTimestamp": "1765386293",
+        "jpegThumbnail": "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",
+        "contextInfo": {
+          "pairedMediaType": "NOT_PAIRED_MEDIA",
+          "statusSourceType": "IMAGE"
+        },
+        "thumbnailDirectPath": "/v/t62.35850-24/598642775_2185176295344215_6525377261251874532_n.enc?ccb=11-4&oh=01_Q5Aa3QF1H3YPqyrTxZ7cA3Bwdd1JlsdVxrjaij3cQE9SojC9Dg&oe=69621BC1&_nc_sid=5e03e0",
+        "thumbnailSha256": "ssMgxo3m6SYSCL/DEAMSBV1uTrnica7ExGOzWqEdSpY=",
+        "thumbnailEncSha256": "8et3kpns0tOfFU9ZgmGmGsFdmZeI+obtxcSuL7voEJw="
+      },
+      "messageContextInfo": {
+        "messageSecret": "AjBCVEVDI9O3JFWFTXIHmc6jVW1BqiB7/s8O1Xy9odw="
+      }
+    }
+  }
+}
+2025-12-11 14:14:51,322 - app.api.whatsapp - INFO - Baileys message from: status
+2025-12-11 14:14:51,322 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-11 14:14:51,387 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from status, skipping
+2025-12-11 14:14:52,708 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-11 14:14:52,849 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-11 14:17:42,502 - app.api.whatsapp - INFO - [2025-12-11T12:17:42.502433] Baileys webhook received
+2025-12-11 14:17:42,502 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F599BD78C7BC448EB1C",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765455458,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-11 14:17:42,502 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 14:17:42,502 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-11 14:17:44,761 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-11 14:17:48,422 - app.api.whatsapp - INFO - [2025-12-11T12:17:48.422702] Baileys webhook received
+2025-12-11 14:17:48,422 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F599BD78C7BC448EB1C",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765455464,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-11 14:17:48,426 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 14:17:48,426 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-11 14:17:48,511 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-11 14:17:50,281 - app.api.whatsapp - INFO - [2025-12-11T12:17:50.281521] Baileys webhook received
+2025-12-11 14:17:50,281 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hi",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F599BD78C7BC448EB1C",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765455464,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "extendedTextMessage": {
+        "text": "hi",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  }
+}
+2025-12-11 14:17:50,283 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 14:17:50,284 - app.api.whatsapp - INFO - Baileys text: 'hi'
+2025-12-11 14:17:53,231 - app.utils.gemini_service - INFO - [GEMINI RESPONSE] Question: hi..., Answer: Hi Vincent! It's great to hear from you.
+
+How can I help you today? Are you looking to book a new service, or perhaps check on a previous booking? I can help you find plumbers, electricians, carpenter...
+2025-12-11 14:17:53,234 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_parse_error, Message: Sorry, I couldn't process that. Please try again....
+2025-12-11 14:17:54,592 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-11 14:17:54,771 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-11 14:18:20,144 - app.api.whatsapp - INFO - [2025-12-11T12:18:20.144512] Baileys webhook received
+2025-12-11 14:18:20,144 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hello",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F544A94B3F20AADDA79",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765455494,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "hello",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-11 14:18:20,144 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 14:18:20,146 - app.api.whatsapp - INFO - Baileys text: 'hello'
+2025-12-11 14:18:24,454 - app.utils.gemini_service - INFO - [GEMINI RESPONSE] Question: hello..., Answer: Hello Vincent! It's great to hear from you.
+
+How can I help you today? Whether you need a plumber, an electrician, a cleaner, or anything else, I'm here to help you find and book the right service pro...
+2025-12-11 14:18:24,454 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_parse_error, Message: Sorry, I couldn't process that. Please try again....
+2025-12-11 14:18:25,623 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-11 14:18:25,808 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-11 14:20:10,673 - app.api.whatsapp - INFO - [2025-12-11T12:20:10.673177] Baileys webhook received
+2025-12-11 14:20:10,674 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F51999E335638EC4FE7",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765455606,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-11 14:20:10,674 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 14:20:10,674 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-11 14:20:12,987 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-11 14:20:16,600 - app.api.whatsapp - INFO - [2025-12-11T12:20:16.600358] Baileys webhook received
+2025-12-11 14:20:16,602 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F51999E335638EC4FE7",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765455612,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-11 14:20:16,603 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 14:20:16,604 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-11 14:20:16,677 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-11 14:20:18,238 - app.api.whatsapp - INFO - [2025-12-11T12:20:18.238340] Baileys webhook received
+2025-12-11 14:20:18,239 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hi",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F51999E335638EC4FE7",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765455612,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "extendedTextMessage": {
+        "text": "hi",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  }
+}
+2025-12-11 14:20:18,240 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 14:20:18,240 - app.api.whatsapp - INFO - Baileys text: 'hi'
+2025-12-11 14:20:20,368 - app.utils.gemini_service - INFO - [GEMINI RESPONSE] Question: hi..., Answer: {"status": "IN_PROGRESS", "next_question": "Hi Vincent! What service are you looking for today?"}...
+2025-12-11 14:20:20,368 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_next_question, Message: Hi Vincent! What service are you looking for today?...
+2025-12-11 14:20:22,050 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-11 14:20:22,228 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-11 14:20:37,204 - app.api.whatsapp - INFO - [2025-12-11T12:20:37.204410] Baileys webhook received
+2025-12-11 14:20:37,204 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "what are you",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F2C3BCE17B1E62B69BA",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765455631,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "what are you",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-11 14:20:37,204 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 14:20:37,204 - app.api.whatsapp - INFO - Baileys text: 'what are you'
+2025-12-11 14:20:38,988 - app.utils.gemini_service - INFO - [GEMINI RESPONSE] Question: what are you..., Answer: {"status": "IN_PROGRESS", "next_question": "I am Hustlr's AI assistant, here to help you book services. What can I do for you today?"}...
+2025-12-11 14:20:38,989 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_next_question, Message: I am Hustlr's AI assistant, here to help you book services. What can I do for you today?...
+2025-12-11 14:20:40,245 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-11 14:20:40,395 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322

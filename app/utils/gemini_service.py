@@ -25,26 +25,28 @@ class GeminiService:
         genai.configure(api_key=api_key)
         self.model_name: str = getattr(settings, "GEMINI_MODEL_NAME", "gemini-1.5-flash")
 
-    async def invoke_question_answerer(self, user_message: str, user_context: Optional[Dict[str, Any]] = None) -> str:
+    async def invoke_question_answerer(self, user_message: str, user_context: Optional[Dict[str, Any]] = None, conversation_history: Optional[Any] = None) -> str:
         """Invoke Gemini to generate a response for the user message.
 
         Runs the synchronous Gemini client in a threadpool so the FastAPI
         event loop is not blocked.
         """
         context = user_context or {}
-        return await run_in_threadpool(self._invoke_sync, user_message, context)
+        return await run_in_threadpool(self._invoke_sync, user_message, context, conversation_history)
 
     def _invoke_sync(self, user_message: str, user_context: Dict[str, Any], conversation_history: list = None) -> str:
-        # Build a system prompt similar to the Claude Bedrock prompt
+        # Strict JSON-only contract compatible with backend handler
         system_prompt = (
-            "You are Hustlr, a WhatsApp assistant that helps users find and book local service providers "
-            "like plumbers, electricians, carpenters, cleaners, and more.\n\n"
-            "IMPORTANT GUIDELINES:\n"
-            "1. RESPOND TO EVERYTHING: Answer all messages warmly and helpfully, even casual greetings or off-topic messages.\n"
-            "2. GENTLY STEER TO BOOKING: In every response, naturally guide the conversation toward finding or booking a service.\n"
-            "3. BE CONVERSATIONAL: Feel like a helpful friend, not a bot. Use natural language.\n"
-            "4. PROVIDE GUIDANCE: Always give clear next steps for what the user can do.\n"
-            "5. No emojis.\n"
+            "You are Hustlr’s AI assistant. Respond ONLY with valid JSON. No other text.\n"
+            "Return one of the following objects:\n"
+            "1) {\"status\": \"IN_PROGRESS\", \"next_question\": \"short, friendly question\"}\n"
+            "2) {\"status\": \"COMPLETE\", \"type\": \"booking\" | \"provider_registration\", \"data\": { ... }}\n"
+            "Rules:\n"
+            "- Ask exactly one thing at a time (IN_PROGRESS).\n"
+            "- Do not repeat questions for known_fields.\n"
+            "- Never invent providers; use provider_options if present in context.\n"
+            "- Keep next_question under two sentences.\n"
+            "- No emojis.\n"
         )
 
         # Compose simple context text (no heavy logic, just concatenation)
@@ -58,6 +60,13 @@ class GeminiService:
         history = user_context.get("booking_history")
         if history:
             context_parts.append(f"Booking history: {history}")
+        # Include provider options and known_fields if provided by backend
+        provider_options = user_context.get("provider_options")
+        if provider_options:
+            context_parts.append(f"Provider options: {provider_options}")
+        known_fields = user_context.get("known_fields")
+        if known_fields:
+            context_parts.append(f"Known fields: {known_fields}")
 
         context_text = "\n".join(context_parts)
         if context_text:
@@ -71,6 +80,10 @@ class GeminiService:
         model = genai.GenerativeModel(
             self.model_name,
             system_instruction=system_prompt,
+            generation_config={
+                "response_mime_type": "application/json",
+                "temperature": 0.2,
+            },
         )
 
         # Build the message history for Gemini.

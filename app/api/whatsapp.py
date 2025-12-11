@@ -20,11 +20,9 @@ router = APIRouter()
 whatsapp_api = WhatsAppCloudAPI()
 mongo_service = MongoService()
 
-# Choose AI backend: Gemini for testing, otherwise Bedrock
-if settings.USE_GEMINI_INTENT:
-    ai_service = GeminiService()
-else:
-    ai_service = AWSLambdaService()
+# Force Gemini backend regardless of env flags
+ai_service = GeminiService()
+logging.getLogger(__name__).info("AI backend selected: GeminiService (forced)")
 
 message_handler = MessageHandler(whatsapp_api, mongo_service, ai_service)
 
@@ -141,6 +139,15 @@ async def receive_whatsapp_message(
     except Exception as e:
         logger.exception("Error parsing payload details")
     
+    # Ignore WhatsApp Status/broadcast messages entirely
+    try:
+        raw = payload.get("rawMessage") or {}
+        if (raw.get("broadcast") is True) or (raw.get("key", {}).get("remoteJid") == "status@broadcast"):
+            logger.info("Baileys webhook received status/broadcast message, skipping")
+            return {"status": "skipped_broadcast"}
+    except Exception:
+        pass
+
     incoming_doc_id = None
     try:
         created_at = None
@@ -249,7 +256,8 @@ async def receive_baileys_message(
     message = WhatsAppMessage(from_number, text)
 
     logger.info(f"Baileys message from: {message.from_number}")
-    logger.info(f"Baileys text: '{message.text}'")
+    # Use %r to avoid Windows console Unicode encoding issues
+    logger.info("Baileys text: %r", message.text)
 
     incoming_doc_id = None
     try:
