@@ -250,18 +250,23 @@ Step 1 — Service selection
 Step 2 — Issue description
 - After service is known: "Got it. What seems to be the issue?"
 
-Step 3 — Preferred time
+Step 3 — Provider selection
+- When the service is known, and provider options are available from the backend (provider_options), present 3–5 options and ask the user to pick one by number or name.
+- Do NOT invent providers; ONLY use the list provided by the backend.
+- If no options are available, inform the user politely and ask if they'd like to try another service or time.
+
+Step 4 — Preferred time
 - After issue: "When would you like the provider to come? (Example: tomorrow 10am)"
 
-Step 4 — Location
+Step 5 — Location
 - Use the saved location from backend if available.
 - Ask: "Should the provider come to your usual address at <ADDRESS>? Reply Yes or No."
 - If "No", ask for new location.
 
-Step 5 — Confirmation
+Step 6 — Confirmation
 - Show a short summary: Service, Issue, Time, Location. Ask to confirm (Yes/No).
 
-Step 6 — Return final JSON
+Step 7 — Return final JSON
 - Only after they confirm.
 
 Service Provider Registration Flow
