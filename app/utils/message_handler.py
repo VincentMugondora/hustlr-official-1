@@ -1770,6 +1770,16 @@ class MessageHandler:
             data = (payload or {}).get('data') or {}
             assistant_msg = (payload or {}).get('assistantMessage') or ''
 
+            # Infer type from data shape when Claude omits explicit "type"
+            if not ptype and isinstance(data, dict):
+                booking_required = {"service_type", "customer_name", "customer_phone", "problem_description", "date", "time", "location", "provider_id"}
+                if booking_required.issubset(set(k for k in data.keys())):
+                    ptype = 'booking'
+                else:
+                    provider_required = {"full_name", "phone", "service_type", "experience_years", "location", "availability_days", "id_number"}
+                    if provider_required.issubset(set(k for k in data.keys())):
+                        ptype = 'provider_registration'
+
             if ptype == 'booking':
                 # Validate fields from Claude's FINAL booking JSON
                 service_type = (data.get('service_type') or '').strip().lower()
@@ -1953,7 +1963,9 @@ class MessageHandler:
                     await self._log_and_send_response(user_number, "Sorry, there was an issue with your registration. Please try again.", "provider_registration_error")
                 return
 
-            await self._log_and_send_response(user_number, "Unsupported operation.", "ai_unsupported")
+            # If we reach here, Claude returned COMPLETE but the payload didn't
+            # match either a booking or provider registration shape.
+            await self._log_and_send_response(user_number, self._short("Sorry, I couldn't process that.", "Sorry."), "ai_unsupported")
             return
 
         # Fallback
