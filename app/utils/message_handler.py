@@ -1372,6 +1372,18 @@ class MessageHandler:
         try:
             payload = json.loads((ai_response or '').strip())
         except Exception:
+            # Fallback: if we already know the service type, proactively list providers from DB
+            try:
+                known_fields = user_context.get('known_fields') or {}
+                service_type = (session.get('data') or {}).get('service_type') or known_fields.get('service_type')
+            except Exception:
+                service_type = None
+            if service_type:
+                try:
+                    await self._ai_action_list_providers(user_number, {'service_type': service_type}, session, user)
+                    return
+                except Exception:
+                    pass
             await self._log_and_send_response(user_number, self._short("Sorry, I couldn't process that. Please try again.", "Sorry, try again."), "ai_parse_error")
             return
 
@@ -1380,8 +1392,10 @@ class MessageHandler:
             question = (payload or {}).get('next_question') or ""
             # Guard: avoid re-asking service if it's already known
             ql = question.lower()
+            um = (message_text or '').lower()
             service_known = bool((session.get('data') or {}).get('service_type')) or bool('service_type' in (user_context.get('known_fields') or {}))
-            if service_known and ('service' in ql and 'type' in ql):
+            wants_list = any(k in ql for k in ['available', 'options', 'list', 'providers']) or any(k in um for k in ['list', 'show options', 'show list', 'providers'])
+            if service_known and (('service' in ql and 'type' in ql) or wants_list):
                 # Prefer to list providers if possible
                 service_type = (session.get('data') or {}).get('service_type') or (user_context.get('known_fields') or {}).get('service_type') or ''
                 if service_type:

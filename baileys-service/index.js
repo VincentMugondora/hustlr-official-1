@@ -5,7 +5,7 @@ const axios = require("axios");
 const pino = require("pino");
 
 const PORT = process.env.BAILEYS_PORT || 3000;
-const FASTAPI_URL = process.env.FASTAPI_URL || "https://hustlr-official-1-1.onrender.com";
+const FASTAPI_URL = process.env.FASTAPI_URL || "http://localhost:8000";
 
 async function startBaileys() {
   const { state, saveCreds } = await useMultiFileAuthState("./baileys_auth");
