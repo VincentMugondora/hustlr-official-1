@@ -27883,3 +27883,191 @@ Traceback (most recent call last):
 httpx.HTTPStatusError: Client error '404 Not Found' for url 'http://localhost:3000/send-text'
 For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
 2025-12-11 19:14:57,309 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-11 19:17:25,008 - app.api.whatsapp - INFO - [2025-12-11T17:17:25.008870] Baileys webhook received
+2025-12-11 19:17:25,011 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3FDBA10AF4F3504FDC74",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765473440,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-11 19:17:25,011 - app.api.whatsapp - INFO - Baileys stub/system message from 263777530322, skipping (messageStubType present)
+2025-12-11 19:17:30,864 - app.api.whatsapp - INFO - [2025-12-11T17:17:30.864320] Baileys webhook received
+2025-12-11 19:17:30,864 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3FDBA10AF4F3504FDC74",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765473446,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-11 19:17:30,864 - app.api.whatsapp - INFO - Baileys stub/system message from 263777530322, skipping (messageStubType present)
+2025-12-11 19:17:32,486 - app.api.whatsapp - INFO - [2025-12-11T17:17:32.486687] Baileys webhook received
+2025-12-11 19:17:32,488 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hello hustlr l miss you",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3FDBA10AF4F3504FDC74",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765473447,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "extendedTextMessage": {
+        "text": "hello hustlr l miss you",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  }
+}
+2025-12-11 19:17:32,489 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 19:17:32,489 - app.api.whatsapp - INFO - Baileys text: 'hello hustlr l miss you'
+2025-12-11 19:17:32,841 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: booking_cancelled, Message: No problem! Let's start over. What service do you need?...
+2025-12-11 19:17:35,159 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-11 19:17:35,314 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-11 19:21:19,041 - app.api.whatsapp - INFO - [2025-12-11T17:21:19.041922] Baileys webhook received
+2025-12-11 19:21:19,045 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hello so what are you doing now",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F9B82A47DC34660C2E2",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765473674,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "hello so what are you doing now",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-11 19:21:19,047 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 19:21:19,048 - app.api.whatsapp - INFO - Baileys text: 'hello so what are you doing now'
+2025-12-11 19:21:19,625 - app.utils.aws_lambda - INFO - [BEDROCK CONFIG] source=settings cfg(HUSTLR)=anthropic.claude-3-5-sonnet-20240620-v1:0, env_ignored(BEDROCK_MODEL_ID)=, param_ignored=None, inference_profile_arn=arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, resolved_model_id=anthropic.claude-3-5-sonnet-20240620-v1:0, chosen=arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, use_bedrock=True, region=us-east-1, has_creds=True
+2025-12-11 19:21:19,626 - app.utils.aws_lambda - INFO - [BEDROCK INVOKE] modelId=arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, region=us-east-1
+2025-12-11 19:21:24,431 - app.utils.aws_lambda - INFO - [CLAUDE RESPONSE] Model: arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, User: Vincent Mugondora, Question: hello so what are you doing now..., Answer: ```json
+{
+  "status": "ASK",
+  "field": "service_type",
+  "question": "Hey Vincent! What service do you need today?"
+}
+```...
+2025-12-11 19:21:24,434 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ask_service_type, Message: Which service do you need? (e.g., plumber, electrician)...
+2025-12-11 19:21:26,844 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-11 19:21:26,986 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-11 19:23:02,792 - app.api.whatsapp - INFO - [2025-12-11T17:23:02.792723] Baileys webhook received
+2025-12-11 19:23:02,792 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "status",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "status@broadcast",
+      "fromMe": false,
+      "id": "ACE3BE17F18CA4AD1D1D39FE169EE012",
+      "participant": "263782890282@s.whatsapp.net",
+      "participantLid": "166537457602712@lid"
+    },
+    "messageTimestamp": 1765473778,
+    "pushName": "Hoskick power  baba Taku",
+    "broadcast": true,
+    "message": {
+      "senderKeyDistributionMessage": {
+        "groupId": "status@broadcast",
+        "axolotlSenderKeyDistributionMessage": "MwiSu/q7BhAAGiC8JqbSqZ44nIkXF6hlGgyt1fgF+RxojJ4UDjy1s8rnSiIhBU0a/B1eb9ckBVutlbqtxaoW85f+5Tss9v3Txbvs2d4R"
+      },
+      "imageMessage": {
+        "url": "https://mmg.whatsapp.net/v/t62.7118-24/599455711_1401383545063518_689613908908514599_n.enc?ccb=11-4&oh=01_Q5Aa3QG9y8iRVBA1ICVvEk5smOZYzhNWwRxhZ8GHU0AP5kjpUA&oe=6962676E&_nc_sid=5e03e0&mms3=true",
+        "mimetype": "image/jpeg",
+        "caption": "Rip my bro",
+        "fileSha256": "bUZVgo0Y9RzucNtJb7Pr+OEy5vOi2R06KviU+C7E3MQ=",
+        "fileLength": "28966",
+        "height": 540,
+        "width": 720,
+        "mediaKey": "4adw6vqYQrNT33rOFou9p6xW5f5eoiQ6+A2zXGpm90E=",
+        "fileEncSha256": "AReaoTKYz7GuVy//R3lSLZfhktiPHQxUz4nzKEKgSm0=",
+        "directPath": "/v/t62.7118-24/599455711_1401383545063518_689613908908514599_n.enc?ccb=11-4&oh=01_Q5Aa3QG9y8iRVBA1ICVvEk5smOZYzhNWwRxhZ8GHU0AP5kjpUA&oe=6962676E&_nc_sid=5e03e0",
+        "mediaKeyTimestamp": "1765473728",
+        "jpegThumbnail": "/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkJCQkKCQoLCwoODw0PDhUTERETFR8WGBYYFh8wHiMeHiMeMCozKScpMypMOzU1O0xXSUVJV2pfX2qFf4WuruoBCQkJCQoJCgsLCg4PDQ8OFRMRERMVHxYYFhgWHzAeIx4eIx4wKjMpJykzKkw7NTU7TFdJRUlXal9faoV/ha6u6v/CABEIAHgAoAMBIgACEQEDEQH/xAAyAAABBQEBAAAAAAAAAAAAAAAEAAIDBQYBBwEAAwEBAQAAAAAAAAAAAAAAAAECAwQF/9oADAMBAAIQAxAAAAAOupJ+O5pmzSuqWVAshHaBk9UMr79rAZSYZcLCmIEhNhYFEdEDCxy+Xuaqen2x25lBoNOXlTaRNaOuvrboMKNBkEtiDmbENW2aPm0gjIjAGpNptFdvFm5uxlDd020a6zh6ubpotVb3t15KHpp6F5Pfa7THzzTE8zXV3mFxxvjBgpQ7MaZUXG7sai2pcr2lPPY1hoch6Di3va1gRefTpIrrzno4b52UhidczE2wXjA55bxxgwyt2DZPQyuIu0jynPcSm1W8qvK7r2XzJguGvaKABifj0DqRrXXxscRLhNxLwkfTMfa0d3LOaNKEplUSz2Ty7V5J1R5r1nz3D0s45qzy4xMcycayoieyW89jWbjyzTG+sQCGintUbO3Hmfo8drMzpMeYbvEOyu3LWsmZNQNnaEbuQAQSIZF6fLJC0rEmtqkr6cWOkcRSSQGIkAvEga1JnNQkGdYlNf/EADoQAAIBAwMCBAMFBwIHAAAAAAECAwAEEQUSIRMxIkFRcRRSYQYycoGREBUkMzRTsUJiI0Njc5Khsv/aAAgBAQABPwBorVeYrxB9DVx8KxJkdAfnBpTESdjhgPMUMUu31FPLGnmDSXERHfFdeL5660HzV14fmrrRfNU7K9zFjJA5NRMHyAO1bKK0VorT4UZNZV84qRPC3tSwx/IKEEfHgFRxqB90V0kbGUU/lSwRf21/ShBF/bX9BXShXnpr+lKsBJ8K8d+KuJ7O3RXkAw3AwM1az2V0WEIB298rXw8fyL+ldGNc+ED8q6aj0qaWKBd0jhVzjNYBAIorRWnRW7iumo7CpF8De1QxvICRgYNC2l+ZaKOg5ZKEgyB1Iz7Glng3heqm49hmgKk4GcZxVnPNLK7cbTUelWF/aILiEErS6FFpzSvAzFGxwfKmOGI/2Gp7u3tkjMz4z2qK/tbl9kMm5gCcYNa3/Rj/ALgrbgYoiiKK5qaRIVLOcCrnUlWNtkZP1NQAc8nv5GvFjhzmrqWfoXAbOCD5VAo6kRx5rS2JBim6qDpnJH0zmlPAI7VMTtGDVnbiNUWtL5Z0+mRU1qJYmRhwRitcE2lsojPLEjLEtkVd31xchVlIwvbAqxW7efFs219vfOOKubbUwkZuZdyGRRjNGjRH7NUR3hAVSfGO1GGTgtCxXzBFRcF/xVNvKAJnOavyfgZAfkFQ/wAyL3WkhCk4TktyTnsaUDgVMq+D3qGLsa00hJ8scLtIz5Cmu7XzuY//ACrXLOy1W2ZUnRpUGV28mr6xnspTHKpHoa0RSb3j+2avYS0UY/60f/1W8F2TzFEUaamUEVOg6f50ksalsyLyfWknjc4VwSK1E/wcvsKtxulhHqy0tKT1j+EVs3MCzAKoySfIVcahPLKYYS0UYPsxrUGuYY0jK57Hd6g07XC2ol24XdgmtDcPfYaJSjccjNala2zQq8qKVUjyyMGks7SJt0cKqcd14pooyVJDHDAjLE8ivCGJ8zRaiRRat1TnwgYPejM3rWnEtIzVff0cvtVr/Ot/xJV0SuMHHFCHZIv8RPllByGNaTp4uLKNbgltyZbnk1IpiuTnOVYg5+hqG9SSIFsBhxn6VcuiQFWLMxIr7PQolu8zrzKcD2Fa/cRwW8Mfm7/4qKVJFBVq8u9H3o9jzTfsOcCp+61mtN7Mavf6SX2q2LB4yoyV5x7VHcy3KhTAV5+8cGobfGC2M1o7gwBfNSQau4CJ7kjusz4/WoW8ZHr5HirkEiKIRjexAHizyatoBa2sUJbIRcE/5rWb/wCM1XKOOlDwvIwa/erxsykqBnuO1fvlgMb/AP3Sak6tkvmrfVgyBShJ9a+OTILYArrIM7/D71calBG4TJNNehn5JFM3iNacuI8+tXfNpL+GtJhMkqtjKqOaggCgYGKKenerO6+GlXP3GOGrVdGkWIX1vl4ZOXI52tT2hmljjHBLgA+ma/ccNlqiJLM8ioykeXJ5FapqKurQQHg8M9XiBGHhTxD0o49FxTRp8qmjFH/bFKAv3VArLEYLce9DwEKx7jIq5P8AxMAA5A59KYx9uM1AE5yueajcR/SpLtJIJE8yCK021EEEaEeLGWpRgCvMU68of91fZW9AD2rnKnlak03TQeqtnCJO+4IARWuyY1K6IHKv/imJPfvWpEdWJfemOaNP2rA4oVd56igeSCg6nCuKhWMOC6bkPmOSKtdMnMfU2Hx8qVI7GpbOVSeoSoHzVAN0sYHmwqLCjkUO1McYNFuY/erW4aCdWDED1HlVpdfE2UchxuOFb3rVnDXl6/zXDgewNdKZiCI2xjvjitR3fGOG/wBKijXFPQ70vGPqauTm5b2AoJuzzz5ConbcoU8kgUgvIowpldSMrtz2xxT/ABEpRZ5n6ZyA5FW2jX0aRXLoOmAGzml7kUrkeEn2NM2Rg0rZZBXJFfZq8D2bQseVZaQrPKoYDxOxz7tUP2bkeFXuJDEJOEAGf1rXdOktXLcFVkMe7Hciie1E05zWaRsuoqY5nl+hoHwNVmubiP8AEKs9LJQSXUnUbJOPqfWtWkEt1HAnCRfe9zUdzJgJvfb6ZOK3YxRYHk9qEgx3qJozKm4nB9KNjplta20saGeeWIOFc4VasrorfnKpEHA+6MLSTFTFhseFiDSTXdxEqtKgBVc+Nmxx6DFazexyRT2rMx6LtgjgZU0ZXNGR6aR6Mr1HMVdSw4zTHdJI31Nf8tvetO/qFq8FtaRu48TehOBU9wwuHKyiQF9zEAgEmrYaW1rHJJcP8SQSI1HANKSxCgZJOBS20vfcq+7CriDohG3qd2eRSvtlXPYEGrCP94Wa3FuQGiYoIif9BORyavhb20TvLNAZsriKM7zjzyauiIpVQHICjB+lTa/qJVlS4aOP5Uwn+KuXJVgDknua20UopW2ilKSjEeRpj4PzrTv5pP0NaxfExmMt6/nnioLaSd8IOB95j2FQWQkZYrOM5CgO/rStitM0RZ7V7qYnpldyKh5xWpaLDFZPJDd72XxqhHJFC1lklXAKFwTyKErIxGaSfOMmrl2Ko+c48NO/FTudhH7SKxWKs/sfLc2omnlMRZcouKv9I1CxB60LbAeHHKmtP7k1/8QAJBEAAgIBBAICAwEAAAAAAAAAAAECESEDEBIxE1EycSAiUoH/2gAIAQIBAT8A/wB2wJr0xX3xZn+WcX63snOfJpM04TkrcycVGqdmn0xZiKJVPeMV2xwkpXxNJfq/sakyOIik1FNJZMpWxyz0xp+in6Mmr8Gafxf2LBNKhQ6RSSo4scWt9SV4IqovalJUJcUTbOcjmyMm2PNDTb3ROVRbLm1bhSY0JCWS8MXdsl2WrqzV8ihLxq5Vg0vI9GPlVSrI2qopeio+hxGsMTxZBtq2R0YJWln830f/xAAmEQACAQMDBAMAAwAAAAAAAAABAgADESEEEhMQIFGBIjJBBWGx/9oACAEDAQE/AO6/YlKkVBKxuIHFM+zAT+iNe471dSgXdm0qH5epeKjObCcWSLnH9QgS3ZS+0Y59dKJIMNTBNxGJJJ7aa2zGPRXKm8ZtxvaIAWAM4knEsamAMQHbfEufMJ6003uqXAuY+m0lME09TyOv2FrD1LiE5jG9oQD0AIh09dU5DScJ5IIE0aaR1U1QAVfJJwQRi81DUk1O6jbaCCAMi8vm83N5m5vMDZzCf8glXDAD8Er/AMhqqwZHqfAgDbbGO++J/9k=",
+        "contextInfo": {
+          "pairedMediaType": "NOT_PAIRED_MEDIA",
+          "statusSourceType": "IMAGE"
+        },
+        "thumbnailDirectPath": "/v/t62.35850-24/599419414_2268544050284512_3159080182783078274_n.enc?ccb=11-4&oh=01_Q5Aa3QEcazwvvNhT3Q_640RogcjdhEFUzM4tahBcpYhQvt9JUA&oe=696260FC&_nc_sid=5e03e0",
+        "thumbnailSha256": "UCRS6BsIVCtCjZ2isrqETQ3m3uq0LEdw2qA7T0bqOjM=",
+        "thumbnailEncSha256": "35J2KNHBE+Q1pg4aEePL/a0m6u/ctxecD10EdmtphKg="
+      },
+      "messageContextInfo": {
+        "messageSecret": "QkEQypVn9GFOfBPyFx7c+xC8+qQlgyy2e69Howp3dW0="
+      }
+    }
+  }
+}
+2025-12-11 19:23:02,797 - app.api.whatsapp - INFO - Baileys message from: status
+2025-12-11 19:23:02,797 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-11 19:23:03,171 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from status, skipping
