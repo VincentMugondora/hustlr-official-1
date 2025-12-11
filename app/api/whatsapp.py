@@ -20,9 +20,18 @@ router = APIRouter()
 whatsapp_api = WhatsAppCloudAPI()
 mongo_service = MongoService()
 
-# Force Gemini backend regardless of env flags
-ai_service = GeminiService()
-logging.getLogger(__name__).info("AI backend selected: GeminiService (forced)")
+# Select AI backend based on configuration
+_logger = logging.getLogger(__name__)
+if getattr(settings, "USE_BEDROCK_INTENT", False):
+    ai_service = AWSLambdaService()
+    _logger.info("AI backend selected: AWSLambdaService (Bedrock)")
+elif getattr(settings, "USE_GEMINI_INTENT", False):
+    ai_service = GeminiService()
+    _logger.info("AI backend selected: GeminiService (Gemini API)")
+else:
+    # Default to Bedrock-backed AWSLambdaService when no explicit flag is set
+    ai_service = AWSLambdaService()
+    _logger.info("AI backend selected: AWSLambdaService (Bedrock, default)")
 
 message_handler = MessageHandler(whatsapp_api, mongo_service, ai_service)
 
