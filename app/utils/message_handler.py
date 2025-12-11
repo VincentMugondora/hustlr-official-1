@@ -1666,13 +1666,12 @@ class MessageHandler:
             pass
 
         status = (payload or {}).get('status')
-        # Strict ASK schema: backend renders messages and controls state
+        assistant_msg = (payload or {}).get('assistantMessage') or ''
+
+        # ASK: let Claude's assistantMessage speak to the user, but still map field to state
         if status == 'ASK':
             field = (payload or {}).get('field') or ''
-            # Ignore model-provided question text to avoid drift; backend renders consistent prompts
-            question = ''
             field = str(field).strip().lower()
-            qtext = str(question).strip() or ""
 
             # Map field to our internal state to keep flow ordered
             field_state_map = {
@@ -1699,15 +1698,18 @@ class MessageHandler:
                 session['state'] = ConversationState.SERVICE_SEARCH
                 return
 
-            # Always use backend-generated prompts for consistency
-            fallback_q = {
-                'service_type': self._short("Which service do you need? (e.g., plumber, electrician)", "What service?"),
-                'location': self._short("Where should the provider come? Please send your area (e.g., 'Harare').", "Your area?"),
-                'date': self._short("What date works for you? (e.g., 'tomorrow', 'Dec 15')", "Which date?"),
-                'time': self._short("What time works for you? (e.g., '10am', '2:30pm')", "What time?"),
-                'user_name': self._short("What name should we put on the booking?", "Your name?"),
-            }
-            qtext = fallback_q.get(field, self._short("What service do you need?", "What service?"))
+            # Prefer Claude's own wording; only fall back to backend text if missing
+            if assistant_msg.strip():
+                qtext = assistant_msg.strip()
+            else:
+                fallback_q = {
+                    'service_type': self._short("Which service do you need? (e.g., plumber, electrician)", "What service?"),
+                    'location': self._short("Where should the provider come? Please send your area (e.g., 'Harare').", "Your area?"),
+                    'date': self._short("What date works for you? (e.g., 'tomorrow', 'Dec 15')", "Which date?"),
+                    'time': self._short("What time works for you? (e.g., '10am', '2:30pm')", "What time?"),
+                    'user_name': self._short("What name should we put on the booking?", "Your name?"),
+                }
+                qtext = fallback_q.get(field, self._short("What service do you need?", "What service?"))
 
             # Render the question and set state if we have a mapping
             await self._log_and_send_response(user_number, qtext, f"ask_{field or 'unknown'}")
