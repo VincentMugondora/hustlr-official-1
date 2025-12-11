@@ -54,7 +54,8 @@ class AWSLambdaService:
         inference_profile_arn = getattr(settings, 'HUSTLR_BEDROCK_INFERENCE_PROFILE_ARN', "") or ""
 
         resolved_model_id = (env_model_id or settings_model_id or cfg_model_id).strip() or None
-        model_for_invoke = resolved_model_id
+        # If an inference profile ARN is configured, prefer it as the modelId
+        model_for_invoke = (inference_profile_arn.strip() or resolved_model_id)
 
         logger.info(
             f"[BEDROCK CONFIG] env(BEDROCK_MODEL_ID)={env_model_id}, settings(BEDROCK_MODEL_ID)={settings_model_id}, cfg(HUSTLR)={cfg_model_id}, "
