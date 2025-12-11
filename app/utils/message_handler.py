@@ -398,6 +398,19 @@ class MessageHandler:
         # LLM-controlled mode: if enabled and we're not mid critical flow,
         # let the AI lead general chat/triage.
         if self._is_llm_controlled():
+            # Anchor the conversation to the latest explicit user intent for service type
+            try:
+                latest_service = self.extract_service_type(message_text) or self.detect_problem_statement(message_text)
+            except Exception:
+                latest_service = None
+            if latest_service:
+                # If user mentions a different service, update session immediately and invalidate old picks
+                prev_service = (session.get('data') or {}).get('service_type') if session.get('data') else None
+                if latest_service != prev_service:
+                    session.setdefault('data', {})
+                    session['data']['service_type'] = latest_service
+                    session['data'].pop('providers', None)
+                    session['data'].pop('selected_provider', None)
             if state != ConversationState.BOOKING_PENDING_PROVIDER:
                 await self.handle_ai_response(user_number, message_text, session, user)
                 return
