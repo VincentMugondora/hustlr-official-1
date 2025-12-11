@@ -1521,15 +1521,11 @@ class MessageHandler:
             )
             return
 
-        # Parse JSON response strictly; if not JSON, treat as conversational text and send as-is
+        # Parse JSON response strictly; if not JSON, DO NOT forward natural text (backend controls rendering)
         try:
             payload = json.loads((ai_response or '').strip())
         except Exception:
-            text_reply = (ai_response or '').strip()
-            if text_reply:
-                await self._log_and_send_response(user_number, text_reply, "ai_response")
-                return
-            # If the model returned nothing useful, fall back to provider list when possible
+            # If the model returned non-JSON or nothing, fall back to backend-driven prompts/actions
             try:
                 known_fields = user_context.get('known_fields') or {}
                 service_type = (session.get('data') or {}).get('service_type') or known_fields.get('service_type')
@@ -1541,7 +1537,7 @@ class MessageHandler:
                     return
                 except Exception:
                     pass
-            await self._log_and_send_response(user_number, self._short("Sorry, I couldn't process that. Please try again.", "Sorry, try again."), "ai_parse_error")
+            await self._log_and_send_response(user_number, self._short("What service do you need? (e.g., plumber, electrician)", "What service?"), "ai_parse_error")
             return
 
         # Final JSON at completion (Option C): booking_complete or provider_registration_complete
@@ -1613,6 +1609,54 @@ class MessageHandler:
             pass
 
         status = (payload or {}).get('status')
+        # Strict ASK schema: backend renders messages and controls state
+        if status == 'ASK':
+            field = (payload or {}).get('field') or ''
+            question = (payload or {}).get('question') or ''
+            field = str(field).strip().lower()
+            qtext = str(question).strip() or ""
+
+            # Map field to our internal state to keep flow ordered
+            field_state_map = {
+                'service_type': ConversationState.SERVICE_SEARCH,
+                'location': ConversationState.BOOKING_LOCATION,
+                'date': ConversationState.BOOKING_TIME,
+                'time': ConversationState.BOOKING_TIME,
+                'selected_provider': ConversationState.PROVIDER_SELECTION,
+                'user_name': ConversationState.BOOKING_CONFIRM,
+            }
+
+            # Special handling for provider selection: render backend provider list
+            if field == 'selected_provider':
+                stype = (session.get('data') or {}).get('service_type') or (user_context.get('known_fields') or {}).get('service_type')
+                if stype:
+                    try:
+                        await self._ai_action_list_providers(user_number, {'service_type': stype}, session, user)
+                        session['state'] = ConversationState.PROVIDER_SELECTION
+                        return
+                    except Exception:
+                        pass
+                # If service unknown, ask for it first
+                await self._log_and_send_response(user_number, self._short("Which service do you need? (e.g., plumber, electrician)", "What service?"), "ask_service_type")
+                session['state'] = ConversationState.SERVICE_SEARCH
+                return
+
+            # Use model's question text when provided; otherwise fallback concise prompts
+            if not qtext:
+                fallback_q = {
+                    'service_type': self._short("Which service do you need? (e.g., plumber, electrician)", "What service?"),
+                    'location': self._short("Where should the provider come? Please send your area (e.g., 'Harare').", "Your area?"),
+                    'date': self._short("What date works for you? (e.g., 'tomorrow', 'Dec 15')", "Which date?"),
+                    'time': self._short("What time works for you? (e.g., '10am', '2:30pm')", "What time?"),
+                    'user_name': self._short("What name should we put on the booking?", "Your name?"),
+                }
+                qtext = fallback_q.get(field, self._short("What service do you need?", "What service?"))
+
+            # Render the question and set state if we have a mapping
+            await self._log_and_send_response(user_number, qtext, f"ask_{field or 'unknown'}")
+            if field in field_state_map:
+                session['state'] = field_state_map[field]
+            return
         if status == 'IN_PROGRESS':
             question = (payload or {}).get('next_question') or ""
             # Guard: avoid re-asking service if it's already known
