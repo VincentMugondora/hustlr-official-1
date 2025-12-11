@@ -24,6 +24,7 @@ class ConversationState(Enum):
     BOOKING_TIME = "booking_time"
     BOOKING_LOCATION = "booking_location"  # Confirm location for service
     CONFIRM_LOCATION = "confirm_location"  # Explicit yes/no confirmation after time
+    BOOKING_USER_NAME = "booking_user_name"
     PROVIDER_SELECTION = "provider_selection"
     BOOKING_CONFIRM = "booking_confirm"  # Final confirmation before booking
     BOOKING_PENDING_PROVIDER = "booking_pending_provider"  # Waiting for provider response
@@ -281,6 +282,7 @@ class MessageHandler:
             ConversationState.BOOKING_SERVICE_DETAILS,
             ConversationState.BOOKING_LOCATION,
             ConversationState.CONFIRM_LOCATION,
+            ConversationState.BOOKING_USER_NAME,
             ConversationState.PROVIDER_SELECTION,
             ConversationState.BOOKING_TIME,
             ConversationState.BOOKING_CONFIRM,
@@ -429,6 +431,8 @@ class MessageHandler:
             await self.handle_booking_time(user_number, message_text, session, user)
         elif state == ConversationState.CONFIRM_LOCATION:
             await self.handle_confirm_location(user_number, message_text, session, user)
+        elif state == ConversationState.BOOKING_USER_NAME:
+            await self.handle_booking_user_name(user_number, message_text, session, user)
         elif state == ConversationState.PROVIDER_SELECTION:
             await self.handle_provider_selection(user_number, message_text, session, user)
         elif state == ConversationState.BOOKING_CONFIRM:
@@ -895,6 +899,48 @@ class MessageHandler:
         parts.append(f"Issue: {issue}")
         parts.append(f"Date & Time: {booking_time}")
         parts.append(f"Location: {final_location}")
+
+        summary_long = "Here's your booking:\n\n" + "\n".join(parts) + "\n\nReply \"Yes\" to confirm or \"No\" to edit."
+        summary_short = "Confirm: " + " | ".join([p.split(": ",1)[1] if ": " in p else p for p in parts]) + ". Reply Yes/No."
+        await self._log_and_send_response(user_number, self._short(summary_long, summary_short), "booking_confirmation_summary")
+        session['state'] = ConversationState.BOOKING_CONFIRM
+
+    async def handle_booking_user_name(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
+        """Capture the user's name for this booking, update profile, and show final confirmation summary."""
+        raw = (message_text or '').strip()
+        if not raw:
+            await self._log_and_send_response(
+                user_number,
+                self._short("What name should we put on the booking?", "Your name?"),
+                "ask_user_name_retry"
+            )
+            return
+        # Simple cleanup/title case
+        name = raw.title()
+        try:
+            await self.db.update_user(user_number, {'name': name})
+        except Exception:
+            pass
+        session.setdefault('data', {})
+        session['data']['user_name'] = name
+
+        # Build confirmation summary using latest fields
+        service_type = session['data'].get('service_type', 'service').title()
+        issue = session['data'].get('issue', 'Not specified')
+        booking_time = session['data'].get('booking_time', 'Not specified')
+        location_display = session['data'].get('location') or (user.get('location') if user else None) or 'your area'
+        provider = (session['data'].get('selected_provider') or {})
+        provider_name = provider.get('name')
+
+        parts = []
+        if provider_name:
+            parts.append(f"Provider: {provider_name}")
+        parts.append(f"Service: {service_type}")
+        parts.append(f"Location: {location_display}")
+        parts.append(f"Date & Time: {booking_time}")
+        parts.append(f"Name: {name}")
+        if issue and issue != 'Not specified':
+            parts.insert(2, f"Issue: {issue}")
 
         summary_long = "Here's your booking:\n\n" + "\n".join(parts) + "\n\nReply \"Yes\" to confirm or \"No\" to edit."
         summary_short = "Confirm: " + " | ".join([p.split(": ",1)[1] if ": " in p else p for p in parts]) + ". Reply Yes/No."
