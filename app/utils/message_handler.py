@@ -411,6 +411,7 @@ class MessageHandler:
                     session['data']['service_type'] = latest_service
                     session['data'].pop('providers', None)
                     session['data'].pop('selected_provider', None)
+                    session['data'].pop('provider_options_cached', None)
             if state != ConversationState.BOOKING_PENDING_PROVIDER:
                 await self.handle_ai_response(user_number, message_text, session, user)
                 return
@@ -1658,7 +1659,8 @@ class MessageHandler:
         # Strict ASK schema: backend renders messages and controls state
         if status == 'ASK':
             field = (payload or {}).get('field') or ''
-            question = (payload or {}).get('question') or ''
+            # Ignore model-provided question text to avoid drift; backend renders consistent prompts
+            question = ''
             field = str(field).strip().lower()
             qtext = str(question).strip() or ""
 
@@ -1687,16 +1689,15 @@ class MessageHandler:
                 session['state'] = ConversationState.SERVICE_SEARCH
                 return
 
-            # Use model's question text when provided; otherwise fallback concise prompts
-            if not qtext:
-                fallback_q = {
-                    'service_type': self._short("Which service do you need? (e.g., plumber, electrician)", "What service?"),
-                    'location': self._short("Where should the provider come? Please send your area (e.g., 'Harare').", "Your area?"),
-                    'date': self._short("What date works for you? (e.g., 'tomorrow', 'Dec 15')", "Which date?"),
-                    'time': self._short("What time works for you? (e.g., '10am', '2:30pm')", "What time?"),
-                    'user_name': self._short("What name should we put on the booking?", "Your name?"),
-                }
-                qtext = fallback_q.get(field, self._short("What service do you need?", "What service?"))
+            # Always use backend-generated prompts for consistency
+            fallback_q = {
+                'service_type': self._short("Which service do you need? (e.g., plumber, electrician)", "What service?"),
+                'location': self._short("Where should the provider come? Please send your area (e.g., 'Harare').", "Your area?"),
+                'date': self._short("What date works for you? (e.g., 'tomorrow', 'Dec 15')", "Which date?"),
+                'time': self._short("What time works for you? (e.g., '10am', '2:30pm')", "What time?"),
+                'user_name': self._short("What name should we put on the booking?", "Your name?"),
+            }
+            qtext = fallback_q.get(field, self._short("What service do you need?", "What service?"))
 
             # Render the question and set state if we have a mapping
             await self._log_and_send_response(user_number, qtext, f"ask_{field or 'unknown'}")
@@ -1704,11 +1705,11 @@ class MessageHandler:
                 session['state'] = field_state_map[field]
             return
         if status == 'IN_PROGRESS':
+            # Do not forward model text; stay strictly backend-rendered
             question = (payload or {}).get('next_question') or ""
-            # Guard: avoid re-asking service if it's already known
             ql = question.lower()
             um = (message_text or '').lower()
-            # Persist provider selection index if indicated by model's question (e.g., first/second/third or a number)
+            # Persist provider selection index if indicated by model's question
             try:
                 ord_map = {'first': 1, '1st': 1, 'second': 2, '2nd': 2, 'third': 3, '3rd': 3}
                 sel_idx = None
@@ -1728,10 +1729,9 @@ class MessageHandler:
             except Exception:
                 pass
 
-            service_known = bool((session.get('data') or {}).get('service_type')) or bool('service_type' in (user_context.get('known_fields') or {}))
-            wants_list = any(k in ql for k in ['available', 'options', 'list', 'providers']) or any(k in um for k in ['list', 'show options', 'show list', 'providers'])
-            if service_known and wants_list:
-                # List providers only when explicitly asked
+            # Choose a safe backend prompt based on current state
+            cur_state = session.get('state')
+            if cur_state == ConversationState.PROVIDER_SELECTION:
                 service_type = (session.get('data') or {}).get('service_type') or (user_context.get('known_fields') or {}).get('service_type') or ''
                 if service_type:
                     try:
@@ -1739,9 +1739,18 @@ class MessageHandler:
                         return
                     except Exception:
                         pass
-            if not question:
-                question = self._short("What service do you need?", "What service?")
-            await self._log_and_send_response(user_number, question, "ai_next_question")
+                await self._log_and_send_response(user_number, self._short("Which service do you need? (e.g., plumber, electrician)", "What service?"), "ask_service_type")
+                session['state'] = ConversationState.SERVICE_SEARCH
+                return
+            fallback_q = {
+                ConversationState.SERVICE_SEARCH: self._short("Which service do you need? (e.g., plumber, electrician)", "What service?"),
+                ConversationState.BOOKING_LOCATION: self._short("Where should the provider come? Please send your area (e.g., 'Harare').", "Your area?"),
+                ConversationState.BOOKING_TIME: self._short("What time works for you? (e.g., '10am', '2:30pm')", "What time?"),
+                ConversationState.CONFIRM_LOCATION: self._short("Should the provider come to your usual address? Reply Yes or No.", "Use saved location? Yes/No"),
+                ConversationState.BOOKING_USER_NAME: self._short("What name should we put on the booking?", "Your name?"),
+            }
+            qtext = fallback_q.get(cur_state, self._short("Which service do you need? (e.g., plumber, electrician)", "What service?"))
+            await self._log_and_send_response(user_number, qtext, "ai_next_question")
             return
 
         if status == 'COMPLETE':
