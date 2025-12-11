@@ -1570,7 +1570,17 @@ class MessageHandler:
 
         # Parse JSON response strictly; if not JSON, DO NOT forward natural text (backend controls rendering)
         try:
-            payload = json.loads((ai_response or '').strip())
+            raw_resp = (ai_response or '').strip()
+            # Claude often wraps JSON in ```json fences; strip them before parsing
+            candidate = raw_resp
+            if candidate.startswith("```"):
+                # Remove leading/backtick fences like ```json\n...```
+                candidate = candidate.strip('`').strip()
+                # If it starts with the word json, drop that label
+                lower = candidate.lower()
+                if lower.startswith('json'):
+                    candidate = candidate[4:].lstrip()
+            payload = json.loads(candidate)
         except Exception:
             # If the model returned non-JSON or nothing, fall back to backend-driven prompts/actions
             try:
