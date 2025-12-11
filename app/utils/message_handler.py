@@ -1924,17 +1924,46 @@ class MessageHandler:
                 return
 
             if ptype == 'provider_registration':
+                # Claude's contract may use slightly different field names; normalize them here
                 full_name = (data.get('full_name') or '').strip()
                 phone = (data.get('phone') or '').strip()
-                service_category = (data.get('service_category') or '').strip().lower()
+
+                # Accept either 'service_category' (old) or 'service_type' (Claude)
+                service_category = (
+                    (data.get('service_category') or data.get('service_type') or '')
+                    .strip()
+                    .lower()
+                )
+
+                # Accept either 'years_experience' (old) or 'experience_years' (Claude)
                 years_experience = data.get('years_experience')
-                national_id = (data.get('national_id') or '').strip()
+                if years_experience is None:
+                    years_experience = data.get('experience_years')
+
+                # Accept either 'national_id' (old) or 'id_number' (Claude)
+                national_id = (data.get('national_id') or data.get('id_number') or '').strip()
+
                 location = (data.get('location') or '').strip()
-                availability_days = data.get('availability_days') or []
+
+                # availability_days may arrive as a string or list
+                availability_days_raw = data.get('availability_days')
+                if isinstance(availability_days_raw, str) and availability_days_raw.strip():
+                    availability_days = [availability_days_raw.strip()]
+                elif isinstance(availability_days_raw, list):
+                    availability_days = availability_days_raw
+                else:
+                    availability_days = []
+
+                # availability_hours is optional; default to an empty string if not provided
                 availability_hours = (data.get('availability_hours') or '').strip()
 
-                if not (full_name and phone and service_category and national_id and location and availability_hours):
-                    await self._log_and_send_response(user_number, "Missing registration fields. Please provide the required info.", "provider_registration_missing")
+                # Require core identity + category + ID + location only
+                if not (full_name and phone and service_category and national_id and location):
+                    await self._log_and_send_response(
+                        user_number,
+                        "Missing registration fields. Please provide your full name, phone number, service type, ID number, and location.",
+                        "provider_registration_missing",
+                    )
                     return
 
                 # Check if phone number is already registered
