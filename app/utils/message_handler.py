@@ -1978,6 +1978,102 @@ class MessageHandler:
             pass
         return s
 
+    async def _maybe_quick_provider_choice(self, user_number: str, message_text: str, session: Dict, user: Dict) -> bool:
+        """Infer provider selection and/or time from free-form user text and create a booking.
+
+        Works when a providers list already exists in session['data']['providers'].
+        Accepts inputs like: 'book the first option', 'I want the second plumber',
+        'book Jayhind tomorrow 10am', or just a time after a prior selection.
+        """
+        try:
+            providers = (session.get('data') or {}).get('providers') or []
+            if not providers:
+                return False
+            text = (message_text or '').strip().lower()
+            if not text:
+                return False
+
+            # Determine provider index from text or previous selection
+            idx: Optional[int] = None
+            ord_map = {
+                'first': 1, '1st': 1,
+                'second': 2, '2nd': 2,
+                'third': 3, '3rd': 3,
+            }
+            for k, v in ord_map.items():
+                if k in text:
+                    idx = v
+                    break
+            if idx is None:
+                # Any number in text
+                m = re.search(r"\b(\d+)\b", text)
+                if m:
+                    try:
+                        n = int(m.group(1))
+                        if 1 <= n <= len(providers):
+                            idx = n
+                    except Exception:
+                        idx = None
+            if idx is None:
+                # Match by provider name
+                for i, p in enumerate(providers, start=1):
+                    name = (p.get('name') or '').lower()
+                    if name and name in text:
+                        idx = i
+                        break
+
+            # Fallback to previously selected index if present
+            if idx is None:
+                prev_idx = (session.get('data') or {}).get('selected_provider_index')
+                if isinstance(prev_idx, int) and 1 <= prev_idx <= len(providers):
+                    idx = prev_idx
+
+            # Try extract a time from the message
+            time_dt = None
+            try:
+                time_dt = self._canonicalize_booking_time(message_text)
+            except Exception:
+                time_dt = None
+
+            if idx is None and not time_dt:
+                return False
+
+            # If we have a provider index but no time yet, remember selection and ask for time
+            if idx is not None and not time_dt:
+                session.setdefault('data', {})
+                session['data']['selected_provider_index'] = idx
+                await self._log_and_send_response(
+                    user_number,
+                    self._short("When would you like the service? (e.g., 'tomorrow 10am')", "When? (e.g., tomorrow 10am)"),
+                    "ask_time_for_booking_quick"
+                )
+                session['state'] = ConversationState.BOOKING_TIME
+                return True
+
+            # If we only have a time, use the previously selected provider index
+            if time_dt and idx is None:
+                prev_idx = (session.get('data') or {}).get('selected_provider_index')
+                if isinstance(prev_idx, int) and 1 <= prev_idx <= len(providers):
+                    idx = prev_idx
+                else:
+                    return False
+
+            # Create booking via existing helper using provider index and time text
+            if idx is not None:
+                payload = {
+                    'action': 'create_booking',
+                    'service_type': (session.get('data', {}) or {}).get('service_type') or '',
+                    'provider_index': idx,
+                    'time_text': message_text,
+                    'issue': (session.get('data', {}) or {}).get('issue') or ''
+                }
+                await self._ai_action_create_booking(user_number, payload, session, user)
+                return True
+
+            return False
+        except Exception:
+            return False
+
     async def show_user_bookings(self, user_number: str, session: Dict, user: Dict, mode: str = "view") -> None:
         bookings = []
         try:
