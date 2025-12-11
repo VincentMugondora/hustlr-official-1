@@ -47,13 +47,15 @@ class AWSLambdaService:
         env_model_id_ignored = os.getenv('BEDROCK_MODEL_ID') or ""
         cfg_model_id = getattr(settings, 'HUSTLR_BEDROCK_MODEL_ID', "") or ""
         resolved_model_id = cfg_model_id.strip() or None
+        inference_profile_arn = getattr(settings, 'HUSTLR_BEDROCK_INFERENCE_PROFILE_ARN', "") or ""
+        model_for_invoke = (inference_profile_arn.strip() or resolved_model_id)
         logger.info(
             f"[BEDROCK CONFIG] source=settings cfg(HUSTLR)={cfg_model_id}, env_ignored(BEDROCK_MODEL_ID)={env_model_id_ignored}, param_ignored={bedrock_model_id}, "
-            f"resolved={resolved_model_id}, use_bedrock={self.use_bedrock_intent}, region={self.aws_region}, has_creds={bool(self.aws_access_key_id)}"
+            f"inference_profile_arn={(inference_profile_arn or '')}, resolved_model_id={resolved_model_id}, chosen={model_for_invoke}, use_bedrock={self.use_bedrock_intent}, region={self.aws_region}, has_creds={bool(self.aws_access_key_id)}"
         )
-        if not (self.use_bedrock_intent and resolved_model_id):
+        if not (self.use_bedrock_intent and model_for_invoke):
             logger.error(
-                f"Bedrock not configured: use_bedrock_intent={self.use_bedrock_intent}, model_id={resolved_model_id}, region={self.aws_region}"
+                f"Bedrock not configured: use_bedrock_intent={self.use_bedrock_intent}, model_or_profile={model_for_invoke}, region={self.aws_region}"
             )
             raise RuntimeError("Bedrock intent model is not configured.")
         
@@ -72,7 +74,7 @@ class AWSLambdaService:
             user_message,
             user_context or {},
             conversation_history=conversation_history,
-            bedrock_model_id=resolved_model_id,
+            bedrock_model_id=model_for_invoke,
         )
 
     async def _invoke_bedrock(self, user_message: str, user_context: Optional[Dict[str, Any]] = None, conversation_history: Optional[Any] = None, bedrock_model_id: Optional[str] = None) -> str:
