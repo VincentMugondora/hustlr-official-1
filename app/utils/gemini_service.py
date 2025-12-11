@@ -57,6 +57,7 @@ class GeminiService:
             "- Ask exactly one thing at a time (IN_PROGRESS).\n"
             "- Do not repeat questions for known_fields.\n"
             "- Never invent providers; use provider_options if present in context, and always pick service_provider_id from those options.\n"
+            "- When you mention multiple provider_options, list them as a short numbered list, one provider per line, like: '1) Name', '2) Name', '3) Name'. Do not join them in a single long sentence.\n"
             "- No emojis.\n"
         )
 

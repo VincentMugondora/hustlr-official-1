@@ -22619,3 +22619,246 @@ Notes: blocked bathroom sink
 Time:...
 2025-12-11 14:42:52,588 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2025-12-11 14:42:52,927 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-11 14:52:15,401 - app.api.whatsapp - INFO - [2025-12-11T12:52:15.401998] Baileys webhook received
+2025-12-11 14:52:15,401 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hello",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F38AD6C2F3F86B8DDE3",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765457530,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "hello",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-11 14:52:15,401 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 14:52:15,401 - app.api.whatsapp - INFO - Baileys text: 'hello'
+2025-12-11 14:52:20,185 - app.utils.gemini_service - INFO - [GEMINI RESPONSE] Question: hello..., Answer: {
+  "status": "IN_PROGRESS",
+  "next_question": "Hello Vincent! How can I help you today? Are you looking to book another service, or do you have a question about a previous booking?"
+}...
+2025-12-11 14:52:20,187 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_next_question, Message: Hello Vincent! How can I help you today? Are you looking to book another service, or do you have a q...
+2025-12-11 14:52:21,255 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-11 14:52:21,408 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-11 14:52:35,392 - app.api.whatsapp - INFO - [2025-12-11T12:52:35.392173] Baileys webhook received
+2025-12-11 14:52:35,393 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F0990EE20BCEA261BBF",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765457550,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-11 14:52:35,393 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 14:52:35,393 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-11 14:52:35,559 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-11 14:52:41,495 - app.api.whatsapp - INFO - [2025-12-11T12:52:41.495148] Baileys webhook received
+2025-12-11 14:52:41,496 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F0990EE20BCEA261BBF",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765457556,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-11 14:52:41,497 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 14:52:41,497 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-11 14:52:41,640 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-11 14:52:43,363 - app.api.whatsapp - INFO - [2025-12-11T12:52:43.363084] Baileys webhook received
+2025-12-11 14:52:43,365 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "l want an electrician",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F0990EE20BCEA261BBF",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765457558,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "extendedTextMessage": {
+        "text": "l want an electrician",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  }
+}
+2025-12-11 14:52:43,366 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 14:52:43,366 - app.api.whatsapp - INFO - Baileys text: 'l want an electrician'
+2025-12-11 14:52:46,157 - app.utils.gemini_service - INFO - [GEMINI RESPONSE] Question: l want an electrician..., Answer: {
+  "status": "IN_PROGRESS",
+  "next_question": "No problem, Vincent! I can help you find an electrician. We have several great options available. Which of these electricians would you like to book: H...
+2025-12-11 14:52:46,162 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_next_question, Message: No problem, Vincent! I can help you find an electrician. We have several great options available. Wh...
+2025-12-11 14:52:47,156 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-11 14:52:47,306 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-11 14:54:04,455 - app.api.whatsapp - INFO - [2025-12-11T12:54:04.455272] Baileys webhook received
+2025-12-11 14:54:04,455 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "book the first option",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F71DB9085B54AB49593",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765457639,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "book the first option",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-11 14:54:04,455 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 14:54:04,459 - app.api.whatsapp - INFO - Baileys text: 'book the first option'
+2025-12-11 14:54:07,062 - app.api.whatsapp - INFO - [2025-12-11T12:54:07.062390] Baileys webhook received
+2025-12-11 14:54:07,062 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263718275163",
+  "text": "Where are you located",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "263718275163@s.whatsapp.net",
+      "fromMe": false,
+      "id": "2AC9AC1271B5FC54020C",
+      "senderLid": "245496505458780@lid"
+    },
+    "messageTimestamp": 1765457642,
+    "pushName": "SeaGate Plumbers",
+    "broadcast": false,
+    "message": {
+      "conversation": "Where are you located",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "lGPI71xjS3DiGw==",
+          "senderTimestamp": "1765354155",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "9tGJxmSPHRbyVWh2LJq7hi8mQCuU1lGpDnYNxusSLvY="
+      }
+    },
+    "verifiedBizName": "SeaGate Plumbers"
+  }
+}
+2025-12-11 14:54:07,065 - app.api.whatsapp - INFO - Baileys message from: 263718275163
+2025-12-11 14:54:07,065 - app.api.whatsapp - INFO - Baileys text: 'Where are you located'
+2025-12-11 14:54:07,359 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263718275163, Type: invalid_provider_response, Message: Please reply with 'accept' or 'deny' to respond to the booking request....
+2025-12-11 14:54:07,546 - app.utils.gemini_service - INFO - [GEMINI RESPONSE] Question: book the first option..., Answer: {"status": "IN_PROGRESS", "next_question": "Great choice, Vincent! You'd like to book HE Jackson Electrical and Engineering. What date would you like the electrician to come?"}...
+2025-12-11 14:54:07,912 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_next_question, Message: Great choice, Vincent! You'd like to book HE Jackson Electrical and Engineering. What date would you...
+2025-12-11 14:54:08,843 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-11 14:54:08,931 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-11 14:54:09,019 - app.api.whatsapp - INFO - Baileys message processed successfully for 263718275163
+2025-12-11 14:54:10,169 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-11 14:54:25,093 - app.api.whatsapp - INFO - [2025-12-11T12:54:25.093841] Baileys webhook received
+2025-12-11 14:54:25,093 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F5E997D5E81E58CD4EC",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765457660,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-11 14:54:25,093 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 14:54:25,093 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-11 14:54:25,209 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
