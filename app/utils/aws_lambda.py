@@ -46,11 +46,12 @@ class AWSLambdaService:
         import os
         env_model = (os.getenv('BEDROCK_MODEL_ID') or "").strip()
         cfg_profile = (getattr(settings, 'HUSTLR_BEDROCK_INFERENCE_PROFILE_ARN', "") or "").strip()
-        cfg_model = (getattr(settings, 'HUSTLR_BEDROCK_MODEL_ID', "") or "").strip()
-        bedrock_model_id = env_model or cfg_profile or cfg_model or None
+        cfg_model_hustlr = (getattr(settings, 'HUSTLR_BEDROCK_MODEL_ID', "") or "").strip()
+        cfg_model_legacy = (getattr(settings, 'BEDROCK_MODEL_ID', "") or "").strip()
+        bedrock_model_id = env_model or cfg_profile or cfg_model_hustlr or cfg_model_legacy or None
         if not (self.use_bedrock_intent and bedrock_model_id):
             logger.error(
-                f"Bedrock not configured: use_bedrock_intent={self.use_bedrock_intent}, env_model={bool(env_model)}, cfg_profile={bool(cfg_profile)}, cfg_model={bool(cfg_model)}"
+                f"Bedrock not configured: use_bedrock_intent={self.use_bedrock_intent}, env_model={bool(env_model)}, cfg_profile={bool(cfg_profile)}, cfg_model_hustlr={bool(cfg_model_hustlr)}, cfg_model_legacy={bool(cfg_model_legacy)}"
             )
             raise RuntimeError("Bedrock intent model is not configured.")
         
