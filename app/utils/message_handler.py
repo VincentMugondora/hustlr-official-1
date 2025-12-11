@@ -1950,11 +1950,14 @@ class MessageHandler:
             return
 
     async def _ai_action_list_providers(self, user_number: str, payload: Dict[str, Any], session: Dict, user: Dict) -> None:
-        service_type = (payload.get('service_type') or '').strip().lower()
+        # Always prefer the current conversation's service and location from session
+        service_type = (session.get('data', {}).get('service_type') or payload.get('service_type') or '').strip().lower()
         if not service_type:
             await self._log_and_send_response(user_number, "Which service do you need? (e.g., plumber, electrician)", "ai_need_service")
             return
-        user_loc = user.get('location') or ''
+        # Prefer session location for this booking, then user profile
+        sess_loc = (session.get('data', {}) or {}).get('location') or ''
+        user_loc = sess_loc or (user.get('location') or '')
         location_extractor = get_location_extractor()
         normalized_location = location_extractor.normalize_user_location(user_loc) if user_loc else ''
         providers = await self.db.get_providers_by_service(service_type, normalized_location or None)
