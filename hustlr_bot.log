@@ -26829,3 +26829,125 @@ For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/St
 2025-12-11 13:25:46,824 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: booking_cancelled, Message: No problem! Let's start over. What service do you need?...
 2025-12-11 13:25:48,092 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2025-12-11 13:25:48,296 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-11 15:21:11,846 - app.api.whatsapp - INFO - [2025-12-11T13:21:11.846693] Baileys webhook received
+2025-12-11 15:21:11,847 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F6D15D4FFAE4863C2E5",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765459267,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-11 15:21:11,847 - app.api.whatsapp - INFO - Baileys stub/system message from 263777530322, skipping (messageStubType present)
+2025-12-11 15:21:17,953 - app.api.whatsapp - INFO - [2025-12-11T13:21:17.953671] Baileys webhook received
+2025-12-11 15:21:17,953 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F6D15D4FFAE4863C2E5",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765459273,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-11 15:21:17,953 - app.api.whatsapp - INFO - Baileys stub/system message from 263777530322, skipping (messageStubType present)
+2025-12-11 15:21:19,594 - app.api.whatsapp - INFO - [2025-12-11T13:21:19.594319] Baileys webhook received
+2025-12-11 15:21:19,594 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hello",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F6D15D4FFAE4863C2E5",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765459274,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "extendedTextMessage": {
+        "text": "hello",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  }
+}
+2025-12-11 15:21:19,595 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 15:21:19,597 - app.api.whatsapp - INFO - Baileys text: 'hello'
+2025-12-11 15:21:23,494 - app.utils.aws_lambda - INFO - [BEDROCK CONFIG] source=settings cfg(HUSTLR)=anthropic.claude-3-5-sonnet-20240620-v1:0, env_ignored(BEDROCK_MODEL_ID)=, param_ignored=None, inference_profile_arn=arn:aws:bedrock:us-east-1:081809265215:inference-profile/us.anthropic.claude-3-5-sonnet-20241022-v1:0, resolved_model_id=anthropic.claude-3-5-sonnet-20240620-v1:0, chosen=arn:aws:bedrock:us-east-1:081809265215:inference-profile/us.anthropic.claude-3-5-sonnet-20241022-v1:0, use_bedrock=True, region=us-east-1, has_creds=True
+2025-12-11 15:21:23,512 - app.utils.aws_lambda - INFO - [BEDROCK INVOKE] modelId=arn:aws:bedrock:us-east-1:081809265215:inference-profile/us.anthropic.claude-3-5-sonnet-20241022-v1:0, region=us-east-1
+2025-12-11 15:21:25,770 - app.utils.aws_lambda - ERROR - Bedrock invocation error
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 87, in _invoke_bedrock
+    response = self.bedrock_client.invoke_model(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 602, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 1078, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the InvokeModel operation: The provided model identifier is invalid.
+2025-12-11 15:21:25,774 - app.utils.message_handler - ERROR - AI invocation failed
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\message_handler.py", line 1557, in handle_ai_response
+    ai_response = await self.lambda_service.invoke_question_answerer(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 73, in invoke_question_answerer
+    return await self._invoke_bedrock(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 87, in _invoke_bedrock
+    response = self.bedrock_client.invoke_model(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 602, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 1078, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the InvokeModel operation: The provided model identifier is invalid.
+2025-12-11 15:21:25,779 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_invoke_error, Message: I'm having trouble connecting right now. Please try again in a moment....
+2025-12-11 15:21:27,040 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-11 15:21:27,277 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
