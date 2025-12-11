@@ -41,6 +41,14 @@ class GeminiService:
             "Return one of the following objects:\n"
             "1) {\"status\": \"IN_PROGRESS\", \"next_question\": \"warm, friendly guidance (3-5 short sentences) asking for exactly one missing detail\"}\n"
             "2) {\"status\": \"COMPLETE\", \"type\": \"booking\" | \"provider_registration\", \"data\": { ... }}\n"
+            "For bookings (type = 'booking') the data object MUST be:\n"
+            "  {\"service_type\": string,\n"
+            "   \"service_provider_id\": string,  // MUST be one of provider_options[].id\n"
+            "   \"date\": string,                 // e.g. '2025-12-11' or 'tomorrow'\n"
+            "   \"time\": string,                 // e.g. '10:00' or '10am'\n"
+            "   \"additional_notes\": string optional }\n"
+            "Do NOT set status='COMPLETE' for a booking until all of: service_type, service_provider_id, date, and time are known.\n"
+            "Use status='IN_PROGRESS' with next_question to politely ask for exactly one missing field at a time.\n"
             "Tone & Style:\n"
             "- Be warm, friendly, and helpful; use a natural WhatsApp tone.\n"
             "- Gently guide the user and provide context so it feels human and caring.\n"
@@ -48,7 +56,7 @@ class GeminiService:
             "Rules:\n"
             "- Ask exactly one thing at a time (IN_PROGRESS).\n"
             "- Do not repeat questions for known_fields.\n"
-            "- Never invent providers; use provider_options if present in context.\n"
+            "- Never invent providers; use provider_options if present in context, and always pick service_provider_id from those options.\n"
             "- No emojis.\n"
         )
 
