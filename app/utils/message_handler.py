@@ -375,6 +375,19 @@ class MessageHandler:
             )
             return
         
+        # Quick provider selection/booking from free-form text when a provider list is present
+        try:
+            if (session.get('data') or {}).get('providers') and state in {
+                ConversationState.SERVICE_SEARCH,
+                ConversationState.PROVIDER_SELECTION,
+                ConversationState.BOOKING_TIME,
+            }:
+                handled = await self._maybe_quick_provider_choice(user_number, message_text, session, user)
+                if handled:
+                    return
+        except Exception:
+            pass
+
         # LLM-controlled mode: if enabled and we're not mid critical flow,
         # let the AI lead general chat/triage.
         if self._is_llm_controlled():
