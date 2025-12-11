@@ -272,6 +272,9 @@ class MessageHandler:
         if state == ConversationState.BOOKING_RESUME_DECISION:
             await self.handle_booking_resume_decision(user_number, message_text, session, user)
             return
+        if state == ConversationState.BOOKING_CONFIRM:
+            await self.handle_booking_confirmation(user_number, message_text, session, user)
+            return
         
         booking_progress_states = {
             ConversationState.BOOKING_SERVICE_DETAILS,
@@ -1732,69 +1735,48 @@ class MessageHandler:
         except Exception:
             bt_iso = time_text
 
-        booking_id = f"booking_{datetime.utcnow().timestamp()}"
-        booking_data = {
-            'booking_id': booking_id,
-            'user_whatsapp_number': user_number,
-            'provider_whatsapp_number': selected_provider.get('whatsapp_number'),
-            'service_type': service_type or (session.get('data', {}).get('service_type') or ''),
-            'date_time': bt_iso,
-            'issue': issue,
-            'status': 'pending',
-            'customer_number': user_number,
-            'customer_name': user.get('name', 'Customer'),
-        }
-
-        success = await self.db.create_booking(booking_data)
-        if not success:
-            await self._log_and_send_response(user_number, "Oops! Something went wrong. Please try again.", "booking_error")
-            return
-
+        # Build provider message preview
         provider_name = selected_provider.get('name') or 'Provider'
         provider_number = selected_provider.get('whatsapp_number')
-
-        await self._log_and_send_response(
-            user_number,
-            self._short(
-                f"Your booking was sent to {provider_name}!\n\nWe're waiting for their confirmation.\nReference: {booking_id}\n\nYou'll get a message once they respond.",
-                f"Sent to {provider_name}. Waiting for confirmation. Ref: {booking_id}"
-            ),
-            "booking_sent_waiting"
-        )
-
-        provider_message = (
+        display_time = self._format_booking_time_for_display(bt_iso)
+        location_display = (session.get('data', {}).get('location') or user.get('location') or 'your area')
+        preview_provider_message = (
             f"New Booking Request\n\n"
             f"Customer: {user.get('name', 'Customer')}\n"
             f"Service: {service_type or session.get('data', {}).get('service_type') or ''}\n"
             f"Issue: {issue or 'Not specified'}\n"
+            f"Location: {location_display}\n"
             f"Time: {bt_iso}\n"
-            f"Reference: {booking_id}\n\n"
+            f"Reference: (will be generated)\n\n"
             f"Reply with 'accept' to confirm or 'deny' to decline"
         )
-        if provider_number:
-            await self._log_and_send_response(provider_number, provider_message, "booking_request_to_provider")
 
-            # Prepare provider session for response
-            provider_session = await self.db.get_session(provider_number) or {
-                'state': ConversationState.BOOKING_PENDING_PROVIDER,
-                'data': {},
-                'last_activity': datetime.utcnow().isoformat(),
-            }
-            provider_session.setdefault('data', {})
-            provider_session['data']['booking_id'] = booking_id
-            provider_session['data']['customer_number'] = user_number
-            provider_session['data']['service_type'] = service_type
-            provider_session['data']['issue'] = issue or 'Not specified'
-            provider_session['data']['booking_time'] = bt_iso
-            provider_session['state'] = ConversationState.BOOKING_PENDING_PROVIDER
-            provider_session_to_save = provider_session.copy()
-            if isinstance(provider_session_to_save.get('state'), ConversationState):
-                provider_session_to_save['state'] = provider_session_to_save['state'].value
-            await self.db.save_session(provider_number, provider_session_to_save)
+        # Persist pending booking for confirmation
+        session.setdefault('data', {})
+        session['data']['_pending_booking'] = {
+            'service_type': service_type or (session.get('data', {}).get('service_type') or ''),
+            'provider_index': provider_index,
+            'provider_name': provider_name,
+            'provider_number': provider_number,
+            'date_time': bt_iso,
+            'issue': issue or '',
+            'location': location_display,
+            'provider_message': preview_provider_message,
+        }
 
-        # Reset customer session
-        session['state'] = ConversationState.SERVICE_SEARCH
-        session['data'] = {}
+        # Ask user to confirm, and show exactly what will be sent to the provider
+        summary = (
+            f"Please confirm your booking:\n\n"
+            f"Provider: {provider_name}\n"
+            f"Service: {service_type or (session.get('data', {}).get('service_type') or '')}\n"
+            f"Location: {location_display}\n"
+            f"Time: {display_time}\n"
+            f"Issue: {issue or 'Not specified'}\n\n"
+            f"This is what will be sent to the provider:\n\n{preview_provider_message}\n\n"
+            f"Reply 'yes' to confirm or 'no' to change."
+        )
+        await self._log_and_send_response(user_number, summary, "booking_confirm_summary")
+        session['state'] = ConversationState.BOOKING_CONFIRM
 
     async def _ai_action_register_provider(self, user_number: str, payload: Dict[str, Any], session: Dict) -> None:
         name = (payload.get('name') or '').strip()
