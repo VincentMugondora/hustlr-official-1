@@ -1766,13 +1766,16 @@ class MessageHandler:
         if status == 'COMPLETE':
             ptype = (payload or {}).get('type')
             data = (payload or {}).get('data') or {}
+            assistant_msg = (payload or {}).get('assistantMessage') or ''
+
             if ptype == 'booking':
-                # Validate fields
+                # Validate fields from Claude's FINAL booking JSON
                 service_type = (data.get('service_type') or '').strip().lower()
-                provider_id = (data.get('service_provider_id') or '').strip()
+                # New contract uses provider_id (Mongo _id string); keep service_provider_id as fallback
+                provider_id = (data.get('provider_id') or data.get('service_provider_id') or '').strip()
                 date_str = (data.get('date') or '').strip()
                 time_str = (data.get('time') or '').strip()
-                notes = (data.get('additional_notes') or '').strip()
+                notes = (data.get('additional_notes') or data.get('problem_description') or '').strip()
 
                 if not (service_type and provider_id and date_str and time_str):
                     await self._log_and_send_response(user_number, "Missing booking fields. Please provide required details.", "booking_missing_fields")
@@ -1817,14 +1820,12 @@ class MessageHandler:
                 provider_name = provider.get('name') or 'Provider'
                 provider_number = provider.get('whatsapp_number') or provider.get('contact')
 
-                await self._log_and_send_response(
-                    user_number,
-                    self._short(
-                        f"Your booking was sent to {provider_name}!\n\nWe're waiting for their confirmation.\nReference: {booking_id}",
-                        f"Sent to {provider_name}. Waiting. Ref: {booking_id}"
-                    ),
-                    "booking_sent_waiting"
+                # Prefer Claude's assistantMessage if provided; fall back to our summary
+                summary_text = assistant_msg.strip() if assistant_msg.strip() else self._short(
+                    f"Your booking was sent to {provider_name}!\n\nWe're waiting for their confirmation.\nReference: {booking_id}",
+                    f"Sent to {provider_name}. Waiting. Ref: {booking_id}"
                 )
+                await self._log_and_send_response(user_number, summary_text, "booking_sent_waiting")
 
                 if provider_number:
                     provider_message = (
