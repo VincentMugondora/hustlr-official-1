@@ -1387,6 +1387,23 @@ class MessageHandler:
             await self._log_and_send_response(user_number, self._short("Sorry, I couldn't process that. Please try again.", "Sorry, try again."), "ai_parse_error")
             return
 
+        # Execute tool actions from the model, if any, to infer user intent (e.g., select provider, list providers)
+        try:
+            actions = None
+            if isinstance(payload, dict):
+                if isinstance(payload.get('actions'), list):
+                    actions = payload.get('actions')
+                elif isinstance(payload.get('actions'), dict):
+                    actions = [payload.get('actions')]
+                elif payload.get('action'):
+                    actions = [payload]
+            if actions:
+                for action in actions:
+                    await self._perform_ai_action(user_number, action, session, user)
+                return
+        except Exception:
+            pass
+
         status = (payload or {}).get('status')
         if status == 'IN_PROGRESS':
             question = (payload or {}).get('next_question') or ""

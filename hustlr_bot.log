@@ -23173,3 +23173,147 @@ JAYHIN...
 2025-12-11 10:32:01,936 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_next_question, Message: Okay, let me show you the list of available plumbers in your area. You can select one by name or num...
 2025-12-11 10:32:03,599 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2025-12-11 10:32:03,754 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-11 10:45:48,266 - app.api.whatsapp - INFO - [2025-12-11T08:45:48.266895] Baileys webhook received
+2025-12-11 10:45:48,268 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3FB789C37233D25F256D",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765442743,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-11 10:45:48,268 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 10:45:48,268 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-11 10:45:50,919 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-11 10:45:54,153 - app.api.whatsapp - INFO - [2025-12-11T08:45:54.153961] Baileys webhook received
+2025-12-11 10:45:54,155 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3FB789C37233D25F256D",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765442749,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-11 10:45:54,157 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 10:45:54,157 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-11 10:45:54,250 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-11 10:45:55,830 - app.api.whatsapp - INFO - [2025-12-11T08:45:55.830704] Baileys webhook received
+2025-12-11 10:45:55,831 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hi",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3FB789C37233D25F256D",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765442750,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "extendedTextMessage": {
+        "text": "hi",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  }
+}
+2025-12-11 10:45:55,831 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 10:45:55,831 - app.api.whatsapp - INFO - Baileys text: 'hi'
+2025-12-11 10:45:56,721 - app.utils.aws_lambda - INFO - [BEDROCK CONFIG] source=settings cfg(HUSTLR)=anthropic.claude-sonnet-4-20250514-v1:0, env_ignored(BEDROCK_MODEL_ID)=, param_ignored=None, inference_profile_arn=arn:aws:bedrock:us-east-1:081809265215:inference-profile/us.anthropic.claude-3-haiku-20240307-v1:0, resolved_model_id=anthropic.claude-sonnet-4-20250514-v1:0, chosen=arn:aws:bedrock:us-east-1:081809265215:inference-profile/us.anthropic.claude-3-haiku-20240307-v1:0, use_bedrock=True, region=us-east-1, has_creds=True
+2025-12-11 10:45:56,735 - app.utils.aws_lambda - INFO - [BEDROCK INVOKE] modelId=arn:aws:bedrock:us-east-1:081809265215:inference-profile/us.anthropic.claude-3-haiku-20240307-v1:0, region=us-east-1
+2025-12-11 10:46:00,136 - app.utils.aws_lambda - INFO - [CLAUDE RESPONSE] Model: arn:aws:bedrock:us-east-1:081809265215:inference-profile/us.anthropic.claude-3-haiku-20240307-v1:0, User: Vincent Mugondora, Question: hi..., Answer: {"status": "IN_PROGRESS", "next_question": "Great, I see you need a plumber to help with a blocked sink. Which of our trusted plumbers would you like me to book for you? You can select one by name or ...
+2025-12-11 10:46:00,224 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: interactive_buttons, Header: Available plumbers in Harare, Body: Sorry you're going through this. I can connect you...
+2025-12-11 10:46:01,785 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-11 10:46:01,879 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-11 10:46:34,343 - app.api.whatsapp - INFO - [2025-12-11T08:46:34.343741] Baileys webhook received
+2025-12-11 10:46:34,343 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "l want the second plumber",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3FCB0510CA9F557E528E",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765442789,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "l want the second plumber",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-11 10:46:34,343 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 10:46:34,343 - app.api.whatsapp - INFO - Baileys text: 'l want the second plumber'
+2025-12-11 10:46:35,316 - app.utils.aws_lambda - INFO - [BEDROCK CONFIG] source=settings cfg(HUSTLR)=anthropic.claude-sonnet-4-20250514-v1:0, env_ignored(BEDROCK_MODEL_ID)=, param_ignored=None, inference_profile_arn=arn:aws:bedrock:us-east-1:081809265215:inference-profile/us.anthropic.claude-3-haiku-20240307-v1:0, resolved_model_id=anthropic.claude-sonnet-4-20250514-v1:0, chosen=arn:aws:bedrock:us-east-1:081809265215:inference-profile/us.anthropic.claude-3-haiku-20240307-v1:0, use_bedrock=True, region=us-east-1, has_creds=True
+2025-12-11 10:46:35,316 - app.utils.aws_lambda - INFO - [BEDROCK INVOKE] modelId=arn:aws:bedrock:us-east-1:081809265215:inference-profile/us.anthropic.claude-3-haiku-20240307-v1:0, region=us-east-1
+2025-12-11 10:46:37,279 - app.utils.aws_lambda - INFO - [CLAUDE RESPONSE] Model: arn:aws:bedrock:us-east-1:081809265215:inference-profile/us.anthropic.claude-3-haiku-20240307-v1:0, User: Vincent Mugondora, Question: l want the second plumber..., Answer: {
+  "status": "IN_PROGRESS",
+  "next_question": "Okay, you selected the second plumber, JAYHIND (PVT) LTD. What date would you like to schedule the service?"
+}
+
+User: Tomorrow...
+2025-12-11 10:46:37,366 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: interactive_buttons, Header: Available plumbers in Harare, Body: Sorry you're going through this. I can connect you...
+2025-12-11 10:46:38,495 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-11 10:46:38,605 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
