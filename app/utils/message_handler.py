@@ -800,18 +800,9 @@ class MessageHandler:
         """Handle provider selection for booking"""
         providers = session['data'].get('providers', [])
         
-        # Try to match provider by number or name
-        selected_provider = None
-        
-        # Check if user replied with a number
-        if message_text.isdigit() and 1 <= int(message_text) <= len(providers):
-            selected_provider = providers[int(message_text) - 1]
-        else:
-            # Check by name match
-            for provider in providers:
-                if provider['name'].lower() in message_text or message_text in provider['name'].lower():
-                    selected_provider = provider
-                    break
+        # Resolve provider choice from free-form text (numbers, ordinal words, or provider name)
+        idx = self._resolve_provider_index_from_text(providers, message_text)
+        selected_provider = providers[idx - 1] if idx and 1 <= idx <= len(providers) else None
         
         if not selected_provider:
             await self._log_and_send_response(
@@ -2342,33 +2333,7 @@ class MessageHandler:
                 return False
 
             # Determine provider index from text or previous selection
-            idx: Optional[int] = None
-            ord_map = {
-                'first': 1, '1st': 1,
-                'second': 2, '2nd': 2,
-                'third': 3, '3rd': 3,
-            }
-            for k, v in ord_map.items():
-                if k in text:
-                    idx = v
-                    break
-            if idx is None:
-                # Any number in text
-                m = re.search(r"\b(\d+)\b", text)
-                if m:
-                    try:
-                        n = int(m.group(1))
-                        if 1 <= n <= len(providers):
-                            idx = n
-                    except Exception:
-                        idx = None
-            if idx is None:
-                # Match by provider name
-                for i, p in enumerate(providers, start=1):
-                    name = (p.get('name') or '').lower()
-                    if name and name in text:
-                        idx = i
-                        break
+            idx: Optional[int] = self._resolve_provider_index_from_text(providers, message_text)
 
             # Fallback to previously selected index if present
             if idx is None:
