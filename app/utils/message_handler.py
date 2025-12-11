@@ -320,6 +320,28 @@ class MessageHandler:
 
         text_cmd = message_text.strip().lower()
         text_cmd_compact = re.sub(r"\s+", " ", text_cmd)
+
+        # Graceful conversation endings / small talk that should not trigger errors
+        closing_phrases = [
+            "nothing for today",
+            "nothing today",
+            "nothing now",
+            "see you tomorrow",
+            "see you later",
+            "that is all",
+            "that's all",
+        ]
+        if any(p in text_cmd for p in closing_phrases):
+            await self._log_and_send_response(
+                user_number,
+                self._short(
+                    "No problem. If you need anything later, just send me a message.",
+                    "Got it. Message me anytime."
+                ),
+                "conversation_closing",
+            )
+            # Keep session state unchanged; user can resume later
+            return
         # View bookings intents (singular/plural, various verbs)
         if any(k in text_cmd for k in ["my bookings", "view bookings", "show bookings", "see bookings", "bookings"]):
             await self.show_user_bookings(user_number, session, user, mode="view")
