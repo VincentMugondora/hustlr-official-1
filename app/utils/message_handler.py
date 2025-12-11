@@ -87,19 +87,40 @@ class MessageHandler:
             return long_text  # Always verbose for LLM mode
         return short_text if self._is_concise() else long_text
 
-    def _build_friendly_provider_body(self, service_type: str, location: str, providers_count: int, session: Dict) -> str:
+    def _build_friendly_provider_body(self, service_type: str, location: str, providers: List[Dict], session: Dict) -> str:
+        """Build a simple, clean text body listing providers line by line."""
+        top_providers = providers[:3] if providers else []
+
         if self._is_concise():
-            return f"Found {providers_count} {service_type}s in {location}. Pick one:"
+            lines = [f"{idx + 1}) {p['name']}" for idx, p in enumerate(top_providers)]
+            header = f"{service_type.title()}s in {location}:" if location else f"{service_type.title()}s:"
+            body = header
+            if lines:
+                body += "\n" + "\n".join(lines)
+            body += "\n\nPick a provider (1-3)."
+            return body
+
         data = (session or {}).get('data') or {}
         issue = (data.get('issue') or '').strip()
         if issue:
             issue_snippet = issue
             if len(issue_snippet) > 120:
                 issue_snippet = issue_snippet[:117] + '...'
-            prefix = f"Sorry you're going through this. For your issue — {issue_snippet} — I can connect you with Hustlr {service_type}s in {location}."
+            prefix = (
+                f"Sorry you're going through this. For your issue — {issue_snippet} — "
+                f"I can connect you with Hustlr {service_type}s in {location}."
+            )
         else:
             prefix = f"Sorry you're going through this. I can connect you with Hustlr {service_type}s in {location}."
-        return f"{prefix}\n\nFound {providers_count} provider(s). Please pick one:"
+
+        lines = [f"{idx + 1}) {p['name']}" for idx, p in enumerate(top_providers)]
+        providers_block = "\n".join(lines) if lines else "No providers available right now."
+        return (
+            f"{prefix}\n\n"
+            f"Available providers:\n"
+            f"{providers_block}\n\n"
+            f"Please pick one provider (1-3)."
+        )
 
     def _friendly_footer(self) -> str:
         return "Tap or reply 1-3" if self._is_concise() else "Tap a provider or reply with the number — we will handle the rest"
@@ -849,13 +870,14 @@ class MessageHandler:
             session['data'] = {}
             return
 
+        top_providers = providers[:3]
         buttons = []
-        for provider in providers[:3]:
+        for provider in top_providers:
             buttons.append({'id': f"provider_{provider['whatsapp_number']}", 'title': f"{provider['name']}"})
         await self._log_and_send_interactive(
             user_number,
             f"Available {service_type}s in {final_location}",
-            self._build_friendly_provider_body(service_type, final_location, len(providers), session),
+            self._build_friendly_provider_body(service_type, final_location, top_providers, session),
             buttons,
             self._friendly_footer()
         )
