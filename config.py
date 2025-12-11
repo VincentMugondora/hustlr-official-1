@@ -1,4 +1,5 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import Field
 
 
 class Settings(BaseSettings):
@@ -22,8 +23,11 @@ class Settings(BaseSettings):
     AWS_ACCESS_KEY_ID: str = ""
     AWS_SECRET_ACCESS_KEY: str = ""
     AWS_REGION: str = "us-east-1"
-    USE_BEDROCK_INTENT: bool = False
+    USE_BEDROCK_INTENT: bool = True
+    # Legacy field (may be populated by old env var BEDROCK_MODEL_ID). We won't rely on it.
     BEDROCK_MODEL_ID: str = ""
+    # Canonical Bedrock model ID for Hustlr; use this going forward
+    HUSTLR_BEDROCK_MODEL_ID: str = "anthropic.claude-sonnet-4-20250514-v1:0"
     AWS_LAMBDA_QUESTION_ANSWERER_FUNCTION_NAME: str = ""
 
     # Gemini (Google Generative AI) testing configuration

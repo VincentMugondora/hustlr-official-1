@@ -35,19 +35,26 @@ class AWSLambdaService:
         self.client_config = client_config
         self.bedrock_client = None
     
-    async def invoke_question_answerer(self, user_message: str, user_context: Optional[Dict] = None, conversation_history: Optional[Any] = None) -> str:
-        """Invoke Claude Sonnet via Bedrock for AI-powered question answering.
+    async def invoke_question_answerer(self, user_message: str, user_context: Optional[Dict] = None, conversation_history: Optional[Any] = None, bedrock_model_id: Optional[str] = None) -> str:
+        """Invoke Claude via Bedrock for AI-powered question answering.
 
         All conversational logic and reasoning is delegated to Claude. This method
         simply forwards the user message (and optional context) to Bedrock and
         returns Claude's raw text response.
         """
-        # Reload model ID from .env at invocation time to pick up changes
+        # Resolve model ID (settings ONLY; use canonical HUSTLR_BEDROCK_MODEL_ID)
         import os
-        bedrock_model_id = os.getenv('BEDROCK_MODEL_ID') or ""
-        bedrock_model_id = bedrock_model_id.strip() if bedrock_model_id else None
-        if not (self.use_bedrock_intent and bedrock_model_id):
-            logger.error(f"Bedrock not configured: use_bedrock_intent={self.use_bedrock_intent}, model_id={bedrock_model_id}")
+        env_model_id_ignored = os.getenv('BEDROCK_MODEL_ID') or ""
+        cfg_model_id = getattr(settings, 'HUSTLR_BEDROCK_MODEL_ID', "") or ""
+        resolved_model_id = cfg_model_id.strip() or None
+        logger.info(
+            f"[BEDROCK CONFIG] source=settings cfg(HUSTLR)={cfg_model_id}, env_ignored(BEDROCK_MODEL_ID)={env_model_id_ignored}, param_ignored={bedrock_model_id}, "
+            f"resolved={resolved_model_id}, use_bedrock={self.use_bedrock_intent}, region={self.aws_region}, has_creds={bool(self.aws_access_key_id)}"
+        )
+        if not (self.use_bedrock_intent and resolved_model_id):
+            logger.error(
+                f"Bedrock not configured: use_bedrock_intent={self.use_bedrock_intent}, model_id={resolved_model_id}, region={self.aws_region}"
+            )
             raise RuntimeError("Bedrock intent model is not configured.")
         
         # Lazy-init Bedrock client if not already done
@@ -61,7 +68,12 @@ class AWSLambdaService:
                 bedrock_kwargs['aws_secret_access_key'] = self.aws_secret_access_key
             self.bedrock_client = boto3.client('bedrock-runtime', **bedrock_kwargs)
 
-        return await self._invoke_bedrock(user_message, user_context or {}, conversation_history=conversation_history, bedrock_model_id=bedrock_model_id)
+        return await self._invoke_bedrock(
+            user_message,
+            user_context or {},
+            conversation_history=conversation_history,
+            bedrock_model_id=resolved_model_id,
+        )
 
     async def _invoke_bedrock(self, user_message: str, user_context: Optional[Dict[str, Any]] = None, conversation_history: Optional[Any] = None, bedrock_model_id: Optional[str] = None) -> str:
         if not self.bedrock_client or not bedrock_model_id:
@@ -69,6 +81,7 @@ class AWSLambdaService:
 
         try:
             body = self._build_bedrock_body(user_message, user_context or {}, conversation_history=conversation_history)
+            logger.info(f"[BEDROCK INVOKE] modelId={bedrock_model_id}, region={self.aws_region}")
             response = self.bedrock_client.invoke_model(
                 modelId=bedrock_model_id,
                 body=json.dumps(body).encode("utf-8"),
@@ -106,7 +119,7 @@ class AWSLambdaService:
             # Log whenever Claude successfully answers a customer
             safe_user = (user_context or {}).get("name") or "unknown user"
             logger.info(
-                f"[CLAUDE RESPONSE] User: {safe_user}, "
+                f"[CLAUDE RESPONSE] Model: {bedrock_model_id}, User: {safe_user}, "
                 f"Question: {user_message[:120]}..., "
                 f"Answer: {final_text[:200]}..."
             )

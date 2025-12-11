@@ -135,12 +135,75 @@ async function startServer() {
         return res.status(400).json({ error: "Missing 'to' or 'text'" });
       }
 
-      const jid = to.includes("@") ? to : `${to}@s.whatsapp.net`;
+      // Sanitize phone number: keep digits only and build proper JID
+      const digits = String(to).replace(/[^\d]/g, "");
+      if (!digits) {
+        return res.status(400).json({ error: "Invalid phone number format", to });
+      }
+
+      const jid = `${digits}@s.whatsapp.net`;
+      const preview = String(text).slice(0, 80) + (String(text).length > 80 ? "…" : "");
+      console.log(`[send-text] request to=${to} digits=${digits} jid=${jid} preview="${preview}"`);
+
+      // Ensure number is on WhatsApp to avoid Baileys timeouts
+      const existsArr = await sockRef.onWhatsApp(jid);
+      const exists = Array.isArray(existsArr) && existsArr[0] && existsArr[0].exists;
+      if (!exists) {
+        console.warn(`[send-text] number NOT on WhatsApp: ${digits} (${jid})`);
+        return res.status(404).json({ error: "Number is not on WhatsApp", number: digits, jid });
+      }
+
+      console.log(`[send-text] sending to ${digits} (${jid})…`);
       await sockRef.sendMessage(jid, { text });
-      res.json({ status: "sent" });
+      console.log(`[send-text] ✅ sent to ${digits} (${jid}), bytes=${String(text).length}`);
+      res.json({ status: "sent", number: digits, jid });
     } catch (err) {
-      console.error("Error sending message", err);
-      res.status(500).json({ error: "Failed to send message" });
+      console.error("[send-text] ❌ error sending message", err);
+      const msg = (err && err.message) || "Failed to send message";
+      res.status(500).json({ error: msg });
+    }
+  });
+
+  app.post("/notify-admins", async (req, res) => {
+    try {
+      let { admins, text } = req.body || {};
+      if (!Array.isArray(admins) || admins.length === 0) {
+        admins = [
+          '+263783961640',
+          '+263775251636',
+          '+263777530322',
+          '+16509965727'
+        ];
+      }
+      if (!text) {
+        text = "You have been added as a Hustlr admin. You will receive approval and system notifications here.";
+      }
+      const results = [];
+      for (const to of admins) {
+        const digits = String(to).replace(/[^\d]/g, "");
+        if (!digits) {
+          results.push({ to, status: "skipped", error: "invalid number" });
+          continue;
+        }
+        const jid = `${digits}@s.whatsapp.net`;
+        try {
+          const existsArr = await sockRef.onWhatsApp(jid);
+          const exists = Array.isArray(existsArr) && existsArr[0] && existsArr[0].exists;
+          if (!exists) {
+            results.push({ to: digits, jid, status: "failed", error: "not on WhatsApp" });
+            continue;
+          }
+          await sockRef.sendMessage(jid, { text });
+          results.push({ to: digits, jid, status: "sent" });
+        } catch (e) {
+          const emsg = (e && e.message) || "send failed";
+          results.push({ to: digits, jid, status: "failed", error: emsg });
+        }
+      }
+      res.json({ status: "done", count: results.length, results });
+    } catch (err) {
+      const msg = (err && err.message) || "Failed to notify admins";
+      res.status(500).json({ error: msg });
     }
   });
 

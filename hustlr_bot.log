@@ -20267,3 +20267,2040 @@ httpx.ReadTimeout
 2025-12-08 15:09:45,088 - app.main - INFO - --------------------------------------------------------------------------------
 2025-12-08 15:09:45,097 - app.main - INFO - --------------------------------------------------------------------------------
 2025-12-08 15:09:45,097 - app.main - INFO - 
+2025-12-08 15:15:28,954 - app.main - INFO - ================================================================================
+2025-12-08 15:15:28,954 - app.main - INFO - ADMIN NOTIFICATION REQUIRED
+2025-12-08 15:15:28,958 - app.main - INFO - ================================================================================
+2025-12-08 15:15:28,958 - app.main - INFO - Please send the following message to these 4 admin numbers:
+2025-12-08 15:15:28,958 - app.main - INFO - 
+2025-12-08 15:15:28,958 - app.main - INFO -   • +263783961640
+2025-12-08 15:15:28,958 - app.main - INFO -   • +263775251636
+2025-12-08 15:15:28,958 - app.main - INFO -   • +263777530322
+2025-12-08 15:15:28,958 - app.main - INFO -   • +16509965727
+2025-12-08 15:15:28,960 - app.main - INFO - 
+2025-12-08 15:15:28,960 - app.main - INFO - MESSAGE:
+2025-12-08 15:15:28,960 - app.main - INFO - --------------------------------------------------------------------------------
+2025-12-08 15:15:28,969 - app.main - INFO - --------------------------------------------------------------------------------
+2025-12-08 15:15:28,970 - app.main - INFO - 
+2025-12-08 15:29:04,909 - app.main - INFO - ================================================================================
+2025-12-08 15:29:04,910 - app.main - INFO - ADMIN NOTIFICATION REQUIRED
+2025-12-08 15:29:04,910 - app.main - INFO - ================================================================================
+2025-12-08 15:29:04,910 - app.main - INFO - Please send the following message to these 4 admin numbers:
+2025-12-08 15:29:04,910 - app.main - INFO - 
+2025-12-08 15:29:04,910 - app.main - INFO -   • +263783961640
+2025-12-08 15:29:04,910 - app.main - INFO -   • +263775251636
+2025-12-08 15:29:04,910 - app.main - INFO -   • +263777530322
+2025-12-08 15:29:04,910 - app.main - INFO -   • +16509965727
+2025-12-08 15:29:04,910 - app.main - INFO - 
+2025-12-08 15:29:04,912 - app.main - INFO - MESSAGE:
+2025-12-08 15:29:04,912 - app.main - INFO - --------------------------------------------------------------------------------
+2025-12-08 15:29:04,920 - app.main - INFO - --------------------------------------------------------------------------------
+2025-12-08 15:29:04,920 - app.main - INFO - 
+2025-12-08 15:29:15,802 - app.main - INFO - ================================================================================
+2025-12-08 15:29:15,804 - app.main - INFO - ADMIN NOTIFICATION REQUIRED
+2025-12-08 15:29:15,804 - app.main - INFO - ================================================================================
+2025-12-08 15:29:15,804 - app.main - INFO - Please send the following message to these 4 admin numbers:
+2025-12-08 15:29:15,804 - app.main - INFO - 
+2025-12-08 15:29:15,805 - app.main - INFO -   • +263783961640
+2025-12-08 15:29:15,805 - app.main - INFO -   • +263775251636
+2025-12-08 15:29:15,805 - app.main - INFO -   • +263777530322
+2025-12-08 15:29:15,806 - app.main - INFO -   • +16509965727
+2025-12-08 15:29:15,807 - app.main - INFO - 
+2025-12-08 15:29:15,807 - app.main - INFO - MESSAGE:
+2025-12-08 15:29:15,807 - app.main - INFO - --------------------------------------------------------------------------------
+2025-12-08 15:29:15,814 - app.main - INFO - --------------------------------------------------------------------------------
+2025-12-08 15:29:15,814 - app.main - INFO - 
+2025-12-10 19:30:37,455 - app.api.whatsapp - INFO - [2025-12-10T17:30:37.455293] Baileys webhook received
+2025-12-10 19:30:37,457 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "status",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "status@broadcast",
+      "fromMe": false,
+      "id": "AC3C69AE97E6763A90942B91D29B1A1F",
+      "participant": "263775586900@s.whatsapp.net",
+      "participantLid": "200442550178047@lid"
+    },
+    "messageTimestamp": 1765281449,
+    "pushName": "lorraine bae\ud83e\ude77\ud83e\udd70\ud83e\ude77\ud83e\udd70",
+    "broadcast": true,
+    "message": {
+      "senderKeyDistributionMessage": {
+        "groupId": "status@broadcast",
+        "axolotlSenderKeyDistributionMessage": "Mwjr9oLcBBAAGiDYyy1pTW8wjd+GPprP4BSZDYXQwYuJ3KyLgaL9B2I3OCIhBar6OEotDmR4qx8zqBnkOiz2cuKTRbZnjYx2ZqzH7MN4"
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  }
+}
+2025-12-10 19:30:37,457 - app.api.whatsapp - INFO - Baileys message from: status
+2025-12-10 19:30:37,457 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-10 19:30:39,386 - app.api.whatsapp - INFO - [2025-12-10T17:30:39.384661] Baileys webhook received
+2025-12-10 19:30:39,394 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "status",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "status@broadcast",
+      "fromMe": false,
+      "id": "A504E93BDAFE5B0975B9254FF532885C",
+      "participant": "263776477958@s.whatsapp.net",
+      "participantLid": "150367140638768@lid"
+    },
+    "messageTimestamp": 1765284407,
+    "pushName": "Mugo Plumbers",
+    "broadcast": true,
+    "message": {
+      "senderKeyDistributionMessage": {
+        "groupId": "status@broadcast",
+        "axolotlSenderKeyDistributionMessage": "MwjnsJeLAhABGiAkoVrXyhh0EHerdTdKBEvBtaboChlgbl0lk5UHJV4/HSIhBUfC/uiCqkttBSW8lmyibR9WevyiThzSjuG/gKzsOvgD"
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Mugo Plumbers"
+  }
+}
+2025-12-10 19:30:39,414 - app.api.whatsapp - INFO - Baileys message from: status
+2025-12-10 19:30:39,466 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-10 19:30:45,028 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from status, skipping
+2025-12-10 19:30:45,112 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from status, skipping
+2025-12-10 19:36:09,154 - app.api.whatsapp - INFO - [2025-12-10T17:36:09.154307] Baileys webhook received
+2025-12-10 19:36:09,157 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "status",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "status@broadcast",
+      "fromMe": false,
+      "id": "ACEA90302CA8CD8C28C373176A996D11",
+      "participant": "263784303418@s.whatsapp.net",
+      "participantLid": "60035438764077@lid"
+    },
+    "messageTimestamp": 1765347008,
+    "pushName": "Kumkanikazi \ud83c\udf39Myckeilah \ud83c\udf3a",
+    "broadcast": true,
+    "message": {
+      "senderKeyDistributionMessage": {
+        "groupId": "status@broadcast",
+        "axolotlSenderKeyDistributionMessage": "MwjFncOpAxAAGiDlrahrpCW6WsGNGssH/Y0zjTRJWIdbWJVTZb8xCLHf7CIhBVQqBZ27OVlWr5Muva4JZShHnlrKkGNOc61FYvd9U7d2"
+      },
+      "imageMessage": {
+        "url": "https://mmg.whatsapp.net/o1/v/t24/f2/m232/AQM8kXpI_5kclftUVJBM7MpNCLO2QCq80WZhnpm1jPolrJ0uqnsxHSGj5hTBw5tG-bomu_v2O_fVBfyWKugoVZio5bYABZo9l9ej3QNiaQ?ccb=9-4&oh=01_Q5Aa3QHR-Hau-bdFZOTJSCBbeF5Yclz7_3x0LNsIPO8ZxoK79g&oe=69608D73&_nc_sid=e6ed6c&mms3=true",
+        "mimetype": "image/jpeg",
+        "caption": "Babe rangu \ud83d\udc93\ud83e\udec2",
+        "fileSha256": "0AfdC6ggfc1MoL5WlBJ0SAx0nruyEXvBdAzOHTcxRLw=",
+        "fileLength": "46721",
+        "height": 1080,
+        "width": 878,
+        "mediaKey": "6TOdtyZuw3X5KdLRB8VYnpwzTf++h6xrf6VCiWuRH/8=",
+        "fileEncSha256": "q8b3a17gSAL3bFDbQ3c1eIEAPAHu5PqgumlOaCqA5m8=",
+        "directPath": "/o1/v/t24/f2/m232/AQM8kXpI_5kclftUVJBM7MpNCLO2QCq80WZhnpm1jPolrJ0uqnsxHSGj5hTBw5tG-bomu_v2O_fVBfyWKugoVZio5bYABZo9l9ej3QNiaQ?ccb=9-4&oh=01_Q5Aa3QHR-Hau-bdFZOTJSCBbeF5Yclz7_3x0LNsIPO8ZxoK79g&oe=69608D73&_nc_sid=e6ed6c",
+        "mediaKeyTimestamp": "1765347002",
+        "jpegThumbnail": "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",
+        "contextInfo": {
+          "pairedMediaType": "NOT_PAIRED_MEDIA",
+          "statusSourceType": "IMAGE"
+        },
+        "thumbnailDirectPath": "/v/t62.35850-24/598230549_2244197029436381_166669037339749056_n.enc?ccb=11-4&oh=01_Q5Aa3QFCveJkYThrERNdhoGfzxImU5Pow6IhDY05mnZKY1LHRw&oe=69608AF2&_nc_sid=5e03e0",
+        "thumbnailSha256": "jluTaoA/cSv/4de+tbf04m+IRZkAnxtTmnzsurvPa/Y=",
+        "thumbnailEncSha256": "GjJRWLcm1QwKnjTbGo1mpI7LAGirVvq9tJ1hx1dfKj4="
+      },
+      "messageContextInfo": {
+        "messageSecret": "WivJ/oj5IL07vaWHCrT5RmR+PPzUb4U1BgRHt6vm7xM="
+      }
+    }
+  }
+}
+2025-12-10 19:36:09,162 - app.api.whatsapp - INFO - Baileys message from: status
+2025-12-10 19:36:09,162 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-10 19:36:09,957 - app.api.whatsapp - INFO - [2025-12-10T17:36:09.957989] Baileys webhook received
+2025-12-10 19:36:09,957 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "Hello Hustlr",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3FD513A64F032BCCF407",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765388164,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "Hello Hustlr",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-10 19:36:09,957 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-10 19:36:09,961 - app.api.whatsapp - INFO - Baileys text: 'Hello Hustlr'
+2025-12-10 19:36:11,001 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from status, skipping
+2025-12-10 19:36:14,476 - app.utils.aws_lambda - ERROR - Bedrock invocation error
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 72, in _invoke_bedrock
+    response = self.bedrock_client.invoke_model(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 602, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 1078, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the InvokeModel operation: The provided model identifier is invalid.
+2025-12-10 19:36:14,481 - app.utils.message_handler - ERROR - AI invocation failed
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\message_handler.py", line 1357, in handle_ai_response
+    ai_response = await self.lambda_service.invoke_question_answerer(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 64, in invoke_question_answerer
+    return await self._invoke_bedrock(user_message, user_context or {}, conversation_history=conversation_history, bedrock_model_id=bedrock_model_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 72, in _invoke_bedrock
+    response = self.bedrock_client.invoke_model(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 602, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 1078, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the InvokeModel operation: The provided model identifier is invalid.
+2025-12-10 19:36:14,492 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_invoke_error, Message: I'm having trouble connecting right now. Please try again in a moment....
+2025-12-10 19:36:18,495 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-10 19:36:18,696 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-10 19:39:31,126 - app.api.whatsapp - INFO - [2025-12-10T17:39:31.126178] Baileys webhook received
+2025-12-10 19:39:31,126 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F086CF53D2A5DBCB4CA",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765388366,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-10 19:39:31,126 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-10 19:39:31,128 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-10 19:39:31,233 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-10 19:39:37,067 - app.api.whatsapp - INFO - [2025-12-10T17:39:37.067998] Baileys webhook received
+2025-12-10 19:39:37,068 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F086CF53D2A5DBCB4CA",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765388372,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-10 19:39:37,070 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-10 19:39:37,071 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-10 19:39:37,197 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-10 19:39:39,126 - app.api.whatsapp - INFO - [2025-12-10T17:39:39.126017] Baileys webhook received
+2025-12-10 19:39:39,130 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "Hello",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F086CF53D2A5DBCB4CA",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765388373,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "extendedTextMessage": {
+        "text": "Hello",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  }
+}
+2025-12-10 19:39:39,132 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-10 19:39:39,133 - app.api.whatsapp - INFO - Baileys text: 'Hello'
+2025-12-10 19:39:40,476 - app.utils.aws_lambda - ERROR - Bedrock invocation error
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 72, in _invoke_bedrock
+    response = self.bedrock_client.invoke_model(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 602, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 1078, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the InvokeModel operation: The provided model identifier is invalid.
+2025-12-10 19:39:40,479 - app.utils.message_handler - ERROR - AI invocation failed
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\message_handler.py", line 1357, in handle_ai_response
+    ai_response = await self.lambda_service.invoke_question_answerer(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 64, in invoke_question_answerer
+    return await self._invoke_bedrock(user_message, user_context or {}, conversation_history=conversation_history, bedrock_model_id=bedrock_model_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 72, in _invoke_bedrock
+    response = self.bedrock_client.invoke_model(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 602, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 1078, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the InvokeModel operation: The provided model identifier is invalid.
+2025-12-10 19:39:40,481 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_invoke_error, Message: I'm having trouble connecting right now. Please try again in a moment....
+2025-12-10 19:39:42,602 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-10 19:39:43,120 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-10 19:40:43,650 - app.api.whatsapp - INFO - [2025-12-10T17:40:43.650253] Baileys webhook received
+2025-12-10 19:40:43,650 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "Hello",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3FEC30FCFA8F6BFD0530",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765388438,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "Hello",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-10 19:40:43,653 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-10 19:40:43,654 - app.api.whatsapp - INFO - Baileys text: 'Hello'
+2025-12-10 19:40:51,111 - app.utils.aws_lambda - ERROR - Bedrock invocation error
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 72, in _invoke_bedrock
+    response = self.bedrock_client.invoke_model(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 602, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 1078, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the InvokeModel operation: The provided model identifier is invalid.
+2025-12-10 19:40:51,120 - app.utils.message_handler - ERROR - AI invocation failed
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\message_handler.py", line 1357, in handle_ai_response
+    ai_response = await self.lambda_service.invoke_question_answerer(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 64, in invoke_question_answerer
+    return await self._invoke_bedrock(user_message, user_context or {}, conversation_history=conversation_history, bedrock_model_id=bedrock_model_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 72, in _invoke_bedrock
+    response = self.bedrock_client.invoke_model(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 602, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 1078, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the InvokeModel operation: The provided model identifier is invalid.
+2025-12-10 19:40:51,130 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_invoke_error, Message: I'm having trouble connecting right now. Please try again in a moment....
+2025-12-10 19:40:53,678 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-10 19:40:54,262 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-10 19:48:40,108 - app.api.whatsapp - INFO - [2025-12-10T17:48:40.108839] Baileys webhook received
+2025-12-10 19:48:40,112 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F88247BB0710297C0E8",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765388915,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-10 19:48:40,112 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-10 19:48:40,112 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-10 19:48:46,176 - app.api.whatsapp - INFO - [2025-12-10T17:48:46.176119] Baileys webhook received
+2025-12-10 19:48:46,176 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F88247BB0710297C0E8",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765388921,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-10 19:48:46,179 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-10 19:48:46,180 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-10 19:48:49,770 - app.api.whatsapp - INFO - [2025-12-10T17:48:49.770105] Baileys webhook received
+2025-12-10 19:48:49,770 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hello",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F88247BB0710297C0E8",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765388922,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "extendedTextMessage": {
+        "text": "hello",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  }
+}
+2025-12-10 19:48:49,776 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-10 19:48:49,781 - app.api.whatsapp - INFO - Baileys text: 'hello'
+2025-12-10 19:48:50,268 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-10 19:48:51,495 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-10 19:49:07,936 - app.utils.aws_lambda - ERROR - Bedrock invocation error
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 72, in _invoke_bedrock
+    response = self.bedrock_client.invoke_model(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 602, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 1078, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the InvokeModel operation: The provided model identifier is invalid.
+2025-12-10 19:49:07,941 - app.utils.message_handler - ERROR - AI invocation failed
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\message_handler.py", line 1357, in handle_ai_response
+    ai_response = await self.lambda_service.invoke_question_answerer(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 64, in invoke_question_answerer
+    return await self._invoke_bedrock(user_message, user_context or {}, conversation_history=conversation_history, bedrock_model_id=bedrock_model_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 72, in _invoke_bedrock
+    response = self.bedrock_client.invoke_model(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 602, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 1078, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the InvokeModel operation: The provided model identifier is invalid.
+2025-12-10 19:49:07,944 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_invoke_error, Message: I'm having trouble connecting right now. Please try again in a moment....
+2025-12-10 19:49:10,249 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-10 19:49:10,537 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-10 19:52:27,533 - app.api.whatsapp - INFO - [2025-12-10T17:52:27.533474] Baileys webhook received
+2025-12-10 19:52:27,533 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "status",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "status@broadcast",
+      "fromMe": false,
+      "id": "AC29DF431084C008A387061FDD6332EE",
+      "participant": "263776454505@s.whatsapp.net",
+      "participantLid": "249662237880326@lid"
+    },
+    "messageTimestamp": 1765389135,
+    "pushName": "Mai Muropa",
+    "broadcast": true,
+    "message": {
+      "imageMessage": {
+        "url": "https://mmg.whatsapp.net/o1/v/t24/f2/m232/AQObL2MBOV8gfR_Nj1gfZzJDFE5f3bguXkhAWwaWgmHAI6ZqoISjhkKM9USpMGM910dEHhShr_FUDVPp2XCqVnDCdUSWbT6SRSTR7x8kjA?ccb=9-4&oh=01_Q5Aa3QG5s-j0sEcIHJ-2TxrGz8ssLDeGMr7iolXpjSdFivlC6A&oe=69613A70&_nc_sid=e6ed6c&mms3=true",
+        "mimetype": "image/jpeg",
+        "fileSha256": "wJsozCoJoxa7gm9FvEsL2jLIgcJcVU4gsCGyMl7l7nA=",
+        "fileLength": "60103",
+        "height": 1080,
+        "width": 810,
+        "mediaKey": "kH7tcFxg3nyjKIunC2eX69/0Jw7Johp48ne7V4FNYh0=",
+        "fileEncSha256": "EHKK9x/tjDhSDF+OifSHBqj0vekr/seg6Ew5PubSVhs=",
+        "directPath": "/o1/v/t24/f2/m232/AQObL2MBOV8gfR_Nj1gfZzJDFE5f3bguXkhAWwaWgmHAI6ZqoISjhkKM9USpMGM910dEHhShr_FUDVPp2XCqVnDCdUSWbT6SRSTR7x8kjA?ccb=9-4&oh=01_Q5Aa3QG5s-j0sEcIHJ-2TxrGz8ssLDeGMr7iolXpjSdFivlC6A&oe=69613A70&_nc_sid=e6ed6c",
+        "mediaKeyTimestamp": "1765388998",
+        "jpegThumbnail": "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",
+        "contextInfo": {
+          "pairedMediaType": "NOT_PAIRED_MEDIA",
+          "statusSourceType": "IMAGE"
+        },
+        "scansSidecar": "HoQcaEtONLLhmmRNbDdJ/MoA5JYo7r7V//Uj7SC+wV8Nb8HkFwHlFQ==",
+        "scanLengths": [
+          7275,
+          17722,
+          10848,
+          24258
+        ],
+        "midQualityFileSha256": "Qd4opTCegmogqbhs0LYpgDUhzGEMuccUPeCjmBDVbk4="
+      },
+      "messageContextInfo": {
+        "messageSecret": "RHzcaUIunBJCWJgzODUbDBscyZQDnoEbfIfu3qwgqRE="
+      }
+    }
+  }
+}
+2025-12-10 19:52:27,537 - app.api.whatsapp - INFO - Baileys message from: status
+2025-12-10 19:52:27,538 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-10 19:52:27,541 - app.api.whatsapp - INFO - [2025-12-10T17:52:27.541539] Baileys webhook received
+2025-12-10 19:52:27,541 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "status",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "status@broadcast",
+      "fromMe": false,
+      "id": "AC4A8A1118E5E7AE1E36BD1098EA01E3",
+      "participant": "263776454505@s.whatsapp.net",
+      "participantLid": "249662237880326@lid"
+    },
+    "messageTimestamp": 1765389139,
+    "pushName": "Mai Muropa",
+    "broadcast": true,
+    "message": {
+      "imageMessage": {
+        "url": "https://mmg.whatsapp.net/v/t62.7118-24/599114935_2361489090992023_6963663362169182471_n.enc?ccb=11-4&oh=01_Q5Aa3QEfly31lRkOhRULrEKqVPLkM63VPORJMu437Hdrd-V51Q&oe=69611834&_nc_sid=5e03e0&mms3=true",
+        "mimetype": "image/jpeg",
+        "fileSha256": "4/ApJNNtgadxMKq09r9/H6HfwIsAarVzCNfH88KhUNY=",
+        "fileLength": "87036",
+        "height": 1080,
+        "width": 810,
+        "mediaKey": "9k8Ay0QssohsDvqkXYkldRqWdlvF3DvdWYfYwEgIxbo=",
+        "fileEncSha256": "8Hrp/bXDyg4IwjENjAiWH6lyscdUxu+FhcVD+nkcjvQ=",
+        "directPath": "/v/t62.7118-24/599114935_2361489090992023_6963663362169182471_n.enc?ccb=11-4&oh=01_Q5Aa3QEfly31lRkOhRULrEKqVPLkM63VPORJMu437Hdrd-V51Q&oe=69611834&_nc_sid=5e03e0",
+        "mediaKeyTimestamp": "1765389002",
+        "jpegThumbnail": "/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkJCQkKCQoLCwoODw0PDhUTERETFR8WGBYYFh8wHiMeHiMeMCozKScpMypMOzU1O0xXSUVJV2pfX2qFf4WuruoBCQkJCQoJCgsLCg4PDQ8OFRMRERMVHxYYFhgWHzAeIx4eIx4wKjMpJykzKkw7NTU7TFdJRUlXal9faoV/ha6u6v/CABEIAKAAdwMBIgACEQEDEQH/xAAzAAACAwEBAQAAAAAAAAAAAAAEBQADBgIBBwEAAwEBAQEAAAAAAAAAAAAAAQIDAAQFBv/aAAwDAQACEAMQAAAA+r+qfKSf35+4bQ9JL8WnAPOx3AFZzDlXWc18TenOIlmwUDs5+oq8PzE3tR7RHtQvivbyPVsVWPQcZcmvViYvm3JSVoAb5XErRKhaxfVh2JW6rkYExeSuZSJPZ05nk2Tv8jo6c7SD+pcAJvm6S0BgZSV6EFFKtlxi3YktfdOlkqitnn6BlbleKGWPbUm5k7o5/oZRei4+/wCcJtgqevgnQySNsH8VmMEiNnj7qKc77H7LDuiVuhYdPP8AaXebdJ78xe8+Yju6GHoh5DwWnxIsYmgxYuvrEc5ifqXzDogqbLH9E0u4zAEPV1OeWnP9Ws8H6j8if7wSo4lkwc++VxImM12Ov56Pa4XWXT6YPkBeKpJyC631Oi4OvT57OR8SBkJq5n4Vs0qKHl9OjfkQbCmMbDQvJAIjjQP0KLOOIcJ1glqg2BzPqkTVXTrCTaKpiNeBcnNZ5d0oo8nYHAttgnSVTACIRA3/xAA7EAACAgEDAgUCBAIGCwAAAAABAgMRAAQSITFBBRMiUXFhoRQykcFSsQYjM9HS8RUkNEJDYnLC4eLw/9oACAEBAAE/ACV45xZAvRsWccc4sw98EueYvvhlXPNXDOuHUDDqcGps4dUbNZ+KbDqWzz3blUGCef2XFkn+gxZZh1bEnfu2LNZOeZhc4XwucMv1zzsE563n4jG1Sg9GPxkEh255z9nT9Rgmlv8Atf0rGmNckmsM+1Sci1Fk/OedS3ePMf42/U55l92/VsL1zZ/VsEuGbqcjlFVeFseYqCVajdZp35ZQejEYGb+GT9f/AGxXYGzvHyf/ACcZ+dtk0M1UhWByD2zTObbnDJSg33zfx+Y3hkb2f7/34zubsNVd/wDPFb09cdwA2RuVGCZ++GW6+Sc08o8x+evOXTG5lAvpz/fiEFLDBue150R2PUnNW3+rt9Rmncgm8YgrkbXeHgngfb/DjNV8Ace4/wAIwNSXeTy1GecR/SMLcXZzn7ZFNWoojg4XhDW7kdwPM2/axiuhRWVrFHveORsuzwpyaVAtN0vBqSzAg1iTmRKNqwPNZGzEUOLyVgpG9oxf8Rr9xhlU2FdGNdFN/ucJuLJytIt/mbEhX0gtzV1kkYVDQyM+psnnlPlwI4Ct1vqKyAbqtyKUdDX7jBstgSw+vav1OOw2kX1FDNTFMwRkwKWl2K/TrfAs5ACbtvTe0YN5Y7ACck8xQOpP0/zXHdyfV9Pp+5wyVEMlbc8Sg0eTeXOuoTaQw4yWRqRW97xGGwlu5zUk+fEaNB6v2ByCUhAT7e4H8wcilsCv1sHGfkMaoDE1emMDosn9aeAvxnnStOyBe/XIlqNFLGx3zfS1ms1gj4Q7m+l/sRkWrjkbbRD/ACSDWTOpUDpjFTKisCaF8fXCB+KhIl23fByZ3DUWBpTWBHZABuHttzUBjG0m4ABhx3N8/tmie1jCsarir/bPUhNlx83/AN2a/XBG8q+epybVtu3CRlINgjis8O127WKNoPmL667kd8skcDNkoVCQar43V7Zq5/TLGYVRu3FE/XNDA41iuTdCvgnJ5WF2KyGQPMXphQrjJXUzw/kf7HGK21CuQMrhSW6DpkpjaN2PUDj5vPDmJgjA4I6YxjkT1Itg8iuPvWeMSbNdIAoFouSOzXWeFs4miI/MHFZofDpZwHBAHa++DQxoFSwaUC2U++eN+EPGbjfsaGafQ+TECzDeTZGazeFIUEEEZojZY975N0eOMnjEoUN14qxgY1Gp97wOzKCL3duAwHzg3ncVHJNV9SM0D/1Xt2B+MZuQGKqx4/MTf3GePBk1gPvHjP6TxngbJ+Kj3tVdAc8L1UoTbvNDoDg1E3BoVfBrNbp0lFTuyP8A7jdrPY5NvhmdAwJU0SM1TEMn1POaWUBWauN1/ObwARfsDhmiR1LmqHxiajTFb3pZ9+D9jkiNHIiFVthyfqBnh9I8qEg0ar7398jvyloMFA5XlAPj8ozx6dH1VA/kFe+eaG4PTNNGpdCsm3nNL+HREEMySAKAzKQecjntkNUq8hR75q4E1OhnZ7DIu4ZqkmMyryqsVsjg8cnJp2MgvkbSf0zTyEQ8Dl+g98Wdwp7sB26XjSeLht62Qw4pgw++S6nxPpLp93zEG/kMmlctGXkXapHTNN/tUrRuAFBA3ZLLqoYmdZAQoLWQDmpmZ2JJqzd++E854XENRMY3ZgKsVnh+/wAPn3uwdaoZovHtOIdjQWeotwCP0BzX/wBKJpRsijVEIIYdbyyTvZmY7clk5kHQBcjQeXExvcAKHsM4CgXfvkaBoyb5B7AXjLNSgOw9uCTnl6GZRsiAvG8O07f8NL+Lx/CtOyMhQkMOKY5q4vKkdDwVYg4Rz1z+j2kl1OsYRKxZYy3HyBj6DWqyko3bgLjeahNooYda6jASWwGyoJ4rJ3R0mYHotHNNOjxBZHAIwbGYIkiKdvANmsKTRBdqI/sAwH7X98aaXhW0ZJrjaB/e2Kse1VQ7VAAFewyWeRF9Fk4fEpQJCxBqgSCazx/cNc72fWA2Xn9ENSNO2scRB/Si81ieK6QheCnU8EqB+mazWR6mOWNZaDAVZFA3kciSElGBo0cX+1Va7Y3gkM+5VndWJBYPGdtY3gZBCJLD3qjROLoC05VaLrVqtGrH0xo9VGSDI24ngHGm1QYjdb16hQGAPV8A/YXjkgn/AOrNQURd6oSzLZa6Bzxp5HELPVkv+2bs8EU/hWPYsxPPtjvtj/KK5JF++I9qpthd37nNExh8yyoLPmk8RZNe02//AJQR/Di+NFlF0oPGf6RhIUuga8V9L5ocUgce23BNBuNTNtHBvpkggFMVjfcT6iBgQqhtrbvniLMkRZSbbq11VYguI+ZLvVVB22KJXPF5fNnJAoDIYnlbhTtB5OaNY49KoCjn4HQ3ks9xhQ4uzTX754fphIsrOHO0gigeO9nNXNJJNuVjwOe11n4URadJ2kG5lFL3ze3p3G/oO5GCVqsPY3WRfIv6DE1Cs3VjxY5/liy+Ve80xsH298OoXbtDlSOuTny4/WObPHX4x9LGPzubLEi/c4kaSyKpC0Db/XvYOeLwxT6hnjJVj2GaLw1l0rv5TbFI3PwbJwRTiUKqf9JuhgQts3iuD8X3OD0hytbSpJI7jrkqGSQgLwBd8EG88RfSzaOJIfLb1CgBt/L1BvDFVs7Ly3v1rIyPUu8IF5v6H5zcAm/eWs2GPv8AXpgLliOa2/xduuLHuCubJ7bqH63jRM58xyAbtbHTNW4dq8whSSL7Lmpc6eAMU2uy0T71iqCpZqDDm/ntiDbsBLlmreA1WOo54zTaxAnlywl67ngj4rHZJZWPlhe/pFcHFg8kAOvIHBY/IrKjBJVWXk847MygcrtYMcdYVhslyCe446cd8WtwZQKDjcSKtu2Ebl4HerAPbNMXRhwrcVzf7Y6GqSr2glSLrNdqCQyKvA/Megr2zTmSOpShIVhYbke4x4YNdIwgJ3t0iY/y98j8KhidRqGMXJb4AHscHoq3sKvpAGKgrapNix05uvfI9oW1jDWvVj7nqKxrjDC1IDiiOQTfBxGtzfU1us2TkhAMgFEkWPqavvjUFHrJpT9Q3OIlnoLoEUBdj5yZS17NqqG47dD2xZJUWyoqzddr6HEc2SrbXoCuOaFGgRWf/8QAIxEAAgIBBAICAwAAAAAAAAAAAAECESEDEBIxIlEyQUJSYf/aAAgBAgEBPwC9qRUDwPH0XH0i4/qhvLEz8SzkWSkWS2XQxCY3kseUjNnl0MUXV7fe14NKnMkk0Pl0lZ5LB9bZ9ieDS+Y8ojaj1bRzlHtZJO7e6l/DRaySdJsWpK7su7bG8FlsVmjJ8zVfgzkznVnM5ItbaMkpW/RqT59dIT4vo5xadvI3siQqrstotsZ1tZ//xAAnEQACAgECBgICAwAAAAAAAAABAgARAxIhBBMxQVFhEDIFIiOBkf/aAAgBAwEBPwAIPc0V0Blv2lZZoy+Zy27mDGx7zlnzAtqJp2Mr95pmiadoq7TTMfT4YgNBRoyoRK2gETYmWKlITcAhYXVw9RO0FwfYzKSE2mMnUJVQcMzldK2eu0IpoZ/Ur9pmFJMWzAwY1OJGCg7TgOJXHjbUdR1BdHs+JxDq+Z3UUCxIEMuEkzMSamP7CYdyuMHYsJw/AYUViqC62Mb7GVKEat5kbtdxTRmLiXTIjKBakETF+fVcbasP8gPQGhUbKGYkEbmc33OZMzEKRBjZlL+IcZ5YIBsmYWGLIGZQwHYzGUyLxD5GGqtrhMs3OYfczEEhf9MdSyAIRpEDup2MO/wTvAaIM1ep/9k=",
+        "contextInfo": {
+          "pairedMediaType": "NOT_PAIRED_MEDIA",
+          "statusSourceType": "IMAGE"
+        },
+        "scansSidecar": "IfZFLTs/RhCV13om/gbnrEWcdcsVDxCedEE3f8e8ZHzhtOrtRZ6ngA==",
+        "scanLengths": [
+          7659,
+          23203,
+          19569,
+          36605
+        ],
+        "midQualityFileSha256": "5UN6W/tehOdF7BNyE8yjlV9uw5M/lTCs5UR5unQZglE="
+      },
+      "messageContextInfo": {
+        "messageSecret": "uZR3UVpjbl3XYTXrKy2Tz+ZNFJKhNO0XiumpAmcaeAc="
+      }
+    }
+  }
+}
+2025-12-10 19:52:27,549 - app.api.whatsapp - INFO - Baileys message from: status
+2025-12-10 19:52:27,549 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-10 19:52:27,554 - app.api.whatsapp - INFO - [2025-12-10T17:52:27.554695] Baileys webhook received
+2025-12-10 19:52:27,557 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "status",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "status@broadcast",
+      "fromMe": false,
+      "id": "AC4FC8CACDA14F6C238EE3C6A07486D3",
+      "participant": "263776454505@s.whatsapp.net",
+      "participantLid": "249662237880326@lid"
+    },
+    "messageTimestamp": 1765389142,
+    "pushName": "Mai Muropa",
+    "broadcast": true,
+    "message": {
+      "imageMessage": {
+        "url": "https://mmg.whatsapp.net/v/t62.7118-24/41160556_1870795547140654_6725831263285316492_n.enc?ccb=11-4&oh=01_Q5Aa3QHWHDwxA3jqI-UuLlFUZDqaF1gDznhUKb3BTS9fRQoDHQ&oe=69613570&_nc_sid=5e03e0&mms3=true",
+        "mimetype": "image/jpeg",
+        "fileSha256": "ZZS6QsmNx+fueGMj2j40O7CREhZ2ihXinxgVp9c2ueY=",
+        "fileLength": "63596",
+        "height": 1020,
+        "width": 574,
+        "mediaKey": "613CFwmPAwog/wWa1+9zFDtCFzwLLAmV4QYSFoS/mgE=",
+        "fileEncSha256": "Ke4X3oRowGs56mOBrjEjhAz5L5kP24i4y62BpynzTVc=",
+        "directPath": "/v/t62.7118-24/41160556_1870795547140654_6725831263285316492_n.enc?ccb=11-4&oh=01_Q5Aa3QHWHDwxA3jqI-UuLlFUZDqaF1gDznhUKb3BTS9fRQoDHQ&oe=69613570&_nc_sid=5e03e0",
+        "mediaKeyTimestamp": "1765389008",
+        "jpegThumbnail": "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",
+        "contextInfo": {
+          "pairedMediaType": "NOT_PAIRED_MEDIA",
+          "statusSourceType": "IMAGE"
+        },
+        "scansSidecar": "Cfi5KnRlh5pTvMkBgAD4QX1/tXUZkIsxcFHoJFA6Nw+9373kuEJ7Jw==",
+        "scanLengths": [
+          5278,
+          20012,
+          13073,
+          25233
+        ],
+        "midQualityFileSha256": "RyGkqwjwwaXhgVst9nPLxfGaFK5j6tXfsDDmWItLTy4="
+      },
+      "messageContextInfo": {
+        "messageSecret": "sDnvBxI4vFt0Er9PP8BMfWuiFjBu6P0a7AYPlARvGE8="
+      }
+    }
+  }
+}
+2025-12-10 19:52:27,560 - app.api.whatsapp - INFO - Baileys message from: status
+2025-12-10 19:52:27,564 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-10 19:52:27,566 - app.api.whatsapp - INFO - [2025-12-10T17:52:27.566284] Baileys webhook received
+2025-12-10 19:52:27,569 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "status",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "status@broadcast",
+      "fromMe": false,
+      "id": "ACFE88A9AC05668A8A713CEBA7B3177F",
+      "participant": "263776454505@s.whatsapp.net",
+      "participantLid": "249662237880326@lid"
+    },
+    "messageTimestamp": 1765389134,
+    "pushName": "Mai Muropa",
+    "broadcast": true,
+    "message": {
+      "senderKeyDistributionMessage": {
+        "groupId": "status@broadcast",
+        "axolotlSenderKeyDistributionMessage": "Mwj6kqbAAhAAGiAChLT5YaWMC0EC2kTQRSq+eIUODM5MoLkP1B/NQ9oydyIhBa7ilhaAsGqNAnESLR7Cmt6TQWYhhZxVWLdY/mPLIv5e"
+      },
+      "videoMessage": {
+        "url": "https://mmg.whatsapp.net/v/t62.7161-24/527057982_25626389706997387_6253768125675654464_n.enc?ccb=11-4&oh=01_Q5Aa3QEv_sj68VPBcyUWezJq_8syultXS4sUynYltYSzrO5q-w&oe=69611BAB&_nc_sid=5e03e0&mms3=true",
+        "mimetype": "video/mp4",
+        "fileSha256": "tGymdBrkDocHKYDAw4BDBePsGrUmv9S+jIu7j4pHL7o=",
+        "fileLength": "8464896",
+        "seconds": 38,
+        "mediaKey": "I+lKH7MDxZhmg1QTQlRBL+vRlGq6b9s/9V5zFhvwYXc=",
+        "height": 850,
+        "width": 478,
+        "fileEncSha256": "ogWnQd7TdNXLm7SKrY6HM3M+eXHyMpJFOhqpp8fT/D4=",
+        "directPath": "/v/t62.7161-24/527057982_25626389706997387_6253768125675654464_n.enc?ccb=11-4&oh=01_Q5Aa3QEv_sj68VPBcyUWezJq_8syultXS4sUynYltYSzrO5q-w&oe=69611BAB&_nc_sid=5e03e0",
+        "mediaKeyTimestamp": "1765388997",
+        "jpegThumbnail": "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",
+        "contextInfo": {
+          "pairedMediaType": "NOT_PAIRED_MEDIA",
+          "statusSourceType": "VIDEO"
+        },
+        "streamingSidecar": "moV9JfQuAJYn/y9srGJfyUQLWEC9/LLjBzeHtCtjOXj5v5QdOWKYYPV2grP4+YbYgJMBvIMdjALT/BzpVFZo3Yuj8nF7FTy2g81VsFMTtodWulFeMXlh9L4RLcr5AggYQ6l5TiU7H6nq4MdD+4VwxFpBX6Dy1VOpR4OMEXWoS8LNWbE4DhCgy/gKghiKZLynJZTkfchsCLIwTcHkAFCCfRgr8pBacy/9NARxfXMXQ7rl6E6Tt2t0Sur9TBRW5pcPDAqDPuCiPYihvH3ub/KsUGtzOizRKJWaG1gNNXcfvpCKrho1jpGBTAN3w1pA9P6pd/JpIaEltwKuDf6Al3G4DnC7m/+w1sumiC+pxTnj8qXgdyHRwweSk+AXFKDnErSFxexqvGBsgi9dN+o3qPf34oOWTLQZZ2Ai+RWKEzWLCIQ0oJ50oO2GKOKrsslIulbfHMkaQGwPWNxrqQbGIYtYlgKbxTOHeIANLiABQYfHSF+Li1G0nPMwkLb55zvq5XhDwkFeZJJPKKoywGcLAxyz7lUlWynz2i1MV/lC8aUaZwCisZaXWHQLcZbombHLW5oyDlynDYi5qp08oEEYmSWfWE37iYwWRt6zp2bletISM6QG4+0m3wYxBuB2/pEKkfgV3h7rQ7SCpU58CXC4yUJNcCplC/DaGo8uvpSiOWZm6U568Vq1VY106RBlr79RtHxwkUyLm0brT104q2E8090Pq41j7HCz6tFR5/9tnRC8K8V4iQ/AYXDe1qF2S30eqgLxw+hQN5z+QY6elciLu1xYRx6rJtRalDtr3cRxAhIuZ28hP3UqMESFQVfvTkpg6W5t3dDd9CC9ONaL3cfaKvVXzDm0xt/FkXUR0LYe2i8fJlZdinbTmEhjGmPzwLNS4IoTImfY58ji6qRjM1/grVplft2t5ufys+g3FbgSoK0RULPXIDaPEINBFQUeRZ5GlzhDatcFpW/QZF1pG99htzvCKKkPIPzOi/XnY2zA0GAvr4g/THFEfKJlfeCM0YO7gUMw6IFDBi/26HFDd9pClRKAv3C+wh7XKlUEsQO7n5esLJCnT1xa7QosX66qvVWo7v73+p3jWZJm44MVOmfo4T+FYbA4vXZQGjpIeacuCRsR3p0Bumdy4/bzByHB4Dhrw6HW3WtXlAAUqsNpbKsZaTUr7G5dWvZni39slfAVZV9ihjUDNxXmRaDaYZpPXGigXUF8h0ySh/vkpO/re0PNsdR9KX04DKuH1OKc1c+DzfwSdy+kZNd2anoDvFGRW1Tfzi3FxhQU+ZUxiAVKg3FviDtuEqEvEnizGum/ufgztpsauYnqd+g8F+UZ5tmLkK/jl3R88winU/5bLqikyYC+1CGICfQ1KuF1VAee8BFEXZUbRHoIEXuesNwyuo3yXiFnEx2pYo13xaRF14kt3NjO52gOfJXiguC7NxWjDq3RzQeWNvIX84iSICfdhWRAo9OQuoWJJitVaj1FvRawsquWQb74xp4FgRCO/iU5ue6onIQufL9jFPZmrLF7VBbtzTysiKjzN06xOGSnLnVWqlrxp2ylD7WbZMp4qnaSAIhuFJJEWHrGUG/HUEGs+FdPO4dh+pY29Mk+5Axz+s6EAM8jixf0xKcVnFO0v2Lt5rbVTpCwC98OqMCTWuGarHKD+gQ1Va0wlvxyNPgWeB+VJPpQDCVMnaLRXtqeCywOZrbeNTlsKJioOTQHDLVZ7ha5GbWj0GUM8Cus9Q==",
+        "thumbnailDirectPath": "/v/t62.36147-24/11881882_1361912525603684_4646239032251489824_n.enc?ccb=11-4&oh=01_Q5Aa3QFz427hYzvpK8Lvj2AZ12SerhBs1BLAElCufAcK3C2fTA&oe=6961148D&_nc_sid=5e03e0",
+        "thumbnailSha256": "JXBEU5DimRqXW0a3E2U/5PNGsLoK5Jx/49Og1tomHf0=",
+        "thumbnailEncSha256": "q9L1LVLUTndltbW+CEXjrumqbXCLXDzAfiiaknl/kGc=",
+        "externalShareFullVideoDurationInSeconds": 0
+      },
+      "messageContextInfo": {
+        "messageSecret": "beLgHE1J+lI4+V/fRaQA6tWVZyfnKQOTtmDxdQxwSAk="
+      }
+    }
+  }
+}
+2025-12-10 19:52:27,573 - app.api.whatsapp - INFO - Baileys message from: status
+2025-12-10 19:52:27,574 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-10 19:52:27,583 - app.api.whatsapp - INFO - [2025-12-10T17:52:27.583897] Baileys webhook received
+2025-12-10 19:52:27,583 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "status",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "status@broadcast",
+      "fromMe": false,
+      "id": "ACE2952FF5B6DDC44FFF2D1DE9307FA1",
+      "participant": "263776454505@s.whatsapp.net",
+      "participantLid": "249662237880326@lid"
+    },
+    "messageTimestamp": 1765389137,
+    "pushName": "Mai Muropa",
+    "broadcast": true,
+    "message": {
+      "imageMessage": {
+        "url": "https://mmg.whatsapp.net/v/t62.7118-24/599073049_2098904630930482_702591482850124415_n.enc?ccb=11-4&oh=01_Q5Aa3QE_ib5xOdcx4dseXAZsjRtxm6mwC3pSlL84mOEArTWr-A&oe=696126E4&_nc_sid=5e03e0&mms3=true",
+        "mimetype": "image/jpeg",
+        "fileSha256": "n7FFUIauvbsZeAagT4ikWrIs75PIqU+hXvyazJYJhQA=",
+        "fileLength": "112041",
+        "height": 1080,
+        "width": 810,
+        "mediaKey": "9RHEPXR1V/UDQ/JkYwnwu/OkZsgwOUjuCv36iZQrEVM=",
+        "fileEncSha256": "GSoAYMFch0iBw5MJrG/JlEjBLDP2wkT6yIUY8nzStEo=",
+        "directPath": "/v/t62.7118-24/599073049_2098904630930482_702591482850124415_n.enc?ccb=11-4&oh=01_Q5Aa3QE_ib5xOdcx4dseXAZsjRtxm6mwC3pSlL84mOEArTWr-A&oe=696126E4&_nc_sid=5e03e0",
+        "mediaKeyTimestamp": "1765388997",
+        "jpegThumbnail": "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",
+        "contextInfo": {
+          "pairedMediaType": "NOT_PAIRED_MEDIA",
+          "statusSourceType": "IMAGE"
+        },
+        "scansSidecar": "AwLR8aBPa83c7+cwasF4ZGMNpsDbpEsJlM7j2uSy3HRpLXcKtQAwoA==",
+        "scanLengths": [
+          7988,
+          27848,
+          27646,
+          48559
+        ],
+        "midQualityFileSha256": "wkGMSiYtkhRCuXwmQVtxpALcn2Q+M/m09dwDQ0pjZWo="
+      },
+      "messageContextInfo": {
+        "messageSecret": "5qs4RO243cy/e0VftaTx795WhrgIiduLWHJHQu11D40="
+      }
+    }
+  }
+}
+2025-12-10 19:52:27,587 - app.api.whatsapp - INFO - Baileys message from: status
+2025-12-10 19:52:27,589 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-10 19:52:27,591 - app.api.whatsapp - INFO - [2025-12-10T17:52:27.591777] Baileys webhook received
+2025-12-10 19:52:27,593 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "status",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "status@broadcast",
+      "fromMe": false,
+      "id": "ACF65A736D97E101909010F58273D2AD",
+      "participant": "263776454505@s.whatsapp.net",
+      "participantLid": "249662237880326@lid"
+    },
+    "messageTimestamp": 1765389141,
+    "pushName": "Mai Muropa",
+    "broadcast": true,
+    "message": {
+      "imageMessage": {
+        "url": "https://mmg.whatsapp.net/v/t62.7118-24/598041115_1538711687249314_3041151141725720950_n.enc?ccb=11-4&oh=01_Q5Aa3QHdQ5MslqNboXMkEfKySB2atn0ldnpGhokQ_5FIt2SvTA&oe=696124D2&_nc_sid=5e03e0&mms3=true",
+        "mimetype": "image/jpeg",
+        "fileSha256": "EcnxTWhulAIWhP4k+mvI9qKYFxoTtitPCbrlMBDVTUA=",
+        "fileLength": "107215",
+        "height": 1080,
+        "width": 810,
+        "mediaKey": "6Lid/O6QR2t08ZPMJoJ4FVikhPKiFIDHDRYgKymMP30=",
+        "fileEncSha256": "F2i9s5NAc1CNwz0Y9PIQ1ulOGUwX9RJ9DtenD483hLI=",
+        "directPath": "/v/t62.7118-24/598041115_1538711687249314_3041151141725720950_n.enc?ccb=11-4&oh=01_Q5Aa3QHdQ5MslqNboXMkEfKySB2atn0ldnpGhokQ_5FIt2SvTA&oe=696124D2&_nc_sid=5e03e0",
+        "mediaKeyTimestamp": "1765389016",
+        "jpegThumbnail": "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",
+        "contextInfo": {
+          "pairedMediaType": "NOT_PAIRED_MEDIA",
+          "statusSourceType": "IMAGE"
+        },
+        "scansSidecar": "wcHNBVkDGHRjdWm+5s3+EtzFjb8Nw8lzBFTAuDs+b3CLyP9k7IKSdQ==",
+        "scanLengths": [
+          7901,
+          27372,
+          26211,
+          45731
+        ],
+        "midQualityFileSha256": "JaS6JoLZCYyhurBuGTWhH1jH+6srmXcqGHaWe3DaaDU="
+      },
+      "messageContextInfo": {
+        "messageSecret": "h8b/8H2UFTm3trNWEIA7KQD4JF/U702BD3bCXxIQt9M="
+      }
+    }
+  }
+}
+2025-12-10 19:52:27,598 - app.api.whatsapp - INFO - Baileys message from: status
+2025-12-10 19:52:27,598 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-10 19:52:27,604 - app.api.whatsapp - INFO - [2025-12-10T17:52:27.604100] Baileys webhook received
+2025-12-10 19:52:27,605 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "status",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "status@broadcast",
+      "fromMe": false,
+      "id": "ACD394D057B2D5937B2A2976D57CEFFD",
+      "participant": "263776454505@s.whatsapp.net",
+      "participantLid": "249662237880326@lid"
+    },
+    "messageTimestamp": 1765389138,
+    "pushName": "Mai Muropa",
+    "broadcast": true,
+    "message": {
+      "imageMessage": {
+        "url": "https://mmg.whatsapp.net/v/t62.7118-24/33576196_2939653139567796_4833355839483203334_n.enc?ccb=11-4&oh=01_Q5Aa3QGBSUmzUvzl3ULKqO7E3XCrviGrzyBWPHro9Zrnh9iKbQ&oe=696114B9&_nc_sid=5e03e0&mms3=true",
+        "mimetype": "image/jpeg",
+        "fileSha256": "TAWbHNfSy2jfYDICo201MfhJzjNk/d1reYoHhwIfltI=",
+        "fileLength": "69861",
+        "height": 1020,
+        "width": 574,
+        "mediaKey": "bW2wjoqWaUKSbmxNgeTYwIy2A2fVfGjn1q/qim4AOv4=",
+        "fileEncSha256": "sCNkTF/rgWF+ERc/7IXyq0cKmtKjOq23X7CwrHIt3xU=",
+        "directPath": "/v/t62.7118-24/33576196_2939653139567796_4833355839483203334_n.enc?ccb=11-4&oh=01_Q5Aa3QGBSUmzUvzl3ULKqO7E3XCrviGrzyBWPHro9Zrnh9iKbQ&oe=696114B9&_nc_sid=5e03e0",
+        "mediaKeyTimestamp": "1765388972",
+        "jpegThumbnail": "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",
+        "contextInfo": {
+          "pairedMediaType": "NOT_PAIRED_MEDIA",
+          "statusSourceType": "IMAGE"
+        },
+        "scansSidecar": "/xEsnfU35iNLgdxv1phZ3ho2MfV01VVqgv1lEfzXjsMdNlo2jnXjiA==",
+        "scanLengths": [
+          5778,
+          23389,
+          14441,
+          26253
+        ],
+        "midQualityFileSha256": "bBzICe/Dq8LB+OYkIGvprsweLnL7pCZzDi6CQPYepfM="
+      },
+      "messageContextInfo": {
+        "messageSecret": "6Pf1bjzqQ7g5cYyvzrReJZYHwEsq6DN0C5lG+3YVMUY="
+      }
+    }
+  }
+}
+2025-12-10 19:52:27,611 - app.api.whatsapp - INFO - Baileys message from: status
+2025-12-10 19:52:27,615 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-10 19:52:27,616 - app.api.whatsapp - INFO - [2025-12-10T17:52:27.616202] Baileys webhook received
+2025-12-10 19:52:27,620 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "status",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "status@broadcast",
+      "fromMe": false,
+      "id": "ACCF562AEF3D41DA19DFB4D00840FCDF",
+      "participant": "263776454505@s.whatsapp.net",
+      "participantLid": "249662237880326@lid"
+    },
+    "messageTimestamp": 1765389136,
+    "pushName": "Mai Muropa",
+    "broadcast": true,
+    "message": {
+      "imageMessage": {
+        "url": "https://mmg.whatsapp.net/v/t62.7118-24/530295726_1844936219721979_1528100874428191793_n.enc?ccb=11-4&oh=01_Q5Aa3QFI3-ozjIiJnD0tyrTjxcqczuXjwXfuuusE8pCOgJildg&oe=69613180&_nc_sid=5e03e0&mms3=true",
+        "mimetype": "image/jpeg",
+        "fileSha256": "YGV4ycM7vxrsrv2sMuD/viMKD4WnvY46qXMeFTBZitg=",
+        "fileLength": "125620",
+        "height": 1080,
+        "width": 810,
+        "mediaKey": "gH6oX4cU2HMPEiUcH2HFTmbzj3riczrA9a60SGDbICc=",
+        "fileEncSha256": "FOaw3JMh1PDjagQ6a6pK1Ukd9Y1SMMRPrNImW/5Y+qM=",
+        "directPath": "/v/t62.7118-24/530295726_1844936219721979_1528100874428191793_n.enc?ccb=11-4&oh=01_Q5Aa3QFI3-ozjIiJnD0tyrTjxcqczuXjwXfuuusE8pCOgJildg&oe=69613180&_nc_sid=5e03e0",
+        "mediaKeyTimestamp": "1765388997",
+        "jpegThumbnail": "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",
+        "contextInfo": {
+          "pairedMediaType": "NOT_PAIRED_MEDIA",
+          "statusSourceType": "IMAGE"
+        },
+        "scansSidecar": "3ckJ5tm7Rr6eqMZmNnCV+7fMToA4ep3F56HXZXmSxbI+jq2T5987nw==",
+        "scanLengths": [
+          8377,
+          32753,
+          31320,
+          53170
+        ],
+        "midQualityFileSha256": "Wpwx2/aUJxIIuzl0IYon3TCvsUZZvR3jDZCTtSslO+M="
+      },
+      "messageContextInfo": {
+        "messageSecret": "TDo+uUweuyPH9+4l3hWT4XoMvwSaWMUWB+ERtHEAdus="
+      }
+    }
+  }
+}
+2025-12-10 19:52:27,624 - app.api.whatsapp - INFO - Baileys message from: status
+2025-12-10 19:52:27,626 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-10 19:52:28,739 - app.api.whatsapp - INFO - [2025-12-10T17:52:28.739848] Baileys webhook received
+2025-12-10 19:52:28,739 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "status",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "status@broadcast",
+      "fromMe": false,
+      "id": "AC96A518D57C029FC19BB1654B2E05E2",
+      "participant": "263776454505@s.whatsapp.net",
+      "participantLid": "249662237880326@lid"
+    },
+    "messageTimestamp": 1765389143,
+    "pushName": "Mai Muropa",
+    "broadcast": true,
+    "message": {
+      "imageMessage": {
+        "url": "https://mmg.whatsapp.net/v/t62.7118-24/599116358_1179641950403051_7572767935676648837_n.enc?ccb=11-4&oh=01_Q5Aa3QF5o_u7iNK3XI2chGDg-u8uOwVG8K3An2R5HgaVlbOcUw&oe=69610E50&_nc_sid=5e03e0&mms3=true",
+        "mimetype": "image/jpeg",
+        "fileSha256": "+jxEA6/9rIWvS+JBeJ7FQatfnM2dvTpr+5XVvEfQq60=",
+        "fileLength": "96865",
+        "height": 1020,
+        "width": 574,
+        "mediaKey": "VPUkjjo4ZtUcGw6waTgcuX++yPamB7PPvplKg0Z6Df0=",
+        "fileEncSha256": "k5L94riw81XKIzpA+KP1yppOJinLC0jn6XfMEUBWPl0=",
+        "directPath": "/v/t62.7118-24/599116358_1179641950403051_7572767935676648837_n.enc?ccb=11-4&oh=01_Q5Aa3QF5o_u7iNK3XI2chGDg-u8uOwVG8K3An2R5HgaVlbOcUw&oe=69610E50&_nc_sid=5e03e0",
+        "mediaKeyTimestamp": "1765389002",
+        "jpegThumbnail": "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",
+        "contextInfo": {
+          "pairedMediaType": "NOT_PAIRED_MEDIA",
+          "statusSourceType": "IMAGE"
+        },
+        "scansSidecar": "mZMdZxsFyS1Mr8ntZaLeYbYDNkMSPm59kZ1RFl5NA8clFJZ+OYAbuA==",
+        "scanLengths": [
+          6446,
+          28472,
+          22093,
+          39854
+        ],
+        "midQualityFileSha256": "z77p2HKZbvOumgSypoUQD2mRmL/c2AA+X9brtZQxMyQ="
+      },
+      "messageContextInfo": {
+        "messageSecret": "wgNjV5dI21Oj8JCoZ2T6svLFhniw1zwe5Kf51l4Azss="
+      }
+    }
+  }
+}
+2025-12-10 19:52:28,743 - app.api.whatsapp - INFO - Baileys message from: status
+2025-12-10 19:52:28,746 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-10 19:52:31,395 - app.api.whatsapp - INFO - [2025-12-10T17:52:31.395248] Baileys webhook received
+2025-12-10 19:52:31,558 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "status",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "status@broadcast",
+      "fromMe": false,
+      "id": "AC5359DB0C860432009626DED66C5D6B",
+      "participant": "263776454505@s.whatsapp.net",
+      "participantLid": "249662237880326@lid"
+    },
+    "messageTimestamp": 1765389143,
+    "pushName": "Mai Muropa",
+    "broadcast": true,
+    "message": {
+      "imageMessage": {
+        "url": "https://mmg.whatsapp.net/v/t62.7118-24/598584374_1253406879898869_7127952324230754711_n.enc?ccb=11-4&oh=01_Q5Aa3QElBWUbN1o-0oh8jCZRH7HCRo-SpCZdbar4E52BIewo3w&oe=69611B8A&_nc_sid=5e03e0&mms3=true",
+        "mimetype": "image/jpeg",
+        "fileSha256": "WAwrDePZKD/ic4iON97AG+5/hOHQ3LUcupQe2x+dEys=",
+        "fileLength": "125772",
+        "height": 1020,
+        "width": 574,
+        "mediaKey": "m2HSnMqcxooS2qbexqlZPgmRNz0fVjVOy/nxgtxVEE8=",
+        "fileEncSha256": "rsMXy47EDte5er9iKbejGtaVHLKr/Q39zmHtWbW3YjQ=",
+        "directPath": "/v/t62.7118-24/598584374_1253406879898869_7127952324230754711_n.enc?ccb=11-4&oh=01_Q5Aa3QElBWUbN1o-0oh8jCZRH7HCRo-SpCZdbar4E52BIewo3w&oe=69611B8A&_nc_sid=5e03e0",
+        "mediaKeyTimestamp": "1765389002",
+        "jpegThumbnail": "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",
+        "contextInfo": {
+          "pairedMediaType": "NOT_PAIRED_MEDIA",
+          "statusSourceType": "IMAGE"
+        },
+        "scansSidecar": "M+tdquu41SS0QtyfmmIAZtoaZ9i56NW4k18JY/8HjFXxkBdQsjfqCQ==",
+        "scanLengths": [
+          6407,
+          32728,
+          32559,
+          54078
+        ],
+        "midQualityFileSha256": "iTLtMMhpVdCsJbpBy8qUh2uFzZ4lj9YHbLEDqRR6hZM="
+      },
+      "messageContextInfo": {
+        "messageSecret": "2TnzprJQaam0Jri+ARGLAjhNwnZyQI0HAcilvUC5GlM="
+      }
+    }
+  }
+}
+2025-12-10 19:52:31,977 - app.api.whatsapp - INFO - Baileys message from: status
+2025-12-10 19:52:32,474 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-10 19:52:33,208 - app.api.whatsapp - INFO - [2025-12-10T17:52:33.208065] Baileys webhook received
+2025-12-10 19:52:33,237 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "status",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "status@broadcast",
+      "fromMe": false,
+      "id": "ACB766D436B63753B2942B038EADF022",
+      "participant": "263776454505@s.whatsapp.net",
+      "participantLid": "249662237880326@lid"
+    },
+    "messageTimestamp": 1765389144,
+    "pushName": "Mai Muropa",
+    "broadcast": true,
+    "message": {
+      "imageMessage": {
+        "url": "https://mmg.whatsapp.net/v/t62.7118-24/524649124_1867768427157391_2632948983618297515_n.enc?ccb=11-4&oh=01_Q5Aa3QEGaFKkhcHqBbu3_MwqBP9Qjr_q0_7a2VxqHUfB5KdZVg&oe=696133F4&_nc_sid=5e03e0&mms3=true",
+        "mimetype": "image/jpeg",
+        "fileSha256": "UnHudNQWIKxIEbUk7glXn0C49WX99bG4jcw9NtNGLnc=",
+        "fileLength": "92393",
+        "height": 1020,
+        "width": 574,
+        "mediaKey": "QhgAzpkg6J5+xpJqINqguZBW+S85kq3XJSvTGvKF6ac=",
+        "fileEncSha256": "e5tUJlI3s/lJJhV+KMpUJ7vXd04IUnhU3rO0ElnW35s=",
+        "directPath": "/v/t62.7118-24/524649124_1867768427157391_2632948983618297515_n.enc?ccb=11-4&oh=01_Q5Aa3QEGaFKkhcHqBbu3_MwqBP9Qjr_q0_7a2VxqHUfB5KdZVg&oe=696133F4&_nc_sid=5e03e0",
+        "mediaKeyTimestamp": "1765389002",
+        "jpegThumbnail": "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",
+        "contextInfo": {
+          "pairedMediaType": "NOT_PAIRED_MEDIA",
+          "statusSourceType": "IMAGE"
+        },
+        "scansSidecar": "SneWxa1OX+KQlY3qscqdXvKImAOOHiCtzEfoE3m8BSB+WTOG4CEclQ==",
+        "scanLengths": [
+          6302,
+          26764,
+          21390,
+          37937
+        ],
+        "midQualityFileSha256": "BBnmrSLe/sg4vEPvmKbT6otN/j7G0YrZP/9CXPJKFEw="
+      },
+      "messageContextInfo": {
+        "messageSecret": "iT9mBSo15g+I/piBrEbnhss+xGn3dsVvraPL8xTkWnQ="
+      }
+    }
+  }
+}
+2025-12-10 19:52:33,270 - app.api.whatsapp - INFO - Baileys message from: status
+2025-12-10 19:52:33,273 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-10 19:52:47,875 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from status, skipping
+2025-12-10 19:52:47,880 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from status, skipping
+2025-12-10 19:52:47,889 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from status, skipping
+2025-12-10 19:52:56,535 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from status, skipping
+2025-12-10 19:52:56,646 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from status, skipping
+2025-12-10 19:52:57,889 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from status, skipping
+2025-12-10 19:52:59,034 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from status, skipping
+2025-12-10 19:53:00,176 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from status, skipping
+2025-12-10 19:53:01,216 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from status, skipping
+2025-12-10 19:53:01,867 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from status, skipping
+2025-12-10 19:53:02,621 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from status, skipping
+2025-12-10 19:56:01,244 - app.api.whatsapp - INFO - [2025-12-10T17:56:01.244439] Baileys webhook received
+2025-12-10 19:56:01,251 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hello",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F7576BB12F00419F58F",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765389354,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "hello",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-10 19:56:01,254 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-10 19:56:01,254 - app.api.whatsapp - INFO - Baileys text: 'hello'
+2025-12-10 19:56:09,309 - app.utils.aws_lambda - ERROR - Bedrock invocation error
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 80, in _invoke_bedrock
+    response = self.bedrock_client.invoke_model(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 602, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 1078, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the InvokeModel operation: The provided model identifier is invalid.
+2025-12-10 19:56:09,316 - app.utils.message_handler - ERROR - AI invocation failed
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\message_handler.py", line 1358, in handle_ai_response
+    ai_response = await self.lambda_service.invoke_question_answerer(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 67, in invoke_question_answerer
+    return await self._invoke_bedrock(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 80, in _invoke_bedrock
+    response = self.bedrock_client.invoke_model(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 602, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 1078, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the InvokeModel operation: The provided model identifier is invalid.
+2025-12-10 19:56:09,324 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_invoke_error, Message: I'm having trouble connecting right now. Please try again in a moment....
+2025-12-10 19:56:10,788 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-10 19:56:11,150 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-10 19:57:54,070 - app.api.whatsapp - INFO - [2025-12-10T17:57:54.070818] Baileys webhook received
+2025-12-10 19:57:54,073 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F2A9188551394524C5F",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765389469,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-10 19:57:54,073 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-10 19:57:54,076 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-10 19:57:58,038 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-10 19:58:00,425 - app.api.whatsapp - INFO - [2025-12-10T17:58:00.425975] Baileys webhook received
+2025-12-10 19:58:00,427 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F2A9188551394524C5F",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765389475,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-10 19:58:00,429 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-10 19:58:00,430 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-10 19:58:00,966 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-10 19:58:02,520 - app.api.whatsapp - INFO - [2025-12-10T17:58:02.520528] Baileys webhook received
+2025-12-10 19:58:02,520 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hello",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F2A9188551394524C5F",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765389477,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "extendedTextMessage": {
+        "text": "hello",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  }
+}
+2025-12-10 19:58:02,523 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-10 19:58:02,524 - app.api.whatsapp - INFO - Baileys text: 'hello'
+2025-12-10 19:58:11,356 - app.utils.aws_lambda - ERROR - Bedrock invocation error
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 80, in _invoke_bedrock
+    response = self.bedrock_client.invoke_model(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 602, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 1078, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the InvokeModel operation: The provided model identifier is invalid.
+2025-12-10 19:58:11,360 - app.utils.message_handler - ERROR - AI invocation failed
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\message_handler.py", line 1358, in handle_ai_response
+    ai_response = await self.lambda_service.invoke_question_answerer(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 67, in invoke_question_answerer
+    return await self._invoke_bedrock(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 80, in _invoke_bedrock
+    response = self.bedrock_client.invoke_model(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 602, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 1078, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the InvokeModel operation: The provided model identifier is invalid.
+2025-12-10 19:58:11,367 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_invoke_error, Message: I'm having trouble connecting right now. Please try again in a moment....
+2025-12-10 19:58:13,345 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-10 19:58:13,930 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-10 20:00:01,924 - app.api.whatsapp - INFO - [2025-12-10T18:00:01.924997] Baileys webhook received
+2025-12-10 20:00:01,926 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hello",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F6A54A3E52A2F88C0F4",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765389596,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "hello",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-10 20:00:01,930 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-10 20:00:01,930 - app.api.whatsapp - INFO - Baileys text: 'hello'
+2025-12-10 20:00:13,152 - app.utils.aws_lambda - ERROR - Bedrock invocation error
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 80, in _invoke_bedrock
+    response = self.bedrock_client.invoke_model(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 602, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 1078, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the InvokeModel operation: The provided model identifier is invalid.
+2025-12-10 20:00:13,159 - app.utils.message_handler - ERROR - AI invocation failed
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\message_handler.py", line 1358, in handle_ai_response
+    ai_response = await self.lambda_service.invoke_question_answerer(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 67, in invoke_question_answerer
+    return await self._invoke_bedrock(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 80, in _invoke_bedrock
+    response = self.bedrock_client.invoke_model(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 602, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 1078, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the InvokeModel operation: The provided model identifier is invalid.
+2025-12-10 20:00:13,165 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_invoke_error, Message: I'm having trouble connecting right now. Please try again in a moment....
+2025-12-10 20:00:15,582 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-10 20:00:15,855 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-10 20:01:54,739 - app.api.whatsapp - INFO - [2025-12-10T18:01:54.739347] Baileys webhook received
+2025-12-10 20:01:54,741 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3FA8EC1D3A5956F344BF",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765389710,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-10 20:01:54,742 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-10 20:01:54,743 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-10 20:01:56,560 - app.api.whatsapp - INFO - [2025-12-10T18:01:56.560277] Baileys webhook received
+2025-12-10 20:01:56,562 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hello",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3FA8EC1D3A5956F344BF",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765389711,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "extendedTextMessage": {
+        "text": "hello",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  }
+}
+2025-12-10 20:01:56,565 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-10 20:01:56,566 - app.api.whatsapp - INFO - Baileys text: 'hello'
+2025-12-10 20:02:09,538 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-10 20:02:09,643 - app.utils.aws_lambda - INFO - [BEDROCK CONFIG] param=anthropic.claude-3-5-sonnet-20240620, env=anthropic.claude-3-5-sonnet-20240620, cfg=anthropic.claude-3-5-sonnet-20240620, resolved=anthropic.claude-3-5-sonnet-20240620, use_bedrock=True, region=us-east-1, has_creds=True
+2025-12-10 20:02:09,720 - app.utils.aws_lambda - INFO - [BEDROCK INVOKE] modelId=anthropic.claude-3-5-sonnet-20240620, region=us-east-1
+2025-12-10 20:02:12,380 - app.utils.aws_lambda - ERROR - Bedrock invocation error
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 85, in _invoke_bedrock
+    response = self.bedrock_client.invoke_model(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 602, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 1078, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the InvokeModel operation: The provided model identifier is invalid.
+2025-12-10 20:02:12,446 - app.utils.message_handler - ERROR - AI invocation failed
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\message_handler.py", line 1358, in handle_ai_response
+    ai_response = await self.lambda_service.invoke_question_answerer(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 71, in invoke_question_answerer
+    return await self._invoke_bedrock(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 85, in _invoke_bedrock
+    response = self.bedrock_client.invoke_model(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 602, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 1078, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the InvokeModel operation: The provided model identifier is invalid.
+2025-12-10 20:02:12,455 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_invoke_error, Message: I'm having trouble connecting right now. Please try again in a moment....
+2025-12-10 20:02:15,782 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-10 20:02:16,142 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-10 20:30:25,436 - app.api.whatsapp - INFO - [2025-12-10T18:30:25.436054] Baileys webhook received
+2025-12-10 20:30:25,440 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hello",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F96E5A7BEE2FE522502",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765391417,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "hello",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-10 20:30:25,441 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-10 20:30:25,448 - app.api.whatsapp - INFO - Baileys text: 'hello'
+2025-12-10 20:31:02,464 - app.api.whatsapp - WARNING - Failed to store Baileys incoming message for 263777530322: No primary available for writes, Timeout: 30s, Topology Description: <TopologyDescription id: 6939bbec09cfca82f19027f5, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('ac-amijgry-shard-00-00.m1s3xla.mongodb.net', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('SSL handshake failed: ac-amijgry-shard-00-00.m1s3xla.mongodb.net:27017: [WinError 10054] An existing connection was forcibly closed by the remote host (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('ac-amijgry-shard-00-01.m1s3xla.mongodb.net', 27017) server_type: RSSecondary, rtt: 1.6880000000237487>, <ServerDescription ('ac-amijgry-shard-00-02.m1s3xla.mongodb.net', 27017) server_type: Unknown, rtt: None, error=NetworkTimeout('SSL handshake failed: ac-amijgry-shard-00-02.m1s3xla.mongodb.net:27017: _ssl.c:993: The handshake operation timed out (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2025-12-10 20:31:21,299 - app.utils.aws_lambda - INFO - [BEDROCK CONFIG] param=anthropic.claude-3-5-sonnet-20240620, env=anthropic.claude-3-5-sonnet-20240620, cfg=anthropic.claude-3-5-sonnet-20240620, resolved=anthropic.claude-3-5-sonnet-20240620, use_bedrock=True, region=us-east-1, has_creds=True
+2025-12-10 20:31:21,337 - app.utils.aws_lambda - INFO - [BEDROCK INVOKE] modelId=anthropic.claude-3-5-sonnet-20240620, region=us-east-1
+2025-12-10 20:31:28,981 - app.utils.aws_lambda - ERROR - Bedrock invocation error
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 85, in _invoke_bedrock
+    response = self.bedrock_client.invoke_model(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 602, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 1078, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the InvokeModel operation: The provided model identifier is invalid.
+2025-12-10 20:31:28,987 - app.utils.message_handler - ERROR - AI invocation failed
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\message_handler.py", line 1358, in handle_ai_response
+    ai_response = await self.lambda_service.invoke_question_answerer(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 71, in invoke_question_answerer
+    return await self._invoke_bedrock(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 85, in _invoke_bedrock
+    response = self.bedrock_client.invoke_model(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 602, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 1078, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the InvokeModel operation: The provided model identifier is invalid.
+2025-12-10 20:31:28,992 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_invoke_error, Message: I'm having trouble connecting right now. Please try again in a moment....
+2025-12-10 20:31:32,406 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-10 20:31:34,309 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-11 08:25:08,519 - app.api.whatsapp - INFO - [2025-12-11T06:25:08.519389] Baileys webhook received
+2025-12-11 08:25:08,521 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "status",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "status@broadcast",
+      "fromMe": false,
+      "id": "AC58D9E1593F7D803872E620E760294D",
+      "participant": "263782890282@s.whatsapp.net",
+      "participantLid": "166537457602712@lid"
+    },
+    "messageTimestamp": 1765392909,
+    "pushName": "Hoskick power  baba Taku",
+    "broadcast": true,
+    "message": {
+      "senderKeyDistributionMessage": {
+        "groupId": "status@broadcast",
+        "axolotlSenderKeyDistributionMessage": "MwjQubX3BBAAGiDRsIKGMQrImCNvOriLLcOlAYLAxqAELi9/ZZ4RRf7WuSIhBSTyIyYQwZgesVzH2mQFyGPN9mWu6MxUSr77csZPaIkz"
+      },
+      "imageMessage": {
+        "url": "https://mmg.whatsapp.net/v/t62.7118-24/599114243_2021579412020341_6738730415051883581_n.enc?ccb=11-4&oh=01_Q5Aa3QHJGDv953BGDE2aYja6CEK7unCcqvk_4T7Qy-gPuLkQSg&oe=69611C8E&_nc_sid=5e03e0&mms3=true",
+        "mimetype": "image/jpeg",
+        "fileSha256": "meW+/tQaG8lHg2FxaLx+7C46dPLFeEyb8RdYMPnBJrY=",
+        "fileLength": "56620",
+        "height": 1080,
+        "width": 810,
+        "mediaKey": "x/vLZT+HQpNMu+zm5bzLdk2rueZ7LNuK33rESoN3qzY=",
+        "fileEncSha256": "xfq3GBfIxxYb3P1Mw5JCrn71jsKkyY3IFbvbYRQVe/4=",
+        "directPath": "/v/t62.7118-24/599114243_2021579412020341_6738730415051883581_n.enc?ccb=11-4&oh=01_Q5Aa3QHJGDv953BGDE2aYja6CEK7unCcqvk_4T7Qy-gPuLkQSg&oe=69611C8E&_nc_sid=5e03e0",
+        "mediaKeyTimestamp": "1765392895",
+        "jpegThumbnail": "/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkJCQkKCQoLCwoODw0PDhUTERETFR8WGBYYFh8wHiMeHiMeMCozKScpMypMOzU1O0xXSUVJV2pfX2qFf4WuruoBCQkJCQoJCgsLCg4PDQ8OFRMRERMVHxYYFhgWHzAeIx4eIx4wKjMpJykzKkw7NTU7TFdJRUlXal9faoV/ha6u6v/CABEIAKAAeAMBIgACEQEDEQH/xAAzAAABBQEBAQAAAAAAAAAAAAAGAAMEBQcCAQgBAAMBAQEAAAAAAAAAAAAAAAECAwAEBf/aAAwDAQACEAMQAAAAmvvzCkOZJd2Zeff2jPvuHRn3utmE/wCjQK6bZyetU9WmLyfXsfe3PRvH07t732tl2oeNYEAd3Dp1SfxVFTFDSrFSPUVe7ds8YPVzC2YXfpHOWaxhyvn7zHcukuI8nIV2iqsRTRenhakSy++b6CfR9acfOm3Mth135bmWA7/gKUCzkH5l0kOg5jDUn6GUBt+J3eeWg/e8cc/c8VXMvnppNVNz3v8ANsAO6GEYNfrZjPZQ41qCytZWTGiQKVBo1QLSlsRXtVfopTEp7gzlVZDBk+Ry9ckNsuKzN4iUrJUT5NgHoyxrvX3g3nsuuAMDUTnlNRsQbSdoj70Mib4vWXxJA/MEetKOf06W2IA5ucgqrErnWkLgkcrzbpduetN52kjA37g8RkNpxYfLxKEWkO23DLGlvzyS4QlkkEXrbLQvGpI5zPbsjNyjsXtY4ykyE0R87OJ6ms6e0qGz3TDnVCR9GfOm9SYr7HYPJazA7dScR8vxNXfUVbf/xAA5EAACAQMDAwMCBAMFCQAAAAABAgMABBEFEiEGMUETIlFhcRQjMoEQQpEVM2KCoQcWQ0SSssHR4f/aAAgBAQABPwBEJ5xzQWQDlT9hzSA8ZDD9qRVAHuFLGPBoREjk0kOaEOPFBPpQUUENbKk9iFqsLcySSXj/AM42x/Rfn96MfI4zUcMnfK4+1JG2aVeMYoJ24pQq96Cqe1Korac4FCOth+BQB8isCrhfxNwtup9g5k+1CMAAAYAFGKlUhajR8UqMPArJz2oZz2oLyM0IwTQQAChn5oVrvUFvpMYUYkuGGVj+B8mk17VtQlTdM8aseye0VZaRfgGWC4kVsfzHOfuDVtqeJTbXe1Jh2YfpauKCg8UoZRS9s1jkUO9AZoLWCDSrWpX0OnWU11KeEHA+TWo6tNfX0s8hzuatG1JIp4i/Pu4qC/1WSEPFEhU1qSNJGfWi2sOciundQ/Exy2zvl4ex8slRITzmgn1pVwBxSg5AAOa9JlxuQisDIrAoKK2iv9o9+4NnYqfYAZXpaS4kjYFeCDmtN601KywrndHUnWMOowmJ4PS39mrptzHq8RU5WRHVqRT8U0oSSND+p87f2q3gll/lwPJNR2EYO4u2fpxSxhQRkkH55qeIIwKjg0KVFArYtdeyLLrMo8RIiUTslKlcEGmBYkrXu8g1pOl6pqMZEIJiU8l+B+1aZcL08RPdbpFjzwv14pFcAfNSukIEsmAFB5PfJ+K06/ec52BYx2NLNEf+Iv8AX+DoHGDWwAmkjRQSPJyf4dcIf7fvP8n/AG0sW5jXTOu6fpKTR3VruRxgkKDV9LpEOqJcwRrc2cnPptldp8jirLWtMltEWwhjiwP0dsVcg3hMO7BY4NKprqK9SNo0d8JH73rUurNSn/Kt5TDCO2ODQvbx2LNcSlvnea0fqrWdOkQpds8fmOU7lrRdet9Zsmmj9kqf3kfxT/rz8gGhRyBxXV7Tf2rO9wgSRjnb8CmOQQOSe9JE8rrHnAJ8ngVqFhBbWsJimSVwfeykkHP0NWNxJDJuUmpb6RIPVDYZmAFXN4lpZz3MgOIo2cjycDOK1bXm1QbyArO5DpXpNICFGTWgaBPqk5hWVE+rVqelXdjfC39EumQA68hq0A3el38OI2T1cxOhpUDhCT2GK1TVIbBdiKHmbsD4pOqJxJ+ZFGyDvjIrrx7a6mtL63J96FJFPgikV2Bw+KjglJCFjtJ5YDNXtpBEim3nnIxyHPmraNpGwvLcZrVbS7hjtcwSiNmyrFSAxPxXVD3OpwH0ZTI9s2GjT4PmkhuQzOYJMJnedp4+9abfwQRyLKoxtJH1rTJr97kNbXAUhvaCwAGagS4QI96yZKgkIeFb6VZQC51W12ncEJbk1dXC2dqzkc44HyxpmnuHeSb9THNTwNyVj3IOy+Sa6htp5IvYoCoaWRo3ZT4NJNU1y7gKprSITJMkffeQCfpWl3M0F1b2f64WZVaJvcuKj1W9gkMscxDO+5/OasurZQVSeOM8YLYxVxH01exO5VomAGWjIFQ6DJIN9lPFOnw2Y2pbrVLJzBcxTKCeA2SP2NaTf3DzybJnMiYxFGoYEnjDUXuWtZC9wXI9+xiCE/6QKti7gv6m5H5H/wAIpgAM1LAeVK7o5DhgaPTOp3V9drDBiNJSu9+BTdE6on/MW+fjfitP6A1KV83VxFAnyPfWh9EvHcsW1O1cL4jyTVtpenWkiTLHvnRSokbuAauEaN2jYYZWINRyOowrEGhM7Zy5Jq1vp4JUeNz7e4z3FSa5eW1wJ4maW2mXc0TkMKs76ynRbq0VISW2sits25rRdbmmmaN4PcAQ2w5ye3atOhlYyxblIM59Lxww3EfbNXdo1sgWTG8kUoyQMZNQQtPP6UPLH+lP0/cyN+bAr/XcKg0CNV9M26he5BwRS2M9u6mGEqV7FRVvI8g/NgKN/pWrb3ugXUiQoC4PHNKiDlj+1Yjf2qAKiTB5oXOF9MZbjsKsbp7O9icqyoWG4HyKttKhlma7urkxwvOxjiTguM+T4BpI1gO43PtwEVF7IfHNWccGqwxvMW9RF2EduR5qPSbOMEBCSRgmhZQRAmGNUP0qCXeuD+od/wCIq70mK/Cqi7GQ49QLjj4NSaQbV3/GiSNB2kUblapo9MA/Jecn/EBUP9nBDuE7ufjgCnhxHuSGeJN2QSng9uamaWR0jXe7EgAEAk5qx07WUsxHLYi5YnKo7qqrU93eWduJ204LbAgMgAV4WAxnIyGFdEGSWa4lSWdo2AYiUg4ZvjFbh88/wlUxyB17eaUggH+BOK/H3dywWeVmRe65wP6LUt/paLJEuTvXa21c0mmW4RHe7t+cEDk8H5oabprAMZY1XsVEYPPyDwaVLKG3bddTm28RMV2t/lpp7Cxu4b9LF1Cn8pACi8fzE1adZWUr7J0e3yRhwd4FRPb3kOU2TK6YJzuBBFdKacdOtZFzkPK5X7A4AppWVjnNQTF6l9y4qB8EqakmKHtQkL1MztsiQH3eB5zWi9P2qkSXih277PC1eaTZzZEGInVfYnZWFKl0wJlAtYN5Bc4BYjg7QeWNWd/pMcREUZkkU+3eAWOPOfFaVqSXUIRkAYV1ZpdiIvxUMaRyeQOA1dPaw+m36Rlt1tLgMD8Gre8s1giUMBhBxT39kASSDR1a3DELxUmuRL9atdVjmkHihtkUUFAq0eOORZGXLYAU/FfiCDGXyquOGrUL3ZA9vKxMqjdC6+aubn1TiQHf5NWcwR8OTtPx3NWUrWYE+ERDyELe6tduLzUrdWiwEAyUHc10p09c6tqMTsNttAymRj4WnuNLOFbb+wr8Hp0x9k+Ppkf+afQrZ+zNX+78Iq66fuUf1bZ/2rTJZjCFlGHXg1njNLK6qRUN6ZYmglb2n9P0bxVw0ktsrclo3wT9/FOsrSDJJaobhoVAiQeruOX7/wBPireJi2+dixzkLST5I2OD/hrpLTLePSYpNhBlJY1NpOnzjDw4PyrFT/pV7oF9bAy2Fw0oHPpP3q21m4jYqzPE6nBH/sGk6huVHuRHH04NDquFf7yBxQ6o0zuVKn7VJ1Lby+2I806FSKiG4g9qn/Dm0EcMQVjyT5JFQxhnZmFMIYvtWYggfeefFWapczJHFHukZgoyfJrR7VLLTrW1NwHaNME0uMfqrI+RWraFb6h+ahEc4H6/Dfer2x1CwJE8RC+GHKmmu63rIMilJVsg8iijM3u4pY1RkOfoanikjiWY8LuAFMHMrAHzmsIp7bmpLdnO6Tt8VHFHBJHLGCGVgw+4qw1SK4tIJYYGLOgOAPNEanOOGSEf1NTaNfvyNR5+1SQa/Ye9bhnUfuKTqq5iGy8tt6+SBV2vTupAtBILec/y9gamgmtXODuAr8So91f/xAAlEQACAgEEAQQDAQAAAAAAAAABAgARAxIhMUEQICJRcRMUQmH/2gAIAQIBAT8A9S+/Jq/ldl++z63Zr/yXpAqA2L8XAfDcQxhtMTALRPcyNpUmBiBBlB+/D8Sj8wgldjEQ1HGoRi1EdCFmbQoFG4zkADuBzwYQZuF3iZARx4q4MaBtVRhe4hgdyNhDq7WAGtiAPI8AKd6nHHjaMyruxMTIHBI6hylSfbEcOtibVzNQrmA2NjKMyYyd5gUIhrkz9dsrVwJlwpiVAgjX2oMDYj1UGjpprX5hVtJMwEBAed4rnoCZy1LdVPyEcKTGZGO4KmVUqf/EACQRAQACAQQCAQUBAAAAAAAAAAEAAhEDEiExEEFREyAiMmFS/9oACAEDAQE/APufxrt9vLMfdSlQ+WbS3cTDjxiJ4p3BgmZq0W+QlK7rBPpbpfRtX+njS/aCdYmTPJLXBmn+LK1rkc8pLGC6uTEKCrNpnJK2Jxa3EvVGVBeY7ag1XMtrajXbBxwwm2o8sE9MU9wUcy1m3eI+FscZnfn6iDSlK49qS2kV7t30S1KNCtQD29svp7XE5z1Nr8RMPJMkpq1mvdtY+CGuUr8spq2u2tfv1Db/AKSJqHuO97JsZWw3JrZ34/kQmmHOJsPdoFzpLHjJP//Z",
+        "contextInfo": {
+          "pairedMediaType": "NOT_PAIRED_MEDIA",
+          "statusSourceType": "IMAGE"
+        },
+        "scansSidecar": "zqCcuiBJLrhv74oCJv7I6Yy2q5kBYC6iCf6yKqTULkGUVi49GROvGg==",
+        "scanLengths": [
+          8010,
+          17787,
+          10638,
+          20185
+        ],
+        "midQualityFileSha256": "Aiu4Oy39GOgq7BBZIpCu19w06XlrlavX4eG7x1ocMcs="
+      },
+      "messageContextInfo": {
+        "messageSecret": "T/kxOzp6Ev0N+F9zLnI/YNBHsEdgrufj0fUEgqWBXhk="
+      }
+    }
+  }
+}
+2025-12-11 08:25:08,522 - app.api.whatsapp - INFO - Baileys message from: status
+2025-12-11 08:25:08,523 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-11 08:25:08,641 - app.api.whatsapp - INFO - [2025-12-11T06:25:08.641021] Baileys webhook received
+2025-12-11 08:25:08,641 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3FF2D52CAC8F598D1D20",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765434303,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-11 08:25:08,641 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 08:25:08,643 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-11 08:25:12,572 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-11 08:25:12,576 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from status, skipping
+2025-12-11 08:25:14,440 - app.api.whatsapp - INFO - [2025-12-11T06:25:14.440615] Baileys webhook received
+2025-12-11 08:25:14,440 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3FF2D52CAC8F598D1D20",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765434309,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-11 08:25:14,440 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 08:25:14,442 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-11 08:25:14,534 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-11 08:25:16,011 - app.api.whatsapp - INFO - [2025-12-11T06:25:16.011939] Baileys webhook received
+2025-12-11 08:25:16,012 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hello",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3FF2D52CAC8F598D1D20",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765434310,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "extendedTextMessage": {
+        "text": "hello",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  }
+}
+2025-12-11 08:25:16,012 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 08:25:16,012 - app.api.whatsapp - INFO - Baileys text: 'hello'
+2025-12-11 08:25:16,592 - app.utils.aws_lambda - INFO - [BEDROCK CONFIG] param=anthropic.claude-3-5-sonnet-20240620, env=anthropic.claude-3-5-sonnet-20240620, cfg=anthropic.claude-3-5-sonnet-20240620, resolved=anthropic.claude-3-5-sonnet-20240620, use_bedrock=True, region=us-east-1, has_creds=True
+2025-12-11 08:25:16,642 - app.utils.aws_lambda - INFO - [BEDROCK INVOKE] modelId=anthropic.claude-3-5-sonnet-20240620, region=us-east-1
+2025-12-11 08:25:18,963 - app.utils.aws_lambda - ERROR - Bedrock invocation error
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 85, in _invoke_bedrock
+    response = self.bedrock_client.invoke_model(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 602, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 1078, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the InvokeModel operation: The provided model identifier is invalid.
+2025-12-11 08:25:18,966 - app.utils.message_handler - ERROR - AI invocation failed
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\message_handler.py", line 1358, in handle_ai_response
+    ai_response = await self.lambda_service.invoke_question_answerer(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 71, in invoke_question_answerer
+    return await self._invoke_bedrock(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 85, in _invoke_bedrock
+    response = self.bedrock_client.invoke_model(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 602, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 1078, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the InvokeModel operation: The provided model identifier is invalid.
+2025-12-11 08:25:18,966 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_invoke_error, Message: I'm having trouble connecting right now. Please try again in a moment....
+2025-12-11 08:25:20,938 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-11 08:25:21,164 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-11 08:54:42,665 - app.api.whatsapp - INFO - [2025-12-11T06:54:42.665116] Baileys webhook received
+2025-12-11 08:54:42,665 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "Hello",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F8568C23A34C4CE72E3",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765436077,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "Hello",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-11 08:54:42,667 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 08:54:42,667 - app.api.whatsapp - INFO - Baileys text: 'Hello'
+2025-12-11 08:54:45,852 - app.utils.aws_lambda - INFO - [BEDROCK CONFIG] param=anthropic.claude-3-5-sonnet-20240620, env=anthropic.claude-3-5-sonnet-20240620, cfg=anthropic.claude-3-5-sonnet-20240620, resolved=anthropic.claude-3-5-sonnet-20240620, use_bedrock=True, region=us-east-1, has_creds=True
+2025-12-11 08:54:45,868 - app.utils.aws_lambda - INFO - [BEDROCK INVOKE] modelId=anthropic.claude-3-5-sonnet-20240620, region=us-east-1
+2025-12-11 08:54:49,010 - app.utils.aws_lambda - ERROR - Bedrock invocation error
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 85, in _invoke_bedrock
+    response = self.bedrock_client.invoke_model(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 602, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 1078, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the InvokeModel operation: The provided model identifier is invalid.
+2025-12-11 08:54:49,014 - app.utils.message_handler - ERROR - AI invocation failed
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\message_handler.py", line 1358, in handle_ai_response
+    ai_response = await self.lambda_service.invoke_question_answerer(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 71, in invoke_question_answerer
+    return await self._invoke_bedrock(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 85, in _invoke_bedrock
+    response = self.bedrock_client.invoke_model(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 602, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 1078, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the InvokeModel operation: The provided model identifier is invalid.
+2025-12-11 08:54:49,017 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_invoke_error, Message: I'm having trouble connecting right now. Please try again in a moment....
+2025-12-11 08:54:50,592 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-11 08:54:50,839 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-11 09:04:32,981 - app.api.whatsapp - INFO - [2025-12-11T07:04:32.981371] Baileys webhook received
+2025-12-11 09:04:32,981 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3FA193F5ACB0585E154D",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765436668,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-11 09:04:32,981 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 09:04:32,981 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-11 09:04:35,680 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-11 09:04:38,917 - app.api.whatsapp - INFO - [2025-12-11T07:04:38.917180] Baileys webhook received
+2025-12-11 09:04:38,920 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3FA193F5ACB0585E154D",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765436674,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-11 09:04:38,920 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 09:04:38,922 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-11 09:04:38,991 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-11 09:04:40,758 - app.api.whatsapp - INFO - [2025-12-11T07:04:40.758571] Baileys webhook received
+2025-12-11 09:04:40,759 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hello",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3FA193F5ACB0585E154D",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765436675,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "extendedTextMessage": {
+        "text": "hello",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  }
+}
+2025-12-11 09:04:40,759 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 09:04:40,760 - app.api.whatsapp - INFO - Baileys text: 'hello'
+2025-12-11 09:04:41,315 - app.utils.aws_lambda - INFO - [BEDROCK CONFIG] param_ignored=None, env=anthropic.claude-3-5-sonnet-20240620, cfg=anthropic.claude-3-5-sonnet-20240620, resolved=anthropic.claude-3-5-sonnet-20240620, use_bedrock=True, region=us-east-1, has_creds=True
+2025-12-11 09:04:41,333 - app.utils.aws_lambda - INFO - [BEDROCK INVOKE] modelId=anthropic.claude-3-5-sonnet-20240620, region=us-east-1
+2025-12-11 09:04:43,180 - app.utils.aws_lambda - ERROR - Bedrock invocation error
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 86, in _invoke_bedrock
+    response = self.bedrock_client.invoke_model(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 602, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 1078, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the InvokeModel operation: The provided model identifier is invalid.
+2025-12-11 09:04:43,185 - app.utils.message_handler - ERROR - AI invocation failed
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\message_handler.py", line 1357, in handle_ai_response
+    ai_response = await self.lambda_service.invoke_question_answerer(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 72, in invoke_question_answerer
+    return await self._invoke_bedrock(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 86, in _invoke_bedrock
+    response = self.bedrock_client.invoke_model(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 602, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 1078, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the InvokeModel operation: The provided model identifier is invalid.
+2025-12-11 09:04:43,186 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_invoke_error, Message: I'm having trouble connecting right now. Please try again in a moment....
+2025-12-11 09:04:44,452 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-11 09:04:44,650 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-11 09:09:45,570 - app.api.whatsapp - INFO - [2025-12-11T07:09:45.569678] Baileys webhook received
+2025-12-11 09:09:45,570 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hello",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3FA76E82CC916206DD10",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765436980,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "hello",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-11 09:09:45,570 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 09:09:45,570 - app.api.whatsapp - INFO - Baileys text: 'hello'
+2025-12-11 09:09:50,555 - app.utils.aws_lambda - INFO - [BEDROCK CONFIG] source=settings cfg=anthropic.claude-3-5-sonnet-20240620, env_ignored=anthropic.claude-3-5-sonnet-20240620, param_ignored=None, resolved=anthropic.claude-3-5-sonnet-20240620, use_bedrock=True, region=us-east-1, has_creds=True
+2025-12-11 09:09:50,566 - app.utils.aws_lambda - INFO - [BEDROCK INVOKE] modelId=anthropic.claude-3-5-sonnet-20240620, region=us-east-1
+2025-12-11 09:09:52,903 - app.utils.aws_lambda - ERROR - Bedrock invocation error
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 85, in _invoke_bedrock
+    response = self.bedrock_client.invoke_model(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 602, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 1078, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the InvokeModel operation: The provided model identifier is invalid.
+2025-12-11 09:09:52,917 - app.utils.message_handler - ERROR - AI invocation failed
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\message_handler.py", line 1357, in handle_ai_response
+    ai_response = await self.lambda_service.invoke_question_answerer(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 71, in invoke_question_answerer
+    return await self._invoke_bedrock(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 85, in _invoke_bedrock
+    response = self.bedrock_client.invoke_model(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 602, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 1078, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the InvokeModel operation: The provided model identifier is invalid.
+2025-12-11 09:09:52,924 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_invoke_error, Message: I'm having trouble connecting right now. Please try again in a moment....
+2025-12-11 09:09:54,624 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-11 09:09:54,840 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
