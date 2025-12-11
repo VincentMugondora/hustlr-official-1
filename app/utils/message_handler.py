@@ -1423,10 +1423,30 @@ class MessageHandler:
             # Guard: avoid re-asking service if it's already known
             ql = question.lower()
             um = (message_text or '').lower()
+            # Persist provider selection index if indicated by model's question (e.g., first/second/third or a number)
+            try:
+                ord_map = {'first': 1, '1st': 1, 'second': 2, '2nd': 2, 'third': 3, '3rd': 3}
+                sel_idx = None
+                for k, v in ord_map.items():
+                    if k in ql:
+                        sel_idx = v
+                        break
+                if sel_idx is None:
+                    mnum = re.search(r"\b(\d+)\b", ql)
+                    if mnum:
+                        sel = int(mnum.group(1))
+                        if sel > 0:
+                            sel_idx = sel
+                if sel_idx:
+                    session.setdefault('data', {})
+                    session['data']['selected_provider_index'] = sel_idx
+            except Exception:
+                pass
+
             service_known = bool((session.get('data') or {}).get('service_type')) or bool('service_type' in (user_context.get('known_fields') or {}))
             wants_list = any(k in ql for k in ['available', 'options', 'list', 'providers']) or any(k in um for k in ['list', 'show options', 'show list', 'providers'])
-            if service_known and (('service' in ql and 'type' in ql) or wants_list):
-                # Prefer to list providers if possible
+            if service_known and wants_list:
+                # List providers only when explicitly asked
                 service_type = (session.get('data') or {}).get('service_type') or (user_context.get('known_fields') or {}).get('service_type') or ''
                 if service_type:
                     try:
@@ -1434,9 +1454,6 @@ class MessageHandler:
                         return
                     except Exception:
                         pass
-                # Otherwise, ask for time next
-                await self._log_and_send_response(user_number, self._short("When do you want the service? (e.g., 'tomorrow at 10am')", "When? (e.g., tomorrow 10am)"), "ai_next_question_time")
-                return
             if not question:
                 question = self._short("What service do you need?", "What service?")
             await self._log_and_send_response(user_number, question, "ai_next_question")

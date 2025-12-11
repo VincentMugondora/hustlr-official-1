@@ -44,6 +44,8 @@ class Settings(BaseSettings):
     USE_CONCISE_RESPONSES: bool = False
     # LLM-led conversation mode
     LLM_CONTROLLED_CONVERSATION: bool = True
+    # LLM output length (tokens) for Bedrock Claude responses
+    LLM_MAX_TOKENS: int = 1500
 
 
 settings = Settings()

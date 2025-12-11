@@ -313,7 +313,7 @@ class AWSLambdaService:
             )
         return {
             "anthropic_version": "bedrock-2023-05-31",
-            "max_tokens": 200,
+            "max_tokens": int(getattr(settings, 'LLM_MAX_TOKENS', 1500) or 1500),
             "temperature": 0.3,
             "system": system_prompt,
             "messages": [
