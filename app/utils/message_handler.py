@@ -593,8 +593,9 @@ class MessageHandler:
         session['data']['location'] = user_location
         session['data']['providers'] = providers
 
+        top_providers = providers[:3]
         buttons = []
-        for provider in providers[:3]:
+        for provider in top_providers:
             buttons.append({
                 'id': f"provider_{provider['whatsapp_number']}",
                 'title': f"{provider['name']}"
@@ -603,7 +604,7 @@ class MessageHandler:
         await self._log_and_send_interactive(
             user_number,
             f"Available {service_type}s in {user_location}",
-            self._build_friendly_provider_body(service_type, user_location, len(providers), session),
+            self._build_friendly_provider_body(service_type, user_location, top_providers, session),
             buttons,
             self._friendly_footer()
         )
