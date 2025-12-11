@@ -20418,3 +20418,55 @@ RuntimeError: Bedrock intent model is not configured.
 2025-12-11 13:43:23,346 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_invoke_error, Message: I'm having trouble connecting right now. Please try again in a moment....
 2025-12-11 13:43:24,871 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2025-12-11 13:43:25,029 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-11 13:45:52,058 - app.api.whatsapp - INFO - [2025-12-11T11:45:52.058610] Baileys webhook received
+2025-12-11 13:45:52,059 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hi",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3FADA2FFCDB12D65C9BB",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765453546,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "hi",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-11 13:45:52,059 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 13:45:52,059 - app.api.whatsapp - INFO - Baileys text: 'hi'
+2025-12-11 13:45:55,454 - app.utils.aws_lambda - ERROR - Bedrock not configured: use_bedrock_intent=True, model_id=None
+2025-12-11 13:45:55,454 - app.utils.message_handler - ERROR - AI invocation failed
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\message_handler.py", line 1357, in handle_ai_response
+    ai_response = await self.lambda_service.invoke_question_answerer(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 51, in invoke_question_answerer
+    raise RuntimeError("Bedrock intent model is not configured.")
+RuntimeError: Bedrock intent model is not configured.
+2025-12-11 13:45:55,454 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_invoke_error, Message: I'm having trouble connecting right now. Please try again in a moment....
+2025-12-11 13:45:56,784 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-11 13:45:56,942 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
