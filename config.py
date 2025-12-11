@@ -27,7 +27,7 @@ class Settings(BaseSettings):
     # Legacy field (may be populated by old env var BEDROCK_MODEL_ID). We won't rely on it.
     BEDROCK_MODEL_ID: str = ""
     # Canonical Bedrock model ID for Hustlr; use this going forward
-    HUSTLR_BEDROCK_MODEL_ID: str = "anthropic.claude-sonnet-4-20250514-v1:0"
+    HUSTLR_BEDROCK_MODEL_ID: str = "anthropic.claude-3-5-sonnet-20240620-v1:0"
     # Optional: If provided, use this inference profile ARN/ID instead of model ID
     HUSTLR_BEDROCK_INFERENCE_PROFILE_ARN: str = ""
     AWS_LAMBDA_QUESTION_ANSWERER_FUNCTION_NAME: str = ""
