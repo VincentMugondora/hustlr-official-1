@@ -55,8 +55,20 @@ class MessageHandler:
     
     async def _log_and_send_response(self, user_number: str, message: str, response_type: str = "text") -> None:
         """Log bot response and send it to user"""
-        logger.info(f"[BOT RESPONSE] To: {user_number}, Type: {response_type}, Message: {message[:100]}...")
-        await self.whatsapp_api.send_text_message(user_number, message)
+        # Some terminals on Windows can't render emojis / non-ASCII; strip them from log preview
+        preview = message[:100]
+        try:
+            safe_preview = preview.encode("ascii", errors="ignore").decode("ascii", errors="ignore")
+        except Exception:
+            safe_preview = preview[:80]
+        logger.info(f"[BOT RESPONSE] To: {user_number}, Type: {response_type}, Message: {safe_preview}...")
+
+        # Network / Baileys errors (e.g., 404 from /send-text) should not crash the app
+        try:
+            await self.whatsapp_api.send_text_message(user_number, message)
+        except Exception as e:
+            logger.warning(f"Failed to send WhatsApp message to {user_number}: {e}")
+            # Do not re-raise; booking/flow logic should continue even if delivery fails
         
         # Store bot response in conversation history for context
         try:
@@ -459,8 +471,10 @@ class MessageHandler:
             await self.handle_ai_response(user_number, message_text, session, user)
     
     def detect_problem_statement(self, message_text: str) -> Optional[str]:
-        """
-        Detect problem statements like 'I have a leaking pipe' and map to service type.
+        """Detect if the user message contains a problem description implying a service type."""
+        if not message_text:
+            return None
+        """Detect problem statements like 'I have a leaking pipe' and map to service type.
         
         Returns:
             Service type (e.g., 'plumber') or None if no problem detected.
@@ -522,7 +536,8 @@ class MessageHandler:
         for service_type, keywords in problem_keywords.items():
             for keyword in keywords:
                 if keyword in message_lower:
-                    logger.info(f"Problem detected: '{keyword}' → service type: {service_type}")
+                    # Use ASCII-only arrow in logs to avoid Windows console encoding issues
+                    logger.info(f"Problem detected: '{keyword}' -> service type: {service_type}")
                     return service_type
 
         return None
@@ -1715,6 +1730,21 @@ class MessageHandler:
             await self._log_and_send_response(user_number, qtext, f"ask_{field or 'unknown'}")
             if field in field_state_map:
                 session['state'] = field_state_map[field]
+            return
+
+        # CONFIRM: semantically a confirmation step, but UX is identical to ASK
+        if status == 'CONFIRM':
+            field = (payload or {}).get('field') or ''
+            field = str(field).strip().lower()
+
+            confirm_text = (assistant_msg or '').strip() or (payload or {}).get('question') or "Please confirm."
+            await self._log_and_send_response(user_number, confirm_text, f"confirm_{field or 'unknown'}")
+
+            # Persist any structured data Claude already collected
+            if isinstance((payload or {}).get('data'), dict):
+                session.setdefault('data', {})
+                session['data'].update(payload['data'])
+
             return
         if status == 'IN_PROGRESS':
             # Do not forward model text; stay strictly backend-rendered
