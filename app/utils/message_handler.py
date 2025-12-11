@@ -1459,11 +1459,15 @@ class MessageHandler:
             )
             return
 
-        # Parse JSON response strictly
+        # Parse JSON response strictly; if not JSON, treat as conversational text and send as-is
         try:
             payload = json.loads((ai_response or '').strip())
         except Exception:
-            # Fallback: if we already know the service type, proactively list providers from DB
+            text_reply = (ai_response or '').strip()
+            if text_reply:
+                await self._log_and_send_response(user_number, text_reply, "ai_response")
+                return
+            # If the model returned nothing useful, fall back to provider list when possible
             try:
                 known_fields = user_context.get('known_fields') or {}
                 service_type = (session.get('data') or {}).get('service_type') or known_fields.get('service_type')
@@ -1477,6 +1481,57 @@ class MessageHandler:
                     pass
             await self._log_and_send_response(user_number, self._short("Sorry, I couldn't process that. Please try again.", "Sorry, try again."), "ai_parse_error")
             return
+
+        # Final JSON at completion (Option C): booking_complete or provider_registration_complete
+        try:
+            if isinstance(payload, dict) and payload.get('booking_complete') is True:
+                service = (payload.get('service') or '').strip().lower()
+                issue = (payload.get('issue') or '').strip()
+                time_text = (payload.get('time') or '').strip()
+                loc_text = (payload.get('location') or '').strip()
+                if service:
+                    session.setdefault('data', {})
+                    session['data']['service_type'] = service
+                if issue:
+                    session.setdefault('data', {})
+                    session['data']['issue'] = issue
+                if time_text:
+                    session.setdefault('data', {})
+                    session['data']['booking_time'] = time_text
+                if loc_text:
+                    session.setdefault('data', {})
+                    session['data']['location'] = loc_text
+
+                providers = (session.get('data') or {}).get('providers') or []
+                sel_idx = (session.get('data') or {}).get('selected_provider_index')
+                if providers and isinstance(sel_idx, int) and 1 <= sel_idx <= len(providers):
+                    await self._ai_action_create_booking(
+                        user_number,
+                        {'action': 'create_booking', 'service_type': service, 'provider_index': sel_idx, 'time_text': time_text, 'issue': issue},
+                        session,
+                        user,
+                    )
+                    return
+                # If no provider choice yet, list providers for the chosen service
+                if service:
+                    await self._ai_action_list_providers(user_number, {'service_type': service}, session, user)
+                    return
+                # If service missing, ask user to specify
+                await self._log_and_send_response(user_number, "Which service do you need? (e.g., plumber, electrician)", "ai_need_service")
+                return
+
+            if isinstance(payload, dict) and payload.get('provider_registration_complete') is True:
+                mapped = {
+                    'action': 'register_provider',
+                    'name': payload.get('name'),
+                    'service_type': (payload.get('service') or ''),
+                    'location': payload.get('location') or '',
+                    'contact': payload.get('phone') or user_number,
+                }
+                await self._ai_action_register_provider(user_number, mapped, session)
+                return
+        except Exception:
+            pass
 
         # Execute tool actions from the model, if any, to infer user intent (e.g., select provider, list providers)
         try:

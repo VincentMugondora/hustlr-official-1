@@ -217,6 +217,15 @@ async def receive_baileys_message(
     from_number = from_number.split("@")[0]
     text = (payload.get("text") or "").strip()
 
+    # Ignore Baileys stub/system messages that are not real user text
+    try:
+        raw_msg = (payload.get("rawMessage") or {})
+        if isinstance(raw_msg, dict) and raw_msg.get("messageStubType") is not None:
+            logger.info(f"Baileys stub/system message from {from_number}, skipping (messageStubType present)")
+            return {"status": "skipped_stub"}
+    except Exception:
+        pass
+
     if not text:
         raw = payload.get("rawMessage") or {}
         raw_msg = raw.get("message") or {}
