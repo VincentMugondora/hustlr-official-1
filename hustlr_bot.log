@@ -22304,3 +22304,129 @@ botocore.errorfactory.ValidationException: An error occurred (ValidationExceptio
 2025-12-11 09:09:52,924 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_invoke_error, Message: I'm having trouble connecting right now. Please try again in a moment....
 2025-12-11 09:09:54,624 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2025-12-11 09:09:54,840 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-11 09:23:08,669 - app.api.whatsapp - INFO - [2025-12-11T07:23:08.669539] Baileys webhook received
+2025-12-11 09:23:08,669 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F76C3EAF4326E2D8CFE",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765437784,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-11 09:23:08,669 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 09:23:08,671 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-11 09:23:11,077 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-11 09:23:14,520 - app.api.whatsapp - INFO - [2025-12-11T07:23:14.520328] Baileys webhook received
+2025-12-11 09:23:14,520 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F76C3EAF4326E2D8CFE",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765437789,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-11 09:23:14,521 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 09:23:14,523 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-11 09:23:14,596 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-11 09:23:16,070 - app.api.whatsapp - INFO - [2025-12-11T07:23:16.070660] Baileys webhook received
+2025-12-11 09:23:16,072 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hello",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F76C3EAF4326E2D8CFE",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765437790,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "extendedTextMessage": {
+        "text": "hello",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  }
+}
+2025-12-11 09:23:16,073 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 09:23:16,074 - app.api.whatsapp - INFO - Baileys text: 'hello'
+2025-12-11 09:23:17,610 - app.utils.aws_lambda - INFO - [BEDROCK CONFIG] source=settings cfg(HUSTLR)=anthropic.claude-sonnet-4-20250514-v1:0, env_ignored(BEDROCK_MODEL_ID)=, param_ignored=None, resolved=anthropic.claude-sonnet-4-20250514-v1:0, use_bedrock=True, region=us-east-1, has_creds=True
+2025-12-11 09:23:17,626 - app.utils.aws_lambda - INFO - [BEDROCK INVOKE] modelId=anthropic.claude-sonnet-4-20250514-v1:0, region=us-east-1
+2025-12-11 09:23:19,546 - app.utils.aws_lambda - ERROR - Bedrock invocation error
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 85, in _invoke_bedrock
+    response = self.bedrock_client.invoke_model(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 602, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 1078, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the InvokeModel operation: Invocation of model ID anthropic.claude-sonnet-4-20250514-v1:0 with on-demand throughput isn’t supported. Retry your request with the ID or ARN of an inference profile that contains this model.
+2025-12-11 09:23:19,548 - app.utils.message_handler - ERROR - AI invocation failed
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\message_handler.py", line 1357, in handle_ai_response
+    ai_response = await self.lambda_service.invoke_question_answerer(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 71, in invoke_question_answerer
+    return await self._invoke_bedrock(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\aws_lambda.py", line 85, in _invoke_bedrock
+    response = self.bedrock_client.invoke_model(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 602, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\venv\Lib\site-packages\botocore\client.py", line 1078, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the InvokeModel operation: Invocation of model ID anthropic.claude-sonnet-4-20250514-v1:0 with on-demand throughput isn’t supported. Retry your request with the ID or ARN of an inference profile that contains this model.
+2025-12-11 09:23:19,552 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_invoke_error, Message: I'm having trouble connecting right now. Please try again in a moment....
+2025-12-11 09:23:21,224 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-11 09:23:21,426 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
