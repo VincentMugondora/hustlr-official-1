@@ -882,28 +882,15 @@ class MessageHandler:
                 )
                 return
 
-        # Persist final location and show confirmation summary
+        # Persist final location and ask for user name next
         session.setdefault('data', {})
         session['data']['location'] = final_location
-
-        service_type = session['data'].get('service_type', 'service').title()
-        issue = session['data'].get('issue', 'Not specified')
-        booking_time = session['data'].get('booking_time', 'Not specified')
-        provider = (session['data'].get('selected_provider') or {})
-        provider_name = provider.get('name')
-
-        parts = []
-        if provider_name:
-            parts.append(f"Provider: {provider_name}")
-        parts.append(f"Service: {service_type}")
-        parts.append(f"Issue: {issue}")
-        parts.append(f"Date & Time: {booking_time}")
-        parts.append(f"Location: {final_location}")
-
-        summary_long = "Here's your booking:\n\n" + "\n".join(parts) + "\n\nReply \"Yes\" to confirm or \"No\" to edit."
-        summary_short = "Confirm: " + " | ".join([p.split(": ",1)[1] if ": " in p else p for p in parts]) + ". Reply Yes/No."
-        await self._log_and_send_response(user_number, self._short(summary_long, summary_short), "booking_confirmation_summary")
-        session['state'] = ConversationState.BOOKING_CONFIRM
+        await self._log_and_send_response(
+            user_number,
+            self._short("Great. What name should we put on the booking?", "Your name?"),
+            "ask_user_name"
+        )
+        session['state'] = ConversationState.BOOKING_USER_NAME
 
     async def handle_booking_user_name(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
         """Capture the user's name for this booking, update profile, and show final confirmation summary."""
@@ -1669,7 +1656,7 @@ class MessageHandler:
                 'date': ConversationState.BOOKING_TIME,
                 'time': ConversationState.BOOKING_TIME,
                 'selected_provider': ConversationState.PROVIDER_SELECTION,
-                'user_name': ConversationState.BOOKING_CONFIRM,
+                'user_name': ConversationState.BOOKING_USER_NAME,
             }
 
             # Special handling for provider selection: render backend provider list
