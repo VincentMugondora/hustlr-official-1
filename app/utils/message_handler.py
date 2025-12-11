@@ -23,6 +23,7 @@ class ConversationState(Enum):
     BOOKING_SERVICE_DETAILS = "booking_service_details"  # Ask about specific issue/details
     BOOKING_TIME = "booking_time"
     BOOKING_LOCATION = "booking_location"  # Confirm location for service
+    CONFIRM_LOCATION = "confirm_location"  # Explicit yes/no confirmation after time
     PROVIDER_SELECTION = "provider_selection"
     BOOKING_CONFIRM = "booking_confirm"  # Final confirmation before booking
     BOOKING_PENDING_PROVIDER = "booking_pending_provider"  # Waiting for provider response
@@ -279,6 +280,7 @@ class MessageHandler:
         booking_progress_states = {
             ConversationState.BOOKING_SERVICE_DETAILS,
             ConversationState.BOOKING_LOCATION,
+            ConversationState.CONFIRM_LOCATION,
             ConversationState.PROVIDER_SELECTION,
             ConversationState.BOOKING_TIME,
             ConversationState.BOOKING_CONFIRM,
@@ -425,6 +427,8 @@ class MessageHandler:
             await self.handle_booking_location(user_number, message_text, session, user)
         elif state == ConversationState.BOOKING_TIME:
             await self.handle_booking_time(user_number, message_text, session, user)
+        elif state == ConversationState.CONFIRM_LOCATION:
+            await self.handle_confirm_location(user_number, message_text, session, user)
         elif state == ConversationState.PROVIDER_SELECTION:
             await self.handle_provider_selection(user_number, message_text, session, user)
         elif state == ConversationState.BOOKING_CONFIRM:
@@ -798,7 +802,7 @@ class MessageHandler:
         )
     
     async def handle_booking_time(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
-        """Handle booking time and move to confirmation"""
+        """Handle booking time and move to explicit location confirmation"""
         # Parse date/time (simplified - you'd want more robust parsing)
         booking_time = self.parse_datetime(message_text)
         
@@ -811,32 +815,90 @@ class MessageHandler:
             )
             return
         
-        # Store booking time and move to confirmation
+        # Store booking time
         session['data']['booking_time'] = booking_time
         
-        # Build formatted confirmation summary with all details
+        # Ask to confirm saved location if available; otherwise ask for location
+        saved_location = (user or {}).get('location') or (session.get('data', {}).get('location') if session.get('data') else None)
+        if saved_location:
+            prompt = self._short(
+                f"Should the provider come to your usual address at {saved_location}? Reply Yes or No.",
+                f"Use saved location ({saved_location})? Yes/No"
+            )
+        else:
+            prompt = self._short(
+                "Where should the provider come? Please send your area (e.g., 'Harare', 'Borrowdale').",
+                "Your area for this booking?"
+            )
+        await self._log_and_send_response(user_number, prompt, "confirm_location_prompt")
+        session['state'] = ConversationState.CONFIRM_LOCATION
+
+    async def handle_confirm_location(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
+        """Explicit Yes/No confirmation of location after time selection, with ability to change location."""
+        text = (message_text or '').strip().lower()
+        saved_location = (user or {}).get('location')
+        final_location: Optional[str] = None
+
+        yes_values = {'yes', 'y', 'yeah', 'yep', 'sure', 'ok', 'okay'}
+        no_values = {'no', 'n', 'nope', 'nah'}
+
+        if saved_location and text in yes_values:
+            final_location = saved_location
+        elif text in no_values:
+            # Ask for a new location explicitly
+            await self._log_and_send_response(
+                user_number,
+                self._short(
+                    "No problem. Please send the area for this booking (e.g., 'Harare', 'Borrowdale').",
+                    "Send area (e.g., Harare)"
+                ),
+                "ask_new_location"
+            )
+            return
+        else:
+            # Try to interpret input as a location value
+            location_extractor = get_location_extractor()
+            normalized_location = location_extractor.normalize_user_location(message_text)
+            if normalized_location:
+                final_location = normalized_location
+                # Update user's saved location if it changed
+                try:
+                    if (user or {}).get('location') != final_location:
+                        await self.db.update_user(user_number, {'location': final_location})
+                except Exception:
+                    pass
+            else:
+                await self._log_and_send_response(
+                    user_number,
+                    self._short(
+                        f"I didn't recognize '{message_text}'. Please send your area (e.g., 'Harare', 'Borrowdale').",
+                        "Area not recognized. Try 'Harare'"
+                    ),
+                    "location_not_recognized_after_time"
+                )
+                return
+
+        # Persist final location and show confirmation summary
+        session.setdefault('data', {})
+        session['data']['location'] = final_location
+
         service_type = session['data'].get('service_type', 'service').title()
         issue = session['data'].get('issue', 'Not specified')
-        location = session['data'].get('location', 'Not specified')
-        # Always show user's saved location from DB if present; fallback to session location
-        location_display = (user or {}).get('location') or location
-        
-        confirmation_msg = self._short(
-            f"Here's your booking:\n\n"
-            f"Service: {service_type}\n"
-            f"Issue: {issue}\n"
-            f"Date & Time: {booking_time}\n"
-            f"Location: {location_display}\n"
-            f"\nReply \"Yes\" to confirm or \"No\" to edit.",
-            f"Confirm: {service_type} | {issue} | {booking_time} | {location_display}. Reply Yes/No."
-        )
-        
-        await self._log_and_send_response(
-            user_number,
-            confirmation_msg,
-            "booking_confirmation_summary"
-        )
-        
+        booking_time = session['data'].get('booking_time', 'Not specified')
+        provider = (session['data'].get('selected_provider') or {})
+        provider_name = provider.get('name')
+
+        parts = []
+        if provider_name:
+            parts.append(f"Provider: {provider_name}")
+        parts.append(f"Service: {service_type}")
+        parts.append(f"Issue: {issue}")
+        parts.append(f"Date & Time: {booking_time}")
+        parts.append(f"Location: {final_location}")
+
+        summary_long = "Here's your booking:\n\n" + "\n".join(parts) + "\n\nReply \"Yes\" to confirm or \"No\" to edit."
+        summary_short = "Confirm: " + " | ".join([p.split(": ",1)[1] if ": " in p else p for p in parts]) + ". Reply Yes/No."
+        await self._log_and_send_response(user_number, self._short(summary_long, summary_short), "booking_confirmation_summary")
         session['state'] = ConversationState.BOOKING_CONFIRM
     
     async def handle_booking_resume_decision(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
