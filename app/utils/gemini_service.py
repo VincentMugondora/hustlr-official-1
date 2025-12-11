@@ -86,6 +86,7 @@ class GeminiService:
             generation_config={
                 "response_mime_type": "application/json",
                 "temperature": 0.2,
+                "max_output_tokens": 4000,
             },
         )
 
