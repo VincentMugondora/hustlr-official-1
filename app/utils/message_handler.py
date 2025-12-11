@@ -1077,8 +1077,6 @@ class MessageHandler:
         # Reset customer session
         session['state'] = ConversationState.SERVICE_SEARCH
         session['data'] = {}
-                "booking_error"
-            )
     
     async def handle_provider_response(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
         """Handle provider's accept/deny response to booking request"""
