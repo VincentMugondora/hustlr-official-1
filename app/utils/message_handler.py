@@ -23,6 +23,8 @@ class ConversationState(Enum):
     BOOKING_SERVICE_DETAILS = "booking_service_details"  # Ask about specific issue/details
     BOOKING_TIME = "booking_time"
     BOOKING_LOCATION = "booking_location"  # Confirm location for service
+    CONFIRM_LOCATION = "confirm_location"  # Explicit yes/no confirmation after time
+    BOOKING_USER_NAME = "booking_user_name"
     PROVIDER_SELECTION = "provider_selection"
     BOOKING_CONFIRM = "booking_confirm"  # Final confirmation before booking
     BOOKING_PENDING_PROVIDER = "booking_pending_provider"  # Waiting for provider response
@@ -375,12 +377,23 @@ class MessageHandler:
             )
             return
         
-        # LLM-controlled mode: if enabled and we're not mid critical flow,
-        # let the AI lead general chat/triage.
-        if self._is_llm_controlled():
-            if state != ConversationState.BOOKING_PENDING_PROVIDER:
-                await self.handle_ai_response(user_number, message_text, session, user)
-                return
+        # LLM-controlled mode: only delegate to AI in SERVICE_SEARCH to avoid bypassing field prompts
+        if self._is_llm_controlled() and state == ConversationState.SERVICE_SEARCH:
+            # Anchor the conversation to the latest explicit user intent for service type
+            try:
+                latest_service = self.extract_service_type(message_text) or self.detect_problem_statement(message_text)
+            except Exception:
+                latest_service = None
+            if latest_service:
+                prev_service = (session.get('data') or {}).get('service_type') if session.get('data') else None
+                if latest_service != prev_service:
+                    session.setdefault('data', {})
+                    session['data']['service_type'] = latest_service
+                    session['data'].pop('providers', None)
+                    session['data'].pop('selected_provider', None)
+                    session['data'].pop('provider_options_cached', None)
+            await self.handle_ai_response(user_number, message_text, session, user)
+            return
 
         # Try fast booking when the message already includes service + time
         if state == ConversationState.SERVICE_SEARCH:
@@ -409,6 +422,10 @@ class MessageHandler:
             await self.handle_booking_location(user_number, message_text, session, user)
         elif state == ConversationState.BOOKING_TIME:
             await self.handle_booking_time(user_number, message_text, session, user)
+        elif state == ConversationState.CONFIRM_LOCATION:
+            await self.handle_confirm_location(user_number, message_text, session, user)
+        elif state == ConversationState.BOOKING_USER_NAME:
+            await self.handle_booking_user_name(user_number, message_text, session, user)
         elif state == ConversationState.PROVIDER_SELECTION:
             await self.handle_provider_selection(user_number, message_text, session, user)
         elif state == ConversationState.BOOKING_CONFIRM:
@@ -484,7 +501,7 @@ class MessageHandler:
         for service_type, keywords in problem_keywords.items():
             for keyword in keywords:
                 if keyword in message_lower:
-                    logger.info(f"Problem detected: '{keyword}' → service type: {service_type}")
+                    logger.info(f"Problem detected: '{keyword}' -> service type: {service_type}")
                     return service_type
 
         return None
@@ -705,43 +722,19 @@ class MessageHandler:
             )
             return
         
-        # Filter providers by the selected location
-        providers = location_extractor.filter_providers_by_location(all_providers, normalized_location)
-        
-        if not providers:
-            await self._log_and_send_response(
-                user_number,
-                f"Sorry, no {service_type}s available in {normalized_location} right now. Try a different area.",
-                "no_providers_found"
-            )
-            session['state'] = ConversationState.SERVICE_SEARCH
-            session['data'] = {}
-            return
-        
         # Update user's location in database if it changed
         if user and user.get('location') != normalized_location:
             await self.db.update_user(user_number, {'location': normalized_location})
             logger.info(f"Updated user location from {user.get('location')} to {normalized_location}")
-        
-        # Show available providers in the selected location
-        buttons = []
-        for provider in providers[:3]:
-            buttons.append({
-                'id': f"provider_{provider['whatsapp_number']}",
-                'title': f"{provider['name']} - {provider.get('location', 'Unknown')}"
-            })
-        
-        await self._log_and_send_interactive(
-            user_number,
-            f"Available {service_type}s in {normalized_location}",
-            self._build_friendly_provider_body(service_type, normalized_location, len(providers), session),
-            buttons,
-            self._friendly_footer()
-        )
-        
+
+        # Store location and move to date/time next (providers will be listed after time + confirmation)
         session['data']['location'] = normalized_location
-        session['data']['providers'] = providers
-        session['state'] = ConversationState.PROVIDER_SELECTION
+        await self._log_and_send_response(
+            user_number,
+            self._short("What date works for you? (e.g., 'tomorrow', 'Dec 15')", "Which date?"),
+            "ask_date"
+        )
+        session['state'] = ConversationState.BOOKING_TIME
     
     async def handle_provider_selection(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
         """Handle provider selection for booking"""
@@ -768,21 +761,13 @@ class MessageHandler:
             )
             return
         
-        # Ask for booking time
+        # Ask for user name next
         session['data']['selected_provider'] = selected_provider
-        session['state'] = ConversationState.BOOKING_TIME
-        
-        await self._log_and_send_response(
-            user_number,
-            self._short(
-                f"Great! You've selected {selected_provider['name']}.\n\nWhen would you like the service? (e.g., 'tomorrow morning', 'Dec 15 at 2pm')",
-                f"Great choice. When?"
-            ),
-            "provider_selected"
-        )
+        session['state'] = ConversationState.BOOKING_USER_NAME
+        await self._log_and_send_response(user_number, self._short("Great. What name should we put on the booking?", "Your name?"), "ask_user_name")
     
     async def handle_booking_time(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
-        """Handle booking time and move to confirmation"""
+        """Handle booking time and move to explicit location confirmation"""
         # Parse date/time (simplified - you'd want more robust parsing)
         booking_time = self.parse_datetime(message_text)
         
@@ -795,32 +780,122 @@ class MessageHandler:
             )
             return
         
-        # Store booking time and move to confirmation
+        # Store booking time and ask to confirm saved location if available; otherwise ask for location
         session['data']['booking_time'] = booking_time
-        
-        # Build formatted confirmation summary with all details
+        saved_location = (user or {}).get('location') or (session.get('data', {}).get('location') if session.get('data') else None)
+        if saved_location:
+            prompt = self._short(
+                f"Should the provider come to your usual address at {saved_location}? Reply Yes or No.",
+                f"Use saved location ({saved_location})? Yes/No"
+            )
+        else:
+            prompt = self._short(
+                "Where should the provider come? Please send your area (e.g., 'Harare', 'Borrowdale').",
+                "Your area for this booking?"
+            )
+        await self._log_and_send_response(user_number, prompt, "confirm_location_prompt")
+        session['state'] = ConversationState.CONFIRM_LOCATION
+
+    async def handle_confirm_location(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
+        """Confirm or update location after time selection, then list providers in that area."""
+        text = (message_text or '').strip().lower()
+        saved_location = (user or {}).get('location')
+        final_location: Optional[str] = None
+
+        yes_values = {'yes', 'y', 'yeah', 'yep', 'sure', 'ok', 'okay'}
+        no_values = {'no', 'n', 'nope', 'nah'}
+
+        if saved_location and text in yes_values:
+            final_location = saved_location
+        elif text in no_values:
+            await self._log_and_send_response(
+                user_number,
+                self._short("No problem. Please send the area for this booking (e.g., 'Harare', 'Borrowdale').", "Send area (e.g., Harare)"),
+                "ask_new_location"
+            )
+            return
+        else:
+            location_extractor = get_location_extractor()
+            normalized_location = location_extractor.normalize_user_location(message_text)
+            if normalized_location:
+                final_location = normalized_location
+                try:
+                    if (user or {}).get('location') != final_location:
+                        await self.db.update_user(user_number, {'location': final_location})
+                except Exception:
+                    pass
+            else:
+                await self._log_and_send_response(
+                    user_number,
+                    self._short(f"I didn't recognize '{message_text}'. Please send your area (e.g., 'Harare', 'Borrowdale').", "Area not recognized. Try 'Harare'"),
+                    "location_not_recognized_after_time"
+                )
+                return
+
+        # Persist final location
+        session.setdefault('data', {})
+        session['data']['location'] = final_location
+
+        # List providers for chosen service and location
+        service_type = (session.get('data') or {}).get('service_type') or ''
+        providers = await self.db.get_providers_by_service(service_type, final_location)
+        if not providers:
+            await self._log_and_send_response(
+                user_number,
+                self._short(f"Sorry, no {service_type}s available in your area right now.", f"Sorry, no {service_type}s in your area."),
+                "no_providers_found"
+            )
+            session['state'] = ConversationState.SERVICE_SEARCH
+            session['data'] = {}
+            return
+
+        buttons = []
+        for provider in providers[:3]:
+            buttons.append({'id': f"provider_{provider['whatsapp_number']}", 'title': f"{provider['name']}"})
+        await self._log_and_send_interactive(
+            user_number,
+            f"Available {service_type}s in {final_location}",
+            self._build_friendly_provider_body(service_type, final_location, len(providers), session),
+            buttons,
+            self._friendly_footer()
+        )
+        session['data']['providers'] = providers
+        session['state'] = ConversationState.PROVIDER_SELECTION
+
+    async def handle_booking_user_name(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
+        """Capture the user's name, then show final summary before confirmation."""
+        raw = (message_text or '').strip()
+        if not raw:
+            await self._log_and_send_response(user_number, self._short("What name should we put on the booking?", "Your name?"), "ask_user_name_retry")
+            return
+        name = raw.title()
+        try:
+            await self.db.update_user(user_number, {'name': name})
+        except Exception:
+            pass
+        session.setdefault('data', {})
+        session['data']['user_name'] = name
+
         service_type = session['data'].get('service_type', 'service').title()
         issue = session['data'].get('issue', 'Not specified')
-        location = session['data'].get('location', 'Not specified')
-        # Always show user's saved location from DB if present; fallback to session location
-        location_display = (user or {}).get('location') or location
-        
-        confirmation_msg = self._short(
-            f"Here's your booking:\n\n"
-            f"Service: {service_type}\n"
-            f"Issue: {issue}\n"
-            f"Date & Time: {booking_time}\n"
-            f"Location: {location_display}\n"
-            f"\nReply \"Yes\" to confirm or \"No\" to edit.",
-            f"Confirm: {service_type} | {issue} | {booking_time} | {location_display}. Reply Yes/No."
-        )
-        
-        await self._log_and_send_response(
-            user_number,
-            confirmation_msg,
-            "booking_confirmation_summary"
-        )
-        
+        booking_time = session['data'].get('booking_time', 'Not specified')
+        location_display = session['data'].get('location') or (user.get('location') if user else None) or 'your area'
+        provider = (session['data'].get('selected_provider') or {})
+        provider_name = provider.get('name')
+
+        parts = []
+        if provider_name:
+            parts.append(f"Provider: {provider_name}")
+        parts.append(f"Service: {service_type}")
+        if issue and issue != 'Not specified':
+            parts.append(f"Issue: {issue}")
+        parts.append(f"Date & Time: {booking_time}")
+        parts.append(f"Location: {location_display}")
+        parts.append(f"Name: {name}")
+
+        summary_long = "Here's your booking:\n\n" + "\n".join(parts) + "\n\nReply \"Yes\" to confirm or \"No\" to edit."
+        summary_short = "Confirm: " + " | ".join([p.split(": ",1)[1] if ": " in p else p for p in parts]) + ". Reply Yes/No."
+        await self._log_and_send_response(user_number, self._short(summary_long, summary_short), "booking_confirmation_summary")
         session['state'] = ConversationState.BOOKING_CONFIRM
     
     async def handle_booking_resume_decision(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
@@ -1604,11 +1679,11 @@ class MessageHandler:
             return
 
     async def _ai_action_list_providers(self, user_number: str, payload: Dict[str, Any], session: Dict, user: Dict) -> None:
-        service_type = (payload.get('service_type') or '').strip().lower()
+        service_type = (payload.get('service_type') or (session.get('data', {}).get('service_type') if session.get('data') else '')).strip().lower()
         if not service_type:
             await self._log_and_send_response(user_number, "Which service do you need? (e.g., plumber, electrician)", "ai_need_service")
             return
-        user_loc = user.get('location') or ''
+        user_loc = (session.get('data', {}).get('location') if session.get('data') else '') or (user.get('location') or '')
         location_extractor = get_location_extractor()
         normalized_location = location_extractor.normalize_user_location(user_loc) if user_loc else ''
         providers = await self.db.get_providers_by_service(service_type, normalized_location or None)

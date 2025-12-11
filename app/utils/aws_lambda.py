@@ -44,10 +44,14 @@ class AWSLambdaService:
         """
         # Reload model ID from .env at invocation time to pick up changes
         import os
-        bedrock_model_id = os.getenv('BEDROCK_MODEL_ID') or ""
-        bedrock_model_id = bedrock_model_id.strip() if bedrock_model_id else None
+        env_model = (os.getenv('BEDROCK_MODEL_ID') or "").strip()
+        cfg_profile = (getattr(settings, 'HUSTLR_BEDROCK_INFERENCE_PROFILE_ARN', "") or "").strip()
+        cfg_model = (getattr(settings, 'HUSTLR_BEDROCK_MODEL_ID', "") or "").strip()
+        bedrock_model_id = env_model or cfg_profile or cfg_model or None
         if not (self.use_bedrock_intent and bedrock_model_id):
-            logger.error(f"Bedrock not configured: use_bedrock_intent={self.use_bedrock_intent}, model_id={bedrock_model_id}")
+            logger.error(
+                f"Bedrock not configured: use_bedrock_intent={self.use_bedrock_intent}, env_model={bool(env_model)}, cfg_profile={bool(cfg_profile)}, cfg_model={bool(cfg_model)}"
+            )
             raise RuntimeError("Bedrock intent model is not configured.")
         
         # Lazy-init Bedrock client if not already done
@@ -67,59 +71,53 @@ class AWSLambdaService:
         if not self.bedrock_client or not bedrock_model_id:
             raise RuntimeError("Bedrock client or model ID is not configured.")
 
-        try:
-            body = self._build_bedrock_body(user_message, user_context or {}, conversation_history=conversation_history)
-            response = self.bedrock_client.invoke_model(
-                modelId=bedrock_model_id,
-                body=json.dumps(body).encode("utf-8"),
-                contentType="application/json",
-                accept="application/json",
-            )
-            raw_body = response.get("body")
-            if hasattr(raw_body, "read"):
-                parsed = json.loads(raw_body.read())
-            else:
-                parsed = json.loads(raw_body)
+        import asyncio
+        attempts = 0
+        last_err: Optional[Exception] = None
+        body = self._build_bedrock_body(user_message, user_context or {}, conversation_history=conversation_history)
+        while attempts < 3:
+            try:
+                response = self.bedrock_client.invoke_model(
+                    modelId=bedrock_model_id,
+                    body=json.dumps(body).encode("utf-8"),
+                    contentType="application/json",
+                    accept="application/json",
+                )
+                raw_body = response.get("body")
+                if hasattr(raw_body, "read"):
+                    parsed = json.loads(raw_body.read())
+                else:
+                    parsed = json.loads(raw_body)
 
-            # Extract main text from Claude response
-            final_text: Optional[str] = None
-
-            content = parsed.get("content")
-            if isinstance(content, list):
-                texts = []
-                for item in content:
-                    if isinstance(item, dict) and item.get("type") == "text":
-                        t = item.get("text") or ""
-                        if t:
-                            texts.append(t)
-                if texts:
-                    final_text = "\n".join(texts).strip()
-
-            if not final_text:
-                text = parsed.get("output_text") or parsed.get("completion") or ""
-                if text:
-                    final_text = str(text).strip()
-
-            if not final_text:
-                raise RuntimeError("Claude response did not contain any text content.")
-
-            # Log whenever Claude successfully answers a customer
-            safe_user = (user_context or {}).get("name") or "unknown user"
-            logger.info(
-                f"[CLAUDE RESPONSE] User: {safe_user}, "
-                f"Question: {user_message[:120]}..., "
-                f"Answer: {final_text[:200]}..."
-            )
-
-            return final_text
-        except ClientError as e:
-            # Surface Bedrock errors to the caller; do not generate local responses
-            logger.exception("Bedrock invocation error")
-            raise
-        except Exception as e:
-            # Surface unexpected errors to the caller
-            logger.exception("Unexpected error in Bedrock service")
-            raise
+                # Extract main text from Claude response
+                final_text: Optional[str] = None
+                content = parsed.get("content")
+                if isinstance(content, list):
+                    texts = []
+                    for item in content:
+                        if isinstance(item, dict) and item.get("type") == "text":
+                            t = item.get("text") or ""
+                            if t:
+                                texts.append(t)
+                    if texts:
+                        final_text = "\n".join(texts).strip()
+                if not final_text:
+                    text = parsed.get("output_text") or parsed.get("completion") or ""
+                    if text:
+                        final_text = str(text).strip()
+                if not final_text:
+                    raise RuntimeError("Claude response did not contain any text content.")
+                safe_user = (user_context or {}).get("name") or "unknown user"
+                logger.info(f"[CLAUDE RESPONSE] User={safe_user} Q={user_message[:120]}... A={final_text[:200]}...")
+                return final_text
+            except (ClientError, Exception) as e:
+                last_err = e
+                attempts += 1
+                if attempts >= 3:
+                    logger.exception("Bedrock invocation failed after retries")
+                    raise
+                # Backoff
+                await asyncio.sleep(0.5 * attempts)
 
     def _build_bedrock_body(self, user_message: str, user_context: Dict[str, Any], conversation_history: Optional[Any] = None) -> Dict[str, Any]:
         context_parts = []
