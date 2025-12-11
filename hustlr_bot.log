@@ -22862,3 +22862,87 @@ Time:...
 2025-12-11 14:54:25,093 - app.api.whatsapp - INFO - Baileys message from: 263777530322
 2025-12-11 14:54:25,093 - app.api.whatsapp - INFO - Baileys text: ''
 2025-12-11 14:54:25,209 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-11 14:54:33,020 - app.api.whatsapp - INFO - [2025-12-11T12:54:33.020794] Baileys webhook received
+2025-12-11 14:54:33,020 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F5E997D5E81E58CD4EC",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765457666,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-11 14:54:33,020 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 14:54:33,020 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-11 14:54:33,020 - app.api.whatsapp - INFO - [2025-12-11T12:54:33.020794] Baileys webhook received
+2025-12-11 14:54:33,023 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "tomorrow 2pm",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F5E997D5E81E58CD4EC",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765457667,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "extendedTextMessage": {
+        "text": "tomorrow 2pm",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  }
+}
+2025-12-11 14:54:33,025 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-11 14:54:33,025 - app.api.whatsapp - INFO - Baileys text: 'tomorrow 2pm'
+2025-12-11 14:54:34,669 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263777530322, skipping
+2025-12-11 14:54:38,582 - app.utils.gemini_service - INFO - [GEMINI RESPONSE] Question: tomorrow 2pm..., Answer: {
+  "status": "COMPLETE",
+  "type": "booking",
+  "data": {
+    "service_type": "electrician",
+    "service_provider_id": "692d7a9cbde07218537a20fb",
+    "date": "2025-12-12",
+    "time": "14:00",
+    ...
+2025-12-11 14:54:38,725 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: booking_sent_waiting, Message: Your booking was sent to HE Jackson Electrical and Engineering!
+
+We're waiting for their confirmatio...
+2025-12-11 14:54:39,784 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-11 14:54:39,852 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 2634758886, Type: booking_request_to_provider, Message: New Booking Request
+
+Customer: Vincent Mugondora
+Service: electrician
+Notes: N/A
+Time: 2025-12-12 14...
+2025-12-11 14:54:46,073 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-11 14:54:46,447 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
