@@ -1596,7 +1596,7 @@ class MessageHandler:
             )
             return
 
-        # Parse JSON response strictly; if not JSON, DO NOT forward natural text (backend controls rendering)
+        # Parse JSON response strictly; if not JSON, prefer forwarding Claude's natural text
         try:
             raw_resp = (ai_response or '').strip()
             # Claude often wraps JSON in ```json fences; strip them before parsing
@@ -1610,7 +1610,13 @@ class MessageHandler:
                     candidate = candidate[4:].lstrip()
             payload = json.loads(candidate)
         except Exception:
-            # If the model returned non-JSON or nothing, fall back to backend-driven prompts/actions
+            # If the model returned non-JSON or nothing, prefer letting Claude speak naturally
+            raw_resp = (ai_response or '').strip()
+            if raw_resp:
+                await self._log_and_send_response(user_number, raw_resp, "ai_fallback_text")
+                return
+
+            # If there's truly no content, fall back to a safe backend-driven prompt
             try:
                 known_fields = user_context.get('known_fields') or {}
                 service_type = (session.get('data') or {}).get('service_type') or known_fields.get('service_type')
