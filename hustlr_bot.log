@@ -33149,3 +33149,326 @@ For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/St
 2025-12-15 09:31:28,067 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: session_reset, Message: Okay, let's start fresh. What service do you need?...
 2025-12-15 09:31:29,507 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2025-12-15 09:31:29,656 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-15 09:42:56,744 - app.api.whatsapp - INFO - [2025-12-15T07:42:56.744609] Baileys webhook received
+2025-12-15 09:42:56,744 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F2BE802D69C390B4C66",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765784569,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-15 09:42:56,744 - app.api.whatsapp - INFO - Baileys stub/system message from 263777530322, skipping (messageStubType present)
+2025-12-15 09:43:02,427 - app.api.whatsapp - INFO - [2025-12-15T07:43:02.427015] Baileys webhook received
+2025-12-15 09:43:02,428 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F2BE802D69C390B4C66",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765784575,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-15 09:43:02,428 - app.api.whatsapp - INFO - Baileys stub/system message from 263777530322, skipping (messageStubType present)
+2025-12-15 09:43:03,870 - app.api.whatsapp - INFO - [2025-12-15T07:43:03.870470] Baileys webhook received
+2025-12-15 09:43:03,872 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hello hustlr",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F2BE802D69C390B4C66",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765784575,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "extendedTextMessage": {
+        "text": "hello hustlr",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  }
+}
+2025-12-15 09:43:03,872 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-15 09:43:03,872 - app.api.whatsapp - INFO - Baileys text: 'hello hustlr'
+2025-12-15 09:43:07,720 - app.utils.aws_lambda - INFO - [BEDROCK CONFIG] source=settings cfg(HUSTLR)=anthropic.claude-3-5-sonnet-20240620-v1:0, env_ignored(BEDROCK_MODEL_ID)=, param_ignored=None, inference_profile_arn=arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, resolved_model_id=anthropic.claude-3-5-sonnet-20240620-v1:0, chosen=arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, use_bedrock=True, region=us-east-1, has_creds=True
+2025-12-15 09:43:07,735 - app.utils.aws_lambda - INFO - [BEDROCK INVOKE] modelId=arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, region=us-east-1
+2025-12-15 09:43:12,725 - app.utils.aws_lambda - INFO - [CLAUDE RESPONSE] Model: arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, User: Vincent Mugondora, Question: hello hustlr..., Answer: ```json
+{
+  "status": "ASK",
+  "field": "service_type",
+  "data": {},
+  "assistantMessage": "Hi Vincent! What service can I help you book today?"
+}
+```...
+2025-12-15 09:43:12,726 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ask_service_type, Message: Hi Vincent! What service can I help you book today?...
+2025-12-15 09:43:14,023 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-15 09:43:14,184 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-15 09:43:39,594 - app.api.whatsapp - INFO - [2025-12-15T07:43:39.594781] Baileys webhook received
+2025-12-15 09:43:39,594 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "nothing today just checking how you are",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F825FC614495B2C6E6F",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765784611,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "nothing today just checking how you are",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-15 09:43:39,594 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-15 09:43:39,594 - app.api.whatsapp - INFO - Baileys text: 'nothing today just checking how you are'
+2025-12-15 09:43:39,889 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: conversation_closing, Message: No problem. If you need anything later, just send me a message....
+2025-12-15 09:43:41,180 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-15 09:43:41,341 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-15 09:44:16,926 - app.api.whatsapp - INFO - [2025-12-15T07:44:16.926775] Baileys webhook received
+2025-12-15 09:44:16,926 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F8C76CDBA602AB13178",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765784649,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-15 09:44:16,928 - app.api.whatsapp - INFO - Baileys stub/system message from 263777530322, skipping (messageStubType present)
+2025-12-15 09:44:22,778 - app.api.whatsapp - INFO - [2025-12-15T07:44:22.778880] Baileys webhook received
+2025-12-15 09:44:22,780 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F8C76CDBA602AB13178",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765784655,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-15 09:44:22,780 - app.api.whatsapp - INFO - Baileys stub/system message from 263777530322, skipping (messageStubType present)
+2025-12-15 09:44:24,180 - app.api.whatsapp - INFO - [2025-12-15T07:44:24.180525] Baileys webhook received
+2025-12-15 09:44:24,180 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "okay thanks can you give me tips on how to keep my plumbing optimal",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F8C76CDBA602AB13178",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765784656,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "extendedTextMessage": {
+        "text": "okay thanks can you give me tips on how to keep my plumbing optimal",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  }
+}
+2025-12-15 09:44:24,183 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-15 09:44:24,185 - app.api.whatsapp - INFO - Baileys text: 'okay thanks can you give me tips on how to keep my plumbing optimal'
+2025-12-15 09:44:24,764 - app.utils.aws_lambda - INFO - [BEDROCK CONFIG] source=settings cfg(HUSTLR)=anthropic.claude-3-5-sonnet-20240620-v1:0, env_ignored(BEDROCK_MODEL_ID)=, param_ignored=None, inference_profile_arn=arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, resolved_model_id=anthropic.claude-3-5-sonnet-20240620-v1:0, chosen=arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, use_bedrock=True, region=us-east-1, has_creds=True
+2025-12-15 09:44:24,764 - app.utils.aws_lambda - INFO - [BEDROCK INVOKE] modelId=arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, region=us-east-1
+2025-12-15 09:44:28,635 - app.utils.aws_lambda - INFO - [CLAUDE RESPONSE] Model: arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, User: Vincent Mugondora, Question: okay thanks can you give me tips on how to keep my plumbing optimal..., Answer: ```json
+{
+  "status": "ASK",
+  "field": "service_type",
+  "data": {},
+  "assistantMessage": "I'm here to help you book services like plumbers, electricians, doctors, and more. For plumbing tips, I'd r...
+2025-12-15 09:44:28,637 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ask_service_type, Message: I'm here to help you book services like plumbers, electricians, doctors, and more. For plumbing tips...
+2025-12-15 09:44:30,017 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-15 09:44:30,227 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-15 10:06:19,867 - app.api.whatsapp - INFO - [2025-12-15T08:06:19.867448] Baileys webhook received
+2025-12-15 10:06:19,867 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263774659090",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "184327111446565@lid",
+      "fromMe": false,
+      "id": "2A1B11BC7F63138876DD",
+      "senderPn": "263774659090@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765785972,
+    "pushName": "Crown Tech Hub",
+    "broadcast": false,
+    "message": {
+      "imageMessage": {
+        "url": "https://mmg.whatsapp.net/o1/v/t24/f2/m232/AQMGxivNYwwtNacW9PpeNE8M2OP1HpxhoL2F6xMnoii2tJdapdZ4MQN_QfIAuvRB5imibUcBM6Y_OGnfW_wOfzh8of7bHgxL6Kqt_ivCnA?ccb=9-4&oh=01_Q5Aa3QHHkPs4Lfc3bfiInlI4WpDvFypN5bjOk-dLtRn9IDl_pg&oe=696728B1&_nc_sid=e6ed6c&mms3=true",
+        "mimetype": "image/jpeg",
+        "caption": "Good day , these laptops are available in stock, may I know which one you\u2019re interested in?",
+        "fileSha256": "strbh1rKfFUz1m23axprjNWnltTHnDXcbSaxvGwWbtI=",
+        "fileLength": "109807",
+        "height": 1280,
+        "width": 590,
+        "mediaKey": "tl6WBBxYDN91Rw3b+ns4zV33EAwGLmHiuG1D8HXiueI=",
+        "fileEncSha256": "LV3wOzzRSkDpNF0eTQAeIjFiuSLwL7I9M9zBEj+NcCg=",
+        "directPath": "/o1/v/t24/f2/m232/AQMGxivNYwwtNacW9PpeNE8M2OP1HpxhoL2F6xMnoii2tJdapdZ4MQN_QfIAuvRB5imibUcBM6Y_OGnfW_wOfzh8of7bHgxL6Kqt_ivCnA?ccb=9-4&oh=01_Q5Aa3QHHkPs4Lfc3bfiInlI4WpDvFypN5bjOk-dLtRn9IDl_pg&oe=696728B1&_nc_sid=e6ed6c",
+        "mediaKeyTimestamp": "1765629973",
+        "jpegThumbnail": "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABsSFBcUERsXFhceHBsgKEIrKCUlKFE6PTBCYFVlZF9VXVtqeJmBanGQc1tdhbWGkJ6jq62rZ4C8ybqmx5moq6T/2wBDARweHigjKE4rK06kbl1upKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKT/wgARCABIAEgDASIAAhEBAxEB/8QAGQAAAwEBAQAAAAAAAAAAAAAAAAEDAgQG/8QAFAEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEAMQAAAA810c1igkTWkDTJiAtK5pamaWcgayTAHaFzQ0YNsniuCQwdI3MFZggBayYAHcCiAkAOYGAD//xAAUEQEAAAAAAAAAAAAAAAAAAABA/9oACAECAQE/AE//xAAUEQEAAAAAAAAAAAAAAAAAAABA/9oACAEDAQE/AE//xAApEAACAgEDAwMEAwEAAAAAAAABAgARAxIhMRMikRBBYTIzUXFSU4Gh/9oACAEBAAE/AALNTDSq26k/MUjckKDHp020iDFzbAQ4wBeoQYgTu4nSFkaxGFEi7g5mOgD3Db4jNuO4eIWs3qHiFAzfVzOkN+8bTppX3BFxoR9wAw8wczGdKmm/5B7d48RnFEax4msaR3jxGKuADkHiIisxBegPeMiAbPfoKvfiYqCkgnxNdk7nxHVWtiWv9TpoRdmAY73JhXDvTmFcei9R1fj0FXvxMZAU0Wq5Q5t7/UVrssWr4EsexajOmnNN4nTT21X+pkVV4u/n0HO8x10yaar9onduC/xFBVW+qjAtkCmoTcXZYKY1pu5YfiFsbGySYavbiJpvuuUdJCBqijIBtdSsoHvU05h/KAZWHuajDKwtrInSciwpr0HO0x3pN6v8hAC7KwJ+Zpy8b7TVlBqzB1VsgkQjKBW9Gasie5HoOdpiRqNqT/sONv6yRX5iIzKewk/uNhyhqPMOHNW90YcOf52mRHT6x6f//gADAP/Z",
+        "contextInfo": {
+          "stanzaId": "AC7E9BF8D54941DF2EFABB955E6EFD12",
+          "participant": "10205563764934@lid",
+          "quotedMessage": {
+            "extendedTextMessage": {
+              "text": "Hello! Can I get more info on this?",
+              "contextInfo": {
+                "externalAdReply": {
+                  "title": "Crown Tech Hub",
+                  "body": "\ud83c\udf92 Back to School Laptop Deals! \ud83c\udf92 Swipe \u27a1 to See What\u2019s in Stock \n\ud83d\udcbb Starting from just $150\n\ud83d\udc49 Whether you\u2019re a student or professional \u2014 study, work & game with ease. We\u2019ve got a laptop for every need & budget!\n\n\u26a1 All laptops come with SSDs = faster performance\n\ud83c\udf92 Free laptop bag with every purchase\n\ud83d\ude9a Nationwide delivery | Pay on Collection\n\ud83d\udcf2 Order now: +263774659090\n\u23f3 Limited stock \u2014 grab yours before it\u2019s gone!\n\n#BackToSchool #LaptopSale #CrownTechHub #ZimDeals",
+                  "mediaType": "IMAGE",
+                  "thumbnailUrl": "https://scontent.xx.fbcdn.net/v/t39.30808-6/547768741_752933530905136_5478013563657243412_n.jpg?stp=dst-jpg_s394x394_tt6&_nc_cat=107&ccb=1-7&_nc_sid=c9359e&_nc_ohc=eouAgOnxDw0Q7kNvwGR74e1&_nc_oc=AdmgZaRFxEd9PqJjECtLoXEctIUY7-GTCbnrO-r4X7d8BcWe9OqQ_lFeUXBPVkn5kxRnK95rFVsNpN1kBPT64HZ2&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.xx&_nc_gid=OuIVyfDFnIlOPMghwBkwOA&oh=00_AfkQnfu0IoRRgFjzjrn8Um5HfnNZ4gR0IdxOH73t5RLh-w&oe=69459220",
+                  "thumbnail": "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",
+                  "sourceType": "ad",
+                  "sourceId": "120236312783980353",
+                  "sourceUrl": "https://fb.me/7t6nV21CX",
+                  "containsAutoReply": false,
+                  "renderLargerThumbnail": true,
+                  "showAdAttribution": true,
+                  "ctwaClid": "AffYIUcBhuKN_Wgmfk5PlEY2Ii1oTqWjN07TdkVoQ3HAHZPD9K_yRwy2CjpvXsrwe5vVG5Yl2M8Fc1khG93prxzTRqYH5xzicSgnV9kUS6prd6Mre_qvRIFBZSYqszoI9HTQXmEM",
+                  "clickToWhatsappCall": true,
+                  "adContextPreviewDismissed": false,
+                  "sourceApp": "facebook",
+                  "automatedGreetingMessageShown": false,
+                  "disableNudge": false,
+                  "originalImageUrl": "https://scontent.xx.fbcdn.net/v/t39.30808-6/547768741_752933530905136_5478013563657243412_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=c9359e&_nc_ohc=eouAgOnxDw0Q7kNvwGR74e1&_nc_oc=AdmgZaRFxEd9PqJjECtLoXEctIUY7-GTCbnrO-r4X7d8BcWe9OqQ_lFeUXBPVkn5kxRnK95rFVsNpN1kBPT64HZ2&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.xx&_nc_gid=OuIVyfDFnIlOPMghwBkwOA&oh=00_AfnmzdTkcz8uTHLjSRAg9xgZEljKGy-QS1R4_zSrCAnZfQ&oe=69459220",
+                  "wtwaAdFormat": false
+                }
+              }
+            }
+          },
+          "statusSourceType": "IMAGE"
+        },
+        "firstScanSidecar": "BC/j+LUY2DG1Aw==",
+        "firstScanLength": 5890,
+        "scansSidecar": "BC/j+LUY2DG1A7GDcHRQem/eD1BvEp5YBjtqFrxw5ncAh26NkckQEg==",
+        "scanLengths": [
+          5890,
+          49463,
+          22595,
+          31857
+        ],
+        "midQualityFileSha256": "fYGmoHdjjratKeK2KVtYCkLsC+RXdWfT3cnbthA4g3U=",
+        "imageSourceType": "USER_IMAGE"
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "2xfyQixPVwRM4g==",
+          "senderTimestamp": "1763746405",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "2KyUQ7RxchBwbt41A0jBLFCKIbMScYuvB1GlR1Wx9ck="
+      }
+    },
+    "verifiedBizName": ""
+  }
+}
+2025-12-15 10:06:19,870 - app.api.whatsapp - INFO - Baileys message from: 263774659090
+2025-12-15 10:06:19,872 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-15 10:06:20,960 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263774659090, skipping

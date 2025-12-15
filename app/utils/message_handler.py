@@ -1860,14 +1860,21 @@ class MessageHandler:
 
             if ptype == 'booking':
                 # Validate fields from Claude's FINAL booking JSON
-                service_type = (data.get('service_type') or '').strip().lower()
+                # Accept either 'service_type' (legacy) or 'service' (more natural schema)
+                service_type = (data.get('service_type') or data.get('service') or '').strip().lower()
+
                 # New contract uses provider_id (Mongo _id string); keep service_provider_id as fallback
                 provider_id = (data.get('provider_id') or data.get('service_provider_id') or '').strip()
+
+                # Allow either separate date/time or a single scheduled_time field
                 date_str = (data.get('date') or '').strip()
                 time_str = (data.get('time') or '').strip()
+                scheduled_iso = (data.get('scheduled_time') or '').strip()
+
                 notes = (data.get('additional_notes') or data.get('problem_description') or '').strip()
 
-                if not (service_type and provider_id and date_str and time_str):
+                # Basic required fields: service, provider, and some notion of time
+                if not (service_type and provider_id and (scheduled_iso or (date_str and time_str))):
                     await self._log_and_send_response(user_number, "Missing booking fields. Please provide required details.", "booking_missing_fields")
                     return
 
@@ -1878,12 +1885,26 @@ class MessageHandler:
                     return
 
                 # Combine date and time
-                try:
-                    base_dt = du_parse(date_str)
-                    tm = du_parse(time_str, fuzzy=True, default=base_dt)
-                    bt_iso = tm.strftime('%Y-%m-%d %H:%M')
-                except Exception:
-                    bt_iso = f"{date_str} {time_str}".strip()
+                bt_iso = None
+                if scheduled_iso:
+                    # Prefer a single scheduled_time field if Claude provided it
+                    try:
+                        dt = du_parse(scheduled_iso)
+                        bt_iso = dt.strftime('%Y-%m-%d %H:%M')
+                        # Back-fill date/time strings if they were missing
+                        if not date_str:
+                            date_str = dt.strftime('%Y-%m-%d')
+                        if not time_str:
+                            time_str = dt.strftime('%H:%M')
+                    except Exception:
+                        bt_iso = scheduled_iso
+                else:
+                    try:
+                        base_dt = du_parse(date_str)
+                        tm = du_parse(time_str, fuzzy=True, default=base_dt)
+                        bt_iso = tm.strftime('%Y-%m-%d %H:%M')
+                    except Exception:
+                        bt_iso = f"{date_str} {time_str}".strip()
 
                 booking_id = f"booking_{datetime.utcnow().timestamp()}"
                 booking_data = {
@@ -1900,7 +1921,24 @@ class MessageHandler:
                     'status': 'pending',
                     'customer_number': user_number,
                     'customer_name': user.get('name', 'Customer'),
+                    # New richer fields to match the desired schema more closely
+                    'contact_channel': 'whatsapp',
+                    'reminder_sent': False,
                 }
+
+                # Optional budget range from Claude
+                budget_min = data.get('budget_min')
+                budget_max = data.get('budget_max')
+                if budget_min is not None or budget_max is not None:
+                    booking_data['budget'] = {
+                        'min': budget_min,
+                        'max': budget_max,
+                    }
+
+                # Optional provider snapshot (name/rating/price, etc.)
+                provider_snapshot = data.get('provider')
+                if isinstance(provider_snapshot, dict) and provider_snapshot:
+                    booking_data['provider_snapshot'] = provider_snapshot
 
                 success = await self.db.create_booking(booking_data)
                 if not success:
