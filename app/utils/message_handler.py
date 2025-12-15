@@ -532,7 +532,10 @@ class MessageHandler:
             )
             return
 
-        if message_text in ['delete my data', 'delete data', 'erase my data', 'remove my data']:
+        if message_text in [
+            'delete my data', 'delete data', 'erase my data', 'remove my data',
+            'delete my information', 'delete information', 'erase my information', 'remove my information',
+        ]:
             try:
                 await self.db.delete_user_and_data(user_number)
             except Exception:

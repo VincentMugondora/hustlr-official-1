@@ -176,9 +176,19 @@ class AWSLambdaService:
         tool_result = user_context.get('tool_result')
         tool_text = f"Tool result available:\n{tool_result}" if tool_result else ""
         provider_options = user_context.get('provider_options')
-        providers_text = f"Provider options (JSON):\n{json.dumps(provider_options)}" if provider_options else ""
+        providers_text = f"Provider options (JSON):\n{json.dumps(provider_options, default=str)}" if provider_options else ""
+
+        # known_fields may contain Mongo ObjectId or other non-JSON types; coerce to strings
         known_fields = user_context.get('known_fields')
-        known_fields_text = f"Known fields (use as given; do not ask again):\n{json.dumps(known_fields)}" if known_fields else ""
+        if known_fields:
+            try:
+                known_fields_json = json.dumps(known_fields, default=str)
+            except TypeError:
+                # Last-resort: stringify the whole object
+                known_fields_json = str(known_fields)
+            known_fields_text = f"Known fields (use as given; do not ask again):\n{known_fields_json}"
+        else:
+            known_fields_text = ""
         context_text = "\n".join([p for p in ["\n".join(context_parts), history_text, tool_text, providers_text, known_fields_text] if p])
         user_text = f"User message: {user_message}"
         if context_text:
