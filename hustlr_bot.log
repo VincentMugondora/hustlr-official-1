@@ -35539,3 +35539,51 @@ For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/St
 2025-12-15 11:16:09,217 - app.utils.message_handler - WARNING - Failed to send WhatsApp message to 38977432232103: Client error '404 Not Found' for url 'http://localhost:3000/send-text'
 For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
 2025-12-15 11:16:09,359 - app.api.whatsapp - INFO - Baileys message processed successfully for 38977432232103
+2025-12-15 11:23:02,130 - app.api.whatsapp - INFO - [2025-12-15T09:23:02.130912] Baileys webhook received
+2025-12-15 11:23:02,130 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "status",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "status@broadcast",
+      "fromMe": false,
+      "id": "AC1C222CEB89C9961D3B61699448940F",
+      "participant": "263780416173@s.whatsapp.net",
+      "participantLid": "172043823755335@lid"
+    },
+    "messageTimestamp": 1765790574,
+    "pushName": "Rashy\ud83d\ude18",
+    "broadcast": true,
+    "message": {
+      "videoMessage": {
+        "url": "https://mmg.whatsapp.net/v/t62.7161-24/550801933_1193781238752977_1441828090620396065_n.enc?ccb=11-4&oh=01_Q5Aa3QEkqfJSM4ejC1HKvHMi-ssCV6Qw62Crj5NxnttIkCwrlQ&oe=6967510F&_nc_sid=5e03e0&mms3=true",
+        "mimetype": "video/mp4",
+        "fileSha256": "7V+Fd0RjO8yJ4gJOb48JMEBiaeeXOLZ3Y+LjDIq3WHU=",
+        "fileLength": "6095212",
+        "seconds": 63,
+        "mediaKey": "9CgPrRiOzaFvkhiTF4t5/PDaGUebn4f11WnuT1USj3Q=",
+        "height": 1024,
+        "width": 576,
+        "fileEncSha256": "gCcI3xc55EoeTh/gKX9Eg4qtEGle+4ZEy/vTBrjNSA8=",
+        "directPath": "/v/t62.7161-24/550801933_1193781238752977_1441828090620396065_n.enc?ccb=11-4&oh=01_Q5Aa3QEkqfJSM4ejC1HKvHMi-ssCV6Qw62Crj5NxnttIkCwrlQ&oe=6967510F&_nc_sid=5e03e0",
+        "mediaKeyTimestamp": "1765790563",
+        "jpegThumbnail": "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",
+        "contextInfo": {
+          "pairedMediaType": "NOT_PAIRED_MEDIA",
+          "statusSourceType": "VIDEO"
+        },
+        "streamingSidecar": "9zorFO822XGTwYpvaICxg14tY4yu8nvjEEgW3ll+Nv+pKnBsSBW2W+VVwlVJ/de5KRGf+l2e5ZVokSwfC0CysxzobJf1VpCAjqWVEHkeK/diculHLxOJpdbvW36HCRLy22hIVTUR/2fre3f/HGIs4p/3pAH142iFoLBmcnrzlXwkcx7Q2UO5MFuPwkHejxM0LaIFge5oBEjD5z1bh2s/bFrE5HIFu4CGBXvnpHGKkZy+g6iFdhErk2cQXI/BzhZImcSFOqTk2Bkm8a6Xh3xd8/F8OSBfmuqpk3apNuQJT68TphnZKK4a1J83CmZdbzdBpa8bVFrgbY8XnX9Te9c8i9s8Ekw3FYIRSnBCSLcopAERF8/mbNSFiNlFeBypUPg28SMx5SVno3vDaVyVs2v9nuEmnbRsaS9xnshjzuDQ5xMo+9s6McbpOz9HepM03MCPScYt9JZERG33dJzhUgJz3Yfy9iySaB3j7h9KPtRpAO3agQkL7A83cy3n8hs1bi9RogwHQg3G3TGHU04vN8Z9H/PXdmhT4tuz4i6wFF7BGJXctbq+2HsxUjP5wD2t1vSOMxbEiwx2yFys+vUzI7pbg8DmnjYQ1cG0+4XsAutRz6GxA2y2wRSCMV5SVWlHbNnDa3DOJTnlfXb0jb/nRlCxmuLC/qorxPEOc4CQ9bIDhrztU/tsPZ4EL1CP/fMV1Iz3qqugDHePfft6Tnw4wkjxh8k4fp9XmW5Y94G9CC9PiwtvpDXT/yAptdrKCfEdpOrwGGZ4MCy8bR/159eyIIcU3yqRWNG3IQtC3FRIo7tHxKiU07kOxc1z+XAzUZ9W/gmF4TwTz3Mw0YX9qP9iqZfJb2VH/A5F9k9Z8FLGY7zst/J5t9tBkpPFyVZqJ/NP9wWQV1GCqgPUO5veLIr/t7QT72tjmjUobiN2/E6DwX6lbmFTvmSN5cLSenNWEfm42eucY5PS8Nvot+TgNC3bGKezHjy0rDWra3Dx/bC25qNwjA4ZpIiTnsSNbmuvFVTYc/scgQfwT9Kzv7kQmIdHotIHWoYBXoDdGtxbS6ViPk12nnuB0R4HVotNRsbW25/v6YK2lPFZ6SWA8Wy3QrNRQ+BEBux2Rl3n+5qXDEH/arozL6F5XIICBD3bcrz/PG9Z4fr/INcI03hmWmimGvyxEZrJT8x++sfFHvmg8pOVvjDv20cH7dpbXhcMHGMlooHte/wqCn+kmqFTr3XHyOugBxll7nGrZUIivDfcXMt8VA==",
+        "thumbnailDirectPath": "/v/t62.36147-24/550484883_25280573001628860_5579542576735476540_n.enc?ccb=11-4&oh=01_Q5Aa3QEUQ11CnbVf7NiUG3A_x8FP71GrBoe5bFZN7tRfEgDmbA&oe=69674AA0&_nc_sid=5e03e0",
+        "thumbnailSha256": "UslKC50TDB95pUzWTKN/CFTmeYVMuTdAepEd1iw6SC8=",
+        "thumbnailEncSha256": "GSGklt3PS6Yn8wGXPOb3XZuMskzIcaVDGO+9Sh9Cxs8=",
+        "externalShareFullVideoDurationInSeconds": 0
+      },
+      "messageContextInfo": {
+        "messageSecret": "mWdlm1+Nb204sgWonz7FSw4m8UXd1mRH4aeRFi5tAjQ="
+      }
+    }
+  }
+}
+2025-12-15 11:23:02,134 - app.api.whatsapp - INFO - Baileys message from: status
+2025-12-15 11:23:02,134 - app.api.whatsapp - INFO - Baileys text: ''
+2025-12-15 11:23:04,864 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from status, skipping
