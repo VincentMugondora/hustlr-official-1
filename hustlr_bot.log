@@ -37558,3 +37558,44 @@ TypeError: Object of type ObjectId is not JSON serializable
 2025-12-15 13:40:59,073 - app.api.whatsapp - INFO - Baileys message from: 263777530322
 2025-12-15 13:40:59,073 - app.api.whatsapp - INFO - Baileys text: 'hi'
 2025-12-15 13:41:02,659 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-15 13:43:55,152 - app.api.whatsapp - INFO - [2025-12-15T11:43:55.152783] Baileys webhook received
+2025-12-15 13:43:55,152 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hi",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3FDF3E4AA1C9F94E5DFA",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765799028,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "hi",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-15 13:43:55,152 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-15 13:43:55,152 - app.api.whatsapp - INFO - Baileys text: 'hi'
+2025-12-15 13:44:20,328 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
