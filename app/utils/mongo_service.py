@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
 from bson import ObjectId
 
@@ -112,6 +112,37 @@ class MongoService:
         result = await db.bookings.update_one(
             {"booking_id": booking_id},
             {"$set": update},
+        )
+        return result.matched_count > 0
+
+    async def get_bookings_needing_reminders(self, within_minutes: int = 30) -> List[Dict[str, Any]]:
+        """Return bookings that are due for a reminder within the next window.
+
+        We rely on the 'date_time' field being stored in a consistent
+        '%Y-%m-%d %H:%M' format so lexical comparison is safe.
+        """
+        db = get_database()
+        now = datetime.utcnow()
+        end = now + timedelta(minutes=within_minutes)
+
+        now_str = now.strftime('%Y-%m-%d %H:%M')
+        end_str = end.strftime('%Y-%m-%d %H:%M')
+
+        query = {
+            "reminder_sent": False,
+            "status": {"$in": ["pending", "confirmed"]},
+            "date_time": {"$gte": now_str, "$lte": end_str},
+        }
+
+        cursor = db.bookings.find(query)
+        return [doc async for doc in cursor]
+
+    async def mark_booking_reminder_sent(self, booking_id: str) -> bool:
+        """Mark a booking's reminder as sent."""
+        db = get_database()
+        result = await db.bookings.update_one(
+            {"booking_id": booking_id},
+            {"$set": {"reminder_sent": True, "reminder_sent_at": datetime.utcnow()}},
         )
         return result.matched_count > 0
 
