@@ -1083,6 +1083,50 @@ class MessageHandler:
             except Exception as e:
                 logger.error(f"Failed to send reminder for booking {b.get('booking_id')}: {e}")
 
+    async def _notify_booking_other_party(self, actor_number: str, booking_id: str, change_type: str, new_time: Optional[str] = None) -> None:
+        try:
+            booking = await self.db.get_booking_by_id(booking_id)
+        except Exception:
+            booking = None
+        if not booking:
+            return
+
+        user_num = booking.get('user_whatsapp_number') or booking.get('customer_number')
+        provider_num = booking.get('provider_whatsapp_number')
+
+        if not user_num or not provider_num:
+            return
+
+        if actor_number == user_num:
+            target = provider_num
+            role = 'provider'
+        elif actor_number == provider_num:
+            target = user_num
+            role = 'customer'
+        else:
+            target = provider_num
+            role = 'provider'
+
+        service = booking.get('service_type') or 'service'
+        time_text = booking.get('date_time') or (f"{booking.get('date','')} {booking.get('time','')}".strip()) or 'unscheduled time'
+        location = booking.get('location') or (booking.get('provider_snapshot') or {}).get('location') or ''
+
+        if change_type == 'cancelled':
+            if role == 'provider':
+                msg = f"A customer has cancelled their {service} booking for {time_text} at {location}."
+            else:
+                msg = f"Your {service} booking for {time_text} at {location} has been cancelled by the provider."
+        elif change_type == 'rescheduled':
+            nt = new_time or booking.get('date_time') or 'a new time'
+            if role == 'provider':
+                msg = f"A customer has rescheduled their {service} booking to {nt} at {location}."
+            else:
+                msg = f"Your {service} booking has been rescheduled to {nt}."
+        else:
+            return
+
+        await self._log_and_send_response(target, msg, f"booking_{change_type}_notify_{role}")
+
         missing = [k for k, v in [('name', name), ('service_type', service_type), ('location', location), ('contact', contact)] if not v]
         if missing:
             await self._log_and_send_response(user_number, f"Missing: {', '.join(missing)}. Please provide these to complete registration.", "provider_registration_missing")

@@ -36269,3 +36269,48 @@ For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/St
 1) GLAUDINA 24HR M...
 2025-12-15 12:03:54,567 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2025-12-15 12:03:54,694 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-15 12:06:39,383 - app.api.whatsapp - INFO - [2025-12-15T10:06:39.383246] Baileys webhook received
+2025-12-15 12:06:39,383 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "cancel allmy bookings",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3FFB593DCD9B64AB7604",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765793192,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "cancel allmy bookings",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-15 12:06:39,384 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-15 12:06:39,384 - app.api.whatsapp - INFO - Baileys text: 'cancel allmy bookings'
+2025-12-15 12:06:42,833 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: interactive_buttons, Header: Your bookings, Body: Here are your recent bookings:
+
+1) GLAUDINA 24HR M...
+2025-12-15 12:06:43,971 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-15 12:06:44,053 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
