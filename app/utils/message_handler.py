@@ -301,8 +301,20 @@ class MessageHandler:
         }
         
         if state in booking_progress_states:
+            # Only treat as resumable if there is meaningful booking data in the session
+            data = session.get('data') or {}
+            has_booking_context = any(
+                k in data for k in [
+                    'service_type',
+                    'booking_time',
+                    'location',
+                    'selected_provider',
+                    '_pending_booking',
+                ]
+            )
+
             last_activity_str = session.get('last_activity')
-            if last_activity_str:
+            if has_booking_context and last_activity_str:
                 try:
                     last_activity = datetime.fromisoformat(last_activity_str)
                     if (datetime.utcnow() - last_activity).total_seconds() > 600:
@@ -1819,6 +1831,23 @@ class MessageHandler:
             data = (payload or {}).get('data') or {}
             assistant_msg = (payload or {}).get('assistantMessage') or ''
 
+            # Special-case cancel_booking: let Claude drive the wording but use our
+            # existing cancel flow to actually cancel.
+            field_name = (payload or {}).get('field') or ''
+            action_name = (data.get('action') or payload.get('action') or '').lower()
+            if str(field_name).lower() == 'cancel_booking' or action_name == 'cancel_booking':
+                # Show user's bookings in cancel mode and move into CANCEL_BOOKING_SELECT
+                try:
+                    await self.show_user_bookings(user_number, session, user, mode="cancel")
+                    session['state'] = ConversationState.CANCEL_BOOKING_SELECT
+                except Exception:
+                    # If something goes wrong, fall back to a simple explanation
+                    pass
+
+                if assistant_msg.strip():
+                    await self._log_and_send_response(user_number, assistant_msg.strip(), "cancel_booking_complete")
+                return
+
             # Infer type from data shape when Claude omits explicit "type"
             if not ptype and isinstance(data, dict):
                 booking_required = {"service_type", "customer_name", "customer_phone", "problem_description", "date", "time", "location", "provider_id"}
@@ -2042,7 +2071,7 @@ class MessageHandler:
                 return
 
             # If we reach here, Claude returned COMPLETE but the payload didn't
-            # match either a booking or provider registration shape.
+            # match either a booking, cancel, or provider registration shape.
             await self._log_and_send_response(user_number, self._short("Sorry, I couldn't process that.", "Sorry."), "ai_unsupported")
             return
 
