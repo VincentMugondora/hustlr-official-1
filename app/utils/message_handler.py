@@ -544,6 +544,18 @@ class MessageHandler:
             )
             return
 
+        # Simple greeting handler so a bare "hi" / "hello" always gets a reply
+        if text_cmd in ["hi", "hello", "hey", "morning", "good morning", "good afternoon", "good evening"]:
+            await self._log_and_send_response(
+                user_number,
+                self._short(
+                    "Hi! I'm Hustlr on WhatsApp. I can help you find and book local service providers like plumbers and electricians. What do you need help with today?",
+                    "Hi! What service do you need?",
+                ),
+                "greeting",
+            )
+            return
+
         # Check for admin approval/denial commands
         approve_match = re.match(r'approve\s+(\+?[\d\s\-\(\)]+)', text_cmd)
         deny_match = re.match(r'deny\s+(\+?[\d\s\-\(\)]+)', text_cmd)

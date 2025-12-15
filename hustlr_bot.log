@@ -36621,3 +36621,85 @@ For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/St
 2025-12-15 13:09:54,015 - app.api.whatsapp - INFO - Baileys message from: 263777530322
 2025-12-15 13:09:54,017 - app.api.whatsapp - INFO - Baileys text: 'hi'
 2025-12-15 13:09:54,540 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-15 13:14:45,078 - app.api.whatsapp - INFO - [2025-12-15T11:14:45.078443] Baileys webhook received
+2025-12-15 13:14:45,079 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hi",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3FA8FE65F56CD0289512",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765797277,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "hi",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-15 13:14:45,081 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-15 13:14:45,081 - app.api.whatsapp - INFO - Baileys text: 'hi'
+2025-12-15 13:14:50,128 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-15 13:20:53,429 - app.api.whatsapp - INFO - [2025-12-15T11:20:53.429503] Baileys webhook received
+2025-12-15 13:20:53,431 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hi",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F8FEABF72CCDC1DE0F1",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765797646,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "hi",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-15 13:20:53,435 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-15 13:20:53,436 - app.api.whatsapp - INFO - Baileys text: 'hi'
+2025-12-15 13:20:56,273 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
