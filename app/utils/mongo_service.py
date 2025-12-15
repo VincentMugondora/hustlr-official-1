@@ -33,6 +33,21 @@ class MongoService:
         )
         return result.matched_count > 0
 
+    async def delete_user_and_data(self, whatsapp_number: str) -> bool:
+        """Delete a user and associated session/history documents.
+
+        Keeps bookings intact for providers, but removes direct user profile
+        and chat history to respect a DELETE MY DATA request.
+        """
+        db = get_database()
+        # Delete user profile
+        await db.users.delete_one({"whatsapp_number": whatsapp_number})
+        # Delete session
+        await db.sessions.delete_one({"whatsapp_number": whatsapp_number})
+        # Delete conversation history
+        await db.conversation_history.delete_many({"whatsapp_number": whatsapp_number})
+        return True
+
     # Provider operations
     async def get_providers_by_service(self, service_type: str, location: Optional[str] = None) -> List[Dict[str, Any]]:
         db = get_database()

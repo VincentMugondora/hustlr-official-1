@@ -182,7 +182,7 @@ class MessageHandler:
                 self._short(
                     "Welcome to Hustlr! I'll help you find local service providers.\n\n"
                     "To get started, send your name and area in one message.\n"
-                    "You can continue using Hustlr without sharing additional data.",
+                    "By continuing, you agree to our User Policy (reply POLICY to read it anytime).",
                     "You can still use Hustlr without extra data."
                 ),
                 "onboarding_privacy_declined"
@@ -505,9 +505,43 @@ class MessageHandler:
             await self.handle_provider_registration(user_number, message_text, session)
             return
         
-        # Check for help command
+        # Check for help / policy / control commands
         if message_text in ['help', 'menu', 'options']:
             await self.send_help_menu(user_number)
+            return
+
+        if message_text in ['policy', 'user policy', 'terms', 'privacy']:
+            from config import settings as _s  # local import to avoid circulars
+            policy_text = getattr(_s, 'USER_POLICY_TEXT', None) or (
+                "Hustlr User Policy:\n\n"
+                "You can ask for help with local services, opt out at any time by replying STOP,"
+                " and request deletion of your data by replying DELETE MY DATA."
+            )
+            await self._log_and_send_response(user_number, policy_text, 'user_policy')
+            return
+
+        if message_text in ['stop', 'opt out', 'opt-out', 'unsubscribe']:
+            try:
+                await self.db.update_user(user_number, {'consent_transactional': False, 'opted_out': True})
+            except Exception:
+                pass
+            await self._log_and_send_response(
+                user_number,
+                "You have been opted out of Hustlr notifications. You can message again anytime to start a new chat.",
+                'opt_out_confirm',
+            )
+            return
+
+        if message_text in ['delete my data', 'delete data', 'erase my data', 'remove my data']:
+            try:
+                await self.db.delete_user_and_data(user_number)
+            except Exception:
+                pass
+            await self._log_and_send_response(
+                user_number,
+                "Your Hustlr profile, session, and chat history have been deleted. Bookings already sent to providers may be kept for records.",
+                'delete_data_confirm',
+            )
             return
 
         # Check for admin approval/denial commands
