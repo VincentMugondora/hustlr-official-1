@@ -1250,6 +1250,42 @@ class MessageHandler:
                 except Exception as e:
                     logger.error(f"Error while listing providers after AI CONFIRM: {e}")
 
+            # Execute booking-level actions that Claude has already explained
+            # to the user via assistantMessage. Backend only performs the
+            # state change; all wording stays with Claude.
+            if status == "COMPLETE" and field == "cancel_booking":
+                try:
+                    bid = (data or {}).get("booking_id") or (session.get("data") or {}).get("_cancel_booking_id")
+                    if bid:
+                        try:
+                            await self.db.update_booking_status(bid, "cancelled")
+                        except Exception:
+                            pass
+                finally:
+                    # Clear any local helper fields but keep general session data
+                    if session.get("data"):
+                        session["data"].pop("_cancel_booking_id", None)
+                        session["data"].pop("_bookings_list", None)
+                    session["state"] = ConversationState.SERVICE_SEARCH
+                return
+
+            if status == "COMPLETE" and field == "reschedule_booking":
+                try:
+                    bid = (data or {}).get("booking_id") or (session.get("data") or {}).get("_reschedule_booking_id")
+                    new_time = (data or {}).get("new_time") or (data or {}).get("date_time") or (session.get("data") or {}).get("_reschedule_new_time")
+                    if bid and new_time:
+                        try:
+                            await self.db.update_booking_time(bid, new_time, set_status="pending")
+                        except Exception:
+                            pass
+                finally:
+                    if session.get("data"):
+                        session["data"].pop("_reschedule_booking_id", None)
+                        session["data"].pop("_reschedule_new_time", None)
+                        session["data"].pop("_bookings_list", None)
+                    session["state"] = ConversationState.SERVICE_SEARCH
+                return
+
             return
 
         # Last resort
