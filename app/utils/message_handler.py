@@ -1183,18 +1183,72 @@ class MessageHandler:
 
         # If it's a bare dict in our standard shape, prefer assistantMessage
         if isinstance(payload, dict):
+            status = str(payload.get("status") or "").upper()
+            field = str(payload.get("field") or "").lower()
+            data = payload.get("data") or {}
+
             assistant_msg = (payload.get("assistantMessage") or "").strip()
             if assistant_msg:
-                await self._log_and_send_response(user_number, assistant_msg, f"ai_{payload.get('status') or 'reply'}")
+                await self._log_and_send_response(user_number, assistant_msg, f"ai_{status or 'reply'}")
             else:
                 # Fallback to entire JSON as text if no assistantMessage
                 await self._log_and_send_response(user_number, ai_raw.strip(), "ai_fallback_json")
 
             # Shallow merge any data into session for future turns
-            data = payload.get("data")
             if isinstance(data, dict):
                 session.setdefault("data", {})
                 session["data"].update(data)
+
+            # Special handling: when Claude says CONFIRM selected_provider, actually
+            # list real providers for the chosen service/location so the user can pick.
+            if status == "CONFIRM" and field == "selected_provider":
+                try:
+                    service_type = (data.get("service_type") or (session.get("data") or {}).get("service_type") or "").strip().lower()
+                    location = (data.get("location") or (session.get("data") or {}).get("location") or (user or {}).get("location") or "").strip()
+                    if service_type:
+                        providers = await self.db.get_providers_by_service(service_type, location or None)
+                    else:
+                        providers = []
+
+                    if not providers:
+                        await self._log_and_send_response(
+                            user_number,
+                            self._short(
+                                f"Sorry, no {service_type or 'provider'}s available in your area right now.",
+                                "Sorry, no providers available right now."
+                            ),
+                            "ai_no_providers_for_confirm",
+                        )
+                        return
+
+                    # Cache providers in session and move to PROVIDER_SELECTION
+                    session.setdefault("data", {})
+                    session["data"]["service_type"] = service_type
+                    session["data"]["providers"] = providers
+                    if location:
+                        session["data"]["location"] = location
+
+                    # Build interactive buttons (reuse existing UX)
+                    buttons: List[Dict[str, Any]] = []
+                    for p in providers[:3]:
+                        buttons.append({
+                            "id": f"provider_{p.get('whatsapp_number') or p.get('_id')}",
+                            "title": f"{p.get('name') or 'Provider'}",
+                        })
+
+                    header_loc = location or (user or {}).get("location") or "your area"
+                    await self._log_and_send_interactive(
+                        user_number,
+                        f"Available {service_type}s in {header_loc}",
+                        self._build_friendly_provider_body(service_type or 'provider', header_loc, len(providers), session),
+                        buttons,
+                        self._friendly_footer(),
+                    )
+
+                    session["state"] = ConversationState.PROVIDER_SELECTION
+                    return
+                except Exception as e:
+                    logger.error(f"Error while listing providers after AI CONFIRM: {e}")
 
             return
 
