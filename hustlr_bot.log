@@ -33472,3 +33472,54 @@ For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/St
 2025-12-15 10:06:19,870 - app.api.whatsapp - INFO - Baileys message from: 263774659090
 2025-12-15 10:06:19,872 - app.api.whatsapp - INFO - Baileys text: ''
 2025-12-15 10:06:20,960 - app.api.whatsapp - INFO - Baileys webhook received non-text/empty message from 263774659090, skipping
+2025-12-15 10:35:56,913 - app.api.whatsapp - INFO - [2025-12-15T08:35:56.913932] Baileys webhook received
+2025-12-15 10:35:56,913 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "Hey Hustlr, I need a plumber at 5pm today.",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F0A57E61C861D01954F",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765787748,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "Hey Hustlr, I need a plumber at 5pm today.",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-15 10:35:56,916 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-15 10:35:56,917 - app.api.whatsapp - INFO - Baileys text: 'Hey Hustlr, I need a plumber at 5pm today.'
+2025-12-15 10:35:59,752 - app.api.whatsapp - ERROR - Error handling Baileys message from 263777530322
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\api\whatsapp.py", line 275, in receive_baileys_message
+    await baileys_message_handler.handle_message(message)
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\message_handler.py", line 161, in handle_message
+    await self.handle_main_menu(user_number, message_text, session, user)
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\message_handler.py", line 462, in handle_main_menu
+    await self.handle_ai_response(user_number, message_text, session, user)
+          ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'MessageHandler' object has no attribute 'handle_ai_response'
+2025-12-15 10:36:01,838 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"

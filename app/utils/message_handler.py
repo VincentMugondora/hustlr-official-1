@@ -997,6 +997,70 @@ class MessageHandler:
             ),
             "help_menu"
         )
+
+    async def handle_ai_response(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
+        """Minimal AI handler to delegate conversation to Claude.
+
+        This implementation keeps the existing Bedrock JSON contract but only
+        uses `assistantMessage` for now, without advanced action routing.
+        """
+        user_context: Dict[str, Any] = {
+            "user_name": (user or {}).get("name"),
+            "user_location": (user or {}).get("location"),
+            "session_state": str(session.get("state")),
+            "known_fields": (session.get("data") or {}),
+        }
+
+        try:
+            ai_raw = await self.lambda_service.invoke_question_answerer(
+                message_text,
+                user_context=user_context,
+                conversation_history=None,
+            )
+        except Exception as e:
+            logger.error(f"AI invoke failed for {user_number}: {e}")
+            await self._log_and_send_response(
+                user_number,
+                "Sorry, I couldn't process that right now. Please try again in a moment.",
+                "ai_invoke_error",
+            )
+            return
+
+        # Strip markdown fences if present
+        text = (ai_raw or "").strip()
+        if text.startswith("```"):
+            # Remove leading ```json or ``` and trailing ```
+            parts = text.split("```")
+            if len(parts) >= 3:
+                text = parts[1].strip()
+
+        payload: Any = None
+        try:
+            payload = json.loads(text)
+        except Exception:
+            # Treat whole response as plain text
+            await self._log_and_send_response(user_number, (ai_raw or "").strip() or "Sorry, I couldn't process that.", "ai_plain")
+            return
+
+        # If it's a bare dict in our standard shape, prefer assistantMessage
+        if isinstance(payload, dict):
+            assistant_msg = (payload.get("assistantMessage") or "").strip()
+            if assistant_msg:
+                await self._log_and_send_response(user_number, assistant_msg, f"ai_{payload.get('status') or 'reply'}")
+            else:
+                # Fallback to entire JSON as text if no assistantMessage
+                await self._log_and_send_response(user_number, ai_raw.strip(), "ai_fallback_json")
+
+            # Shallow merge any data into session for future turns
+            data = payload.get("data")
+            if isinstance(data, dict):
+                session.setdefault("data", {})
+                session["data"].update(data)
+
+            return
+
+        # Last resort
+        await self._log_and_send_response(user_number, (ai_raw or "").strip() or "Sorry, I couldn't process that.", "ai_unknown_payload")
     
     def extract_service_type(self, message_text: str) -> Optional[str]:
         """Extract service type from message"""
