@@ -682,12 +682,42 @@ class MessageHandler:
                 pass
 
         if not service_type:
-            # Use AI to understand the request
+            # Use AI to understand the request, but only show assistantMessage to the user
             ai_response = await self.lambda_service.invoke_question_answerer(
-                message_text, 
+                message_text,
                 {'name': user.get('name'), 'location': user.get('location')}
             )
-            await self._log_and_send_response(user_number, ai_response, "ai_response")
+
+            text = (ai_response or "").strip()
+            # Strip ```json fences if Claude wraps output
+            if text.startswith("```"):
+                parts = text.split("```")
+                if len(parts) >= 3:
+                    text = parts[1].strip()
+
+            try:
+                payload = json.loads(text)
+            except Exception:
+                # Fallback: treat whole response as plain text
+                await self._log_and_send_response(
+                    user_number,
+                    text or "Sorry, I couldn't process that.",
+                    "ai_response_plain",
+                )
+                return
+
+            if isinstance(payload, dict):
+                assistant_msg = (payload.get('assistantMessage') or "").strip()
+                if assistant_msg:
+                    await self._log_and_send_response(user_number, assistant_msg, f"ai_{payload.get('status') or 'response'}")
+                    return
+
+            # Last resort if shape is unexpected
+            await self._log_and_send_response(
+                user_number,
+                text or "Sorry, I couldn't process that.",
+                "ai_response_fallback",
+            )
             return
         
         # Get all providers for this service type (no location filter yet)
