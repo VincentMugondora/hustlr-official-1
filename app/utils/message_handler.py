@@ -1255,11 +1255,23 @@ class MessageHandler:
             # state change; all wording stays with Claude.
             if status == "COMPLETE" and field == "cancel_booking":
                 try:
-                    bid = (data or {}).get("booking_id") or (session.get("data") or {}).get("_cancel_booking_id")
-                    if bid:
+                    # Claude may send a single booking_id or a list of booking_ids
+                    bids_any = []
+                    # Single id
+                    single_bid = (data or {}).get("booking_id") or (session.get("data") or {}).get("_cancel_booking_id")
+                    if single_bid:
+                        bids_any.append(single_bid)
+                    # List of ids
+                    many_bids = (data or {}).get("booking_ids") or []
+                    if isinstance(many_bids, list):
+                        bids_any.extend([b for b in many_bids if b])
+
+                    for bid in bids_any:
                         try:
                             await self.db.update_booking_status(bid, "cancelled")
                         except Exception:
+                            # Ignore per-booking failures; Claude has already
+                            # informed the user in assistantMessage.
                             pass
                 finally:
                     # Clear any local helper fields but keep general session data
