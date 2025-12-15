@@ -1657,6 +1657,7 @@ class MessageHandler:
             if bid:
                 try:
                     await self.db.update_booking_status(bid, 'cancelled')
+                    await self._notify_booking_other_party(user_number, bid, 'cancelled')
                 except Exception:
                     pass
             await self._log_and_send_response(user_number, "Your booking has been cancelled.", "booking_cancelled_success")
@@ -1703,6 +1704,7 @@ class MessageHandler:
         if text in ['yes', 'y', 'confirm', 'ok', 'sure'] and bid and new_iso:
             try:
                 await self.db.update_booking_time(bid, new_iso, set_status='pending')
+                await self._notify_booking_other_party(user_number, bid, 'rescheduled', new_time=new_iso)
             except Exception:
                 pass
             await self._log_and_send_response(user_number, f"Your booking has been rescheduled to {new_iso}.", "booking_rescheduled_success")
