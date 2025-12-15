@@ -17,6 +17,8 @@ class ConversationState(Enum):
     ONBOARDING_NAME = "onboarding_name"
     ONBOARDING_LOCATION = "onboarding_location"
     ONBOARDING_PRIVACY = "onboarding_privacy"
+    ONBOARDING_EMAIL = "onboarding_email"
+    ONBOARDING_PREFERENCES = "onboarding_preferences"
     
     # Booking flow states
     SERVICE_SEARCH = "service_search"
@@ -180,13 +182,13 @@ class MessageHandler:
                 self._short(
                     "Welcome to Hustlr! I'll help you find local service providers.\n\n"
                     "To get started, send your name and area in one message.\n"
-                    "Example: 'Vincent, Avondale'",
-                    "Welcome to Hustlr! Send: 'Name, Area'"
+                    "You can continue using Hustlr without sharing additional data.",
+                    "You can still use Hustlr without extra data."
                 ),
-                "onboarding_welcome"
+                "onboarding_privacy_declined"
             )
             session['state'] = ConversationState.ONBOARDING_NAME
-        
+
         elif state == ConversationState.ONBOARDING_NAME:
             # Collect name and location from a single message
             raw = message_text.strip()
@@ -236,42 +238,141 @@ class MessageHandler:
         elif state == ConversationState.ONBOARDING_PRIVACY:
             # Handle privacy agreement
             if message_text in ['yes', 'y', 'agree', 'ok', 'sure']:
-                # Create user in database
-                user_data = {
-                    'whatsapp_number': user_number,
-                    'name': session['data']['name'],
-                    'location': session['data']['location'],
-                    'agreed_privacy_policy': True,
-                    'onboarding_completed': True,
-                    'registered_at': datetime.utcnow().isoformat()
-                }
-                
-                success = await self.db.create_user(user_data)
-                
-                if success:
-                    await self._log_and_send_response(
-                        user_number,
-                        self._short(
-                            f"Great! You're all set, {session['data']['name']}!\n\n"
-                            "You can now search for service providers and book appointments.\n\n"
-                            "What service are you looking for?",
-                            f"All set, {session['data']['name']}! What service do you need?"
-                        ),
-                        "onboarding_complete"
-                    )
-                    session['state'] = ConversationState.SERVICE_SEARCH
-                else:
-                    await self._log_and_send_response(
-                        user_number,
-                        "Sorry, there was an issue setting up your account. Please try again later.",
-                        "onboarding_error"
-                    )
+                # Record core consent flags and proceed to email collection
+                session['data']['agreed_privacy_policy'] = True
+                session['data']['consent_transactional'] = True
+                session['data']['consent_marketing'] = False
+                session['data']['consent_timestamp'] = datetime.utcnow().isoformat()
+
+                await self._log_and_send_response(
+                    user_number,
+                    self._short(
+                        "If you'd like email confirmations and account recovery, please share your email address now, or reply 'skip'.",
+                        "Share your email for confirmations, or reply 'skip'."
+                    ),
+                    "onboarding_ask_email"
+                )
+                session['state'] = ConversationState.ONBOARDING_EMAIL
             else:
                 await self._log_and_send_response(
                     user_number,
-                    "You need to agree to the privacy policy to use Hustlr.\n\n"
-                    "Type 'yes' to agree, or 'no' to decline.",
-                    "privacy_policy_decline"
+                    self._short(
+                        "You need to agree to the privacy policy to use Hustlr.\n\n"
+                        "Type 'yes' to agree, or 'no' to decline.",
+                        "You need to agree to the privacy policy to use Hustlr.\n\n"
+                        "Type 'yes' to agree, or 'no' to decline."
+                    ),
+                    "onboarding_privacy_declined"
+                )
+        
+        elif state == ConversationState.ONBOARDING_EMAIL:
+            # Optional email collection (allow 'skip')
+            text = (message_text or '').strip()
+            email = None
+            if text.lower() not in ['skip', 'no', 'none', 'na', 'n/a', '']:
+                # Very light validation
+                if re.match(r"^[^@\s]+@[^@\s]+\.[^@\s]+$", text):
+                    email = text
+                else:
+                    await self._log_and_send_response(
+                        user_number,
+                        self._short(
+                            "That doesn't look like a valid email. Please send a correct email address, or reply 'skip' to continue without one.",
+                            "Invalid email. Send a valid one or 'skip'."
+                        ),
+                        "onboarding_email_invalid"
+                    )
+                    return
+            if email:
+                session['data']['email'] = email
+
+            # Ask for service preferences
+            await self._log_and_send_response(
+                user_number,
+                self._short(
+                    "Which services are you most interested in? For example: plumber, electrician, cleaner, driver. You can list several or reply 'skip'.",
+                    "Which services do you use most? e.g. plumber, electrician, cleaner (or 'skip')."
+                ),
+                "onboarding_ask_preferences"
+            )
+            session['state'] = ConversationState.ONBOARDING_PREFERENCES
+
+        elif state == ConversationState.ONBOARDING_PREFERENCES:
+            text = (message_text or '').strip().lower()
+            prefs: List[str] = []
+            if text not in ['skip', 'no', 'none', 'na', 'n/a', '']:
+                # Reuse service keyword mapping from extract_service_type
+                services_map = {
+                    'plumber': 'plumber',
+                    'plumbing': 'plumber',
+                    'electrician': 'electrician',
+                    'electrical': 'electrician',
+                    'electricity': 'electrician',
+                    'carpenter': 'carpenter',
+                    'carpentry': 'carpenter',
+                    'wood': 'carpenter',
+                    'painter': 'painter',
+                    'painting': 'painter',
+                    'cleaner': 'cleaner',
+                    'cleaning': 'cleaner',
+                    'mechanic': 'mechanic',
+                    'repair': 'mechanic',
+                    'gardener': 'gardener',
+                    'gardening': 'gardener',
+                    'landscaping': 'gardener'
+                }
+                for keyword, service in services_map.items():
+                    if keyword in text and service not in prefs:
+                        prefs.append(service)
+
+                if not prefs:
+                    await self._log_and_send_response(
+                        user_number,
+                        self._short(
+                            "I couldn't match any services from that. Try something like: plumber, electrician, cleaner, driver. Or reply 'skip'.",
+                            "Couldn't match services. Try: plumber, electrician, cleaner (or 'skip')."
+                        ),
+                        "onboarding_preferences_invalid"
+                    )
+                    return
+
+            if prefs:
+                session['data']['service_preferences'] = prefs
+
+            # Create user in database now that we have all onboarding data
+            user_data = {
+                'whatsapp_number': user_number,
+                'name': session['data']['name'],
+                'location': session['data']['location'],
+                'email': session['data'].get('email'),
+                'service_preferences': session['data'].get('service_preferences', []),
+                'agreed_privacy_policy': bool(session['data'].get('agreed_privacy_policy')), 
+                'consent_transactional': bool(session['data'].get('consent_transactional', True)),
+                'consent_marketing': bool(session['data'].get('consent_marketing', False)),
+                'consent_timestamp': session['data'].get('consent_timestamp') or datetime.utcnow().isoformat(),
+                'onboarding_completed': True,
+                'registered_at': datetime.utcnow().isoformat()
+            }
+
+            success = await self.db.create_user(user_data)
+
+            if success:
+                await self._log_and_send_response(
+                    user_number,
+                    self._short(
+                        f"Great! You're all set, {session['data']['name']}!\n\n"
+                        "You can now search for service providers and book appointments.\n\n"
+                        "What service are you looking for?",
+                        f"All set, {session['data']['name']}! What service do you need?"
+                    ),
+                    "onboarding_complete"
+                )
+                session['state'] = ConversationState.SERVICE_SEARCH
+            else:
+                await self._log_and_send_response(
+                    user_number,
+                    "Sorry, there was an issue completing your registration. Please try again.",
+                    "onboarding_error"
                 )
     
     async def handle_main_menu(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
