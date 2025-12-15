@@ -226,6 +226,17 @@ async def receive_baileys_message(
     except Exception:
         pass
 
+    # Ignore broadcast/status updates (e.g., status@broadcast) that are not user chats
+    try:
+        raw_msg = (payload.get("rawMessage") or {})
+        remote_jid = ((raw_msg.get("key") or {}).get("remoteJid") or "").lower()
+        is_broadcast = bool(raw_msg.get("broadcast")) or remote_jid.endswith("@broadcast") or from_number.lower() == "status"
+        if is_broadcast:
+            logger.info(f"Baileys broadcast/status message from '{from_number}' (remoteJid='{remote_jid}'), skipping")
+            return {"status": "skipped_broadcast"}
+    except Exception:
+        pass
+
     if not text:
         raw = payload.get("rawMessage") or {}
         raw_msg = raw.get("message") or {}

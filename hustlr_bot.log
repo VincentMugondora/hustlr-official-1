@@ -37599,3 +37599,173 @@ TypeError: Object of type ObjectId is not JSON serializable
 2025-12-15 13:43:55,152 - app.api.whatsapp - INFO - Baileys message from: 263777530322
 2025-12-15 13:43:55,152 - app.api.whatsapp - INFO - Baileys text: 'hi'
 2025-12-15 13:44:20,328 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-15 13:51:22,489 - app.api.whatsapp - INFO - [2025-12-15T11:51:22.489717] Baileys webhook received
+2025-12-15 13:51:22,508 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hi",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F5FDB3C30AEE420AD93",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765799474,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "hi",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-15 13:51:22,517 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-15 13:51:22,518 - app.api.whatsapp - INFO - Baileys text: 'hi'
+2025-12-15 13:51:37,368 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-15 14:24:02,428 - app.api.whatsapp - INFO - [2025-12-15T12:24:02.428568] Baileys webhook received
+2025-12-15 14:24:02,431 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hi",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F0FF81D99DD12D3ACFF",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765801435,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "hi",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-15 14:24:02,432 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-15 14:24:02,434 - app.api.whatsapp - INFO - Baileys text: 'hi'
+2025-12-15 14:24:09,738 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-15 14:35:38,850 - app.api.whatsapp - INFO - [2025-12-15T12:35:38.850887] Baileys webhook received
+2025-12-15 14:35:38,855 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hi",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3FDBB456F7ADD325FEEE",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765802131,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "hi",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "yl7OsgTirTqxCA==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-15 14:35:38,857 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-15 14:35:38,861 - app.api.whatsapp - INFO - Baileys text: 'hi'
+2025-12-15 14:35:46,507 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-15 14:35:54,289 - app.api.whatsapp - INFO - [2025-12-15T12:35:54.289781] Baileys webhook received
+2025-12-15 14:35:54,290 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "status",
+  "text": "Hapasi kuda nharo\n....",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "status@broadcast",
+      "fromMe": false,
+      "id": "AC4462C5FCF1B6B1F70165789E9DDE5C",
+      "participant": "263784303418@s.whatsapp.net",
+      "participantLid": "60035438764077@lid"
+    },
+    "messageTimestamp": 1765802147,
+    "pushName": "Kumkanikazi \ud83c\udf39Myckeilah \ud83c\udf3a",
+    "broadcast": true,
+    "message": {
+      "senderKeyDistributionMessage": {
+        "groupId": "status@broadcast",
+        "axolotlSenderKeyDistributionMessage": "Mwio8MPxAxACGiBa0aUPAhkJUkQPWo62oIXcvWR/KWG76Btjj1sQ1cAt+yIhBUCLBqD1xtIOt9vvEoaTgEJMdhIIh+3N95uPUbeY1QkP"
+      },
+      "extendedTextMessage": {
+        "text": "Hapasi kuda nharo\n....",
+        "textArgb": 4294967295,
+        "backgroundArgb": 4280563264,
+        "font": "SYSTEM",
+        "previewType": "NONE",
+        "contextInfo": {
+          "statusSourceType": "TEXT"
+        },
+        "inviteLinkGroupTypeV2": "DEFAULT"
+      },
+      "messageContextInfo": {
+        "messageSecret": "AQW6WEacKQnyQb3ywRFXdafC1uwdC/trNuHxFMO0D1w="
+      }
+    }
+  }
+}
+2025-12-15 14:35:54,292 - app.api.whatsapp - INFO - Baileys message from: status
+2025-12-15 14:35:54,293 - app.api.whatsapp - INFO - Baileys text: 'Hapasi kuda nharo
+....'
+2025-12-15 14:35:54,899 - app.utils.message_handler - INFO - [BOT RESPONSE] To: status, Type: onboarding_privacy_declined, Message: Welcome to Hustlr! I'll help you find local service providers.
+
+To get started, send your name and a...
+2025-12-15 14:35:59,850 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 400 Bad Request"
+2025-12-15 14:35:59,870 - app.utils.message_handler - WARNING - Failed to send WhatsApp message to status: Client error '400 Bad Request' for url 'http://localhost:3000/send-text'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400
+2025-12-15 14:36:00,128 - app.api.whatsapp - INFO - Baileys message processed successfully for status

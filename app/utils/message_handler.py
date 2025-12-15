@@ -547,6 +547,47 @@ class MessageHandler:
             )
             return
 
+        if message_text in [
+            'my info', 'my information', 'see my info', 'see my information',
+            'show my info', 'show my information', 'view my info', 'view my information'
+        ]:
+            try:
+                profile = await self.db.get_user(user_number)
+            except Exception:
+                profile = None
+            if not profile:
+                await self._log_and_send_response(
+                    user_number,
+                    self._short(
+                        "I don't have any saved details for you yet. You can still tell me what service you need and we'll get started.",
+                        "No saved details yet. Tell me what you need."
+                    ),
+                    'my_info_empty'
+                )
+                return
+            parts = []
+            if profile.get('name'):
+                parts.append(f"Name: {profile.get('name')}")
+            if profile.get('location'):
+                parts.append(f"Location: {profile.get('location')}")
+            if profile.get('service_preferences'):
+                try:
+                    prefs = profile.get('service_preferences')
+                    if isinstance(prefs, list):
+                        parts.append(f"Preferences: {', '.join([str(p) for p in prefs])}")
+                except Exception:
+                    pass
+            body = "\n".join(parts) or "No saved details found."
+            await self._log_and_send_response(
+                user_number,
+                self._short(
+                    f"Here is what I have saved:\n\n{body}\n\nReply DELETE MY INFORMATION to erase this.",
+                    f"Saved: {body}"
+                ),
+                'my_info_show'
+            )
+            return
+
         # Check for admin approval/denial commands
         approve_match = re.match(r'approve\s+(\+?[\d\s\-\(\)]+)', text_cmd)
         deny_match = re.match(r'deny\s+(\+?[\d\s\-\(\)]+)', text_cmd)
