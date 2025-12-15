@@ -1056,20 +1056,28 @@ class MessageHandler:
             )
             return
 
-        # Strip markdown fences if present
+        # Strip markdown fences if present and remove optional language tag (e.g. ```json)
         text = (ai_raw or "").strip()
         if text.startswith("```"):
-            # Remove leading ```json or ``` and trailing ```
             parts = text.split("```")
             if len(parts) >= 3:
-                text = parts[1].strip()
+                inner = parts[1].strip()
+                # Drop a leading language identifier like 'json' if present
+                if inner.lower().startswith("json"):
+                    # Remove the word 'json' and any immediate newline/space after it
+                    inner = inner[4:].lstrip("\n\r ")
+                text = inner
 
         payload: Any = None
         try:
             payload = json.loads(text)
         except Exception:
-            # Treat whole response as plain text
-            await self._log_and_send_response(user_number, (ai_raw or "").strip() or "Sorry, I couldn't process that.", "ai_plain")
+            # Treat whole response as plain text if JSON parsing fails
+            await self._log_and_send_response(
+                user_number,
+                text or (ai_raw or "").strip() or "Sorry, I couldn't process that.",
+                "ai_plain",
+            )
             return
 
         # If it's a bare dict in our standard shape, prefer assistantMessage
