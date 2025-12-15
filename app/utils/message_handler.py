@@ -886,6 +886,8 @@ class MessageHandler:
         else:
             prompt = self._short(
                 "Where should the provider come? Please send your area (e.g., 'Harare', 'Borrowdale').",
+                "Where should the provider come?"
+            )
         await self._log_and_send_response(user_number, prompt, "confirm_location_prompt")
         session['state'] = ConversationState.CONFIRM_LOCATION
 
