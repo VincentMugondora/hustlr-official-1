@@ -193,3 +193,37 @@ async def import_json(
             inserted += 1
     return {"inserted": inserted, "updated": updated, "total": len(items)}
 
+
+@router.get("/all")
+async def list_all_providers(
+    service_type: Optional[str] = None,
+    status_filter: Optional[str] = None,
+    db: AsyncIOMotorDatabase = Depends(get_database),
+):
+    query = {}
+    if service_type:
+        query["service_type"] = service_type
+    if status_filter:
+        query["status"] = status_filter
+
+    total = await db.providers.count_documents(query)
+    cursor = db.providers.find(query).sort("registered_at", -1)
+    docs = await cursor.to_list(length=total)
+    return {
+        "total": total,
+        "items": [
+            {
+                "id": str(doc.get("_id")),
+                "whatsapp_number": doc.get("whatsapp_number"),
+                "name": doc.get("name"),
+                "service_type": doc.get("service_type"),
+                "location": doc.get("location"),
+                "business_name": doc.get("business_name"),
+                "contact": doc.get("contact"),
+                "status": doc.get("status", "active"),
+                "registered_at": doc.get("registered_at"),
+            }
+            for doc in docs
+        ],
+    }
+
