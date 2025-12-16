@@ -157,7 +157,14 @@ class MessageHandler:
             await self.handle_main_menu(user_number, message_text, session, user or {})
         elif not user or not user.get('onboarding_completed', False):
             await self.handle_onboarding(user_number, message_text, session)
-        elif current_state == ConversationState.PROVIDER_REGISTER:
+        elif current_state in {
+            ConversationState.PROVIDER_REGISTER,
+            ConversationState.PROVIDER_REGISTER_NAME,
+            ConversationState.PROVIDER_REGISTER_SERVICE,
+            ConversationState.PROVIDER_REGISTER_LOCATION,
+            ConversationState.PROVIDER_REGISTER_BUSINESS,
+            ConversationState.PROVIDER_REGISTER_CONTACT,
+        }:
             await self.handle_provider_registration(user_number, message_text, session)
         else:
             await self.handle_main_menu(user_number, message_text, session, user)
@@ -1236,28 +1243,7 @@ class MessageHandler:
             return
 
         await self._log_and_send_response(target, msg, f"booking_{change_type}_notify_{role}")
-
-        missing = [k for k, v in [('name', name), ('service_type', service_type), ('location', location), ('contact', contact)] if not v]
-        if missing:
-            await self._log_and_send_response(user_number, f"Missing: {', '.join(missing)}. Please provide these to complete registration.", "provider_registration_missing")
-            return
-
-        provider_data = {
-            'whatsapp_number': contact,
-            'name': name,
-            'service_type': service_type,
-            'location': location,
-            'business_name': business_name,
-            'contact': contact,
-            'status': 'pending',
-        }
-        success = await self.db.create_provider(provider_data)
-        if success:
-            await self._log_and_send_response(user_number, self._short("Registration received. We'll review and notify you soon.", "Registration submitted. We'll notify you."), "provider_registration_complete")
-            session['state'] = ConversationState.SERVICE_SEARCH
-            session['data'] = {}
-        else:
-            await self._log_and_send_response(user_number, "Sorry, there was an issue with your registration. Please try again.", "provider_registration_error")
+        return
     
     async def send_help_menu(self, user_number: str) -> None:
         """Send help menu with options"""
@@ -1282,6 +1268,214 @@ class MessageHandler:
             ),
             "help_menu"
         )
+
+    def _normalize_msisdn(self, phone: str) -> Optional[str]:
+        s = re.sub(r"\D+", "", str(phone or ""))
+        if not s:
+            return None
+        if s.startswith("0") and len(s) >= 9:
+            return "263" + s[1:]
+        if s.startswith("7") and len(s) >= 9:
+            return "263" + s
+        if s.startswith("263"):
+            return s
+        if len(s) >= 9:
+            return "263" + s
+        return s
+
+    def _admin_numbers(self) -> List[str]:
+        try:
+            raw = getattr(settings, 'ADMIN_WHATSAPP_NUMBERS', "") or ""
+        except Exception:
+            raw = ""
+        if isinstance(raw, (list, tuple)):
+            vals = list(raw)
+        else:
+            vals = [p.strip() for p in str(raw).replace(";", ",").split(",") if p.strip()]
+        if not vals:
+            vals = ['+263783961640', '+263775251636', '+263777530322', '+16509965727']
+        norm = []
+        for v in vals:
+            n = self._normalize_msisdn(v)
+            if n:
+                norm.append(n)
+        return list(dict.fromkeys(norm))
+
+    async def _notify_admins_new_provider(self, provider: Dict[str, Any]) -> None:
+        admins = self._admin_numbers()
+        if not admins:
+            return
+        name = provider.get('name') or ''
+        svc = provider.get('service_type') or ''
+        loc = provider.get('location') or ''
+        phone = provider.get('whatsapp_number') or provider.get('contact') or ''
+        phone_norm = self._normalize_msisdn(phone) or phone
+        lines = [
+            f"New provider registration",
+            f"Name: {name}",
+            f"Service: {svc}",
+            f"Location: {loc}",
+            f"Phone: {phone_norm}",
+            "Reply APPROVE <number> to approve, or DENY <number> to reject.",
+        ]
+        body = "\n".join(lines)
+        for a in admins:
+            try:
+                await self._log_and_send_response(a, body, "admin_new_provider")
+            except Exception:
+                pass
+
+    async def handle_provider_registration(self, user_number: str, message_text: str, session: Dict) -> None:
+        state = session.get('state')
+        sd = session.setdefault('data', {})
+        reg = sd.setdefault('_prov_reg', {})
+        text = (message_text or '').strip()
+        if state == ConversationState.PROVIDER_REGISTER:
+            await self._log_and_send_response(
+                user_number,
+                self._short("Welcome! Please send your full name to register as a service provider.", "Your full name?"),
+                "provider_register_name"
+            )
+            session['state'] = ConversationState.PROVIDER_REGISTER_NAME
+            return
+        if state == ConversationState.PROVIDER_REGISTER_NAME:
+            reg['name'] = text.title()
+            await self._log_and_send_response(
+                user_number,
+                self._short("What service do you offer? (e.g., plumber, electrician)", "What service do you offer?"),
+                "provider_register_service"
+            )
+            session['state'] = ConversationState.PROVIDER_REGISTER_SERVICE
+            return
+        if state == ConversationState.PROVIDER_REGISTER_SERVICE:
+            reg['service_type'] = text.strip().lower()
+            await self._log_and_send_response(
+                user_number,
+                self._short("Which area are you based in? (e.g., Harare, Bulawayo)", "Your area?"),
+                "provider_register_location"
+            )
+            session['state'] = ConversationState.PROVIDER_REGISTER_LOCATION
+            return
+        if state == ConversationState.PROVIDER_REGISTER_LOCATION:
+            reg['location'] = text
+            await self._log_and_send_response(
+                user_number,
+                self._short("Business name (or reply 'skip')", "Business name (or 'skip')"),
+                "provider_register_business"
+            )
+            session['state'] = ConversationState.PROVIDER_REGISTER_BUSINESS
+            return
+        if state == ConversationState.PROVIDER_REGISTER_BUSINESS:
+            if text.lower() not in {"skip", "-", "n/a", "none"}:
+                reg['business_name'] = text
+            else:
+                reg['business_name'] = reg.get('name')
+            await self._log_and_send_response(
+                user_number,
+                self._short("Send your WhatsApp number (or reply 'skip' to use this number)", "Your WhatsApp number? ('skip' to use this)"),
+                "provider_register_contact"
+            )
+            session['state'] = ConversationState.PROVIDER_REGISTER_CONTACT
+            return
+        if state == ConversationState.PROVIDER_REGISTER_CONTACT:
+            number = None
+            if text.lower() in {"skip", "same", "use this"} or not text:
+                number = user_number
+            else:
+                number = self._normalize_msisdn(text)
+            if not number:
+                await self._log_and_send_response(user_number, self._short("Please send a valid phone number or 'skip' to use this one.", "Send a valid number or 'skip'."), "provider_register_contact_invalid")
+                return
+            reg['whatsapp_number'] = number
+            reg['contact'] = number
+            missing = [k for k in ['name','service_type','location','whatsapp_number'] if not reg.get(k)]
+            if missing:
+                await self._log_and_send_response(user_number, "Missing some details. Please start again with 'register'.", "provider_registration_missing")
+                session['state'] = ConversationState.SERVICE_SEARCH
+                sd.pop('_prov_reg', None)
+                return
+            doc = {
+                'whatsapp_number': reg['whatsapp_number'],
+                'name': reg['name'],
+                'service_type': reg['service_type'],
+                'location': reg['location'],
+                'business_name': reg.get('business_name') or reg['name'],
+                'contact': reg['contact'],
+                'status': 'pending',
+            }
+            ok = await self.db.create_provider(doc)
+            if ok:
+                await self._log_and_send_response(user_number, self._short("Registration received. We'll review and notify you soon.", "Registration submitted. We'll notify you."), "provider_registration_complete")
+                try:
+                    prov = await self.db.get_provider_by_phone(doc['whatsapp_number'])
+                except Exception:
+                    prov = doc
+                await self._notify_admins_new_provider(prov or doc)
+                session['state'] = ConversationState.SERVICE_SEARCH
+                sd.pop('_prov_reg', None)
+                return
+            await self._log_and_send_response(user_number, "Sorry, there was an issue with your registration. Please try again.", "provider_registration_error")
+            session['state'] = ConversationState.SERVICE_SEARCH
+            sd.pop('_prov_reg', None)
+            return
+
+    async def handle_admin_approval(self, user_number: str, message_text: str, session: Dict) -> None:
+        admins = set(self._admin_numbers())
+        actor = self._normalize_msisdn(user_number)
+        if actor not in admins:
+            await self._log_and_send_response(user_number, "You are not authorized to approve providers.", "admin_not_authorized")
+            return
+        text = (message_text or '').strip().lower()
+        action = None
+        m = re.match(r"^\s*(approve|deny)\s+(.+)$", text)
+        if m:
+            action = m.group(1)
+            num_raw = m.group(2)
+        else:
+            await self._log_and_send_response(user_number, "Send 'approve <number>' or 'deny <number>'.", "admin_approval_help")
+            return
+        target_num = self._normalize_msisdn(num_raw)
+        if not target_num:
+            await self._log_and_send_response(user_number, "Please include a valid phone number.", "admin_number_invalid")
+            return
+        prov = await self.db.get_provider_by_phone(target_num)
+        if not prov:
+            await self._log_and_send_response(user_number, f"No provider found for {target_num}.", "admin_provider_not_found")
+            return
+        prov_id = str(prov.get('_id')) if prov.get('_id') else None
+        if not prov_id:
+            await self._log_and_send_response(user_number, "Unable to update provider.", "admin_update_failed")
+            return
+        if action == 'approve':
+            await self.db.update_provider_status(prov_id, 'active')
+            await self._log_and_send_response(user_number, f"Approved {prov.get('name')} ({target_num}).", "admin_approved")
+            try:
+                await self._log_and_send_response(target_num, "Your provider registration has been approved. You are now listed and can receive bookings.", "provider_approved")
+            except Exception:
+                pass
+            others = [a for a in admins if a != actor]
+            note = f"Provider approved: {prov.get('name')} — {prov.get('service_type')} — {target_num} (by {actor})."
+            for a in others:
+                try:
+                    await self._log_and_send_response(a, note, "admin_approval_broadcast")
+                except Exception:
+                    pass
+            return
+        else:
+            await self.db.update_provider_status(prov_id, 'rejected')
+            await self._log_and_send_response(user_number, f"Rejected {prov.get('name')} ({target_num}).", "admin_rejected")
+            try:
+                await self._log_and_send_response(target_num, "Your provider registration has been rejected. You may reply REGISTER to try again.", "provider_rejected")
+            except Exception:
+                pass
+            others = [a for a in admins if a != actor]
+            note = f"Provider rejected: {prov.get('name')} — {prov.get('service_type')} — {target_num} (by {actor})."
+            for a in others:
+                try:
+                    await self._log_and_send_response(a, note, "admin_approval_broadcast")
+                except Exception:
+                    pass
+            return
 
     async def handle_ai_response(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
         """Minimal AI handler to delegate conversation to Claude.

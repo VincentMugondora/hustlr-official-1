@@ -51,7 +51,7 @@ class MongoService:
     # Provider operations
     async def get_providers_by_service(self, service_type: str, location: Optional[str] = None) -> List[Dict[str, Any]]:
         db = get_database()
-        query: Dict[str, Any] = {"service_type": service_type}
+        query: Dict[str, Any] = {"service_type": service_type, "status": "active"}
         if location:
             query["location"] = {"$regex": location, "$options": "i"}
         cursor = db.providers.find(query)
