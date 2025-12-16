@@ -3,12 +3,15 @@ const qrcode = require("qrcode-terminal");
 const express = require("express");
 const axios = require("axios");
 const pino = require("pino");
+const fs = require("fs");
+const path = require("path");
 
 const PORT = process.env.BAILEYS_PORT || 3000;
 const FASTAPI_URL = process.env.FASTAPI_URL || "http://localhost:8000";
+const AUTH_DIR = process.env.BAILEYS_AUTH_DIR || path.join(__dirname, "baileys_auth");
 
 async function startBaileys() {
-  const { state, saveCreds } = await useMultiFileAuthState("./baileys_auth");
+  const { state, saveCreds } = await useMultiFileAuthState(AUTH_DIR);
   const { version } = await fetchLatestBaileysVersion();
 
   const sock = makeWASocket({
@@ -52,6 +55,11 @@ async function startBaileys() {
 
       const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
       console.log("connection closed. reconnect:", shouldReconnect, "status:", statusCode);
+      // If logged out/unauthorized (401), wipe creds and force a fresh login with QR
+      if (statusCode === DisconnectReason.loggedOut || statusCode === 401) {
+        resetAuthAndReconnect("401/loggedOut");
+        return;
+      }
       if (shouldReconnect) {
         // This will update sockRef again because startBaileys assigns it.
         startBaileys().catch((err) => console.error("reconnect failed", err));
@@ -121,6 +129,30 @@ async function startBaileys() {
 
 let sockRef;
 let latestQR = null;
+let isResetting = false;
+
+function _wipeAuthDir() {
+  try {
+    fs.rmSync(AUTH_DIR, { recursive: true, force: true });
+    console.log(`[auth-reset] removed auth dir at ${AUTH_DIR}`);
+  } catch (e) {
+    console.error("[auth-reset] failed to remove auth dir", e);
+  }
+}
+
+async function resetAuthAndReconnect(reason) {
+  if (isResetting) return;
+  isResetting = true;
+  console.log(`[auth-reset] resetting due to: ${reason}`);
+  _wipeAuthDir();
+  try {
+    await startBaileys();
+  } catch (err) {
+    console.error("reconnect failed", err);
+  } finally {
+    isResetting = false;
+  }
+}
 
 async function startServer() {
   sockRef = await startBaileys();
@@ -218,6 +250,15 @@ async function startServer() {
     }
     const html = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>WhatsApp QR</title></head><body style="font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; padding: 24px;"><h2>Scan to link WhatsApp</h2><canvas id="qr" style="max-width: 320px; width: 100%; height: auto;"></canvas><p>On your phone: WhatsApp > Linked devices > Link a device.</p><script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script><script>const val = ${JSON.stringify(latestQR)};QRCode.toCanvas(document.getElementById('qr'), val, { width: 320 }, function (error) { if (error) console.error(error); });</script></body></html>`;
     res.send(html);
+  });
+
+  app.post("/reset-auth", async (req, res) => {
+    try {
+      await resetAuthAndReconnect("manual");
+      res.json({ status: "reset_triggered" });
+    } catch (e) {
+      res.status(500).json({ error: (e && e.message) || "failed to reset" });
+    }
   });
 
   app.listen(PORT, () => {
