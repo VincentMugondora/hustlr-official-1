@@ -622,6 +622,24 @@ class MessageHandler:
 
         # LLM-controlled mode: if enabled and we're not mid critical flow,
         # let the AI lead general chat/triage.
+        greeting_patterns = (
+            "hi", "hello", "hey", "hie", "hiya", "yo", "sup",
+            "morning", "afternoon", "evening",
+            "good morning", "good afternoon", "good evening",
+        )
+        if text_cmd in greeting_patterns or re.match(r"^(hi|hello|hey|hie|hiya|yo|sup|good (morning|afternoon|evening)|morning|afternoon|evening)\b", text_cmd):
+            name = (user or {}).get('name') or ''
+            greet = f"Hi {name}!" if name else "Hi!"
+            await self._log_and_send_response(
+                user_number,
+                self._short(
+                    f"{greet} How can I help you today? You can ask for a service like plumber, electrician, cleaner, or say HELP.",
+                    f"{greet} How can I help?"
+                ),
+                "greeting"
+            )
+            session['state'] = ConversationState.SERVICE_SEARCH
+            return
         if self._is_llm_controlled():
             # Anchor the conversation to the latest explicit user intent for service type
             try:
