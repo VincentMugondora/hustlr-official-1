@@ -1745,6 +1745,36 @@ class MessageHandler:
             await send("User blocked.")
             return
 
+        if low.startswith('/announce admins'):
+            admins = self._admin_numbers()
+            if not admins:
+                await send("No admin numbers configured.")
+                return
+            lines = [
+                "Hello! You have been added as a Hustlr Admin to help vet and verify service providers, manage bookings, and ensure quality.",
+                "",
+                "Your WhatsApp admin privileges:",
+                "• Providers: list/view, approve/reject, suspend/reinstate/blacklist, edit details.",
+                "• Bookings: list/view, assign/reassign provider, cancel (with reason), complete, panic/flag.",
+                "• Conversations: view recent history, reset a user conversation.",
+                "• Services: list current service types.",
+                "• Stats & AI: quick stats; pause/resume AI.",
+                "• Safety: block/opt-out a user.",
+                "",
+                "Type /help for the full command list.",
+                "Operate professionally and do not book services as a customer.",
+            ]
+            body = "\n".join(lines)
+            sent = 0
+            for a in admins:
+                try:
+                    await self._log_and_send_response(a, body, "admin_announcement")
+                    sent += 1
+                except Exception:
+                    pass
+            await send(f"Announcement sent to {sent} admins.", "admin_announce_done")
+            return
+
         await send("Unknown admin command. Type /help.", "admin_unknown")
 
     async def handle_ai_response(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:

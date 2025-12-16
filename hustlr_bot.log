@@ -39851,3 +39851,46 @@ AttributeError: 'MessageHandler' object has no attribute 'handle_booking_resume_
   }
 }
 2025-12-16 12:56:11,898 - app.api.whatsapp - INFO - Baileys broadcast/status message from 'status' (remoteJid='status@broadcast'), skipping
+2025-12-16 15:34:33,258 - app.api.whatsapp - INFO - [2025-12-16T13:34:33.258568] Baileys webhook received
+2025-12-16 15:34:33,258 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hi",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F4DB323AAD9E7188A53",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765892065,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "hi",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "wom0j6rFsvt9iQ==",
+          "recipientTimestamp": "1765042896"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-16 15:34:33,260 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-16 15:34:33,260 - app.api.whatsapp - INFO - Baileys text: 'hi'
+2025-12-16 15:34:36,125 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: greeting, Message: Welcome Admin Vincent Mugondora. Type /help for admin commands....
+2025-12-16 15:34:37,325 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-16 15:34:37,484 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
