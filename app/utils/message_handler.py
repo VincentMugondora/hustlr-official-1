@@ -1326,17 +1326,37 @@ class MessageHandler:
             if status == "CONFIRM" and field == "selected_provider":
                 try:
                     service_type = (data.get("service_type") or (session.get("data") or {}).get("service_type") or "").strip().lower()
-                    location = (data.get("location") or (session.get("data") or {}).get("location") or (user or {}).get("location") or "").strip()
-                    if service_type:
-                        providers = await self.db.get_providers_by_service(service_type, location or None)
-                    else:
-                        providers = []
+                    # Prefer Claude-provided location, then session, then stored user location
+                    raw_location = (data.get("location") or (session.get("data") or {}).get("location") or (user or {}).get("location") or "").strip()
 
+                    # Normalize to our known service areas so free-form addresses (e.g. '17 Taguta Rd, Greencroft')
+                    # resolve to an area like 'Harare' or 'Greencroft'.
+                    from app.utils.location_extractor import get_location_extractor
+                    location_extractor = get_location_extractor()
+                    norm_location = location_extractor.normalize_user_location(raw_location) if raw_location else None
+
+                    # First try a direct DB query with normalized area (if available), otherwise no location filter
+                    providers: List[Dict[str, Any]] = []
+                    if service_type:
+                        if norm_location:
+                            providers = await self.db.get_providers_by_service(service_type, norm_location)
+                        else:
+                            providers = await self.db.get_providers_by_service(service_type)
+
+                    # If still none but we have a normalized area, fetch all for the service and filter by area heuristics
+                    if not providers and service_type:
+                        all_for_service = await self.db.get_providers_by_service(service_type)
+                        if norm_location:
+                            providers = location_extractor.filter_providers_by_location(all_for_service, norm_location)
+                        else:
+                            providers = all_for_service
+
+                    # If after all that we still have no providers for the service, only then report none
                     if not providers:
                         await self._log_and_send_response(
                             user_number,
                             self._short(
-                                f"Sorry, no {service_type or 'provider'}s available in your area right now.",
+                                f"Sorry, no {service_type or 'provider'}s available right now.",
                                 "Sorry, no providers available right now."
                             ),
                             "ai_no_providers_for_confirm",
@@ -1347,8 +1367,8 @@ class MessageHandler:
                     session.setdefault("data", {})
                     session["data"]["service_type"] = service_type
                     session["data"]["providers"] = providers
-                    if location:
-                        session["data"]["location"] = location
+                    if norm_location:
+                        session["data"]["location"] = norm_location
 
                     # Build interactive buttons (reuse existing UX)
                     buttons: List[Dict[str, Any]] = []
@@ -1358,7 +1378,7 @@ class MessageHandler:
                             "title": f"{p.get('name') or 'Provider'}",
                         })
 
-                    header_loc = location or (user or {}).get("location") or "your area"
+                    header_loc = norm_location or (user or {}).get("location") or "your area"
                     await self._log_and_send_interactive(
                         user_number,
                         f"Available {service_type}s in {header_loc}",
