@@ -168,6 +168,18 @@ class MongoService:
             query["created_at"] = time_filter
         return await db.bookings.count_documents(query)
 
+    async def count_bookings_by_status(self, status: str, start: Optional[datetime] = None, end: Optional[datetime] = None) -> int:
+        db = get_database()
+        query: Dict[str, Any] = {"status": status}
+        if start or end:
+            time_filter: Dict[str, Any] = {}
+            if start:
+                time_filter["$gte"] = start
+            if end:
+                time_filter["$lte"] = end
+            query["created_at"] = time_filter
+        return await db.bookings.count_documents(query)
+
     async def count_providers(self, status: Optional[str] = None) -> int:
         db = get_database()
         query: Dict[str, Any] = {}
@@ -257,6 +269,11 @@ class MongoService:
         db = get_database()
         result = await db.sessions.delete_one({"whatsapp_number": whatsapp_number})
         return result.deleted_count > 0
+
+    async def delete_conversation_history(self, whatsapp_number: str) -> bool:
+        db = get_database()
+        result = await db.conversation_history.delete_many({"whatsapp_number": whatsapp_number})
+        return result.acknowledged
 
     # Conversation history operations
     async def store_message(self, whatsapp_number: str, role: str, text: str) -> bool:

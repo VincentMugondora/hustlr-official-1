@@ -54,6 +54,7 @@ class MessageHandler:
         self.db = dynamodb_service
         self.lambda_service = lambda_service
         self.user_sessions = {}  # In-memory session store (consider Redis for production)
+        self.ai_paused = False
     
     async def _log_and_send_response(self, user_number: str, message: str, response_type: str = "text") -> None:
         """Log bot response and send it to user"""
@@ -402,12 +403,17 @@ class MessageHandler:
         if text_cmd in greeting_patterns or re.match(r"^(hi|hello|hey|hie|hiya|yo|sup|good (morning|afternoon|evening)|morning|afternoon|evening)\b", text_cmd):
             name = (user or {}).get('name') or ''
             greet = f"Hi {name}!" if name else "Hi!"
+            is_admin = False
+            try:
+                is_admin = self._normalize_msisdn(user_number) in set(self._admin_numbers())
+            except Exception:
+                is_admin = False
             await self._log_and_send_response(
                 user_number,
-                self._short(
+                (f"Welcome Admin {name or self._normalize_msisdn(user_number)}. Type /help for admin commands." if is_admin else self._short(
                     f"{greet} How can I help you today? You can ask for a service like plumber, electrician, cleaner, or say HELP.",
                     f"{greet} How can I help?"
-                ),
+                )),
                 "greeting"
             )
             session['state'] = ConversationState.SERVICE_SEARCH
@@ -423,6 +429,16 @@ class MessageHandler:
             except Exception:
                 pass
             return
+
+        # Admin slash-commands
+        if message_text.strip().startswith('/'):
+            actor = self._normalize_msisdn(user_number)
+            if actor in set(self._admin_numbers()):
+                await self.handle_admin_commands(user_number, message_text, session)
+                return
+            else:
+                await self._log_and_send_response(user_number, "You are not authorized to use admin commands.", "admin_not_authorized")
+                return
         
         if state == ConversationState.BOOKING_RESUME_DECISION:
             await self.handle_booking_resume_decision(user_number, message_text, session, user)
@@ -1478,11 +1494,9 @@ class MessageHandler:
             return
 
     async def handle_ai_response(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
-        """Minimal AI handler to delegate conversation to Claude.
-
-        This implementation keeps the existing Bedrock JSON contract but only
-        uses `assistantMessage` for now, without advanced action routing.
-        """
+        if getattr(self, 'ai_paused', False):
+            await self._log_and_send_response(user_number, "AI is currently paused. Please try again later or use HELP.", "ai_paused")
+            return
         user_context: Dict[str, Any] = {
             "user_name": (user or {}).get("name"),
             "user_location": (user or {}).get("location"),
