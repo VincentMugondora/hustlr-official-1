@@ -639,6 +639,18 @@ class MessageHandler:
                 "greeting"
             )
             session['state'] = ConversationState.SERVICE_SEARCH
+            # Clear any stale booking context so greetings don't re-trigger old flows
+            try:
+                sd = session.setdefault('data', {})
+                for k in [
+                    'service_type', 'providers', 'selected_provider', 'selected_provider_index',
+                    'booking_time', '_pending_booking', 'all_providers', 'location',
+                    '_bookings_list', '_cancel_booking_id', '_reschedule_booking_id', '_reschedule_new_time',
+                    'issue'
+                ]:
+                    sd.pop(k, None)
+            except Exception:
+                pass
             return
         if self._is_llm_controlled():
             # Anchor the conversation to the latest explicit user intent for service type
