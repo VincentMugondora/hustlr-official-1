@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
@@ -164,4 +164,32 @@ async def import_places_from_link(
         return result
     except RuntimeError as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.post("/import-json")
+async def import_json(
+    items: List[ProviderCreate],
+    db: AsyncIOMotorDatabase = Depends(get_database),
+):
+    inserted = 0
+    updated = 0
+    for it in items:
+        doc = {
+            "whatsapp_number": it.whatsapp_number,
+            "name": it.name,
+            "service_type": it.service_type,
+            "location": it.location,
+            "business_name": it.business_name,
+            "contact": it.contact,
+            "status": "active",
+            "registered_at": datetime.utcnow(),
+        }
+        existing = await db.providers.find_one({"whatsapp_number": it.whatsapp_number})
+        if existing:
+            await db.providers.update_one({"_id": existing["_id"]}, {"$set": doc})
+            updated += 1
+        else:
+            await db.providers.insert_one(doc)
+            inserted += 1
+    return {"inserted": inserted, "updated": updated, "total": len(items)}
 
