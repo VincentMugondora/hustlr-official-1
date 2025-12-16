@@ -136,12 +136,5 @@ class Settings(BaseSettings):
         "Thank you for using Hustlr. Hustlr — Local services, made simple on WhatsApp."
     )
 
-    ADMIN_WHATSAPP_NUMBERS: list[str] = [
-        "+263783961640",
-        "+263775251636",
-        "+263777530322",
-        "+16509965727",
-    ]
-
 
 settings = Settings()
