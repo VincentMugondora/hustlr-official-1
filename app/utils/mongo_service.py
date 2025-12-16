@@ -93,6 +93,27 @@ class MongoService:
         )
         return result.matched_count > 0
 
+    async def update_provider_fields(self, provider_id: str, updates: Dict[str, Any]) -> bool:
+        db = get_database()
+        try:
+            oid = ObjectId(provider_id)
+        except Exception:
+            return False
+        to_set = dict(updates or {})
+        to_set["updated_at"] = datetime.utcnow()
+        result = await db.providers.update_one({"_id": oid}, {"$set": to_set})
+        return result.matched_count > 0
+
+    async def list_providers(self, status: Optional[str] = None, service_type: Optional[str] = None, limit: int = 20) -> List[Dict[str, Any]]:
+        db = get_database()
+        query: Dict[str, Any] = {}
+        if status:
+            query["status"] = status
+        if service_type:
+            query["service_type"] = service_type
+        cursor = db.providers.find(query).sort("registered_at", -1).limit(limit)
+        return [doc async for doc in cursor]
+
     # Booking operations
     async def create_booking(self, booking_data: Dict[str, Any]) -> bool:
         db = get_database()
@@ -114,6 +135,57 @@ class MongoService:
             {"$set": {"status": status}},
         )
         return result.matched_count > 0
+
+    async def update_booking_fields(self, booking_id: str, updates: Dict[str, Any]) -> bool:
+        db = get_database()
+        to_set = dict(updates or {})
+        to_set["updated_at"] = datetime.utcnow()
+        result = await db.bookings.update_one({"booking_id": booking_id}, {"$set": to_set})
+        return result.matched_count > 0
+
+    async def list_bookings(self, limit: int = 20, start: Optional[datetime] = None, end: Optional[datetime] = None) -> List[Dict[str, Any]]:
+        db = get_database()
+        query: Dict[str, Any] = {}
+        if start or end:
+            time_filter: Dict[str, Any] = {}
+            if start:
+                time_filter["$gte"] = start
+            if end:
+                time_filter["$lte"] = end
+            query["created_at"] = time_filter
+        cursor = db.bookings.find(query).sort("created_at", -1).limit(limit)
+        return [doc async for doc in cursor]
+
+    async def count_bookings(self, start: Optional[datetime] = None, end: Optional[datetime] = None) -> int:
+        db = get_database()
+        query: Dict[str, Any] = {}
+        if start or end:
+            time_filter: Dict[str, Any] = {}
+            if start:
+                time_filter["$gte"] = start
+            if end:
+                time_filter["$lte"] = end
+            query["created_at"] = time_filter
+        return await db.bookings.count_documents(query)
+
+    async def count_providers(self, status: Optional[str] = None) -> int:
+        db = get_database()
+        query: Dict[str, Any] = {}
+        if status:
+            query["status"] = status
+        return await db.providers.count_documents(query)
+
+    async def count_users(self, start: Optional[datetime] = None, end: Optional[datetime] = None) -> int:
+        db = get_database()
+        query: Dict[str, Any] = {}
+        if start or end:
+            time_filter: Dict[str, Any] = {}
+            if start:
+                time_filter["$gte"] = start
+            if end:
+                time_filter["$lte"] = end
+            query["registered_at"] = time_filter
+        return await db.users.count_documents(query)
 
     async def get_booking_by_id(self, booking_id: str) -> Optional[Dict[str, Any]]:
         db = get_database()
