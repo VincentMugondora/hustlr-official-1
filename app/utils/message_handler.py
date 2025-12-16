@@ -1493,6 +1493,260 @@ class MessageHandler:
                     pass
             return
 
+    async def handle_admin_commands(self, user_number: str, message_text: str, session: Dict) -> None:
+        actor = self._normalize_msisdn(user_number)
+        text = (message_text or '').strip()
+        low = text.lower()
+        def arg_after(prefix: str) -> str:
+            p = low.find(prefix)
+            if p == -1:
+                return ''
+            return text[p+len(prefix):].strip()
+        async def send(msg: str, t: str = "admin"):
+            await self._log_and_send_response(user_number, msg, t)
+
+        if low in {'/help', '/admin', '/commands'}:
+            await send("Admin: /providers [/pending|<service>] | /provider <id|phone> | /approve <phone> | /reject <phone> | /suspend <id|phone> | /reinstate <id|phone> | /edit provider <id|phone> key=\"val\"... | /bookings [today|week] | /booking <id> | /assign booking <id> provider <id|phone> | /reassign booking <id> provider <id|phone> | /cancel booking <id> reason=\"...\" | /complete booking <id> | /conversation <msisdn> | /reset conversation <msisdn> | /services | /stats [today|week] | /ai [status|pause|resume] | /block user <msisdn> | /blacklist provider <id|phone>", "admin_help")
+            return
+
+        if low.startswith('/providers'):
+            parts = text.split(maxsplit=2)
+            status = None
+            service = None
+            if len(parts) >= 2:
+                q = parts[1].strip().lower()
+                if q in {'pending','active','rejected','suspended','blacklisted'}:
+                    status = q
+                else:
+                    service = q
+            lst = await self.db.list_providers(status=status, service_type=service, limit=20)
+            if not lst:
+                await send("No providers found.")
+                return
+            lines = []
+            for d in lst:
+                lines.append(f"{str(d.get('_id'))[-6:]} | {d.get('name')} | {d.get('service_type')} | {d.get('status')} | {d.get('whatsapp_number')}")
+            await send("Providers:\n" + "\n".join(lines), "admin_providers")
+            return
+
+        if low.startswith('/provider'):
+            token = arg_after('/provider')
+            token = token.split()[0] if token else ''
+            prov = None
+            if re.fullmatch(r"[0-9a-f]{24}", token):
+                prov = await self.db.get_provider_by_id(token)
+            else:
+                pn = self._normalize_msisdn(token)
+                if pn:
+                    prov = await self.db.get_provider_by_phone(pn)
+            if not prov:
+                await send("Provider not found.")
+                return
+            await send(f"Provider:\nID: {prov.get('_id')}\nName: {prov.get('name')}\nService: {prov.get('service_type')}\nStatus: {prov.get('status')}\nPhone: {prov.get('whatsapp_number')}\nLocation: {prov.get('location')}", "admin_provider")
+            return
+
+        if low.startswith('/approve provider') or low.startswith('/reject provider') or low.startswith('/suspend provider') or low.startswith('/reinstate provider') or low.startswith('/blacklist provider'):
+            action = low.split()[0][1:]
+            token = arg_after('/'+action+' provider')
+            token = token.split()[0] if token else ''
+            prov = None
+            if re.fullmatch(r"[0-9a-f]{24}", token):
+                prov = await self.db.get_provider_by_id(token)
+            else:
+                pn = self._normalize_msisdn(token)
+                if pn:
+                    prov = await self.db.get_provider_by_phone(pn)
+            if not prov:
+                await send("Provider not found.")
+                return
+            pid = str(prov.get('_id'))
+            if action == 'approve' or action == 'reinstate':
+                await self.db.update_provider_status(pid, 'active')
+                await send(f"Provider approved: {prov.get('name')} ({prov.get('whatsapp_number')}).", "admin_approved")
+                try:
+                    await self._log_and_send_response(prov.get('whatsapp_number'), "Your provider account is now active.", "provider_approved")
+                except Exception:
+                    pass
+            elif action == 'reject':
+                await self.db.update_provider_status(pid, 'rejected')
+                await send(f"Provider rejected: {prov.get('name')}.")
+                try:
+                    await self._log_and_send_response(prov.get('whatsapp_number'), "Your provider registration was rejected.", "provider_rejected")
+                except Exception:
+                    pass
+            elif action == 'suspend' or action == 'blacklist':
+                await self.db.update_provider_status(pid, 'blacklisted' if action=='blacklist' else 'suspended')
+                await send(f"Provider {action}ed: {prov.get('name')}.")
+            return
+
+        if low.startswith('/edit provider'):
+            rest = arg_after('/edit provider')
+            parts = rest.split()
+            token = parts[0] if parts else ''
+            fields_text = rest[len(token):].strip()
+            prov = None
+            if re.fullmatch(r"[0-9a-f]{24}", token):
+                prov = await self.db.get_provider_by_id(token)
+            else:
+                pn = self._normalize_msisdn(token)
+                if pn:
+                    prov = await self.db.get_provider_by_phone(pn)
+            if not prov:
+                await send("Provider not found.")
+                return
+            updates: Dict[str, Any] = {}
+            for m in re.finditer(r"(\w+)=\"([^\"]*)\"", fields_text):
+                updates[m.group(1)] = m.group(2)
+            if not updates:
+                await send("No fields provided.")
+                return
+            ok = await self.db.update_provider_fields(str(prov.get('_id')), updates)
+            await send("Updated." if ok else "No change.")
+            return
+
+        if low.startswith('/bookings'):
+            now = datetime.utcnow()
+            start = None
+            if ' today' in low:
+                start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+            if ' week' in low:
+                start = now - timedelta(days=7)
+            items = await self.db.list_bookings(limit=20, start=start, end=None)
+            if not items:
+                await send("No bookings found.")
+                return
+            lines = []
+            for b in items:
+                lines.append(f"{b.get('booking_id','')} | {b.get('service_type','')} | {b.get('status','')} | {b.get('user_whatsapp_number','')} -> {b.get('provider_whatsapp_number','')}")
+            await send("Bookings:\n" + "\n".join(lines), "admin_bookings")
+            return
+
+        if low.startswith('/booking'):
+            bid = arg_after('/booking').split()[0]
+            b = await self.db.get_booking_by_id(bid)
+            if not b:
+                await send("Booking not found.")
+                return
+            await send(f"Booking {b.get('booking_id')}\nService: {b.get('service_type')}\nStatus: {b.get('status')}\nUser: {b.get('user_whatsapp_number')}\nProvider: {b.get('provider_whatsapp_number')}\nTime: {b.get('date_time')}", "admin_booking")
+            return
+
+        if low.startswith('/assign booking') or low.startswith('/reassign booking'):
+            bid = arg_after('/assign booking' if low.startswith('/assign') else '/reassign booking').split()[0]
+            pv = None
+            m = re.search(r"provider\s+([\w\+\-]+)$", text, re.I)
+            token = m.group(1) if m else ''
+            prov = None
+            if re.fullmatch(r"[0-9a-f]{24}", token):
+                prov = await self.db.get_provider_by_id(token)
+            else:
+                pn = self._normalize_msisdn(token)
+                if pn:
+                    prov = await self.db.get_provider_by_phone(pn)
+            if not prov:
+                await send("Provider not found.")
+                return
+            updates = {
+                'provider_id': str(prov.get('_id')),
+                'provider_whatsapp_number': prov.get('whatsapp_number'),
+                'status': 'assigned'
+            }
+            ok = await self.db.update_booking_fields(bid, updates)
+            await send("Assigned." if ok else "No change.")
+            return
+
+        if low.startswith('/cancel booking'):
+            bid = arg_after('/cancel booking').split()[0]
+            m = re.search(r"reason=\"([^\"]*)\"", text)
+            reason = m.group(1) if m else ''
+            ok = await self.db.update_booking_fields(bid, {'status': 'cancelled', 'cancel_reason': reason})
+            await send("Cancelled." if ok else "No change.")
+            return
+
+        if low.startswith('/complete booking'):
+            bid = arg_after('/complete booking').split()[0]
+            ok = await self.db.update_booking_fields(bid, {'status': 'completed'})
+            await send("Completed." if ok else "No change.")
+            return
+
+        if low.startswith('/conversation'):
+            msisdn = self._normalize_msisdn(arg_after('/conversation').split()[0])
+            if not msisdn:
+                await send("Provide a WhatsApp number.")
+                return
+            msgs = await self.db.get_conversation_history(msisdn, limit=10)
+            if not msgs:
+                await send("No recent messages.")
+                return
+            lines = [f"{m['role']}: {m['text'][:120]}" for m in msgs]
+            await send("Conversation:\n" + "\n".join(lines), "admin_conversation")
+            return
+
+        if low.startswith('/reset conversation'):
+            msisdn = self._normalize_msisdn(arg_after('/reset conversation').split()[0])
+            if not msisdn:
+                await send("Provide a WhatsApp number.")
+                return
+            await self.db.delete_session(msisdn)
+            await self.db.delete_conversation_history(msisdn)
+            await send("Conversation reset.")
+            return
+
+        if low.startswith('/services'):
+            items = await self.db.list_providers(limit=200)
+            st = []
+            for d in items:
+                try:
+                    val = (d.get('service_type') or '').strip()
+                    if val and val not in st:
+                        st.append(val)
+                except Exception:
+                    pass
+            await send("Services:\n" + ("\n".join(st) if st else "None"), "admin_services")
+            return
+
+        if low.startswith('/stats'):
+            now = datetime.utcnow()
+            window = None
+            if ' today' in low:
+                window = (now.replace(hour=0, minute=0, second=0, microsecond=0), None)
+            elif ' week' in low:
+                window = (now - timedelta(days=7), None)
+            b_total = await self.db.count_bookings(*(window or (None, None)))
+            b_completed = await self.db.count_bookings_by_status('completed', *(window or (None, None)))
+            prov_active = await self.db.count_providers('active')
+            users = await self.db.count_users(*(window or (None, None)))
+            await send(f"Stats:\nBookings: {b_total}\nCompleted: {b_completed}\nActive providers: {prov_active}\nNew users: {users}", "admin_stats")
+            return
+
+        if low.startswith('/ai status'):
+            await send(f"AI: {'paused' if getattr(self, 'ai_paused', False) else 'active'}", "admin_ai")
+            return
+        if low.startswith('/ai pause'):
+            self.ai_paused = True
+            await send("AI paused.", "admin_ai")
+            return
+        if low.startswith('/ai resume'):
+            self.ai_paused = False
+            await send("AI resumed.", "admin_ai")
+            return
+
+        if low.startswith('/panic booking'):
+            bid = arg_after('/panic booking').split()[0]
+            ok = await self.db.update_booking_fields(bid, {'status': 'panic', 'flagged': True})
+            await send("Flagged." if ok else "No change.")
+            return
+
+        if low.startswith('/block user'):
+            msisdn = self._normalize_msisdn(arg_after('/block user').split()[0])
+            if not msisdn:
+                await send("Provide a WhatsApp number.")
+                return
+            await self.db.update_user(msisdn, {'opted_out': True, 'consent_transactional': False})
+            await send("User blocked.")
+            return
+
+        await send("Unknown admin command. Type /help.", "admin_unknown")
+
     async def handle_ai_response(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
         if getattr(self, 'ai_paused', False):
             await self._log_and_send_response(user_number, "AI is currently paused. Please try again later or use HELP.", "ai_paused")
