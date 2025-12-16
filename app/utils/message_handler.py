@@ -384,6 +384,39 @@ class MessageHandler:
             session['state'] = ConversationState.SERVICE_SEARCH
             state = session['state']
         
+        # Intercept simple greetings first to avoid resuming old bookings on "hi/hello"
+        text_cmd = message_text.strip().lower()
+        text_cmd_compact = re.sub(r"\s+", " ", text_cmd)
+        greeting_patterns = (
+            "hi", "hello", "hey", "hie", "hiya", "yo", "sup",
+            "morning", "afternoon", "evening",
+            "good morning", "good afternoon", "good evening",
+        )
+        if text_cmd in greeting_patterns or re.match(r"^(hi|hello|hey|hie|hiya|yo|sup|good (morning|afternoon|evening)|morning|afternoon|evening)\b", text_cmd):
+            name = (user or {}).get('name') or ''
+            greet = f"Hi {name}!" if name else "Hi!"
+            await self._log_and_send_response(
+                user_number,
+                self._short(
+                    f"{greet} How can I help you today? You can ask for a service like plumber, electrician, cleaner, or say HELP.",
+                    f"{greet} How can I help?"
+                ),
+                "greeting"
+            )
+            session['state'] = ConversationState.SERVICE_SEARCH
+            try:
+                sd = session.setdefault('data', {})
+                for k in [
+                    'service_type', 'providers', 'selected_provider', 'selected_provider_index',
+                    'booking_time', '_pending_booking', 'all_providers', 'location',
+                    '_bookings_list', '_cancel_booking_id', '_reschedule_booking_id', '_reschedule_new_time',
+                    'issue'
+                ]:
+                    sd.pop(k, None)
+            except Exception:
+                pass
+            return
+        
         if state == ConversationState.BOOKING_RESUME_DECISION:
             await self.handle_booking_resume_decision(user_number, message_text, session, user)
             return
@@ -431,8 +464,7 @@ class MessageHandler:
                 except Exception:
                     pass
 
-        text_cmd = message_text.strip().lower()
-        text_cmd_compact = re.sub(r"\s+", " ", text_cmd)
+        
 
         # Graceful conversation endings / small talk that should not trigger errors
         closing_phrases = [
@@ -622,36 +654,6 @@ class MessageHandler:
 
         # LLM-controlled mode: if enabled and we're not mid critical flow,
         # let the AI lead general chat/triage.
-        greeting_patterns = (
-            "hi", "hello", "hey", "hie", "hiya", "yo", "sup",
-            "morning", "afternoon", "evening",
-            "good morning", "good afternoon", "good evening",
-        )
-        if text_cmd in greeting_patterns or re.match(r"^(hi|hello|hey|hie|hiya|yo|sup|good (morning|afternoon|evening)|morning|afternoon|evening)\b", text_cmd):
-            name = (user or {}).get('name') or ''
-            greet = f"Hi {name}!" if name else "Hi!"
-            await self._log_and_send_response(
-                user_number,
-                self._short(
-                    f"{greet} How can I help you today? You can ask for a service like plumber, electrician, cleaner, or say HELP.",
-                    f"{greet} How can I help?"
-                ),
-                "greeting"
-            )
-            session['state'] = ConversationState.SERVICE_SEARCH
-            # Clear any stale booking context so greetings don't re-trigger old flows
-            try:
-                sd = session.setdefault('data', {})
-                for k in [
-                    'service_type', 'providers', 'selected_provider', 'selected_provider_index',
-                    'booking_time', '_pending_booking', 'all_providers', 'location',
-                    '_bookings_list', '_cancel_booking_id', '_reschedule_booking_id', '_reschedule_new_time',
-                    'issue'
-                ]:
-                    sd.pop(k, None)
-            except Exception:
-                pass
-            return
         if self._is_llm_controlled():
             # Anchor the conversation to the latest explicit user intent for service type
             try:
@@ -1761,6 +1763,58 @@ class MessageHandler:
             return
         await self._log_and_send_response(user_number, "Say 'cancel booking' to cancel one, or tell me what service you need.", "view_bookings_hint")
         session['state'] = ConversationState.SERVICE_SEARCH
+
+    async def handle_booking_resume_decision(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
+        text = (message_text or '').strip().lower()
+        yes_vals = {'yes', 'y', 'resume', 'continue', 'ok', 'okay', 'sure'}
+        no_vals = {'no', 'n', 'new', 'start new', 'start over', 'cancel', 'stop'}
+
+        if text in yes_vals:
+            prev_state_val = (session.get('data') or {}).get('previous_state')
+            if prev_state_val:
+                try:
+                    session['state'] = ConversationState(prev_state_val)
+                except Exception:
+                    session['state'] = ConversationState.SERVICE_SEARCH
+            else:
+                session['state'] = ConversationState.SERVICE_SEARCH
+
+            await self._log_and_send_response(
+                user_number,
+                self._short(
+                    "Okay, resuming your previous booking. Please continue where we left off.",
+                    "Resuming your booking."
+                ),
+                "booking_resume_yes",
+            )
+            session.setdefault('data', {}).pop('previous_state', None)
+            return
+
+        if text in no_vals:
+            session['state'] = ConversationState.SERVICE_SEARCH
+            try:
+                sd = session.setdefault('data', {})
+                for k in [
+                    'service_type', 'providers', 'selected_provider', 'selected_provider_index',
+                    'booking_time', '_pending_booking', 'all_providers', 'location',
+                    '_bookings_list', '_cancel_booking_id', '_reschedule_booking_id', '_reschedule_new_time',
+                    'issue', 'previous_state'
+                ]:
+                    sd.pop(k, None)
+            except Exception:
+                pass
+            await self._log_and_send_response(
+                user_number,
+                self._short("No problem. Let's start fresh. What service do you need?", "Starting new. What service?"),
+                "booking_resume_no",
+            )
+            return
+
+        await self._log_and_send_response(
+            user_number,
+            "Please reply 'yes' to continue your previous booking or 'no' to start a new one.",
+            "booking_resume_prompt_repeat",
+        )
 
     async def handle_cancel_booking_select(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
         items = session.get('data', {}).get('_bookings_list') or []
