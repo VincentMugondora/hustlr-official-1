@@ -46,6 +46,7 @@ venv/
 .DS_Store
 *.sublime-project
 *.sublime-workspace
+whatsapp_providers.json
 
 # Logs
 *.log
