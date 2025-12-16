@@ -39114,3 +39114,35 @@ You can now search for service providers and book appoint...
 2025-12-16 11:55:12,970 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_no_providers_for_confirm, Message: Sorry, no plumbers available in your area right now....
 2025-12-16 11:55:14,342 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2025-12-16 11:55:14,470 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-16 12:01:12,222 - app.api.whatsapp - INFO - [2025-12-16T10:01:12.222237] Baileys webhook received
+2025-12-16 12:01:12,223 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263783423825",
+  "text": "Handihwe chirungu ini",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "145389458071589@lid",
+      "fromMe": false,
+      "id": "AC40D1F36A6EB60E866C49571BA43128",
+      "senderPn": "263783423825@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765879265,
+    "pushName": "+263",
+    "broadcast": false,
+    "message": {
+      "conversation": "Handihwe chirungu ini",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "recipientKeyHash": "wom0j6rFsvt9iQ==",
+          "recipientTimestamp": "1765878053"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "DKU3jfQbChO+iOVzfP7HIhz4/wGvQ2kp8SKT4fEqQmU="
+      }
+    }
+  }
+}
+2025-12-16 12:01:12,223 - app.api.whatsapp - INFO - Baileys message from: 263783423825
+2025-12-16 12:01:12,223 - app.api.whatsapp - INFO - Baileys text: 'Handihwe chirungu ini'
+2025-12-16 12:01:17,215 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263783423825, Type: onboarding_privacy_declined, Message: Welcome to Hustlr! I'll help you find local service providers.
+
+To get started, send your name and a...
