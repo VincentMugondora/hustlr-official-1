@@ -41723,3 +41723,47 @@ I can help with:
   }
 }
 2025-12-17 14:56:55,972 - app.api.whatsapp - INFO - Baileys broadcast/status message from 'status' (remoteJid='status@broadcast'), skipping
+2025-12-17 14:57:19,928 - app.api.whatsapp - INFO - [2025-12-17T12:57:19.926500] Baileys webhook received
+2025-12-17 14:57:19,928 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "status",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "status@broadcast",
+      "fromMe": false,
+      "id": "AC4E8438E9E3B163DF3486F91E29CE49",
+      "participant": "263784303418@s.whatsapp.net",
+      "participantLid": "60035438764077@lid"
+    },
+    "messageTimestamp": 1765976239,
+    "pushName": "Kumkanikazi \ud83c\udf39Myckeilah \ud83c\udf3a",
+    "broadcast": true,
+    "message": {
+      "imageMessage": {
+        "url": "https://mmg.whatsapp.net/o1/v/t24/f2/m234/AQMPdUuggPxImuRyFdeeZR8AU7J8lqbHuz2jWAF-cscAA4TWaeg_-LZcZL0bn06YUlSrKT2x4ODpJqnRJUco1vrYnhnkB7vvO4y-ELpkRw?ccb=9-4&oh=01_Q5Aa3QFiaYmnz1CnUSprfyJCbyoFKQ7kxh3IrQrij-awswHcxQ&oe=6969FE83&_nc_sid=e6ed6c&mms3=true",
+        "mimetype": "image/jpeg",
+        "caption": "Chibatamabvi chauya \ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83d\ude02",
+        "fileSha256": "vuf8vse58QeecyutbeQheRhlB5VOz/OJMVpQeeKY+2U=",
+        "fileLength": "77868",
+        "height": 1080,
+        "width": 877,
+        "mediaKey": "XtUItozUA2S27VMCyzZpTCCN8F2C5kVIPF72A7vD8sM=",
+        "fileEncSha256": "SHlXzyhw9mU/8APeUZXgtFvpEdIDyNHVd0kLf1ZRAxg=",
+        "directPath": "/o1/v/t24/f2/m234/AQMPdUuggPxImuRyFdeeZR8AU7J8lqbHuz2jWAF-cscAA4TWaeg_-LZcZL0bn06YUlSrKT2x4ODpJqnRJUco1vrYnhnkB7vvO4y-ELpkRw?ccb=9-4&oh=01_Q5Aa3QFiaYmnz1CnUSprfyJCbyoFKQ7kxh3IrQrij-awswHcxQ&oe=6969FE83&_nc_sid=e6ed6c",
+        "mediaKeyTimestamp": "1765976237",
+        "jpegThumbnail": "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",
+        "contextInfo": {
+          "pairedMediaType": "NOT_PAIRED_MEDIA",
+          "statusSourceType": "IMAGE"
+        },
+        "thumbnailDirectPath": "/v/t62.35850-24/551769086_1198278742324988_8519006015854964585_n.enc?ccb=11-4&oh=01_Q5Aa3QFZPvlF7-20fD1iy1pDaGW1cLGS7CG_LWsbAPV_SJq4cg&oe=696A029E&_nc_sid=5e03e0",
+        "thumbnailSha256": "l2hA8Zhq4xHgVNzqTMZsltq856dGXnHegSNgqsMpaUA=",
+        "thumbnailEncSha256": "TaCU6YBR8HzIkw0F93gL/Hg32ElUD6oVZmynKPGCb0M="
+      },
+      "messageContextInfo": {
+        "messageSecret": "0TqYx1ctAp089UUiOQ45fNTRQnHxP4AC3WMqZcP+wMY="
+      }
+    }
+  }
+}
+2025-12-17 14:57:19,929 - app.api.whatsapp - INFO - Baileys broadcast/status message from 'status' (remoteJid='status@broadcast'), skipping
