@@ -1848,7 +1848,10 @@ class MessageHandler:
             )
             prompt = (
                 "Format the admin command list into a clean WhatsApp help message with short lines. "
-                "Do not add commands or extra text. Keep <= 12 lines. Return JSON with status=\"ASK\", field=\"admin_help\", data={}, and assistantMessage.\n\n"
+                "Requirements: PLAIN TEXT ONLY, ASCII ONLY, NO EMOJIS, NO MARKDOWN. "
+                "Start with 'Admin Commands' on its own line, then three sections: 'Providers:', 'Bookings:', 'System:'. "
+                "Under each section, list concise items with '-' bullets. Keep <= 12 total lines. "
+                "Do not add any commands not provided. Return JSON with status=\"ASK\", field=\"admin_help\", data={}, and assistantMessage only.\n\n"
                 f"Commands:\n{commands}"
             )
             raw = await self.lambda_service.invoke_question_answerer(prompt, user_context={"session_state": "admin_help", "known_fields": {}})
@@ -1869,36 +1872,40 @@ class MessageHandler:
                 msg = None
             if not msg:
                 msg = (
-                    "Admin commands:\n"
-                    "/providers [/pending|<service>]\n"
-                    "/provider <id|phone>\n"
-                    "/approve <phone> | /reject <phone>\n"
-                    "/suspend <id|phone> | /reinstate <id|phone>\n"
-                    "/edit provider <id|phone> key=\"val\"\n"
-                    "/bookings [today|week] | /booking <id>\n"
-                    "/assign booking <id> provider <id|phone>\n"
-                    "/reassign booking <id> provider <id|phone>\n"
-                    "/cancel booking <id> reason=\"...\" | /complete booking <id>\n"
-                    "/conversation <msisdn> | /reset conversation <msisdn>\n"
-                    "/services | /stats [today|week]\n"
-                    "/ai [status|pause|resume] | /block user <msisdn> | /blacklist provider <id|phone>"
+                    "Admin Commands\n\n"
+                    "Providers:\n"
+                    "- /providers [pending|<service>]\n"
+                    "- /provider <id|phone>\n"
+                    "- /approve <phone> | /reject <phone>\n"
+                    "- /suspend <id|phone> | /reinstate <id|phone>\n"
+                    "- /edit provider <id|phone> key=\"val\"\n\n"
+                    "Bookings:\n"
+                    "- /bookings [today|week] | /booking <id>\n"
+                    "- /assign booking <id> provider <id|phone> | /reassign booking <id> provider <id|phone>\n"
+                    "- /cancel booking <id> reason=\"...\" | /complete booking <id>\n\n"
+                    "System:\n"
+                    "- /conversation <msisdn> | /reset conversation <msisdn>\n"
+                    "- /services | /stats [today|week]\n"
+                    "- /ai [status|pause|resume] | /block user <msisdn> | /blacklist provider <id|phone>"
                 )
             await self._log_and_send_response(user_number, msg, "admin_help_ai")
         except Exception:
             fallback = (
-                "Admin commands:\n"
-                "/providers [/pending|<service>]\n"
-                "/provider <id|phone>\n"
-                "/approve <phone> | /reject <phone>\n"
-                "/suspend <id|phone> | /reinstate <id|phone>\n"
-                "/edit provider <id|phone> key=\"val\"\n"
-                "/bookings [today|week] | /booking <id>\n"
-                "/assign booking <id> provider <id|phone>\n"
-                "/reassign booking <id> provider <id|phone>\n"
-                "/cancel booking <id> reason=\"...\" | /complete booking <id>\n"
-                "/conversation <msisdn> | /reset conversation <msisdn>\n"
-                "/services | /stats [today|week]\n"
-                "/ai [status|pause|resume] | /block user <msisdn> | /blacklist provider <id|phone>"
+                "Admin Commands\n\n"
+                "Providers:\n"
+                "- /providers [pending|<service>]\n"
+                "- /provider <id|phone>\n"
+                "- /approve <phone> | /reject <phone>\n"
+                "- /suspend <id|phone> | /reinstate <id|phone>\n"
+                "- /edit provider <id|phone> key=\"val\"\n\n"
+                "Bookings:\n"
+                "- /bookings [today|week] | /booking <id>\n"
+                "- /assign booking <id> provider <id|phone> | /reassign booking <id> provider <id|phone>\n"
+                "- /cancel booking <id> reason=\"...\" | /complete booking <id>\n\n"
+                "System:\n"
+                "- /conversation <msisdn> | /reset conversation <msisdn>\n"
+                "- /services | /stats [today|week]\n"
+                "- /ai [status|pause|resume] | /block user <msisdn> | /blacklist provider <id|phone>"
             )
             await self._log_and_send_response(user_number, fallback, "admin_help")
 

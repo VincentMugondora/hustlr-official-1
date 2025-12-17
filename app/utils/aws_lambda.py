@@ -118,12 +118,20 @@ class AWSLambdaService:
             if not final_text:
                 raise RuntimeError("Claude response did not contain any text content.")
 
-            # Log whenever Claude successfully answers a customer
-            safe_user = (user_context or {}).get("name") or "unknown user"
+            # Log whenever Claude successfully answers a customer (ASCII-safe previews for Windows consoles)
+            safe_user = (user_context or {}).get("name") or (user_context or {}).get("user_name") or "unknown user"
+            try:
+                q_preview = (user_message or "")[:120]
+                a_preview = (final_text or "")[:200]
+                q_safe = q_preview.encode("ascii", errors="ignore").decode("ascii", errors="ignore")
+                a_safe = a_preview.encode("ascii", errors="ignore").decode("ascii", errors="ignore")
+            except Exception:
+                q_safe = (user_message or "")[:120]
+                a_safe = (final_text or "")[:200]
             logger.info(
                 f"[CLAUDE RESPONSE] Model: {bedrock_model_id}, User: {safe_user}, "
-                f"Question: {user_message[:120]}..., "
-                f"Answer: {final_text[:200]}..."
+                f"Question: {q_safe}..., "
+                f"Answer: {a_safe}..."
             )
 
             return final_text

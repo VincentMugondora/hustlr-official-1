@@ -40742,3 +40742,61 @@ For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/St
 2025-12-17 11:42:55,930 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: admin_action_result, Message: Unknown action....
 2025-12-17 11:42:57,393 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2025-12-17 11:42:58,343 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-17 11:49:26,096 - app.api.whatsapp - INFO - [2025-12-17T09:49:26.096767] Baileys webhook received
+2025-12-17 11:49:26,097 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "what are admin commands",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3FF10AD53E989681C706",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765964965,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "what are admin commands",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "wom0j6rFsvt9iQ==",
+          "recipientTimestamp": "1765878053"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-17 11:49:26,097 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-17 11:49:26,098 - app.api.whatsapp - INFO - Baileys text: 'what are admin commands'
+2025-12-17 11:49:28,859 - app.utils.aws_lambda - INFO - [BEDROCK CONFIG] source=settings cfg(HUSTLR)=anthropic.claude-3-5-sonnet-20240620-v1:0, env_ignored(BEDROCK_MODEL_ID)=, param_ignored=None, inference_profile_arn=arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, resolved_model_id=anthropic.claude-3-5-sonnet-20240620-v1:0, chosen=arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, use_bedrock=True, region=us-east-1, has_creds=True
+2025-12-17 11:49:28,873 - app.utils.aws_lambda - INFO - [BEDROCK INVOKE] modelId=arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, region=us-east-1
+2025-12-17 11:49:38,148 - app.utils.aws_lambda - INFO - [CLAUDE RESPONSE] Model: arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, User: unknown user, Question: what are admin commands..., Answer: ```json
+{
+  "intent": "help_request",
+  "confidence": 0.95,
+  "entities": {},
+  "action": {
+    "type": "show_help",
+    "requiresConfirmation": false,
+    "response": "**Available Admin Commands:**\n...
+2025-12-17 11:49:38,150 - app.utils.aws_lambda - INFO - [BEDROCK CONFIG] source=settings cfg(HUSTLR)=anthropic.claude-3-5-sonnet-20240620-v1:0, env_ignored(BEDROCK_MODEL_ID)=, param_ignored=None, inference_profile_arn=arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, resolved_model_id=anthropic.claude-3-5-sonnet-20240620-v1:0, chosen=arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, use_bedrock=True, region=us-east-1, has_creds=True
+2025-12-17 11:49:38,150 - app.utils.aws_lambda - INFO - [BEDROCK INVOKE] modelId=arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, region=us-east-1
+2025-12-17 11:49:42,203 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: admin_help_ai, Message:  *Admin Commands*
+
+*Providers:* /providers [pending|<service>] | /provider <id|phone> | /approve <p...
+2025-12-17 11:49:43,516 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-17 11:49:43,680 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
