@@ -11,7 +11,7 @@ class Settings(BaseSettings):
 
     # Database
     MONGODB_URI: str = "mongodb://localhost:27017"
-    MONGODB_DB_NAME: str = "hustlr"
+    MONGODB_DB_NAME: str = "hustlr-1"
 
     # WhatsApp Cloud API
     WHATSAPP_API_URL: str = ""
