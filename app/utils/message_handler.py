@@ -721,6 +721,37 @@ class MessageHandler:
             await self.handle_admin_approval(user_number, message_text, session)
             return
 
+        # Provider: quick view of own bookings
+        try:
+            prov = await self.db.get_provider_by_whatsapp(user_number)
+        except Exception:
+            prov = None
+        if prov and str(prov.get('status') or '').lower() in {'active', 'suspended', 'pending'}:
+            terms = [
+                'my bookings', 'all bookings', 'view bookings', 'see bookings', 'bookings', 'bookings list',
+                'my jobs', 'all jobs', 'view jobs', 'see jobs', 'jobs', 'jobs list'
+            ]
+            if any(t in text_cmd_compact for t in terms):
+                st = None
+                for cand in ['pending', 'confirmed', 'assigned', 'cancelled', 'completed']:
+                    if cand in text_cmd_compact:
+                        st = cand
+                        break
+                items = await self.db.list_bookings_for_provider(user_number, limit=20, status=st)
+                if not items:
+                    await self._log_and_send_response(user_number, 'No bookings found.', 'provider_bookings_empty')
+                    return
+                lines = []
+                for b in items:
+                    bid = b.get('booking_id', '')
+                    svc = b.get('service_type', '')
+                    sta = b.get('status', '')
+                    when = b.get('date_time') or str(b.get('created_at') or '')
+                    user_msisdn = b.get('user_whatsapp_number', '')
+                    lines.append(f"{bid} | {svc} | {sta} | {when} | {user_msisdn}")
+                await self._log_and_send_response(user_number, 'Your bookings (latest first):\n' + "\n".join(lines), 'provider_bookings')
+                return
+
         # Reset conversation to fresh booking search
         if message_text in ['reset', 'restart', 'start over', 'new']:
             session['state'] = ConversationState.SERVICE_SEARCH

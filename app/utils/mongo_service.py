@@ -186,6 +186,14 @@ class MongoService:
         cursor = db.bookings.find(query).sort("created_at", -1).limit(limit)
         return [doc async for doc in cursor]
 
+    async def list_bookings_for_provider(self, provider_whatsapp_number: str, limit: int = 20, status: Optional[str] = None) -> List[Dict[str, Any]]:
+        db = get_database()
+        query: Dict[str, Any] = {"provider_whatsapp_number": provider_whatsapp_number}
+        if status:
+            query["status"] = status
+        cursor = db.bookings.find(query).sort("created_at", -1).limit(limit)
+        return [doc async for doc in cursor]
+
     async def count_bookings(self, start: Optional[datetime] = None, end: Optional[datetime] = None) -> int:
         db = get_database()
         query: Dict[str, Any] = {}
