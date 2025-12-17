@@ -1941,13 +1941,21 @@ class MessageHandler:
             await self._log_and_send_response(user_number, "I couldn't parse that.", "admin_ai_parse_error")
             return True
 
-        assistant_msg = (payload.get('assistantMessage') or '').strip()
+        # Prefer assistantMessage; tolerate legacy 'response' field
+        assistant_msg = (payload.get('assistantMessage') or payload.get('response') or '').strip()
         if assistant_msg:
             await self._log_and_send_response(user_number, assistant_msg, "admin_ai_assistant")
 
         action = payload.get('action') or {}
         entities = payload.get('entities') or {}
         if not action or not isinstance(action, dict) or not action.get('type'):
+            return True
+
+        # Handle help intent explicitly without executing backend actions
+        t_raw = str(action.get('type') or '')
+        if t_raw.upper() == 'SHOW_HELP':
+            if not assistant_msg:
+                await self._send_admin_help_via_ai(user_number)
             return True
 
         # Confirmation flow
@@ -1966,6 +1974,9 @@ class MessageHandler:
             await self.db.log_admin_audit({'admin': actor, 'action': action.get('type'), 'entities': entities, 'result': 'ok' if ok else 'failed', 'prompt_version': 'hustlr_admin_prompt_v1'})
         except Exception:
             pass
+        if not ok and (str(result_msg or '').lower().startswith('unknown action')) and assistant_msg:
+            # Prefer Claude's assistant message over an unknown-action error
+            return True
         await self._log_and_send_response(user_number, result_msg or ("Done." if ok else "Failed."), "admin_action_result")
         return True
 
