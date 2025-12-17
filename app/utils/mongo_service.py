@@ -339,3 +339,11 @@ class MongoService:
         db = get_database()
         cursor = db.incoming_messages.find({"processed": False}).sort("created_at", 1).limit(limit)
         return [doc async for doc in cursor]
+
+    async def store_media_upload(self, media_doc: Dict[str, Any]) -> Any:
+        db = get_database()
+        doc = dict(media_doc or {})
+        now = datetime.utcnow()
+        doc.setdefault("created_at", now)
+        result = await db.media_uploads.insert_one(doc)
+        return result.inserted_id

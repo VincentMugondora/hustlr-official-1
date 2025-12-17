@@ -234,6 +234,42 @@ class WhatsAppCloudAPI:
                 return response.json()
             else:
                 raise Exception(f"Upload failed: {response.status_code} - {response.text}")
+
+    async def get_media_metadata(self, media_id: str) -> Dict[str, Any]:
+        """Fetch media metadata (url, mime_type, file_size) for a given media ID."""
+        if not media_id:
+            raise ValueError("media_id is required")
+        url = f"https://graph.facebook.com/{self.version}/{media_id}"
+        headers = {
+            'Authorization': f'Bearer {self.access_token}',
+        }
+        async with httpx.AsyncClient() as client:
+            resp = await client.get(url, headers=headers, timeout=30.0)
+            if resp.status_code != 200:
+                raise Exception(f"Failed to get media metadata: {resp.status_code} - {resp.text}")
+            return resp.json()
+
+    async def download_media(self, media_id: str) -> Dict[str, Any]:
+        """Download media bytes by media_id. Returns dict with bytes, content_type, size, meta."""
+        meta = await self.get_media_metadata(media_id)
+        media_url = meta.get('url')
+        if not media_url:
+            raise Exception("Media URL not found in metadata")
+        headers = {
+            'Authorization': f'Bearer {self.access_token}',
+        }
+        async with httpx.AsyncClient() as client:
+            resp = await client.get(media_url, headers=headers, timeout=60.0)
+            if resp.status_code != 200:
+                raise Exception(f"Failed to download media: {resp.status_code}")
+            content_type = resp.headers.get('Content-Type') or meta.get('mime_type') or 'application/octet-stream'
+            data = resp.content
+            return {
+                'bytes': data,
+                'content_type': content_type,
+                'size': len(data),
+                'meta': meta,
+            }
     
     async def _send_request(self, payload: Dict[str, Any]) -> Dict[str, Any]:
         """Send request to WhatsApp Cloud API"""
