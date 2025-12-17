@@ -40330,3 +40330,56 @@ For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/St
 2025-12-16 15:54:16,313 - app.api.whatsapp - INFO - Baileys message processed successfully for 245943215608017
 2025-12-16 15:54:16,390 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2025-12-16 15:54:16,726 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-17 09:36:55,610 - app.api.whatsapp - INFO - [2025-12-17T07:36:55.610295] Baileys webhook received
+2025-12-17 09:36:55,627 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "status",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "status@broadcast",
+      "fromMe": false,
+      "id": "AC72E8A188052BC560F9EFB48E30E412",
+      "participant": "263782890282@s.whatsapp.net",
+      "participantLid": "166537457602712@lid"
+    },
+    "messageTimestamp": 1765957014,
+    "pushName": "Hoskick power  baba Taku",
+    "broadcast": true,
+    "message": {
+      "senderKeyDistributionMessage": {
+        "groupId": "status@broadcast",
+        "axolotlSenderKeyDistributionMessage": "MwiQv+mMARACGiAjqLhm21o+C09yEup2RZEEO4pAEe8bsfYPDSz2PvBOzCIhBR51HDbcb98y3a0CvXa16b9Pwmvh4+xw5QMQ6wtxRRAk"
+      },
+      "imageMessage": {
+        "url": "https://mmg.whatsapp.net/v/t62.7118-24/552395195_821991213984975_231196348898170695_n.enc?ccb=11-4&oh=01_Q5Aa3QGXLZVVr8DOmJboGDs_Hgxy9F9aVEPrdGJ5KRKN1c9xzA&oe=6969B389&_nc_sid=5e03e0&mms3=true",
+        "mimetype": "image/jpeg",
+        "caption": "Makule manyama",
+        "fileSha256": "maTdxNkgdGmd4FE5gVtMjdHH4OUvFTNcdO8bC6eKRRI=",
+        "fileLength": "17452",
+        "height": 402,
+        "width": 715,
+        "mediaKey": "PAauGkQT8RQAgDPIeFu7GprBPmq4DVhtTN6j8ILpf54=",
+        "fileEncSha256": "rpLA+JONUEhDUUN4QYubKbUPqZk36Iy1eXAZvb1Ages=",
+        "directPath": "/v/t62.7118-24/552395195_821991213984975_231196348898170695_n.enc?ccb=11-4&oh=01_Q5Aa3QGXLZVVr8DOmJboGDs_Hgxy9F9aVEPrdGJ5KRKN1c9xzA&oe=6969B389&_nc_sid=5e03e0",
+        "mediaKeyTimestamp": "1765956985",
+        "jpegThumbnail": "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",
+        "contextInfo": {
+          "pairedMediaType": "NOT_PAIRED_MEDIA",
+          "statusSourceType": "IMAGE"
+        },
+        "scansSidecar": "0+o+r2kq1/Zr/z3OllFBX7aIoU86q8B6TFrc45hSIfl97Z7fAUmW9w==",
+        "scanLengths": [
+          2853,
+          5203,
+          3179,
+          6217
+        ],
+        "midQualityFileSha256": "5RiZ+qx0dyvn8iXjY/fY/j0qvDYMlWU9Wgen9SsqMQw="
+      },
+      "messageContextInfo": {
+        "messageSecret": "OOb/G64+Aklv5I29CiFINDjjVnd2sqUv3szl4laFYh8="
+      }
+    }
+  }
+}
+2025-12-17 09:36:55,646 - app.api.whatsapp - INFO - Baileys broadcast/status message from 'status' (remoteJid='status@broadcast'), skipping
