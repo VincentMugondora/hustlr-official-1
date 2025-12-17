@@ -408,7 +408,9 @@ class MessageHandler:
                 is_admin = self._normalize_msisdn(user_number) in set(self._admin_numbers())
             except Exception:
                 is_admin = False
-            if is_admin:
+            # Respect temporary mode override
+            mode_override = str((session.get('mode_override') or '')).lower()
+            if is_admin and (mode_override in {'', 'admin'}):
                 try:
                     handled = await self.handle_admin_natural_language(user_number, message_text, session)
                     if handled:
@@ -438,16 +440,70 @@ class MessageHandler:
                     pass
                 return
 
+        # Mode override commands (temporary persona switch)
+        mode_txt = text_cmd_compact
+        target_mode = None
+        override_cmd = False
+        if mode_txt.startswith('/mode ') or mode_txt.startswith('mode '):
+            parts = mode_txt.split()
+            if len(parts) >= 2:
+                target_mode = parts[1]
+                override_cmd = True
+        else:
+            m = re.search(r"\bswitch to (admin|provider|user) mode\b", mode_txt)
+            if m:
+                target_mode = m.group(1)
+                override_cmd = True
+            elif mode_txt in {'mode', '/mode', 'mode reset', 'reset mode', 'mode default', 'mode auto'}:
+                target_mode = 'reset'
+                override_cmd = True
+
+        if override_cmd:
+            actor = self._normalize_msisdn(user_number)
+            admins = set(self._admin_numbers())
+            try:
+                prov_chk = await self.db.get_provider_by_whatsapp(user_number)
+            except Exception:
+                prov_chk = None
+            is_provider_active = bool(prov_chk and str(prov_chk.get('status', '')).lower() == 'active')
+            tgt = (target_mode or '').strip().lower()
+            if tgt in {'reset', 'default', 'auto', 'off', ''}:
+                session['mode_override'] = None
+                await self._log_and_send_response(user_number, 'Mode reset. Using automatic role.', 'mode_reset')
+                return
+            if tgt == 'admin':
+                if actor in admins:
+                    session['mode_override'] = 'admin'
+                    await self._log_and_send_response(user_number, 'Mode set: Admin.', 'mode_admin')
+                else:
+                    await self._log_and_send_response(user_number, 'Not permitted: your number is not an admin.', 'mode_denied')
+                return
+            if tgt == 'provider':
+                if is_provider_active:
+                    session['mode_override'] = 'provider'
+                    await self._log_and_send_response(user_number, 'Mode set: Provider.', 'mode_provider')
+                else:
+                    await self._log_and_send_response(user_number, 'You are not an active provider.', 'mode_denied')
+                return
+            if tgt == 'user':
+                session['mode_override'] = 'user'
+                await self._log_and_send_response(user_number, 'Mode set: User.', 'mode_user')
+                return
+
         # Admin slash-commands: Prefer Claude to answer/handle first, then fallback
         if message_text.strip().startswith('/'):
             actor = self._normalize_msisdn(user_number)
-            if actor in set(self._admin_numbers()):
+            mode_override = str((session.get('mode_override') or '')).lower()
+            if actor in set(self._admin_numbers()) and (mode_override in {'', 'admin'}):
                 try:
                     handled = await self.handle_admin_natural_language(user_number, message_text, session)
                     if handled:
                         return
                 except Exception:
                     pass
+            elif actor in set(self._admin_numbers()):
+                await self._log_and_send_response(user_number, "Admin mode is off. Send 'mode admin' to re-enable.", "admin_mode_off")
+                return
             else:
                 await self._log_and_send_response(user_number, "You are not authorized to use admin commands.", "admin_not_authorized")
                 return
@@ -464,13 +520,14 @@ class MessageHandler:
                 is_admin = actor in set(self._admin_numbers())
             except Exception:
                 is_admin = False
+            mode_override = str((session.get('mode_override') or '')).lower()
             terms = [
                 'my bookings', 'all bookings', 'view bookings', 'see bookings', 'bookings', 'bookings list',
                 'my jobs', 'all jobs', 'view jobs', 'see jobs', 'jobs', 'jobs list'
             ]
             provider_trigger = any(t in text_cmd_compact for t in terms)
             # Admins: require an explicit "my" indicator to show only their own jobs here.
-            if provider_trigger and (not is_admin or re.search(r"\bmy\b", text_cmd_compact)):
+            if provider_trigger and (mode_override == 'provider' or (not is_admin or re.search(r"\bmy\b", text_cmd_compact))):
                 st = None
                 for cand in ['pending', 'confirmed', 'assigned', 'cancelled', 'completed']:
                     if cand in text_cmd_compact:
@@ -494,7 +551,8 @@ class MessageHandler:
         # Admin natural-language control via Claude
         try:
             actor = self._normalize_msisdn(user_number)
-            if actor in set(self._admin_numbers()):
+            mode_override = str((session.get('mode_override') or '')).lower()
+            if actor in set(self._admin_numbers()) and (mode_override in {'', 'admin'}):
                 # Pending confirmation short-circuit
                 admin_state = (session.get('admin_state') or {})
                 pending = admin_state.get('pending_action')
@@ -2424,19 +2482,29 @@ class MessageHandler:
             is_admin = actor in set(self._admin_numbers())
         except Exception:
             is_admin = False
-        if is_admin:
+        # Fetch provider status once
+        try:
+            prov = await self.db.get_provider_by_whatsapp(user_number)
+        except Exception:
+            prov = None
+        mode_override = str((session.get('mode_override') or '')).lower()
+        if mode_override == 'admin' and is_admin:
             sp_override = getattr(settings, 'HUSTLR_ADMIN_PROMPT_V1', None)
             prompt_version = 'hustlr_admin_prompt_v1'
+        elif mode_override == 'provider' and prov and str(prov.get('status', '')).lower() == 'active':
+            sp_override = getattr(settings, 'HUSTLR_PROVIDER_PROMPT_V1', None)
+            prompt_version = 'hustlr_provider_prompt_v1'
+        elif mode_override == 'user':
+            sp_override = None
+            prompt_version = 'hustlr_client_prompt_v1'
         else:
-            try:
-                prov = await self.db.get_provider_by_whatsapp(user_number)
-            except Exception:
-                prov = None
-            if prov and str(prov.get('status', '')).lower() == 'active':
+            if is_admin:
+                sp_override = getattr(settings, 'HUSTLR_ADMIN_PROMPT_V1', None)
+                prompt_version = 'hustlr_admin_prompt_v1'
+            elif prov and str(prov.get('status', '')).lower() == 'active':
                 sp_override = getattr(settings, 'HUSTLR_PROVIDER_PROMPT_V1', None)
                 prompt_version = 'hustlr_provider_prompt_v1'
             else:
-                # Use default orchestrator prompt for clients; do not override existing user prompt
                 sp_override = None
                 prompt_version = 'hustlr_client_prompt_v1'
 
