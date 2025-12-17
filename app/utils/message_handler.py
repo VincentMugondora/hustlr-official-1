@@ -2104,7 +2104,7 @@ class MessageHandler:
                 ok = await self.db.update_provider_status(pid, 'blacklisted')
                 return ok, f"Provider blacklisted: {prov.get('name')}"
         # Bookings: list/info
-        if t == 'BOOKING_LIST':
+        if t in {'BOOKING_LIST', 'LIST_BOOKINGS'}:
             window = (entities.get('window') or '').lower()
             now = datetime.utcnow()
             start = None
