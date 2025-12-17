@@ -616,6 +616,14 @@ class MessageHandler:
         
         # Check for help / policy / control commands
         if message_text in ['help', 'menu', 'options']:
+            # Admins are always routed to Claude; no static help/commands
+            try:
+                if self._normalize_msisdn(user_number) in set(self._admin_numbers()):
+                    handled = await self.handle_admin_natural_language(user_number, message_text, session)
+                    if handled:
+                        return
+            except Exception:
+                pass
             await self.send_help_menu(user_number)
             return
 
@@ -702,6 +710,14 @@ class MessageHandler:
         deny_match = re.match(r'deny\s+(\+?[\d\s\-\(\)]+)', text_cmd)
         
         if approve_match or deny_match:
+            # Admins: always let Claude parse/confirm/execute; non-admins use legacy helper
+            try:
+                if self._normalize_msisdn(user_number) in set(self._admin_numbers()):
+                    handled = await self.handle_admin_natural_language(user_number, message_text, session)
+                    if handled:
+                        return
+            except Exception:
+                pass
             await self.handle_admin_approval(user_number, message_text, session)
             return
 
