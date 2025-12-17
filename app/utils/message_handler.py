@@ -1993,8 +1993,7 @@ class MessageHandler:
         # Handle help/clarification intents explicitly without executing backend actions
         t_raw = str(action.get('type') or '')
         if t_raw.upper() == 'SHOW_HELP':
-            if not assistant_msg:
-                await self._send_admin_help_via_ai(user_number)
+            # Admin help is delegated to Claude; no static command lists
             return True
         if t_raw.upper() in {'CLARIFICATION_NEEDED', 'NO_ACTION', 'SMALL_TALK'}:
             # Claude asked for clarification or signaled no backend action
