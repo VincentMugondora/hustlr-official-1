@@ -2121,11 +2121,36 @@ class MessageHandler:
         if getattr(self, 'ai_paused', False):
             await self._log_and_send_response(user_number, "AI is currently paused. Please try again later or use HELP.", "ai_paused")
             return
+        sp_override = None
+        prompt_version = None
+        try:
+            actor = self._normalize_msisdn(user_number)
+            is_admin = actor in set(self._admin_numbers())
+        except Exception:
+            is_admin = False
+        if is_admin:
+            sp_override = getattr(settings, 'HUSTLR_ADMIN_PROMPT_V1', None)
+            prompt_version = 'hustlr_admin_prompt_v1'
+        else:
+            try:
+                prov = await self.db.get_provider_by_whatsapp(user_number)
+            except Exception:
+                prov = None
+            if prov and str(prov.get('status', '')).lower() == 'active':
+                sp_override = getattr(settings, 'HUSTLR_PROVIDER_PROMPT_V1', None)
+                prompt_version = 'hustlr_provider_prompt_v1'
+            else:
+                # Use default orchestrator prompt for clients; do not override existing user prompt
+                sp_override = None
+                prompt_version = 'hustlr_client_prompt_v1'
+
         user_context: Dict[str, Any] = {
             "user_name": (user or {}).get("name"),
             "user_location": (user or {}).get("location"),
             "session_state": str(session.get("state")),
             "known_fields": (session.get("data") or {}),
+            "system_prompt_override": sp_override,
+            "prompt_version": prompt_version,
         }
 
         try:
