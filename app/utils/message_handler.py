@@ -2034,6 +2034,16 @@ class MessageHandler:
 
         # Handle help/clarification intents explicitly without executing backend actions
         t_raw = str(action.get('type') or '')
+        t_upper = t_raw.upper()
+        # Backend safety: always require confirmation for dangerous deletes
+        try:
+            if t_upper == 'DELETE_ACCOUNT':
+                action['requiresConfirmation'] = True
+            # If hard-delete mode is explicitly requested, force confirmation too
+            if t_upper == 'DELETE_ACCOUNT' and str((entities.get('mode') or '')).lower() == 'hard':
+                action['requiresConfirmation'] = True
+        except Exception:
+            pass
         if t_raw.upper() == 'SHOW_HELP':
             # Admin help is delegated to Claude; no static command lists
             return True
@@ -2054,7 +2064,22 @@ class MessageHandler:
 
         ok, result_msg = await self._execute_admin_action(actor, action, entities)
         try:
-            await self.db.log_admin_audit({'admin': actor, 'action': action.get('type'), 'entities': entities, 'result': 'ok' if ok else 'failed', 'prompt_version': 'hustlr_admin_prompt_v1'})
+            audit_doc = {
+                'admin': actor,
+                'action': action.get('type'),
+                'entities': entities,
+                'result': 'ok' if ok else 'failed',
+                'prompt_version': 'hustlr_admin_prompt_v1',
+            }
+            # Add common fields for easier querying/audits
+            try:
+                audit_doc['target'] = (entities.get('target') or '').strip()
+                audit_doc['identifier'] = (entities.get('identifier') or entities.get('phone') or entities.get('id') or '').strip()
+                audit_doc['reason'] = (entities.get('reason') or '').strip()
+                audit_doc['mode'] = (entities.get('mode') or '').strip()
+            except Exception:
+                pass
+            await self.db.log_admin_audit(audit_doc)
         except Exception:
             pass
         # On failure, always show backend error unless it's an unknown action and Claude already spoke.
@@ -2075,7 +2100,7 @@ class MessageHandler:
     async def _execute_admin_action(self, actor: str, action: Dict[str, Any], entities: Dict[str, Any]) -> (bool, str):
         t = (action.get('type') or '').upper()
         # Providers: list
-        if t == 'PROVIDER_LIST':
+        if t == 'PROVIDER_LIST' or t == 'LIST_PROVIDERS':
             status = (entities.get('status') or '').lower() or None
             service = (entities.get('service') or '').lower() or None
             items = await self.db.list_providers(status=status, service_type=service, limit=20)
@@ -2083,6 +2108,20 @@ class MessageHandler:
                 return True, "No providers found."
             lines = [f"{str(d.get('_id'))[-6:]} | {d.get('name')} | {d.get('service_type')} | {d.get('status')} | {d.get('whatsapp_number')}" for d in items]
             return True, "Providers:\n" + "\n".join(lines)
+        # Users: list
+        if t == 'LIST_USERS':
+            status = (entities.get('status') or '').lower() or None
+            items = await self.db.list_users(status=status, limit=20)
+            if not items:
+                return True, "No users found."
+            def _fmt_date(doc):
+                dt = doc.get('registered_at') or doc.get('created_at')
+                return str(dt) if dt else ''
+            lines = [
+                f"{str(d.get('_id'))[-6:]} | {d.get('whatsapp_number') or d.get('phone','')} | {d.get('status','')} | {_fmt_date(d)}"
+                for d in items
+            ]
+            return True, "Users:\n" + "\n".join(lines)
         # Provider lookups
         async def _find_provider(token: str) -> Optional[Dict[str, Any]]:
             if not token:
@@ -2132,6 +2171,148 @@ class MessageHandler:
             if t == 'PROVIDER_BLACKLIST':
                 ok = await self.db.update_provider_status(pid, 'blacklisted')
                 return ok, f"Provider blacklisted: {prov.get('name')}"
+
+        # Account management (users & providers): suspend/reactivate/delete/view
+        if t in {'SUSPEND_ACCOUNT', 'REACTIVATE_ACCOUNT', 'DELETE_ACCOUNT', 'VIEW_ACCOUNT_DETAILS'}:
+            # Superadmin gate for destructive changes
+            try:
+                sup = getattr(settings, 'SUPERADMIN_WHATSAPP_NUMBER', '') or ''
+                superadmin = self._normalize_msisdn(sup) if sup else ''
+            except Exception:
+                superadmin = ''
+            try:
+                actor_norm = self._normalize_msisdn(actor)
+            except Exception:
+                actor_norm = actor
+            if t in {'SUSPEND_ACCOUNT','REACTIVATE_ACCOUNT','DELETE_ACCOUNT'} and superadmin and actor_norm != superadmin:
+                return False, "Only the designated superadmin can change roles."
+
+            target = (entities.get('target') or '').strip().lower()
+            ident = (entities.get('identifier') or entities.get('id') or entities.get('phone') or '').strip()
+            if not target or not ident:
+                return False, "Missing target or identifier."
+
+            # Helpers to locate accounts
+            async def _find_user(token: str) -> Optional[Dict[str, Any]]:
+                if not token:
+                    return None
+                if re.fullmatch(r"[0-9a-f]{24}", token):
+                    return await self.db.get_user_by_id(token)
+                pn = self._normalize_msisdn(token)
+                return await self.db.get_user(pn) if pn else None
+
+            now = datetime.utcnow()
+
+            if target == 'provider':
+                prov = await _find_provider(ident)
+                if not prov:
+                    return False, "Provider not found."
+                pid = str(prov.get('_id'))
+                if t == 'VIEW_ACCOUNT_DETAILS':
+                    ver = prov.get('verification') or {}
+                    lines = [
+                        f"Name: {prov.get('name')}",
+                        f"Phone: {prov.get('whatsapp_number')}",
+                        f"Service: {prov.get('service_type')}",
+                        f"Status: {prov.get('status')}",
+                        f"Verified: {ver.get('verified', False)}",
+                        f"JobsCompleted: {prov.get('jobsCompleted') or prov.get('jobs_completed') or 0}",
+                        f"Rating: {prov.get('rating') or ''}",
+                        f"LastActive: {prov.get('lastActiveAt') or prov.get('last_active_at') or ''}",
+                    ]
+                    return True, "Provider details:\n" + "\n".join(lines)
+                if t == 'SUSPEND_ACCOUNT':
+                    reason = (entities.get('reason') or '').strip() or None
+                    if not reason:
+                        return False, "Provide a suspension reason."
+                    updates = {
+                        'status': 'suspended',
+                        'suspendedAt': now,
+                        'suspendedBy': actor_norm,
+                        'suspensionReason': reason,
+                        'updated_at': now,
+                    }
+                    ok = await self.db.update_provider_fields(pid, updates)
+                    return ok, ("Suspended." if ok else "No change.")
+                if t == 'REACTIVATE_ACCOUNT':
+                    updates = {
+                        'status': 'active',
+                        'suspendedAt': None,
+                        'suspendedBy': None,
+                        'suspensionReason': None,
+                        'deletedAt': None,
+                        'deletedBy': None,
+                        'updated_at': now,
+                    }
+                    ok = await self.db.update_provider_fields(pid, updates)
+                    return ok, ("Reactivated." if ok else "No change.")
+                if t == 'DELETE_ACCOUNT':
+                    mode = (entities.get('mode') or 'soft').lower()
+                    if mode == 'hard':
+                        ok = await self.db.delete_provider_by_id(pid)
+                        return ok, ("Deleted (hard)." if ok else "No change.")
+                    updates = {
+                        'status': 'deleted',
+                        'deletedAt': now,
+                        'deletedBy': actor_norm,
+                        'updated_at': now,
+                    }
+                    ok = await self.db.update_provider_fields(pid, updates)
+                    return ok, ("Deleted (soft)." if ok else "No change.")
+
+            if target == 'user':
+                usr = await _find_user(ident)
+                if not usr:
+                    return False, "User not found."
+                u_phone = usr.get('whatsapp_number') or usr.get('phone')
+                if t == 'VIEW_ACCOUNT_DETAILS':
+                    lines = [
+                        f"Phone: {u_phone}",
+                        f"Status: {usr.get('status','')}",
+                        f"Created: {usr.get('registered_at') or usr.get('created_at') or ''}",
+                        f"Updated: {usr.get('updated_at') or ''}",
+                    ]
+                    return True, "User details:\n" + "\n".join(lines)
+                if t == 'SUSPEND_ACCOUNT':
+                    reason = (entities.get('reason') or '').strip() or None
+                    if not reason:
+                        return False, "Provide a suspension reason."
+                    updates = {
+                        'status': 'suspended',
+                        'suspendedAt': now,
+                        'suspendedBy': actor_norm,
+                        'suspensionReason': reason,
+                        'updated_at': now,
+                    }
+                    ok = await self.db.update_user(u_phone, updates)
+                    return ok, ("Suspended." if ok else "No change.")
+                if t == 'REACTIVATE_ACCOUNT':
+                    updates = {
+                        'status': 'active',
+                        'suspendedAt': None,
+                        'suspendedBy': None,
+                        'suspensionReason': None,
+                        'deletedAt': None,
+                        'deletedBy': None,
+                        'updated_at': now,
+                    }
+                    ok = await self.db.update_user(u_phone, updates)
+                    return ok, ("Reactivated." if ok else "No change.")
+                if t == 'DELETE_ACCOUNT':
+                    mode = (entities.get('mode') or 'soft').lower()
+                    if mode == 'hard':
+                        if not u_phone:
+                            return False, "Cannot hard-delete: missing phone."
+                        ok = await self.db.delete_user_and_data(u_phone)
+                        return ok, ("Deleted (hard)." if ok else "No change.")
+                    updates = {
+                        'status': 'deleted',
+                        'deletedAt': now,
+                        'deletedBy': actor_norm,
+                        'updated_at': now,
+                    }
+                    ok = await self.db.update_user(u_phone, updates)
+                    return ok, ("Deleted (soft)." if ok else "No change.")
         # Bookings: list/info
         if t in {'BOOKING_LIST', 'LIST_BOOKINGS'}:
             window = (entities.get('window') or '').lower()
