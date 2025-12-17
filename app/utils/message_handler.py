@@ -439,6 +439,47 @@ class MessageHandler:
             else:
                 await self._log_and_send_response(user_number, "You are not authorized to use admin commands.", "admin_not_authorized")
                 return
+        # Admin natural-language control via Claude
+        try:
+            actor = self._normalize_msisdn(user_number)
+            if actor in set(self._admin_numbers()):
+                # Pending confirmation short-circuit
+                admin_state = (session.get('admin_state') or {})
+                pending = admin_state.get('pending_action')
+                if pending:
+                    t = message_text.strip().lower()
+                    if t in {"confirm", "yes", "y", "ok"}:
+                        entities = admin_state.get('pending_entities') or {}
+                        ok, result_msg = await self._execute_admin_action(actor, pending, entities)
+                        # Audit log
+                        try:
+                            await self.db.log_admin_audit({
+                                'admin': actor,
+                                'action': pending.get('type'),
+                                'entities': entities,
+                                'result': 'ok' if ok else 'failed',
+                            })
+                        except Exception:
+                            pass
+                        # Clear pending state
+                        session.setdefault('admin_state', {})
+                        session['admin_state'].pop('pending_action', None)
+                        session['admin_state'].pop('pending_entities', None)
+                        await self._log_and_send_response(user_number, result_msg or ("Done." if ok else "Failed."), "admin_confirm_result")
+                        return
+                    if t in {"cancel", "no", "n"}:
+                        session.setdefault('admin_state', {})
+                        session['admin_state'].pop('pending_action', None)
+                        session['admin_state'].pop('pending_entities', None)
+                        await self._log_and_send_response(user_number, "Cancelled.", "admin_confirm_cancel")
+                        return
+                # Route NL admin message to Claude
+                handled = await self.handle_admin_natural_language(user_number, message_text, session)
+                if handled:
+                    return
+        except Exception:
+            # If admin NL flow fails, fall back to normal path
+            pass
         
         if state == ConversationState.BOOKING_RESUME_DECISION:
             await self.handle_booking_resume_decision(user_number, message_text, session, user)
@@ -1859,6 +1900,242 @@ class MessageHandler:
                 "/ai [status|pause|resume] | /block user <msisdn> | /blacklist provider <id|phone>"
             )
             await self._log_and_send_response(user_number, fallback, "admin_help")
+
+    async def handle_admin_natural_language(self, user_number: str, message_text: str, session: Dict) -> bool:
+        """Admin NL handler powered by Claude. Returns True if handled."""
+        actor = self._normalize_msisdn(user_number)
+        # Build admin system prompt override
+        admin_prompt = (
+            "You are Hustlr Admin AI.\n\n"
+            "You control admin operations via structured actions.\n"
+            "You NEVER perform actions directly.\n"
+            "You MUST return valid JSON only. No text outside JSON.\n\n"
+            "Output JSON schema strictly as:\n"
+            "{\n"
+            "  \"intent\": string,\n"
+            "  \"confidence\": number,\n"
+            "  \"entities\": object,\n"
+            "  \"action\": {\n"
+            "    \"type\": one of [PROVIDER_LIST, PROVIDER_APPROVE, PROVIDER_REJECT, PROVIDER_SUSPEND, PROVIDER_REINSTATE, PROVIDER_BLACKLIST, BOOKING_LIST, BOOKING_INFO, BOOKING_ASSIGN, BOOKING_REASSIGN, BOOKING_CANCEL, BOOKING_COMPLETE, CONVERSATION_VIEW, CONVERSATION_RESET, STATS, AI_STATUS, AI_PAUSE, AI_RESUME, USER_BLOCK],\n"
+            "    \"requiresConfirmation\": boolean\n"
+            "  },\n"
+            "  \"assistantMessage\": string\n"
+            "}\n\n"
+            "Rules:\n"
+            "- Ask for missing entities in assistantMessage (short lines).\n"
+            "- Set requiresConfirmation=true for destructive actions (reject/suspend/blacklist/cancel/complete/block).\n"
+            "- NEVER add commands.\n"
+        )
+        user_ctx = {
+            'role': 'admin',
+            'adminLevel': 'super',
+            'system_prompt_override': admin_prompt,
+            'known_fields': (session.get('admin_state') or {}),
+        }
+        try:
+            raw = await self.lambda_service.invoke_question_answerer(
+                message_text,
+                user_context=user_ctx,
+                conversation_history=None,
+            )
+        except Exception as e:
+            await self._log_and_send_response(user_number, "Sorry, admin assistant is unavailable now.", "admin_ai_error")
+            return True
+
+        text = (raw or '').strip()
+        if text.startswith('```'):
+            parts = text.split('```')
+            if len(parts) >= 3:
+                inner = parts[1].strip()
+                if inner.lower().startswith('json'):
+                    inner = inner[4:].lstrip('\n\r ')
+                text = inner
+        try:
+            payload = json.loads(text)
+        except Exception:
+            # Treat as plain advice if not JSON
+            await self._log_and_send_response(user_number, text, "admin_ai_plain")
+            return True
+
+        if not isinstance(payload, dict):
+            await self._log_and_send_response(user_number, "I couldn't parse that.", "admin_ai_parse_error")
+            return True
+
+        assistant_msg = (payload.get('assistantMessage') or '').strip()
+        if assistant_msg:
+            await self._log_and_send_response(user_number, assistant_msg, "admin_ai_assistant")
+
+        action = payload.get('action') or {}
+        entities = payload.get('entities') or {}
+        if not action or not isinstance(action, dict) or not action.get('type'):
+            return True
+
+        # Confirmation flow
+        requires = bool(action.get('requiresConfirmation'))
+        if requires:
+            session.setdefault('admin_state', {})
+            session['admin_state']['pending_action'] = action
+            session['admin_state']['pending_entities'] = entities
+            # If Claude did not include a confirmation text, send a generic one
+            if not assistant_msg:
+                await self._log_and_send_response(user_number, "Please CONFIRM or CANCEL.", "admin_confirm")
+            return True
+
+        ok, result_msg = await self._execute_admin_action(actor, action, entities)
+        try:
+            await self.db.log_admin_audit({'admin': actor, 'action': action.get('type'), 'entities': entities, 'result': 'ok' if ok else 'failed'})
+        except Exception:
+            pass
+        await self._log_and_send_response(user_number, result_msg or ("Done." if ok else "Failed."), "admin_action_result")
+        return True
+
+    async def _execute_admin_action(self, actor: str, action: Dict[str, Any], entities: Dict[str, Any]) -> (bool, str):
+        t = (action.get('type') or '').upper()
+        # Providers: list
+        if t == 'PROVIDER_LIST':
+            status = (entities.get('status') or '').lower() or None
+            service = (entities.get('service') or '').lower() or None
+            items = await self.db.list_providers(status=status, service_type=service, limit=20)
+            if not items:
+                return True, "No providers found."
+            lines = [f"{str(d.get('_id'))[-6:]} | {d.get('name')} | {d.get('service_type')} | {d.get('status')} | {d.get('whatsapp_number')}" for d in items]
+            return True, "Providers:\n" + "\n".join(lines)
+        # Provider lookups
+        async def _find_provider(token: str) -> Optional[Dict[str, Any]]:
+            if not token:
+                return None
+            if re.fullmatch(r"[0-9a-f]{24}", token):
+                return await self.db.get_provider_by_id(token)
+            pn = self._normalize_msisdn(token)
+            return await self.db.get_provider_by_phone(pn) if pn else None
+        # Approve / Reinstate / Reject / Suspend / Blacklist
+        if t in {'PROVIDER_APPROVE','PROVIDER_REINSTATE','PROVIDER_REJECT','PROVIDER_SUSPEND','PROVIDER_BLACKLIST'}:
+            token = (entities.get('provider_id') or entities.get('phone') or entities.get('id') or '').strip()
+            prov = await _find_provider(token)
+            if not prov:
+                return False, "Provider not found."
+            pid = str(prov.get('_id'))
+            if t in {'PROVIDER_APPROVE','PROVIDER_REINSTATE'}:
+                ok = await self.db.update_provider_status(pid, 'active')
+                if ok:
+                    try:
+                        await self._log_and_send_response(prov.get('whatsapp_number'), "Your provider account is now active.", "provider_approved")
+                    except Exception:
+                        pass
+                return ok, f"Provider approved: {prov.get('name')}"
+            if t == 'PROVIDER_REJECT':
+                ok = await self.db.update_provider_status(pid, 'rejected')
+                if ok:
+                    try:
+                        await self._log_and_send_response(prov.get('whatsapp_number'), "Your provider registration was rejected.", "provider_rejected")
+                    except Exception:
+                        pass
+                return ok, f"Provider rejected: {prov.get('name')}"
+            if t == 'PROVIDER_SUSPEND':
+                ok = await self.db.update_provider_status(pid, 'suspended')
+                return ok, f"Provider suspended: {prov.get('name')}"
+            if t == 'PROVIDER_BLACKLIST':
+                ok = await self.db.update_provider_status(pid, 'blacklisted')
+                return ok, f"Provider blacklisted: {prov.get('name')}"
+        # Bookings: list/info
+        if t == 'BOOKING_LIST':
+            window = (entities.get('window') or '').lower()
+            now = datetime.utcnow()
+            start = None
+            if window == 'today':
+                start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+            elif window == 'week':
+                start = now - timedelta(days=7)
+            items = await self.db.list_bookings(limit=20, start=start, end=None)
+            if not items:
+                return True, "No bookings found."
+            lines = [f"{b.get('booking_id','')} | {b.get('service_type','')} | {b.get('status','')} | {b.get('user_whatsapp_number','')} -> {b.get('provider_whatsapp_number','')}" for b in items]
+            return True, "Bookings:\n" + "\n".join(lines)
+        if t == 'BOOKING_INFO':
+            bid = (entities.get('booking_id') or '').strip()
+            b = await self.db.get_booking_by_id(bid)
+            if not b:
+                return False, "Booking not found."
+            return True, f"Booking {b.get('booking_id')}\nService: {b.get('service_type')}\nStatus: {b.get('status')}\nUser: {b.get('user_whatsapp_number')}\nProvider: {b.get('provider_whatsapp_number')}\nTime: {b.get('date_time')}"
+        if t in {'BOOKING_CANCEL','BOOKING_COMPLETE'}:
+            bid = (entities.get('booking_id') or '').strip()
+            if not bid:
+                return False, "Missing booking_id."
+            if t == 'BOOKING_CANCEL':
+                reason = (entities.get('reason') or '').strip()
+                ok = await self.db.update_booking_fields(bid, {'status': 'cancelled', 'cancel_reason': reason})
+                return ok, "Cancelled." if ok else "No change."
+            ok = await self.db.update_booking_fields(bid, {'status': 'completed'})
+            return ok, "Completed." if ok else "No change."
+        # Assign/Reassign
+        if t in {'BOOKING_ASSIGN','BOOKING_REASSIGN'}:
+            bid = (entities.get('booking_id') or '').strip()
+            token = (entities.get('provider_id') or entities.get('phone') or entities.get('id') or '').strip()
+            if not bid or not token:
+                return False, "Missing booking_id or provider."
+            prov = None
+            if re.fullmatch(r"[0-9a-f]{24}", token):
+                prov = await self.db.get_provider_by_id(token)
+            else:
+                pn = self._normalize_msisdn(token)
+                prov = await self.db.get_provider_by_phone(pn) if pn else None
+            if not prov:
+                return False, "Provider not found."
+            updates = {
+                'provider_id': str(prov.get('_id')),
+                'provider_whatsapp_number': prov.get('whatsapp_number'),
+                'status': 'assigned'
+            }
+            ok = await self.db.update_booking_fields(bid, updates)
+            return ok, "Assigned." if ok else "No change."
+        # Conversations
+        if t == 'CONVERSATION_VIEW':
+            msisdn = self._normalize_msisdn((entities.get('msisdn') or '').strip())
+            if not msisdn:
+                return False, "Provide a WhatsApp number."
+            msgs = await self.db.get_conversation_history(msisdn, limit=10)
+            if not msgs:
+                return True, "No recent messages."
+            lines = [f"{m['role']}: {m['text'][:120]}" for m in msgs]
+            return True, "Conversation:\n" + "\n".join(lines)
+        if t == 'CONVERSATION_RESET':
+            msisdn = self._normalize_msisdn((entities.get('msisdn') or '').strip())
+            if not msisdn:
+                return False, "Provide a WhatsApp number."
+            await self.db.delete_session(msisdn)
+            await self.db.delete_conversation_history(msisdn)
+            return True, "Conversation reset."
+        # Stats
+        if t == 'STATS':
+            now = datetime.utcnow()
+            window = (entities.get('window') or '').lower()
+            win = None
+            if window == 'today':
+                win = (now.replace(hour=0, minute=0, second=0, microsecond=0), None)
+            elif window == 'week':
+                win = (now - timedelta(days=7), None)
+            b_total = await self.db.count_bookings(*(win or (None, None)))
+            b_completed = await self.db.count_bookings_by_status('completed', *(win or (None, None)))
+            prov_active = await self.db.count_providers('active')
+            users = await self.db.count_users(*(win or (None, None)))
+            return True, f"Stats:\nBookings: {b_total}\nCompleted: {b_completed}\nActive providers: {prov_active}\nNew users: {users}"
+        # AI controls
+        if t == 'AI_STATUS':
+            return True, f"AI: {'paused' if getattr(self, 'ai_paused', False) else 'active'}"
+        if t == 'AI_PAUSE':
+            self.ai_paused = True
+            return True, "AI paused."
+        if t == 'AI_RESUME':
+            self.ai_paused = False
+            return True, "AI resumed."
+        # Block user
+        if t == 'USER_BLOCK':
+            msisdn = self._normalize_msisdn((entities.get('msisdn') or '').strip())
+            if not msisdn:
+                return False, "Provide a WhatsApp number."
+            await self.db.update_user(msisdn, {'opted_out': True, 'consent_transactional': False})
+            return True, "User blocked."
+        return False, "Unknown action."
 
     async def handle_ai_response(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
         if getattr(self, 'ai_paused', False):
