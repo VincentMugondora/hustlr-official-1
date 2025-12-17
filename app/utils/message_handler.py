@@ -1506,7 +1506,7 @@ class MessageHandler:
             await self._log_and_send_response(user_number, msg, t)
 
         if low in {'/help', '/admin', '/commands'}:
-            await send("Admin: /providers [/pending|<service>] | /provider <id|phone> | /approve <phone> | /reject <phone> | /suspend <id|phone> | /reinstate <id|phone> | /edit provider <id|phone> key=\"val\"... | /bookings [today|week] | /booking <id> | /assign booking <id> provider <id|phone> | /reassign booking <id> provider <id|phone> | /cancel booking <id> reason=\"...\" | /complete booking <id> | /conversation <msisdn> | /reset conversation <msisdn> | /services | /stats [today|week] | /ai [status|pause|resume] | /block user <msisdn> | /blacklist provider <id|phone>", "admin_help")
+            await self._send_admin_help_via_ai(user_number)
             return
 
         if low.startswith('/providers'):
