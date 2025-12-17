@@ -1777,6 +1777,89 @@ class MessageHandler:
 
         await send("Unknown admin command. Type /help.", "admin_unknown")
 
+    async def _send_admin_help_via_ai(self, user_number: str) -> None:
+        if getattr(self, 'ai_paused', False):
+            msg = (
+                "Admin commands:\n"
+                "/providers [/pending|<service>]\n"
+                "/provider <id|phone>\n"
+                "/approve <phone> | /reject <phone>\n"
+                "/suspend <id|phone> | /reinstate <id|phone>\n"
+                "/edit provider <id|phone> key=\"val\"\n"
+                "/bookings [today|week] | /booking <id>\n"
+                "/assign booking <id> provider <id|phone>\n"
+                "/reassign booking <id> provider <id|phone>\n"
+                "/cancel booking <id> reason=\"...\" | /complete booking <id>\n"
+                "/conversation <msisdn> | /reset conversation <msisdn>\n"
+                "/services | /stats [today|week]\n"
+                "/ai [status|pause|resume] | /block user <msisdn> | /blacklist provider <id|phone>"
+            )
+            await self._log_and_send_response(user_number, msg, "admin_help")
+            return
+        try:
+            commands = (
+                "Admin: /providers [/pending|<service>] | /provider <id|phone> | /approve <phone> | /reject <phone> | "
+                "/suspend <id|phone> | /reinstate <id|phone> | /edit provider <id|phone> key=\"val\"... | /bookings [today|week] | "
+                "/booking <id> | /assign booking <id> provider <id|phone> | /reassign booking <id> provider <id|phone> | "
+                "/cancel booking <id> reason=\"...\" | /complete booking <id> | /conversation <msisdn> | /reset conversation <msisdn> | "
+                "/services | /stats [today|week] | /ai [status|pause|resume] | /block user <msisdn> | /blacklist provider <id|phone>"
+            )
+            prompt = (
+                "Format the admin command list into a clean WhatsApp help message with short lines. "
+                "Do not add commands or extra text. Keep <= 12 lines. Return JSON with status=\"ASK\", field=\"admin_help\", data={}, and assistantMessage.\n\n"
+                f"Commands:\n{commands}"
+            )
+            raw = await self.lambda_service.invoke_question_answerer(prompt, user_context={"session_state": "admin_help", "known_fields": {}})
+            text = (raw or "").strip()
+            if text.startswith("```"):
+                parts = text.split("```")
+                if len(parts) >= 3:
+                    inner = parts[1].strip()
+                    if inner.lower().startswith("json"):
+                        inner = inner[4:].lstrip("\n\r ")
+                    text = inner
+            msg = None
+            try:
+                payload = json.loads(text)
+                if isinstance(payload, dict):
+                    msg = (payload.get("assistantMessage") or "").strip()
+            except Exception:
+                msg = None
+            if not msg:
+                msg = (
+                    "Admin commands:\n"
+                    "/providers [/pending|<service>]\n"
+                    "/provider <id|phone>\n"
+                    "/approve <phone> | /reject <phone>\n"
+                    "/suspend <id|phone> | /reinstate <id|phone>\n"
+                    "/edit provider <id|phone> key=\"val\"\n"
+                    "/bookings [today|week] | /booking <id>\n"
+                    "/assign booking <id> provider <id|phone>\n"
+                    "/reassign booking <id> provider <id|phone>\n"
+                    "/cancel booking <id> reason=\"...\" | /complete booking <id>\n"
+                    "/conversation <msisdn> | /reset conversation <msisdn>\n"
+                    "/services | /stats [today|week]\n"
+                    "/ai [status|pause|resume] | /block user <msisdn> | /blacklist provider <id|phone>"
+                )
+            await self._log_and_send_response(user_number, msg, "admin_help_ai")
+        except Exception:
+            fallback = (
+                "Admin commands:\n"
+                "/providers [/pending|<service>]\n"
+                "/provider <id|phone>\n"
+                "/approve <phone> | /reject <phone>\n"
+                "/suspend <id|phone> | /reinstate <id|phone>\n"
+                "/edit provider <id|phone> key=\"val\"\n"
+                "/bookings [today|week] | /booking <id>\n"
+                "/assign booking <id> provider <id|phone>\n"
+                "/reassign booking <id> provider <id|phone>\n"
+                "/cancel booking <id> reason=\"...\" | /complete booking <id>\n"
+                "/conversation <msisdn> | /reset conversation <msisdn>\n"
+                "/services | /stats [today|week]\n"
+                "/ai [status|pause|resume] | /block user <msisdn> | /blacklist provider <id|phone>"
+            )
+            await self._log_and_send_response(user_number, fallback, "admin_help")
+
     async def handle_ai_response(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
         if getattr(self, 'ai_paused', False):
             await self._log_and_send_response(user_number, "AI is currently paused. Please try again later or use HELP.", "ai_paused")
