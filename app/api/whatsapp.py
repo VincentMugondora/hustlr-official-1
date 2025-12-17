@@ -13,12 +13,14 @@ from config import settings
 import logging
 import json
 from datetime import datetime
+from app.utils.storage_service import StorageService
 
 router = APIRouter()
 
 # Initialize services
 whatsapp_api = WhatsAppCloudAPI()
 mongo_service = MongoService()
+storage_service = StorageService()
 
 # Choose AI backend: Gemini for testing, otherwise Bedrock
 if settings.USE_GEMINI_INTENT:
@@ -151,13 +153,18 @@ async def receive_whatsapp_message(
                 created_at = None
         if created_at is None:
             created_at = datetime.utcnow()
-        incoming_doc_id = await mongo_service.store_incoming_message({
+        incoming_doc = {
             "from_number": message.from_number,
             "text": message.text,
             "message_id": message_id,
             "source": "cloud",
             "created_at": created_at,
-        })
+            "msg_type": getattr(message, "type", "text"),
+            "media_id": getattr(message, "media_id", None),
+            "media_mime": getattr(message, "media_mime", None),
+            "media_caption": getattr(message, "media_caption", None),
+        }
+        incoming_doc_id = await mongo_service.store_incoming_message(incoming_doc)
     except Exception as e:
         logger.warning(f"Failed to store incoming message for {message.from_number}: {e}")
     
@@ -166,6 +173,71 @@ async def receive_whatsapp_message(
     print(f"From: {message.from_number}")
     print(f"Message: '{message.text}'")
     print(f"Full payload logged to application logs")
+
+    # Media handling for Cloud webhook
+    try:
+        msg_type_lower = (getattr(message, "type", "") or "").lower()
+        if msg_type_lower in ("image", "document", "video"):
+            media_id = getattr(message, "media_id", None)
+            if not media_id:
+                logger.info(f"Media message without media_id from {message.from_number}")
+                return {"status": "skipped_no_media_id"}
+
+            try:
+                blob = await whatsapp_api.download_media(media_id)
+            except Exception as e:
+                logger.warning(f"Download failed for media {media_id} from {message.from_number}: {e}")
+                try:
+                    await whatsapp_api.send_text_message(message.from_number, "Sorry, I couldn't fetch that file. Please try again.")
+                except Exception:
+                    pass
+                return {"status": "media_download_failed"}
+
+            content_type = (blob.get("content_type") or "").lower()
+            size_bytes = int(blob.get("size") or 0)
+            if not content_type.startswith("image/"):
+                await whatsapp_api.send_text_message(message.from_number, "Please send a clear photo (JPG/PNG).")
+                return {"status": "unsupported_media", "content_type": content_type}
+            if size_bytes and size_bytes > 10 * 1024 * 1024:
+                await whatsapp_api.send_text_message(message.from_number, "That image is too large. Please send a photo under 10MB.")
+                return {"status": "too_large"}
+
+            try:
+                url = storage_service.upload_bytes(blob.get("bytes") or b"", content_type=content_type, prefix="media")
+            except Exception as e:
+                logger.warning(f"Storage upload failed for {message.from_number}: {e}")
+                await whatsapp_api.send_text_message(message.from_number, "Sorry, I couldn't save that file. Please try again.")
+                return {"status": "storage_failed"}
+
+            meta = blob.get("meta") or {}
+            media_doc = {
+                "whatsapp_number": message.from_number,
+                "media_id": media_id,
+                "content_type": content_type,
+                "size": size_bytes,
+                "caption": getattr(message, "media_caption", None),
+                "url": url,
+                "source": "whatsapp_cloud",
+                "raw_meta": meta,
+            }
+            try:
+                await mongo_service.store_media_upload(media_doc)
+            except Exception as e:
+                logger.warning(f"Failed to record media upload for {message.from_number}: {e}")
+
+            try:
+                await whatsapp_api.send_text_message(message.from_number, "Thanks, I received your photo.")
+            except Exception:
+                pass
+
+            if incoming_doc_id is not None:
+                try:
+                    await mongo_service.mark_incoming_message_processed(incoming_doc_id)
+                except Exception:
+                    pass
+            return {"status": "media_processed"}
+    except Exception:
+        logger.exception("Error while handling media message")
 
     # Handle message with enhanced handler
     try:
