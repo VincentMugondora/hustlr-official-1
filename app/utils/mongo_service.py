@@ -104,6 +104,20 @@ class MongoService:
         result = await db.providers.update_one({"_id": oid}, {"$set": to_set})
         return result.matched_count > 0
 
+    async def delete_provider_by_id(self, provider_id: str) -> bool:
+        db = get_database()
+        try:
+            oid = ObjectId(provider_id)
+        except Exception:
+            return False
+        result = await db.providers.delete_one({"_id": oid})
+        return result.deleted_count > 0
+
+    async def delete_provider_by_phone(self, phone: str) -> bool:
+        db = get_database()
+        result = await db.providers.delete_one({"whatsapp_number": phone})
+        return result.deleted_count > 0
+
     async def append_provider_verification_media(self, provider_id: str, media_item: Dict[str, Any]) -> bool:
         db = get_database()
         try:
@@ -236,6 +250,23 @@ class MongoService:
                 time_filter["$lte"] = end
             query["registered_at"] = time_filter
         return await db.users.count_documents(query)
+
+    async def list_users(self, status: Optional[str] = None, limit: int = 20) -> List[Dict[str, Any]]:
+        db = get_database()
+        query: Dict[str, Any] = {}
+        if status:
+            query["status"] = status
+        # Prefer registered_at ordering; fallback works if field missing
+        cursor = db.users.find(query).sort("registered_at", -1).limit(limit)
+        return [doc async for doc in cursor]
+
+    async def get_user_by_id(self, user_id: str) -> Optional[Dict[str, Any]]:
+        db = get_database()
+        try:
+            oid = ObjectId(user_id)
+        except Exception:
+            return None
+        return await db.users.find_one({"_id": oid})
 
     async def get_booking_by_id(self, booking_id: str) -> Optional[Dict[str, Any]]:
         db = get_database()

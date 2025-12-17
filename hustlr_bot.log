@@ -41620,3 +41620,106 @@ I can help with:
  Filter by status (...
 2025-12-17 14:38:23,926 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2025-12-17 14:38:24,092 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-17 14:54:30,420 - app.api.whatsapp - INFO - [2025-12-17T12:54:30.420781] Baileys webhook received
+2025-12-17 14:54:30,421 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "my ...",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F9B43A75A0393293D6D",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765976069,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "my ...",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "wom0j6rFsvt9iQ==",
+          "recipientTimestamp": "1765878053"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-17 14:54:30,422 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-17 14:54:30,422 - app.api.whatsapp - INFO - Baileys text: 'my ...'
+2025-12-17 14:54:34,612 - app.utils.aws_lambda - INFO - [BEDROCK CONFIG] source=settings cfg(HUSTLR)=anthropic.claude-3-5-sonnet-20240620-v1:0, env_ignored(BEDROCK_MODEL_ID)=, param_ignored=None, inference_profile_arn=arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, resolved_model_id=anthropic.claude-3-5-sonnet-20240620-v1:0, chosen=arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, use_bedrock=True, region=us-east-1, has_creds=True
+2025-12-17 14:54:34,624 - app.utils.aws_lambda - INFO - [BEDROCK INVOKE] modelId=arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, region=us-east-1
+2025-12-17 14:54:40,126 - app.utils.aws_lambda - INFO - [CLAUDE RESPONSE] Model: arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, User: 263777530322, Question: my ......, Answer: ```json
+{
+  "intent": "INCOMPLETE_MESSAGE",
+  "confidence": 0.1,
+  "entities": {},
+  "action": {
+    "type": "CLARIFICATION_NEEDED",
+    "requiresConfirmation": false
+  },
+  "assistantMessage": "Your ...
+2025-12-17 14:54:40,126 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: admin_ai_assistant, Message: Your message seems incomplete. Could you please provide more details about what you need help with?...
+2025-12-17 14:54:41,430 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-17 14:54:41,548 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-17 14:56:55,969 - app.api.whatsapp - INFO - [2025-12-17T12:56:55.969814] Baileys webhook received
+2025-12-17 14:56:55,970 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "status",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "status@broadcast",
+      "fromMe": false,
+      "id": "AC3D66DA2D1106AC1A1C4CF72A14EB84",
+      "participant": "263784303418@s.whatsapp.net",
+      "participantLid": "60035438764077@lid"
+    },
+    "messageTimestamp": 1765976215,
+    "pushName": "Kumkanikazi \ud83c\udf39Myckeilah \ud83c\udf3a",
+    "broadcast": true,
+    "message": {
+      "senderKeyDistributionMessage": {
+        "groupId": "status@broadcast",
+        "axolotlSenderKeyDistributionMessage": "MwjewZLOARAAGiD9flZh2KZhXP6ZI2vw0pUfuKOeqD6fXGYHSixcFak8vyIhBYrIqu0Degl+kyqKK1LqfjSdQfUx73kPcsy+4T6j8I53"
+      },
+      "imageMessage": {
+        "url": "https://mmg.whatsapp.net/o1/v/t24/f2/m269/AQM4LaZh9TwOxn8tYVcMsQOqAjXG5TxUQ9C0--5SfKBeevdvGuII_8gzZYAqsprfX_RYZB9dsIUsy9qPJwaQdsfIAIMrRCOPhl5WzboaHg?ccb=9-4&oh=01_Q5Aa3QEJlbqbnXTGuM9fsKD5Xki_BRCfV9qzR4b5iHMNtdDt_A&oe=696A3420&_nc_sid=e6ed6c&mms3=true",
+        "mimetype": "image/jpeg",
+        "caption": "Hanzi idyai henyu maschool fees paxmas apa \ud83d\ude02\ud83d\ude02\ud83d\ude02",
+        "fileSha256": "xDj6VWKr4Yi6GNfAI7Q0fvRvRyFrHCRu6osF2h99GPk=",
+        "fileLength": "66938",
+        "height": 1080,
+        "width": 821,
+        "mediaKey": "d6QY1DwzFNl6e4elCq3mOkZsgF2HPbBMjuubQDlmvtk=",
+        "fileEncSha256": "v8+ZTa468KEUk1bnmibxXx79neGHcXdBqnhNw9V+1/Q=",
+        "directPath": "/o1/v/t24/f2/m269/AQM4LaZh9TwOxn8tYVcMsQOqAjXG5TxUQ9C0--5SfKBeevdvGuII_8gzZYAqsprfX_RYZB9dsIUsy9qPJwaQdsfIAIMrRCOPhl5WzboaHg?ccb=9-4&oh=01_Q5Aa3QEJlbqbnXTGuM9fsKD5Xki_BRCfV9qzR4b5iHMNtdDt_A&oe=696A3420&_nc_sid=e6ed6c",
+        "mediaKeyTimestamp": "1765976210",
+        "jpegThumbnail": "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",
+        "contextInfo": {
+          "pairedMediaType": "NOT_PAIRED_MEDIA",
+          "statusSourceType": "IMAGE"
+        },
+        "thumbnailDirectPath": "/v/t62.35850-24/557293446_880192461115510_7885871228869397230_n.enc?ccb=11-4&oh=01_Q5Aa3QHf2FlaiwsEkV2Ej50QjF3_S6wJsl46hOZP5_jZgUk6LA&oe=696A2E16&_nc_sid=5e03e0",
+        "thumbnailSha256": "9sfL9mkxSqCnHhSzve13VycHYwW0wJ//wC+4l0gHhr0=",
+        "thumbnailEncSha256": "sU4jhw0WPjJRtJeW7zed+LzjL4W5yIxKefQZ27kSPzg="
+      },
+      "messageContextInfo": {
+        "messageSecret": "0calVhB4jmFtIOeLW7JnjrTzS6wV+VUXmZh/1knQWr0="
+      }
+    }
+  }
+}
+2025-12-17 14:56:55,972 - app.api.whatsapp - INFO - Baileys broadcast/status message from 'status' (remoteJid='status@broadcast'), skipping
