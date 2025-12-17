@@ -430,10 +430,16 @@ class MessageHandler:
                 pass
             return
 
-        # Admin slash-commands
+        # Admin slash-commands: Prefer Claude to answer/handle first, then fallback
         if message_text.strip().startswith('/'):
             actor = self._normalize_msisdn(user_number)
             if actor in set(self._admin_numbers()):
+                try:
+                    handled = await self.handle_admin_natural_language(user_number, message_text, session)
+                    if handled:
+                        return
+                except Exception:
+                    pass
                 await self.handle_admin_commands(user_number, message_text, session)
                 return
             else:
@@ -1917,6 +1923,7 @@ class MessageHandler:
             'adminLevel': 'super',
             'system_prompt_override': getattr(settings, 'HUSTLR_ADMIN_PROMPT_V1', None),
             'prompt_version': 'hustlr_admin_prompt_v1',
+            'user_name': actor,
             'known_fields': (session.get('admin_state') or {}),
         }
         try:
@@ -1948,21 +1955,27 @@ class MessageHandler:
             await self._log_and_send_response(user_number, "I couldn't parse that.", "admin_ai_parse_error")
             return True
 
-        # Prefer assistantMessage; tolerate legacy 'response' field
+        # Prefer assistantMessage; tolerate legacy 'response'; fallback to a clarification question
         assistant_msg = (payload.get('assistantMessage') or payload.get('response') or '').strip()
+        clar_q = (payload.get('clarificationQuestion') or payload.get('clarification') or payload.get('question') or '').strip()
         if assistant_msg:
             await self._log_and_send_response(user_number, assistant_msg, "admin_ai_assistant")
+        elif clar_q:
+            await self._log_and_send_response(user_number, clar_q, "admin_ai_clarify")
 
         action = payload.get('action') or {}
         entities = payload.get('entities') or {}
         if not action or not isinstance(action, dict) or not action.get('type'):
             return True
 
-        # Handle help intent explicitly without executing backend actions
+        # Handle help/clarification intents explicitly without executing backend actions
         t_raw = str(action.get('type') or '')
         if t_raw.upper() == 'SHOW_HELP':
             if not assistant_msg:
                 await self._send_admin_help_via_ai(user_number)
+            return True
+        if t_raw.upper() in {'CLARIFICATION_NEEDED', 'NO_ACTION', 'SMALL_TALK'}:
+            # Claude asked for clarification or signaled no backend action
             return True
 
         # Confirmation flow
@@ -1981,7 +1994,7 @@ class MessageHandler:
             await self.db.log_admin_audit({'admin': actor, 'action': action.get('type'), 'entities': entities, 'result': 'ok' if ok else 'failed', 'prompt_version': 'hustlr_admin_prompt_v1'})
         except Exception:
             pass
-        if not ok and (str(result_msg or '').lower().startswith('unknown action')) and assistant_msg:
+        if not ok and (str(result_msg or '').lower().startswith('unknown action')) and (assistant_msg or clar_q):
             # Prefer Claude's assistant message over an unknown-action error
             return True
         await self._log_and_send_response(user_number, result_msg or ("Done." if ok else "Failed."), "admin_action_result")
