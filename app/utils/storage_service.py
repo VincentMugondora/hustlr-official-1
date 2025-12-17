@@ -22,7 +22,8 @@ class StorageService:
         uid = uuid.uuid4().hex
         ext = (ext or '').lstrip('.')
         name = f"{uid}.{ext}" if ext else uid
-        prefix = prefix.strip('/')</n        return f"{prefix}/{dt}/{name}"
+        prefix = prefix.strip('/')
+        return f"{prefix}/{dt}/{name}"
 
     def upload_bytes(self, data: bytes, content_type: Optional[str] = None, prefix: str = 'media', ext: Optional[str] = None) -> str:
         if not data:
