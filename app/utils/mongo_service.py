@@ -104,6 +104,36 @@ class MongoService:
         result = await db.providers.update_one({"_id": oid}, {"$set": to_set})
         return result.matched_count > 0
 
+    async def append_provider_verification_media(self, provider_id: str, media_item: Dict[str, Any]) -> bool:
+        db = get_database()
+        try:
+            oid = ObjectId(provider_id)
+        except Exception:
+            return False
+        item = dict(media_item or {})
+        item.setdefault("added_at", datetime.utcnow())
+        result = await db.providers.update_one(
+            {"_id": oid},
+            {
+                "$push": {"verification_media": item},
+                "$set": {"verification_state": "pending_review", "updated_at": datetime.utcnow()},
+            },
+        )
+        return result.matched_count > 0
+
+    async def append_user_verification_media(self, whatsapp_number: str, media_item: Dict[str, Any]) -> bool:
+        db = get_database()
+        item = dict(media_item or {})
+        item.setdefault("added_at", datetime.utcnow())
+        result = await db.users.update_one(
+            {"whatsapp_number": whatsapp_number},
+            {
+                "$push": {"verification_media": item},
+                "$set": {"verification_state": "pending_review", "updated_at": datetime.utcnow()},
+            },
+        )
+        return result.matched_count > 0
+
     async def list_providers(self, status: Optional[str] = None, service_type: Optional[str] = None, limit: int = 20) -> List[Dict[str, Any]]:
         db = get_database()
         query: Dict[str, Any] = {}

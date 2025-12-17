@@ -220,10 +220,33 @@ async def receive_whatsapp_message(
                 "source": "whatsapp_cloud",
                 "raw_meta": meta,
             }
+            media_upload_id = None
             try:
-                await mongo_service.store_media_upload(media_doc)
+                media_upload_id = await mongo_service.store_media_upload(media_doc)
             except Exception as e:
                 logger.warning(f"Failed to record media upload for {message.from_number}: {e}")
+
+            # Link media to provider or user profile and set verification_state to pending_review
+            try:
+                verification_item = {
+                    "type": "image",
+                    "url": url,
+                    "content_type": content_type,
+                    "size": size_bytes,
+                    "caption": getattr(message, "media_caption", None),
+                    "media_id": media_id,
+                    "media_upload_id": str(media_upload_id) if media_upload_id else None,
+                    "source": "whatsapp_cloud",
+                }
+                provider = await mongo_service.get_provider_by_whatsapp(message.from_number)
+                if provider and provider.get("_id"):
+                    await mongo_service.append_provider_verification_media(str(provider.get("_id")), verification_item)
+                else:
+                    user = await mongo_service.get_user(message.from_number)
+                    if user:
+                        await mongo_service.append_user_verification_media(message.from_number, verification_item)
+            except Exception as e:
+                logger.warning(f"Failed to link media to profile for {message.from_number}: {e}")
 
             try:
                 await whatsapp_api.send_text_message(message.from_number, "Thanks, I received your photo.")
