@@ -347,3 +347,10 @@ class MongoService:
         doc.setdefault("created_at", now)
         result = await db.media_uploads.insert_one(doc)
         return result.inserted_id
+
+    async def log_admin_audit(self, record: Dict[str, Any]) -> Any:
+        db = get_database()
+        doc = dict(record or {})
+        doc.setdefault("timestamp", datetime.utcnow())
+        result = await db.admin_audit.insert_one(doc)
+        return result.inserted_id

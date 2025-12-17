@@ -196,7 +196,15 @@ class AWSLambdaService:
         else:
             combined = user_text
         # Choose system prompt based on LLM-controlled mode
-        if getattr(settings, 'LLM_CONTROLLED_CONVERSATION', False):
+        sp_override = None
+        try:
+            if isinstance(user_context, dict):
+                sp_override = user_context.get('system_prompt_override')
+        except Exception:
+            sp_override = None
+        if sp_override:
+            system_prompt = sp_override
+        elif getattr(settings, 'LLM_CONTROLLED_CONVERSATION', False):
             system_prompt = (
                 """
 HUSTLR – Claude Sonnet 4.5 Database‑First WhatsApp Orchestrator (STATUS/FIELD/DATA CONTRACT)
