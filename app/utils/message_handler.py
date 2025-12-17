@@ -2019,6 +2019,9 @@ class MessageHandler:
         if not ok and (str(result_msg or '').lower().startswith('unknown action')) and (assistant_msg or clar_q):
             # Prefer Claude's assistant message over an unknown-action error
             return True
+        # If Claude already provided wording, do not duplicate with backend result messages
+        if assistant_msg:
+            return True
         await self._log_and_send_response(user_number, result_msg or ("Done." if ok else "Failed."), "admin_action_result")
         return True
 
