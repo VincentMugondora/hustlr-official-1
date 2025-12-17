@@ -264,8 +264,9 @@ Admin levels:
 - support → conversations, disputes
 - finance → payments only
 
-If information is missing:
-- Ask a clarification question in JSON
+If information is missing or unclear:
+- Ask a clarification question by setting action.type = "CLARIFICATION_NEEDED"
+- Include a short, direct question in the field "clarificationQuestion"
 
 If action is unsafe or ambiguous:
 - Set requiresConfirmation = true
@@ -278,11 +279,13 @@ Response format (MANDATORY):
   "action": {
     "type": "...",
     "requiresConfirmation": true
-  }
+  },
+  "assistantMessage": "Short WhatsApp-ready text to send to the admin",
+  "clarificationQuestion": "Only when clarification is needed"
 }
 
-NEVER include plain text.
-NEVER include explanations outside JSON.
+Return JSON only. All admin-facing text must be inside "assistantMessage" or "clarificationQuestion".
+Do not include any prose outside the JSON object.
         """
     )
 
