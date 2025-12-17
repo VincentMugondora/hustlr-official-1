@@ -451,17 +451,26 @@ class MessageHandler:
             else:
                 await self._log_and_send_response(user_number, "You are not authorized to use admin commands.", "admin_not_authorized")
                 return
-        # Provider quick view (own bookings): handle before admin NL so dual-role users see provider view when they ask
+        # Provider quick view (own bookings)
         try:
             prov = await self.db.get_provider_by_whatsapp(user_number)
         except Exception:
             prov = None
         if prov and str(prov.get('status') or '').lower() in {'active', 'suspended', 'pending'}:
+            # If the actor is also an admin, only trigger provider view when they clearly ask about "my" bookings.
+            # Otherwise, let admin NL handle (so admins can see platform-wide bookings).
+            try:
+                actor = self._normalize_msisdn(user_number)
+                is_admin = actor in set(self._admin_numbers())
+            except Exception:
+                is_admin = False
             terms = [
                 'my bookings', 'all bookings', 'view bookings', 'see bookings', 'bookings', 'bookings list',
                 'my jobs', 'all jobs', 'view jobs', 'see jobs', 'jobs', 'jobs list'
             ]
-            if any(t in text_cmd_compact for t in terms):
+            provider_trigger = any(t in text_cmd_compact for t in terms)
+            # Admins: require an explicit "my" indicator to show only their own jobs here.
+            if provider_trigger and (not is_admin or re.search(r"\bmy\b", text_cmd_compact)):
                 st = None
                 for cand in ['pending', 'confirmed', 'assigned', 'cancelled', 'completed']:
                     if cand in text_cmd_compact:

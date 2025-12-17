@@ -41198,3 +41198,60 @@ For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/St
 2025-12-17 13:07:18,121 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: admin_ai_assistant, Message: I'll fetch the latest bookings for you. Showing the most recent 20 bookings across all providers and...
 2025-12-17 13:07:19,659 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2025-12-17 13:07:19,838 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-17 13:21:05,800 - app.api.whatsapp - INFO - [2025-12-17T11:21:05.800446] Baileys webhook received
+2025-12-17 13:21:05,800 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "can l see all the bookings",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3F29091A2F532191CE96",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1765970464,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "can l see all the bookings",
+        "contextInfo": {
+          "expiration": 0,
+          "ephemeralSettingTimestamp": "0",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        }
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "dh+YwB/9Ts2xqw==",
+          "senderTimestamp": "1765387827",
+          "recipientKeyHash": "wom0j6rFsvt9iQ==",
+          "recipientTimestamp": "1765878053"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-17 13:21:05,801 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-17 13:21:05,801 - app.api.whatsapp - INFO - Baileys text: 'can l see all the bookings'
+2025-12-17 13:21:08,388 - app.utils.aws_lambda - INFO - [BEDROCK CONFIG] source=settings cfg(HUSTLR)=anthropic.claude-3-5-sonnet-20240620-v1:0, env_ignored(BEDROCK_MODEL_ID)=, param_ignored=None, inference_profile_arn=arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, resolved_model_id=anthropic.claude-3-5-sonnet-20240620-v1:0, chosen=arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, use_bedrock=True, region=us-east-1, has_creds=True
+2025-12-17 13:21:08,398 - app.utils.aws_lambda - INFO - [BEDROCK INVOKE] modelId=arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, region=us-east-1
+2025-12-17 13:21:12,869 - app.utils.aws_lambda - INFO - [CLAUDE RESPONSE] Model: arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, User: 263777530322, Question: can l see all the bookings..., Answer: ```json
+{
+  "intent": "VIEW_BOOKINGS",
+  "confidence": 0.95,
+  "entities": {
+    "scope": "all",
+    "filters": {}
+  },
+  "action": {
+    "type": "LIST_BOOKINGS",
+    "requiresConfirmation": false,
+  ...
+2025-12-17 13:21:12,869 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: admin_ai_assistant, Message: I'll fetch the latest bookings for you. Showing the most recent 20 bookings across all providers and...
+2025-12-17 13:21:14,297 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-17 13:21:14,566 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
