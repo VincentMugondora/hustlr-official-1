@@ -143,5 +143,10 @@ class Settings(BaseSettings):
         "+16509965727",
     ]
 
+    # File storage configuration
+    FILE_STORAGE_PROVIDER: str = "local"  # "s3" or "local"
+    AWS_S3_BUCKET: str | None = None
+    AWS_S3_PUBLIC_BASE_URL: str | None = None
+
 
 settings = Settings()
