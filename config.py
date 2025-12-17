@@ -143,6 +143,9 @@ class Settings(BaseSettings):
         "+16509965727",
     ]
 
+    # Only this number is allowed to perform role/status changes
+    SUPERADMIN_WHATSAPP_NUMBER: str = "+263777530322"
+
     # File storage configuration
     FILE_STORAGE_PROVIDER: str = "local"  # "s3" or "local"
     AWS_S3_BUCKET: str | None = None

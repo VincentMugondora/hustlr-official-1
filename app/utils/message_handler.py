@@ -2057,16 +2057,19 @@ class MessageHandler:
             await self.db.log_admin_audit({'admin': actor, 'action': action.get('type'), 'entities': entities, 'result': 'ok' if ok else 'failed', 'prompt_version': 'hustlr_admin_prompt_v1'})
         except Exception:
             pass
-        if not ok and (str(result_msg or '').lower().startswith('unknown action')) and (assistant_msg or clar_q):
-            # Prefer Claude's assistant message over an unknown-action error
+        # On failure, always show backend error unless it's an unknown action and Claude already spoke.
+        if not ok:
+            if (str(result_msg or '').lower().startswith('unknown action')) and (assistant_msg or clar_q):
+                return True
+            await self._log_and_send_response(user_number, result_msg or "Failed.", "admin_action_result")
             return True
-        # If Claude already provided wording, do not duplicate with backend result messages,
+        # Success path: avoid duplicate wording if Claude already provided assistantMessage,
         # except for list-type actions where the backend returns the actual data (e.g., bookings).
         t_upper = (action.get('type') or '').upper()
         send_even_if_assistant = t_upper in {'BOOKING_LIST', 'LIST_BOOKINGS'}
         if assistant_msg and not send_even_if_assistant:
             return True
-        await self._log_and_send_response(user_number, result_msg or ("Done." if ok else "Failed."), "admin_action_result")
+        await self._log_and_send_response(user_number, result_msg or "Done.", "admin_action_result")
         return True
 
     async def _execute_admin_action(self, actor: str, action: Dict[str, Any], entities: Dict[str, Any]) -> (bool, str):
@@ -2089,7 +2092,19 @@ class MessageHandler:
             pn = self._normalize_msisdn(token)
             return await self.db.get_provider_by_phone(pn) if pn else None
         # Approve / Reinstate / Reject / Suspend / Blacklist
+        # Guard: Only the designated superadmin can perform role/status changes
         if t in {'PROVIDER_APPROVE','PROVIDER_REINSTATE','PROVIDER_REJECT','PROVIDER_SUSPEND','PROVIDER_BLACKLIST'}:
+            try:
+                sup = getattr(settings, 'SUPERADMIN_WHATSAPP_NUMBER', '') or ''
+                superadmin = self._normalize_msisdn(sup) if sup else ''
+            except Exception:
+                superadmin = ''
+            try:
+                actor_norm = self._normalize_msisdn(actor)
+            except Exception:
+                actor_norm = actor
+            if superadmin and actor_norm != superadmin:
+                return False, "Only the designated superadmin can change roles."
             token = (entities.get('provider_id') or entities.get('phone') or entities.get('id') or '').strip()
             prov = await _find_provider(token)
             if not prov:
