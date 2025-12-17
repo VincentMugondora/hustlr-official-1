@@ -458,6 +458,7 @@ class MessageHandler:
                                 'action': pending.get('type'),
                                 'entities': entities,
                                 'result': 'ok' if ok else 'failed',
+                                'prompt_version': 'hustlr_admin_prompt_v1',
                             })
                         except Exception:
                             pass
@@ -1904,32 +1905,11 @@ class MessageHandler:
     async def handle_admin_natural_language(self, user_number: str, message_text: str, session: Dict) -> bool:
         """Admin NL handler powered by Claude. Returns True if handled."""
         actor = self._normalize_msisdn(user_number)
-        # Build admin system prompt override
-        admin_prompt = (
-            "You are Hustlr Admin AI.\n\n"
-            "You control admin operations via structured actions.\n"
-            "You NEVER perform actions directly.\n"
-            "You MUST return valid JSON only. No text outside JSON.\n\n"
-            "Output JSON schema strictly as:\n"
-            "{\n"
-            "  \"intent\": string,\n"
-            "  \"confidence\": number,\n"
-            "  \"entities\": object,\n"
-            "  \"action\": {\n"
-            "    \"type\": one of [PROVIDER_LIST, PROVIDER_APPROVE, PROVIDER_REJECT, PROVIDER_SUSPEND, PROVIDER_REINSTATE, PROVIDER_BLACKLIST, BOOKING_LIST, BOOKING_INFO, BOOKING_ASSIGN, BOOKING_REASSIGN, BOOKING_CANCEL, BOOKING_COMPLETE, CONVERSATION_VIEW, CONVERSATION_RESET, STATS, AI_STATUS, AI_PAUSE, AI_RESUME, USER_BLOCK],\n"
-            "    \"requiresConfirmation\": boolean\n"
-            "  },\n"
-            "  \"assistantMessage\": string\n"
-            "}\n\n"
-            "Rules:\n"
-            "- Ask for missing entities in assistantMessage (short lines).\n"
-            "- Set requiresConfirmation=true for destructive actions (reject/suspend/blacklist/cancel/complete/block).\n"
-            "- NEVER add commands.\n"
-        )
         user_ctx = {
             'role': 'admin',
             'adminLevel': 'super',
-            'system_prompt_override': admin_prompt,
+            'system_prompt_override': getattr(settings, 'HUSTLR_ADMIN_PROMPT_V1', None),
+            'prompt_version': 'hustlr_admin_prompt_v1',
             'known_fields': (session.get('admin_state') or {}),
         }
         try:
@@ -1983,7 +1963,7 @@ class MessageHandler:
 
         ok, result_msg = await self._execute_admin_action(actor, action, entities)
         try:
-            await self.db.log_admin_audit({'admin': actor, 'action': action.get('type'), 'entities': entities, 'result': 'ok' if ok else 'failed'})
+            await self.db.log_admin_audit({'admin': actor, 'action': action.get('type'), 'entities': entities, 'result': 'ok' if ok else 'failed', 'prompt_version': 'hustlr_admin_prompt_v1'})
         except Exception:
             pass
         await self._log_and_send_response(user_number, result_msg or ("Done." if ok else "Failed."), "admin_action_result")
