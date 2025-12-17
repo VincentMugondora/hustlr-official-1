@@ -408,27 +408,35 @@ class MessageHandler:
                 is_admin = self._normalize_msisdn(user_number) in set(self._admin_numbers())
             except Exception:
                 is_admin = False
-            await self._log_and_send_response(
-                user_number,
-                (f"Welcome Admin {name or self._normalize_msisdn(user_number)}. Type /help for admin commands." if is_admin else self._short(
-                    f"{greet} How can I help you today? You can ask for a service like plumber, electrician, cleaner, or say HELP.",
-                    f"{greet} How can I help?"
-                )),
-                "greeting"
-            )
-            session['state'] = ConversationState.SERVICE_SEARCH
-            try:
-                sd = session.setdefault('data', {})
-                for k in [
-                    'service_type', 'providers', 'selected_provider', 'selected_provider_index',
-                    'booking_time', '_pending_booking', 'all_providers', 'location',
-                    '_bookings_list', '_cancel_booking_id', '_reschedule_booking_id', '_reschedule_new_time',
-                    'issue'
-                ]:
-                    sd.pop(k, None)
-            except Exception:
-                pass
-            return
+            if is_admin:
+                try:
+                    handled = await self.handle_admin_natural_language(user_number, message_text, session)
+                    if handled:
+                        return
+                except Exception:
+                    pass
+            else:
+                await self._log_and_send_response(
+                    user_number,
+                    self._short(
+                        f"{greet} How can I help you today? You can ask for a service like plumber, electrician, cleaner, or say HELP.",
+                        f"{greet} How can I help?"
+                    ),
+                    "greeting"
+                )
+                session['state'] = ConversationState.SERVICE_SEARCH
+                try:
+                    sd = session.setdefault('data', {})
+                    for k in [
+                        'service_type', 'providers', 'selected_provider', 'selected_provider_index',
+                        'booking_time', '_pending_booking', 'all_providers', 'location',
+                        '_bookings_list', '_cancel_booking_id', '_reschedule_booking_id', '_reschedule_new_time',
+                        'issue'
+                    ]:
+                        sd.pop(k, None)
+                except Exception:
+                    pass
+                return
 
         # Admin slash-commands: Prefer Claude to answer/handle first, then fallback
         if message_text.strip().startswith('/'):
@@ -440,8 +448,6 @@ class MessageHandler:
                         return
                 except Exception:
                     pass
-                await self.handle_admin_commands(user_number, message_text, session)
-                return
             else:
                 await self._log_and_send_response(user_number, "You are not authorized to use admin commands.", "admin_not_authorized")
                 return
