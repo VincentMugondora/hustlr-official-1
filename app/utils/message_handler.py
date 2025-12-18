@@ -454,7 +454,18 @@ class MessageHandler:
             if m:
                 target_mode = m.group(1)
                 override_cmd = True
-            elif mode_txt in {'mode', '/mode', 'mode reset', 'reset mode', 'mode default', 'mode auto'}:
+            else:
+                # Additional natural language forms
+                m2 = re.search(r"\b(?:change|switch)\s+(?:role\s+to|to)\s+(admin|provider|user)\b", mode_txt)
+                if m2:
+                    target_mode = m2.group(1)
+                    override_cmd = True
+                else:
+                    m3 = re.search(r"\b(?:act as|be)\s+(admin|provider|user)\b", mode_txt)
+                    if m3:
+                        target_mode = m3.group(1)
+                        override_cmd = True
+            if mode_txt in {'mode', '/mode', 'mode reset', 'reset mode', 'mode default', 'mode auto'}:
                 target_mode = 'reset'
                 override_cmd = True
 
@@ -489,6 +500,13 @@ class MessageHandler:
                 session['mode_override'] = 'user'
                 await self._log_and_send_response(user_number, 'Mode set: User.', 'mode_user')
                 return
+            # Unknown or unsupported target -> show usage help
+            await self._log_and_send_response(
+                user_number,
+                "Unknown mode. Use one of: 'mode admin', 'mode provider', 'mode user', or 'mode reset'.",
+                'mode_help'
+            )
+            return
 
         # Admin slash-commands: Prefer Claude to answer/handle first, then fallback
         if message_text.strip().startswith('/'):
