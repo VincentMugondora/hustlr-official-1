@@ -1923,6 +1923,7 @@ class MessageHandler:
                 return now + timedelta(weeks=n)
 
 
+
         # Keywords today/tomorrow/tonight with optional time after
         def parse_with_base(remove_word: str, base: datetime, default_hour: int = 9) -> Optional[datetime]:
             remainder = re.sub(fr"(?i)\b{remove_word}\b", '', t_raw).strip()
@@ -1962,8 +1963,6 @@ class MessageHandler:
             except Exception:
                 return None
 
-        return try_du(t_raw)
-
         dt = try_du(t_raw)
         if not dt:
             dt = try_du(t_raw, dayfirst=True)
@@ -1976,6 +1975,10 @@ class MessageHandler:
             dt = dt + timedelta(days=1)
 
         return dt
+
+    def _canonicalize_booking_time(self, time_str: str) -> Optional[datetime]:
+        """Parse a human-readable time string into a canonical datetime object."""
+        return self._parse_relative_time(time_str)
 
     def _format_booking_time_for_display(self, dt_text: str) -> str:
         s = (dt_text or '').strip()
@@ -2004,6 +2007,93 @@ class MessageHandler:
         except Exception:
             # Last resort
             return f"B{int(datetime.utcnow().timestamp()*1000)}"
+
+    async def _ai_action_create_booking(self, user_number: str, payload: Dict, session: Dict, user: Dict) -> None:
+        """Handle booking creation from a structured AI payload."""
+        s_type = payload.get('service_type')
+        prov_idx = payload.get('provider_index')
+        time_text = payload.get('time_text')
+        issue = payload.get('issue')
+
+        if not s_type or not prov_idx or not time_text:
+            await self._log_and_send_response(user_number, "I'm missing some details to make the booking. Could you please clarify the service, provider, and time?", "booking_payload_incomplete")
+            return
+
+        providers = (session.get('data') or {}).get('providers') or []
+        if not (isinstance(prov_idx, int) and 1 <= prov_idx <= len(providers)):
+            await self._log_and_send_response(user_number, "That's not a valid provider selection. Please choose a number from the list.", "booking_provider_index_invalid")
+            return
+
+        provider = providers[prov_idx - 1]
+        booking_time_dt = self._canonicalize_booking_time(time_text)
+        if not booking_time_dt:
+            await self._log_and_send_response(user_number, "I couldn't understand that time. Please try something like 'tomorrow at 10am' or 'Dec 20 14:30'.", "booking_time_invalid")
+            return
+
+        booking_time = booking_time_dt.strftime('%Y-%m-%d %H:%M')
+        location = (session.get('data') or {}).get('location') or (user or {}).get('location') or ''
+
+        # Final check: does this provider offer this service?
+        provider_service = (provider.get('service_type') or '').lower()
+        request_service = (s_type or '').lower()
+        # Basic check, can be improved with synonyms
+        assert request_service in provider_service or provider_service in request_service, f"Provider {provider.get('_id')} does not offer {request_service}"
+
+        booking_doc = {
+            'booking_id': self._generate_booking_id(),
+            'customer_whatsapp_number': user_number,
+            'provider_whatsapp_number': provider.get('whatsapp_number'),
+            'service_type': s_type,
+            'booking_time': booking_time,
+            'location': location,
+            'status': 'pending',
+            'created_at': datetime.utcnow().isoformat(),
+            'problem_description': issue or (session.get('data') or {}).get('issue') or ''
+        }
+
+        await self.db.create_booking(booking_doc)
+        await self._notify_booking_other_party(user_number, booking_doc['booking_id'], 'new')
+
+        msg = (
+            f"Booking confirmed!\n"
+            f"{provider['name']} will assist you with {s_type.title()}.\n"
+            f"Location: {location}\n"
+            f"Date: {booking_time}"
+        )
+        await self._log_and_send_response(user_number, msg, "booking_creation_confirmed")
+
+        # Hard reset of session data after booking to prevent contamination
+        session['state'] = ConversationState.SERVICE_SEARCH
+        session['data'] = {}
+
+            return None
+
+        # Direct number match (e.g., '1', '2')
+        if text.isdigit():
+            idx = int(text)
+            if 1 <= idx <= len(providers):
+                return idx
+
+        # Ordinal words ('first', 'second', 'the one', etc.)
+        ordinals = {
+            'first': 1, '1st': 1, 'one': 1,
+            'second': 2, '2nd': 2, 'two': 2,
+            'third': 3, '3rd': 3, 'three': 3,
+            'fourth': 4, '4th': 4, 'four': 4,
+            'fifth': 5, '5th': 5, 'five': 5,
+        }
+        for word, idx in ordinals.items():
+            if word in text:
+                if 1 <= idx <= len(providers):
+                    return idx
+
+        # Match by provider name
+        for i, p in enumerate(providers, start=1):
+            name = (p.get('name') or '').lower()
+            if name and name in text:
+                return i
+
+        return None
 
     async def _maybe_quick_provider_choice(self, user_number: str, message_text: str, session: Dict, user: Dict) -> bool:
         """Infer provider selection and/or time from free-form user text and create a booking.
@@ -2207,18 +2297,6 @@ class MessageHandler:
             i = int(num_match.group(1))
             if 1 <= i <= len(items):
                 selected = items[i-1]
-        if not selected:
-            await self._log_and_send_response(user_number, "Please reply with the number of the booking to cancel.", "cancel_booking_select_invalid")
-            return
-        session['data']['_cancel_booking_id'] = selected['id']
-        await self._log_and_send_response(user_number, f"Cancel booking {selected['id']} with {selected['provider']} at {selected['time']}? Reply 'yes' to confirm or 'no' to keep it.", "cancel_booking_confirm")
-        session['state'] = ConversationState.CANCEL_BOOKING_CONFIRM
-
-    async def handle_cancel_booking_confirm(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
-        text = message_text.strip().lower()
-        if text in ['yes', 'y', 'confirm', 'ok', 'sure']:
-            bid = session.get('data', {}).get('_cancel_booking_id')
-            if bid:
                 try:
                     await self.db.update_booking_status(bid, 'cancelled')
                     await self._notify_booking_other_party(user_number, bid, 'cancelled')

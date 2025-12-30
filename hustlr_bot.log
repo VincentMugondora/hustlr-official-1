@@ -44840,3 +44840,93 @@ Traceback (most recent call last):
           ^^^^^^^^^^^^^^^^^^^^^
 AttributeError: 'MessageHandler' object has no attribute 'handle_main_menu'
 2025-12-30 13:38:25,769 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-30 13:53:22,573 - app.api.whatsapp - INFO - [2025-12-30T11:53:22.573744] Baileys webhook received
+2025-12-30 13:53:22,577 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3EB0A9D6FE694EE33EA5FD",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1767095590,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-30 13:53:22,577 - app.api.whatsapp - INFO - Baileys stub/system message from 263777530322, skipping (messageStubType present)
+2025-12-30 13:53:28,366 - app.api.whatsapp - INFO - [2025-12-30T11:53:28.366782] Baileys webhook received
+2025-12-30 13:53:28,367 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3EB0A9D6FE694EE33EA5FD",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1767095596,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-30 13:53:28,367 - app.api.whatsapp - INFO - Baileys stub/system message from 263777530322, skipping (messageStubType present)
+2025-12-30 13:53:29,984 - app.api.whatsapp - INFO - [2025-12-30T11:53:29.984245] Baileys webhook received
+2025-12-30 13:53:29,984 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hi",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3EB0A9D6FE694EE33EA5FD",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1767095597,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "conversation": "hi",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "K6sU9o1JZyNfpQ==",
+          "senderTimestamp": "1767078455",
+          "senderAccountType": "E2EE",
+          "receiverAccountType": "E2EE",
+          "recipientKeyHash": "DRuaPNpV6+OMqQ==",
+          "recipientTimestamp": "1767081832"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "R8qMIH9aHGQvKxPDwOkQwMv0lKV0QA2jgnn1dEgpct8=",
+        "limitSharingV2": {
+          "trigger": "UNKNOWN",
+          "initiatedByMe": false
+        }
+      }
+    }
+  }
+}
+2025-12-30 13:53:30,600 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-30 13:53:30,602 - app.api.whatsapp - INFO - Baileys text: 'hi'
+2025-12-30 13:53:30,885 - app.api.whatsapp - ERROR - Error handling Baileys message from 263777530322
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\api\whatsapp.py", line 413, in receive_baileys_message
+    await baileys_message_handler.handle_message(message)
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\message_handler.py", line 172, in handle_message
+    await self.handle_main_menu(user_number, message_text, session, user)
+          ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'MessageHandler' object has no attribute 'handle_main_menu'
+2025-12-30 13:53:32,614 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
