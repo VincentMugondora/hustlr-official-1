@@ -2908,6 +2908,7 @@ class MessageHandler:
     def extract_service_type(self, message_text: str) -> Optional[str]:
         """Extract service type from message"""
         services = {
+            # Home Services
             'plumber': 'plumber',
             'plumbing': 'plumber',
             'electrician': 'electrician',
@@ -2921,10 +2922,28 @@ class MessageHandler:
             'cleaner': 'cleaner',
             'cleaning': 'cleaner',
             'mechanic': 'mechanic',
-            'repair': 'mechanic',
+            'car repair': 'mechanic',
             'gardener': 'gardener',
             'gardening': 'gardener',
-            'landscaping': 'gardener'
+            'landscaping': 'gardener',
+
+            # Professional / Tech Services
+            'website': 'web developer',
+            'web': 'web developer',
+            'developer': 'web developer',
+            'software': 'software engineer',
+            'app': 'app developer',
+            'mobile': 'app developer',
+
+            # Wellness & Fitness
+            'fitness': 'fitness',
+            'trainer': 'fitness',
+            'gym': 'fitness',
+            'personal trainer': 'fitness',
+
+            # Other
+            'driver': 'driver',
+            'transport': 'driver',
         }
         
         for keyword, service in services.items():
