@@ -44703,3 +44703,140 @@ I can help you with:
 2025-12-30 12:25:26,152 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_COMPLETE, Message:  Booking confirmed! Plumbflow Plumbers will meet you next Monday at 9am in Harare CBD. I'll send yo...
 2025-12-30 12:25:27,733 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2025-12-30 12:25:28,024 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2025-12-30 13:37:11,981 - app.api.whatsapp - INFO - [2025-12-30T11:37:11.981747] Baileys webhook received
+2025-12-30 13:37:11,982 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3EB0926D57A115811949A1",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1767094619,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-30 13:37:11,983 - app.api.whatsapp - INFO - Baileys stub/system message from 263777530322, skipping (messageStubType present)
+2025-12-30 13:37:17,837 - app.api.whatsapp - INFO - [2025-12-30T11:37:17.837215] Baileys webhook received
+2025-12-30 13:37:17,838 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3EB0926D57A115811949A1",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1767094625,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2025-12-30 13:37:17,841 - app.api.whatsapp - INFO - Baileys stub/system message from 263777530322, skipping (messageStubType present)
+2025-12-30 13:37:19,419 - app.api.whatsapp - INFO - [2025-12-30T11:37:19.419597] Baileys webhook received
+2025-12-30 13:37:19,420 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hello",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3EB0926D57A115811949A1",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1767094626,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "conversation": "hello",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "K6sU9o1JZyNfpQ==",
+          "senderTimestamp": "1767078455",
+          "senderAccountType": "E2EE",
+          "receiverAccountType": "E2EE",
+          "recipientKeyHash": "DRuaPNpV6+OMqQ==",
+          "recipientTimestamp": "1767081832"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "KUVk69SW5/tEvSdTkiU8hk2dEUhxDA+Jks2YA0Q2MMA=",
+        "limitSharingV2": {
+          "trigger": "UNKNOWN",
+          "initiatedByMe": false
+        }
+      }
+    }
+  }
+}
+2025-12-30 13:37:20,225 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-30 13:37:20,225 - app.api.whatsapp - INFO - Baileys text: 'hello'
+2025-12-30 13:37:20,660 - app.api.whatsapp - ERROR - Error handling Baileys message from 263777530322
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\api\whatsapp.py", line 413, in receive_baileys_message
+    await baileys_message_handler.handle_message(message)
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\message_handler.py", line 172, in handle_message
+    await self.handle_main_menu(user_number, message_text, session, user)
+          ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'MessageHandler' object has no attribute 'handle_main_menu'
+2025-12-30 13:37:23,200 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-30 13:38:23,994 - app.api.whatsapp - INFO - [2025-12-30T11:38:23.994891] Baileys webhook received
+2025-12-30 13:38:23,995 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hello",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3EB071F5A559619A3893DF",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1767094691,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "conversation": "hello",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "K6sU9o1JZyNfpQ==",
+          "senderTimestamp": "1767078455",
+          "senderAccountType": "E2EE",
+          "receiverAccountType": "E2EE",
+          "recipientKeyHash": "DRuaPNpV6+OMqQ==",
+          "recipientTimestamp": "1767081832"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "q35ca9SfE1R+hLGHi6h2m1mmfLql8PGJTV+VfwrtJKM=",
+        "limitSharingV2": {
+          "trigger": "UNKNOWN",
+          "initiatedByMe": false
+        }
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-30 13:38:24,067 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-30 13:38:24,068 - app.api.whatsapp - INFO - Baileys text: 'hello'
+2025-12-30 13:38:24,339 - app.api.whatsapp - ERROR - Error handling Baileys message from 263777530322
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\api\whatsapp.py", line 413, in receive_baileys_message
+    await baileys_message_handler.handle_message(message)
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\message_handler.py", line 172, in handle_message
+    await self.handle_main_menu(user_number, message_text, session, user)
+          ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'MessageHandler' object has no attribute 'handle_main_menu'
+2025-12-30 13:38:25,769 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"

@@ -1922,6 +1922,7 @@ class MessageHandler:
             if unit == 'week':
                 return now + timedelta(weeks=n)
 
+
         # Keywords today/tomorrow/tonight with optional time after
         def parse_with_base(remove_word: str, base: datetime, default_hour: int = 9) -> Optional[datetime]:
             remainder = re.sub(fr"(?i)\b{remove_word}\b", '', t_raw).strip()
@@ -1960,6 +1961,8 @@ class MessageHandler:
                 return du_parse(s, fuzzy=True, default=now, **kwargs)
             except Exception:
                 return None
+
+        return try_du(t_raw)
 
         dt = try_du(t_raw)
         if not dt:
