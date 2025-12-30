@@ -49,13 +49,348 @@ class ConversationState(Enum):
 
 class MessageHandler:
     """Advanced message handler for WhatsApp conversations"""
-    
+
     def __init__(self, whatsapp_api, dynamodb_service, lambda_service):
         self.whatsapp_api = whatsapp_api
         self.db = dynamodb_service
         self.lambda_service = lambda_service
         self.user_sessions = {}  # In-memory session store (consider Redis for production)
         self.ai_paused = False
+
+    # --------------------------------------------------------------------------
+    # Private Helper Methods
+    # --------------------------------------------------------------------------
+
+    async def _log_and_send_response(self, user_number: str, message: str, response_type: str = "text") -> None:
+        """Log bot response and send it to user"""
+        preview = message[:100]
+        try:
+            safe_preview = preview.encode("ascii", errors="ignore").decode("ascii", errors="ignore")
+        except Exception:
+            safe_preview = preview[:80]
+        logger.info(f"[BOT RESPONSE] To: {user_number}, Type: {response_type}, Message: {safe_preview}...")
+        try:
+            await self.whatsapp_api.send_text_message(user_number, message)
+        except Exception as e:
+            logger.warning(f"Failed to send WhatsApp message to {user_number}: {e}")
+        try:
+            await self.db.store_message(user_number, "assistant", message)
+        except Exception as e:
+            logger.warning(f"Could not store bot message in history for {user_number}: {e}")
+
+    async def _log_and_send_interactive(self, user_number: str, header: str, body: str, buttons: List[Dict], footer: str = None) -> None:
+        """Log interactive response and send it to user"""
+        logger.info(f"[BOT RESPONSE] To: {user_number}, Type: interactive_buttons, Header: {header}, Body: {body[:50]}...")
+        await self.whatsapp_api.send_interactive_buttons(user_number, header, body, buttons, footer)
+
+    def _is_concise(self) -> bool:
+        try:
+            return bool(getattr(settings, 'USE_CONCISE_RESPONSES', False))
+        except Exception:
+            return False
+
+    def _is_llm_controlled(self) -> bool:
+        try:
+            return bool(getattr(settings, 'LLM_CONTROLLED_CONVERSATION', False))
+        except Exception:
+            return False
+
+    def _short(self, long_text: str, short_text: str) -> str:
+        """Return short or long text based on concise mode. When LLM-controlled, always use long."""
+        if self._is_llm_controlled():
+            return long_text
+        return short_text if self._is_concise() else long_text
+
+    def _build_friendly_provider_body(self, service_type: str, location: str, providers_count: int, session: Dict) -> str:
+        if self._is_concise():
+            return f"Found {providers_count} {service_type}s in {location}. Pick one:"
+        data = (session or {}).get('data') or {}
+        issue = (data.get('issue') or '').strip()
+        if issue:
+            issue_snippet = issue
+            if len(issue_snippet) > 120:
+                issue_snippet = issue_snippet[:117] + '...'
+            prefix = f"Sorry you're going through this. For your issue — {issue_snippet} — I can connect you with Hustlr {service_type}s in {location}."
+        else:
+            prefix = f"Sorry you're going through this. I can connect you with Hustlr {service_type}s in {location}."
+        return f"{prefix}\n\nFound {providers_count} provider(s). Please pick one:"
+
+    def _friendly_footer(self) -> str:
+        return "Reply with one or more numbers (e.g., 1 or 1, 2)" if self._is_concise() else "Tap one or more providers or reply with numbers (e.g., 1 or 1, 2) to book."
+
+    def _normalize_msisdn(self, phone: str) -> Optional[str]:
+        s = re.sub(r"\D+", "", str(phone or ""))
+        if not s:
+            return None
+        if s.startswith("0") and len(s) >= 9:
+            return "263" + s[1:]
+        if s.startswith("7") and len(s) >= 9:
+            return "263" + s
+        if s.startswith("263"):
+            return s
+        if len(s) >= 9:
+            return "263" + s
+        return s
+
+    def _admin_numbers(self) -> List[str]:
+        try:
+            raw = getattr(settings, 'ADMIN_WHATSAPP_NUMBERS', "") or ""
+        except Exception:
+            raw = ""
+        if isinstance(raw, (list, tuple)):
+            vals = list(raw)
+        else:
+            vals = [p.strip() for p in str(raw).replace(";", ",").split(",") if p.strip()]
+        if not vals:
+            vals = ['+263783961640', '+263775251636', '+263777530322', '+16509965727']
+        norm = []
+        for v in vals:
+            n = self._normalize_msisdn(v)
+            if n:
+                norm.append(n)
+        return list(dict.fromkeys(norm))
+
+    async def _notify_admins_new_provider(self, provider: Dict[str, Any]) -> None:
+        admins = self._admin_numbers()
+        if not admins:
+            return
+        name = provider.get('name') or ''
+        svc = provider.get('service_type') or ''
+        loc = provider.get('location') or ''
+        phone = provider.get('whatsapp_number') or provider.get('contact') or ''
+        phone_norm = self._normalize_msisdn(phone) or phone
+        lines = [
+            f"New provider registration",
+            f"Name: {name}",
+            f"Service: {svc}",
+            f"Location: {loc}",
+            f"Phone: {phone_norm}",
+            "Reply APPROVE <number> to approve, or DENY <number> to reject.",
+        ]
+        body = "\n".join(lines)
+        for a in admins:
+            try:
+                await self._log_and_send_response(a, body, "admin_new_provider")
+            except Exception:
+                pass
+
+    def _parse_relative_time(self, time_str: str) -> Optional[datetime]:
+        """Parse a relative time string into a datetime object."""
+        now = datetime.now()
+        t_raw = (time_str or '').strip().lower()
+        t = ' ' + t_raw + ' '
+
+        m = re.search(r"\s(in|for)\s+(\d+)\s+(minute|hour|day|week)s?(\s|$)", t)
+        if m:
+            n = int(m.group(2))
+            unit = m.group(3)
+            if unit == 'minute':
+                return now + timedelta(minutes=n)
+            if unit == 'hour':
+                return now + timedelta(hours=n)
+            if unit == 'day':
+                return now + timedelta(days=n)
+            if unit == 'week':
+                return now + timedelta(weeks=n)
+
+        def parse_with_base(remove_word: str, base: datetime, default_hour: int = 9) -> Optional[datetime]:
+            remainder = re.sub(fr"(?i)\b{remove_word}\b", '', t_raw).strip()
+            if remainder:
+                try:
+                    return du_parse(remainder, fuzzy=True, default=base.replace(hour=default_hour, minute=0, second=0, microsecond=0))
+                except Exception:
+                    return base.replace(hour=default_hour, minute=0, second=0, microsecond=0)
+            return base.replace(hour=default_hour, minute=0, second=0, microsecond=0)
+
+        if 'tomorrow' in t:
+            return parse_with_base('tomorrow', now + timedelta(days=1), 9)
+        if 'today' in t:
+            return parse_with_base('today', now, 9)
+        if 'tonight' in t:
+            return parse_with_base('tonight', now, 18)
+        if 'now' in t:
+            return now
+
+        weekdays = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday']
+        for idx, name in enumerate(weekdays):
+            if f'next {name}' in t:
+                days_ahead = (idx - now.weekday() + 7) % 7
+                days_ahead = days_ahead if days_ahead != 0 else 7
+                base = now + timedelta(days=days_ahead)
+                return parse_with_base(f'next {name}', base, 9)
+            if f'this {name}' in t:
+                days_ahead = (idx - now.weekday() + 7) % 7
+                base = now + timedelta(days=days_ahead)
+                return parse_with_base(f'this {name}', base, 9)
+
+        def try_du(s: str, **kwargs) -> Optional[datetime]:
+            try:
+                return du_parse(s, fuzzy=True, default=now, **kwargs)
+            except Exception:
+                return None
+
+        dt = try_du(t_raw)
+        if not dt:
+            dt = try_du(t_raw, dayfirst=True)
+        if not dt:
+            return None
+
+        has_date_hint = bool(re.search(r"\b\d{4}[-/]\d{1,2}[-/]\d{1,2}\b", t)) or bool(re.search(r"\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\b", t, re.I)) or bool(re.search(r"\b\d{1,2}/\d{1,2}\b", t))
+        if not has_date_hint and dt <= now:
+            dt = dt + timedelta(days=1)
+
+        return dt
+
+    def _canonicalize_booking_time(self, time_str: str) -> Optional[datetime]:
+        """Parse a human-readable time string into a canonical datetime object."""
+        return self._parse_relative_time(time_str)
+
+    def _format_booking_time_for_display(self, dt_text: str) -> str:
+        s = (dt_text or '').strip()
+        if not s:
+            return 'Time not set'
+        try:
+            dt = datetime.fromisoformat(s.replace('Z', '+00:00'))
+            return dt.strftime('%Y-%m-%d %H:%M')
+        except Exception:
+            pass
+        try:
+            dt2 = self._canonicalize_booking_time(s)
+            if dt2:
+                return dt2.strftime('%Y-%m-%d %H:%M')
+        except Exception:
+            pass
+        return s
+
+    def _generate_booking_id(self) -> str:
+        """Generate a compact, unique-ish booking id without extra imports."""
+        try:
+            return 'B' + datetime.utcnow().strftime('%Y%m%d%H%M%S%f')
+        except Exception:
+            return f"B{int(datetime.utcnow().timestamp()*1000)}"
+
+    async def _notify_booking_other_party(self, original_actor_number: str, booking_id: str, event: str, new_time: Optional[str] = None) -> None:
+        """Notify the other party involved in a booking about a change."""
+        try:
+            booking = await self.db.get_booking(booking_id)
+            if not booking:
+                return
+
+            cust_num = booking.get('customer_whatsapp_number')
+            prov_num = booking.get('provider_whatsapp_number')
+
+            if not cust_num or not prov_num:
+                return
+
+            is_customer = self._normalize_msisdn(original_actor_number) == self._normalize_msisdn(cust_num)
+            target_num = prov_num if is_customer else cust_num
+            actor_role = 'Customer' if is_customer else 'Provider'
+
+            msg = ''
+            if event == 'cancelled':
+                msg = f"Booking {booking_id} has been cancelled by the {actor_role}."
+            elif event == 'rescheduled' and new_time:
+                msg = f"Booking {booking_id} has been rescheduled to {new_time} by the {actor_role}. Please confirm if you are available."
+            elif event == 'new':
+                prov_name = (booking.get('provider') or {}).get('name', 'the provider')
+                service = booking.get('service_type', 'service')
+                time = self._format_booking_time_for_display(booking.get('booking_time', ''))
+                msg = f"New booking request from {prov_name} for {service} at {time}. Please reply 'confirm' or 'decline'."
+
+            if msg:
+                await self._log_and_send_response(target_num, msg, f"booking_notify_{event}")
+
+        except Exception as e:
+            logger.error(f"Failed to notify other party for booking {booking_id}: {e}")
+
+    def _resolve_provider_index_from_text(self, providers: List[Dict], text: str) -> Optional[int]:
+        """Utility to find a provider index from free-form text."""
+        text = (text or '').strip().lower()
+        if not text or not providers:
+            return None
+
+        if text.isdigit():
+            idx = int(text)
+            if 1 <= idx <= len(providers):
+                return idx
+
+        ordinals = {
+            'first': 1, '1st': 1, 'one': 1,
+            'second': 2, '2nd': 2, 'two': 2,
+            'third': 3, '3rd': 3, 'three': 3,
+            'fourth': 4, '4th': 4, 'four': 4,
+            'fifth': 5, '5th': 5, 'five': 5,
+        }
+        for word, idx in ordinals.items():
+            if word in text:
+                if 1 <= idx <= len(providers):
+                    return idx
+
+        for i, p in enumerate(providers, start=1):
+            name = (p.get('name') or '').lower()
+            if name and name in text:
+                return i
+
+        return None
+
+    async def _ai_action_create_booking(self, user_number: str, payload: Dict, session: Dict, user: Dict) -> None:
+        """Handle booking creation from a structured AI payload."""
+        s_type = payload.get('service_type')
+        prov_idx = payload.get('provider_index')
+        time_text = payload.get('time_text')
+        issue = payload.get('issue')
+
+        if not s_type or not prov_idx or not time_text:
+            await self._log_and_send_response(user_number, "I'm missing some details to make the booking. Could you please clarify the service, provider, and time?", "booking_payload_incomplete")
+            return
+
+        providers = (session.get('data') or {}).get('providers') or []
+        if not (isinstance(prov_idx, int) and 1 <= prov_idx <= len(providers)):
+            await self._log_and_send_response(user_number, "That's not a valid provider selection. Please choose a number from the list.", "booking_provider_index_invalid")
+            return
+
+        provider = providers[prov_idx - 1]
+        booking_time_dt = self._canonicalize_booking_time(time_text)
+        if not booking_time_dt:
+            await self._log_and_send_response(user_number, "I couldn't understand that time. Please try something like 'tomorrow at 10am' or 'Dec 20 14:30'.", "booking_time_invalid")
+            return
+
+        booking_time = booking_time_dt.strftime('%Y-%m-%d %H:%M')
+        location = (session.get('data') or {}).get('location') or (user or {}).get('location') or ''
+
+        provider_service = (provider.get('service_type') or '').lower()
+        request_service = (s_type or '').lower()
+        assert request_service in provider_service or provider_service in request_service, f"Provider {provider.get('_id')} does not offer {request_service}"
+
+        booking_doc = {
+            'booking_id': self._generate_booking_id(),
+            'customer_whatsapp_number': user_number,
+            'provider_whatsapp_number': provider.get('whatsapp_number'),
+            'service_type': s_type,
+            'booking_time': booking_time,
+            'location': location,
+            'status': 'pending',
+            'created_at': datetime.utcnow().isoformat(),
+            'problem_description': issue or (session.get('data') or {}).get('issue') or ''
+        }
+
+        await self.db.create_booking(booking_doc)
+        await self._notify_booking_other_party(user_number, booking_doc['booking_id'], 'new')
+
+        msg = (
+            f"Booking confirmed!\n"
+            f"{provider['name']} will assist you with {s_type.title()}.\n"
+            f"Location: {location}\n"
+            f"Date: {booking_time}"
+        )
+        await self._log_and_send_response(user_number, msg, "booking_creation_confirmed")
+
+        session['state'] = ConversationState.SERVICE_SEARCH
+        session['data'] = {}
+
+    # --------------------------------------------------------------------------
+    # Public Handler Methods
+    # --------------------------------------------------------------------------
     
     async def _log_and_send_response(self, user_number: str, message: str, response_type: str = "text") -> None:
         """Log bot response and send it to user"""
@@ -2066,34 +2401,6 @@ class MessageHandler:
         session['state'] = ConversationState.SERVICE_SEARCH
         session['data'] = {}
 
-            return None
-
-        # Direct number match (e.g., '1', '2')
-        if text.isdigit():
-            idx = int(text)
-            if 1 <= idx <= len(providers):
-                return idx
-
-        # Ordinal words ('first', 'second', 'the one', etc.)
-        ordinals = {
-            'first': 1, '1st': 1, 'one': 1,
-            'second': 2, '2nd': 2, 'two': 2,
-            'third': 3, '3rd': 3, 'three': 3,
-            'fourth': 4, '4th': 4, 'four': 4,
-            'fifth': 5, '5th': 5, 'five': 5,
-        }
-        for word, idx in ordinals.items():
-            if word in text:
-                if 1 <= idx <= len(providers):
-                    return idx
-
-        # Match by provider name
-        for i, p in enumerate(providers, start=1):
-            name = (p.get('name') or '').lower()
-            if name and name in text:
-                return i
-
-        return None
 
     async def _maybe_quick_provider_choice(self, user_number: str, message_text: str, session: Dict, user: Dict) -> bool:
         """Infer provider selection and/or time from free-form user text and create a booking.
