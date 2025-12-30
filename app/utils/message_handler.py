@@ -2658,6 +2658,14 @@ class MessageHandler:
                 sp_override = None
                 prompt_version = 'hustlr_client_prompt_v1'
 
+        # --- Pre-computation: Check service availability before calling AI ---
+        precomputed_service_type = self.extract_service_type(message_text)
+        service_available = None
+        if precomputed_service_type:
+            # Check if we have any providers for this service
+            providers = await self.db.get_providers_by_service(precomputed_service_type)
+            service_available = bool(providers)
+
         user_context: Dict[str, Any] = {
             "user_name": (user or {}).get("name"),
             "user_location": (user or {}).get("location"),
@@ -2666,6 +2674,13 @@ class MessageHandler:
             "system_prompt_override": sp_override,
             "prompt_version": prompt_version,
         }
+
+        # Add pre-computed context for the AI
+        if service_available is not None:
+            user_context['service_availability'] = {
+                "service_type": precomputed_service_type,
+                "available": service_available
+            }
 
         try:
             ai_raw = await self.lambda_service.invoke_question_answerer(
