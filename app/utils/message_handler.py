@@ -118,7 +118,7 @@ class MessageHandler:
         return f"{prefix}\n\nFound {providers_count} provider(s). Please pick one:"
 
     def _friendly_footer(self) -> str:
-        return "Tap or reply 1-3" if self._is_concise() else "Tap a provider or reply with the number — we will handle the rest"
+        return "Reply with one or more numbers (e.g., 1 or 1, 2)" if self._is_concise() else "Tap one or more providers or reply with numbers (e.g., 1 or 1, 2) to book."
     
     async def handle_message(self, message: WhatsAppMessage) -> None:
         """Main message handler - routes to appropriate handlers"""
@@ -645,6 +645,9 @@ class MessageHandler:
             return
         if state == ConversationState.BOOKING_RESUME_DECISION:
             await self.handle_booking_resume_decision(user_number, message_text, session, user)
+            return
+        if state == ConversationState.CONFIRM_LOCATION:
+            await self.handle_confirm_location(user_number, message_text, session, user)
             return
         if state == ConversationState.BOOKING_CONFIRM:
             await self.handle_booking_confirmation(user_number, message_text, session, user)
@@ -1318,33 +1321,51 @@ class MessageHandler:
         session['state'] = ConversationState.PROVIDER_SELECTION
     
     async def handle_provider_selection(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
-        """Handle provider selection for booking"""
+        """Handle provider selection for booking, including multiple selections."""
         providers = session['data'].get('providers', [])
+        raw_text = message_text.strip()
         
-        # Resolve provider choice from free-form text (numbers, ordinal words, or provider name)
-        idx = self._resolve_provider_index_from_text(providers, message_text)
-        selected_provider = providers[idx - 1] if idx and 1 <= idx <= len(providers) else None
+        # Find all numbers in the message
+        selections = re.findall(r'\d+', raw_text)
         
-        if not selected_provider:
-            await self._log_and_send_response(
-                user_number,
-                "Please pick a provider from the list above.",
-                "invalid_provider_selection"
-            )
+        if not selections:
+            await self._log_and_send_response(user_number, "Please reply with the number(s) of the provider(s) you'd like to book.", "invalid_selection_format")
             return
-        
+
+        selected_indices = []
+        for s in selections:
+            try:
+                idx = int(s) - 1
+                if 0 <= idx < len(providers):
+                    if idx not in selected_indices:
+                        selected_indices.append(idx)
+                else:
+                    await self._log_and_send_response(user_number, f"Invalid selection: {s}. Please pick number(s) from 1 to {len(providers)}.", "invalid_selection")
+                    return
+            except ValueError:
+                continue # Should not happen with regex findall('\\d+')
+
+        if not selected_indices:
+            await self._log_and_send_response(user_number, "No valid providers selected. Please try again.", "invalid_selection")
+            return
+
+        selected_providers = [providers[i] for i in selected_indices]
+        session['data']['selected_providers'] = selected_providers # Store as a list
+
         # Ask for booking time
-        session['data']['selected_provider'] = selected_provider
-        session['state'] = ConversationState.BOOKING_TIME
-        
+        if len(selected_providers) == 1:
+            provider_names = selected_providers[0]['name']
+            prompt = f"Great choice! When would you like {provider_names} to come?"
+        else:
+            provider_names = ", ".join([p['name'] for p in selected_providers])
+            prompt = f"Great, you've selected {len(selected_providers)} providers: {provider_names}. When would you like them to come?"
+
         await self._log_and_send_response(
             user_number,
-            self._short(
-                f"Great! You've selected {selected_provider['name']}.\n\nWhen would you like the service? (e.g., 'tomorrow morning', 'Dec 15 at 2pm')",
-                f"Great choice. When?"
-            ),
-            "provider_selected"
+            self._short(prompt, "When should they come?"),
+            "ask_booking_time"
         )
+        session['state'] = ConversationState.BOOKING_TIME
     
     async def handle_booking_time(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
         """Handle booking time and move to explicit location confirmation"""
@@ -1363,17 +1384,21 @@ class MessageHandler:
         # Store booking time
         session['data']['booking_time'] = booking_time
         
+        # Check for single or multiple providers
+        selected_providers = session.get('data', {}).get('selected_providers', [])
+        provider_or_providers = "the provider" if len(selected_providers) == 1 else "the providers"
+
         # Ask to confirm saved location if available; otherwise ask for location
         saved_location = (user or {}).get('location') or (session.get('data', {}).get('location') if session.get('data') else None)
         if saved_location:
             prompt = self._short(
-                f"Should the provider come to your usual address at {saved_location}? Reply Yes or No.",
+                f"Should {provider_or_providers} come to your usual address at {saved_location}? Reply Yes or No.",
                 f"Use saved location ({saved_location})? Yes/No"
             )
         else:
             prompt = self._short(
-                "Where should the provider come? Please send your area (e.g., 'Harare', 'Borrowdale').",
-                "Where should the provider come?"
+                f"Where should {provider_or_providers} come? Please send your area (e.g., 'Harare', 'Borrowdale').",
+                f"Where should {provider_or_providers} come?"
             )
         await self._log_and_send_response(user_number, prompt, "confirm_location_prompt")
         session['state'] = ConversationState.CONFIRM_LOCATION
