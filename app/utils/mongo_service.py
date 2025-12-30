@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
 from bson import ObjectId
+import re
 
 from app.db import get_database
 
@@ -51,7 +52,30 @@ class MongoService:
     # Provider operations
     async def get_providers_by_service(self, service_type: str, location: Optional[str] = None) -> List[Dict[str, Any]]:
         db = get_database()
-        query: Dict[str, Any] = {"service_type": service_type, "status": "active"}
+        st = (service_type or "").strip()
+        query: Dict[str, Any] = {"status": "active"}
+        if st:
+            tokens = set(re.findall(r"[a-z0-9]+", st.lower()))
+            # Expand with lightweight synonyms so broad intents (e.g. 'website') match relevant categories
+            synonyms_map = {
+                "website": ["web", "developer", "engineer", "frontend", "fullstack", "wordpress", "shopify", "wix", "site"],
+                "web": ["website", "developer", "frontend", "fullstack"],
+                "developer": ["engineer", "programmer", "software"],
+                "software": ["developer", "engineer", "fullstack"],
+                "app": ["mobile", "android", "ios", "flutter", "react", "native"],
+                "fitness": ["gym", "trainer", "personal"],
+                "gym": ["fitness", "trainer"],
+                "trainer": ["fitness", "gym"],
+            }
+            expanded = set(tokens)
+            for t in list(tokens):
+                for syn in synonyms_map.get(t, []):
+                    expanded.add(syn)
+            if expanded:
+                pattern = "|".join(re.escape(t) for t in sorted(expanded))
+                query["service_type"] = {"$regex": pattern, "$options": "i"}
+            else:
+                query["service_type"] = st
         if location:
             query["location"] = {"$regex": location, "$options": "i"}
         cursor = db.providers.find(query)
@@ -167,9 +191,19 @@ class MongoService:
         await db.bookings.insert_one(booking_data)
         return True
 
-    async def get_user_bookings(self, user_whatsapp_number: str) -> List[Dict[str, Any]]:
+    async def get_active_bookings_for_user(self, whatsapp_number: str) -> List[Dict[str, Any]]:
+        """Get user bookings that are not completed or cancelled."""
         db = get_database()
-        cursor = db.bookings.find({"user_whatsapp_number": user_whatsapp_number})
+        query = {
+            "user_whatsapp_number": whatsapp_number,
+            "status": {"$nin": ["completed", "cancelled", "rejected"]},
+        }
+        cursor = db.bookings.find(query).sort("created_at", -1)
+        return [doc async for doc in cursor]
+
+    async def get_user_bookings(self, whatsapp_number: str) -> List[Dict[str, Any]]:
+        db = get_database()
+        cursor = db.bookings.find({"user_whatsapp_number": whatsapp_number})
         return [doc async for doc in cursor]
 
     async def update_booking_status(self, booking_id: str, status: str) -> bool:
@@ -396,6 +430,17 @@ class MongoService:
         result = await db.incoming_messages.insert_one(data)
         return result.inserted_id
 
+    async def exists_incoming_message_id(self, message_id: str) -> bool:
+        """Check if an incoming message with this external message_id already exists.
+
+        Safe for idempotency filtering.
+        """
+        if not message_id:
+            return False
+        db = get_database()
+        doc = await db.incoming_messages.find_one({"message_id": message_id})
+        return doc is not None
+
     async def mark_incoming_message_processed(self, document_id: Any) -> bool:
         db = get_database()
         result = await db.incoming_messages.update_one(
@@ -423,3 +468,88 @@ class MongoService:
         doc.setdefault("timestamp", datetime.utcnow())
         result = await db.admin_audit.insert_one(doc)
         return result.inserted_id
+
+    async def ensure_indexes(self) -> None:
+        """Create/ensure useful indexes. Safe to call repeatedly.
+
+        This does not add TTLs by default to avoid behavior changes.
+        """
+        db = get_database()
+        # Bookings
+        try:
+            await db.bookings.create_index("booking_id", unique=True)
+        except Exception:
+            pass
+        try:
+            await db.bookings.create_index([("user_whatsapp_number", 1), ("created_at", -1)])
+        except Exception:
+            pass
+        try:
+            await db.bookings.create_index([("provider_whatsapp_number", 1), ("created_at", -1)])
+        except Exception:
+            pass
+        for field in ("status", "date_time"):
+            try:
+                await db.bookings.create_index(field)
+            except Exception:
+                pass
+
+        # Providers
+        try:
+            await db.providers.create_index("whatsapp_number", unique=True, sparse=True)
+        except Exception:
+            pass
+        for field in ("service_type", "status", "location"):
+            try:
+                await db.providers.create_index(field)
+            except Exception:
+                pass
+
+        # Users
+        try:
+            await db.users.create_index("whatsapp_number", unique=True)
+        except Exception:
+            pass
+        for field in ("registered_at", "roles"):
+            try:
+                await db.users.create_index(field, sparse=True if field == "roles" else False)
+            except Exception:
+                pass
+
+        # Incoming messages (idempotency + ordering)
+        try:
+            await db.incoming_messages.create_index("message_id", unique=True, sparse=True)
+        except Exception:
+            pass
+        try:
+            await db.incoming_messages.create_index("created_at")
+        except Exception:
+            pass
+
+        # Sessions
+        try:
+            await db.sessions.create_index("whatsapp_number", unique=True)
+        except Exception:
+            pass
+        try:
+            await db.sessions.create_index("updated_at")
+        except Exception:
+            pass
+
+        # Conversation history
+        try:
+            await db.conversation_history.create_index([("whatsapp_number", 1), ("timestamp", -1)])
+        except Exception:
+            pass
+
+        # Media uploads
+        try:
+            await db.media_uploads.create_index("created_at")
+        except Exception:
+            pass
+
+        # Admin audit
+        try:
+            await db.admin_audit.create_index("timestamp")
+        except Exception:
+            pass

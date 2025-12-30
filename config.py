@@ -47,6 +47,21 @@ class Settings(BaseSettings):
     # LLM output length (tokens) for Bedrock Claude responses
     LLM_MAX_TOKENS: int = 1500
 
+    # Security & scalability feature flags (disabled by default for non-breaking rollout)
+    ENABLE_WHATSAPP_SIGNATURE_VERIFICATION: bool = False
+    WHATSAPP_APP_SECRET: str = ""  # Used for X-Hub-Signature-256 verification
+
+    ENABLE_BAILEYS_HMAC_VERIFICATION: bool = False
+    BAILEYS_WEBHOOK_SECRET: str = ""  # Shared secret for local Baileys webhook HMAC
+
+    ENABLE_WEBHOOK_IDEMPOTENCY: bool = True  # Safe to enable; uses unique keys to drop duplicates
+    ENABLE_INDEX_CREATION: bool = True       # Create/ensure indexes at startup
+
+    # Optional lightweight rate limiting (process-local; off by default)
+    ENABLE_RATE_LIMITING: bool = False
+    RATE_LIMIT_PER_MINUTE_IP: int = 120
+    RATE_LIMIT_PER_MINUTE_NUMBER: int = 30
+
     # Full WhatsApp-friendly User Policy text used when a user sends POLICY
     USER_POLICY_TEXT: str = (
         "Hustlr WhatsApp User Policy\n\n"
@@ -187,7 +202,27 @@ Tone:
 Warm, helpful, local, respectful
 
 Output format:
-Plain text only (no JSON, no markdown)
+Default to plain text (no markdown). However, when the user is asking for providers (e.g., "I need a website", "I need a plumber"), return a single JSON object with:
+{
+  "status": "CONFIRM",
+  "field": "selected_provider",
+  "data": {
+    "service_type": "<normalized category>",
+    "location": "<city/suburb if known>"
+  },
+  "assistantMessage": "Short WhatsApp-ready message"
+}
+Use this only to trigger the system to list real providers. Otherwise keep replies as plain text.
+
+Service understanding:
+- Infer the right provider category from broad user phrases and context.
+- Map general intents to relevant categories using synonyms. Examples:
+  • "website" → web developer, software engineer, frontend developer, WordPress developer
+  • "app" → mobile app developer, Android, iOS, Flutter, React Native
+  • "fitness" → gym, personal trainer
+  • "cleaning" → cleaner, house cleaning service
+  • "electricity issue" → electrician
+If unsure which category fits, ask one short follow-up question.
         """
     )
 

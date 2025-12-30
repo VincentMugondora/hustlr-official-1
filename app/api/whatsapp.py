@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Request, status, HTTPException, Body, Query
 from fastapi.responses import PlainTextResponse
-from app.utils.webhook_verifier import verify_whatsapp_signature
+from app.utils.webhook_verifier import verify_whatsapp_signature, verify_baileys_hmac
 from app.models.message import WhatsAppMessage
 from app.utils.whatsapp_cloud_api import WhatsAppCloudAPI
 from app.utils.message_handler import MessageHandler
@@ -64,10 +64,11 @@ async def receive_whatsapp_message(
     # Log raw payload
     logger.info(f"Raw payload: {json.dumps(payload, indent=2)}")
     
-    # (Optional) Signature verification logic if Meta needs it
-    # headers = request.headers
-    # if not verify_whatsapp_signature(headers, payload):
-    #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Verification failed.")
+    # Signature verification (optional, gated by settings)
+    if getattr(settings, 'ENABLE_WHATSAPP_SIGNATURE_VERIFICATION', False):
+        headers = request.headers
+        if not verify_whatsapp_signature(headers, payload):
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Verification failed.")
 
     # Parse incoming WhatsApp message
     message = WhatsAppMessage.from_webhook(payload)
@@ -143,6 +144,15 @@ async def receive_whatsapp_message(
     except Exception as e:
         logger.exception("Error parsing payload details")
     
+    # Idempotency: drop duplicate message_ids if enabled
+    if getattr(settings, 'ENABLE_WEBHOOK_IDEMPOTENCY', False) and message_id:
+        try:
+            if await mongo_service.exists_incoming_message_id(message_id):
+                logger.info(f"Duplicate message {message_id}, dropping")
+                return {"status": "duplicate_dropped"}
+        except Exception:
+            pass
+
     incoming_doc_id = None
     try:
         created_at = None
@@ -291,6 +301,7 @@ async def receive_whatsapp_message(
 
 @router.post("/baileys-webhook")
 async def receive_baileys_message(
+    request: Request,
     payload: dict = Body(...),
 ):
     """Webhook endpoint for the local Baileys Node service.
@@ -303,6 +314,11 @@ async def receive_baileys_message(
     timestamp = datetime.utcnow().isoformat()
 
     logger.info(f"[{timestamp}] Baileys webhook received")
+    # Optional HMAC verification for the local Baileys webhook
+    if getattr(settings, 'ENABLE_BAILEYS_HMAC_VERIFICATION', False):
+        raw = await request.body()
+        if not verify_baileys_hmac(request.headers, raw):
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Baileys signature invalid")
     try:
         logger.info(f"Baileys payload: {json.dumps(payload, indent=2, default=str)}")
     except Exception:
@@ -311,6 +327,13 @@ async def receive_baileys_message(
     from_number = (payload.get("from") or "").strip()
     from_number = from_number.split("@")[0]
     text = (payload.get("text") or "").strip()
+    # Extract message id for idempotency when available
+    message_id = None
+    try:
+        _raw = payload.get("rawMessage") or {}
+        message_id = ((_raw.get("key") or {}).get("id")) or None
+    except Exception:
+        message_id = None
 
     # Ignore Baileys stub/system messages that are not real user text
     try:
@@ -360,6 +383,14 @@ async def receive_baileys_message(
                 parts.append(f"({lat},{lng})")
 
             text = " ".join(parts) or "[location shared]"
+    # Idempotency: drop duplicates early
+    if getattr(settings, 'ENABLE_WEBHOOK_IDEMPOTENCY', False) and message_id:
+        try:
+            if await mongo_service.exists_incoming_message_id(message_id):
+                logger.info(f"Baileys duplicate message {message_id}, dropping")
+                return {"status": "duplicate_dropped"}
+        except Exception:
+            pass
 
     message = WhatsAppMessage(from_number, text)
 
@@ -372,6 +403,7 @@ async def receive_baileys_message(
             "from_number": message.from_number,
             "text": message.text,
             "source": "baileys",
+            "message_id": message_id,
         })
     except Exception as e:
         logger.warning(f"Failed to store Baileys incoming message for {message.from_number}: {e}")

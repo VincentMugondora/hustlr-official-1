@@ -37,6 +37,7 @@ class ConversationState(Enum):
     RESCHEDULE_BOOKING_SELECT = "reschedule_booking_select"
     RESCHEDULE_BOOKING_NEW_TIME = "reschedule_booking_new_time"
     RESCHEDULE_BOOKING_CONFIRM = "reschedule_booking_confirm"
+    CANCEL_EXISTING_BOOKING_CONFIRM = "cancel_existing_booking_confirm"
     
     # Provider registration states
     PROVIDER_REGISTER = "provider_register"
@@ -610,6 +611,9 @@ class MessageHandler:
             # If admin NL flow fails, fall back to normal path
             pass
         
+        if state == ConversationState.CANCEL_EXISTING_BOOKING_CONFIRM:
+            await self.handle_cancel_existing_booking_confirm(user_number, message_text, session, user)
+            return
         if state == ConversationState.BOOKING_RESUME_DECISION:
             await self.handle_booking_resume_decision(user_number, message_text, session, user)
             return
@@ -732,9 +736,11 @@ class MessageHandler:
         
         # Check for help / policy / control commands
         if message_text in ['help', 'menu', 'options']:
-            # Admins are always routed to Claude; no static help/commands
+            # Respect temporary mode override; only route to Admin NL when mode is admin
             try:
-                if self._normalize_msisdn(user_number) in set(self._admin_numbers()):
+                actor = self._normalize_msisdn(user_number)
+                mode_override = str((session.get('mode_override') or '')).lower()
+                if actor in set(self._admin_numbers()) and (mode_override in {'', 'admin'}):
                     handled = await self.handle_admin_natural_language(user_number, message_text, session)
                     if handled:
                         return
@@ -2489,6 +2495,103 @@ class MessageHandler:
             return True, "User blocked."
         return False, "Unknown action."
 
+    async def _list_providers_for_selection(self, user_number: str, service_type: str, raw_location: str, session: Dict, user: Dict) -> None:
+        """Helper to fetch and display a list of providers for selection."""
+        try:
+            # Normalize to our known service areas
+            from app.utils.location_extractor import get_location_extractor
+            location_extractor = get_location_extractor()
+            norm_location = location_extractor.normalize_user_location(raw_location) if raw_location else None
+
+            providers: List[Dict[str, Any]] = []
+            if service_type:
+                if norm_location:
+                    providers = await self.db.get_providers_by_service(service_type, norm_location)
+                else:
+                    providers = await self.db.get_providers_by_service(service_type)
+
+            if not providers and service_type:
+                all_for_service = await self.db.get_providers_by_service(service_type)
+                if norm_location:
+                    providers = location_extractor.filter_providers_by_location(all_for_service, norm_location)
+                else:
+                    providers = all_for_service
+
+            if not providers:
+                await self._log_and_send_response(
+                    user_number,
+                    self._short(
+                        f"Sorry, no {service_type or 'provider'}s available right now.",
+                        "Sorry, no providers available right now."
+                    ),
+                    "ai_no_providers_for_confirm",
+                )
+                return
+
+            session.setdefault("data", {})
+            session["data"]["service_type"] = service_type
+            session["data"]["providers"] = providers
+            if norm_location:
+                session["data"]["location"] = norm_location
+
+            buttons: List[Dict[str, Any]] = []
+            for p in providers[:3]:
+                buttons.append({
+                    "id": f"provider_{p.get('whatsapp_number') or p.get('_id')}",
+                    "title": f"{p.get('name') or 'Provider'}",
+                })
+
+            header_loc = norm_location or (user or {}).get("location") or "your area"
+            await self._log_and_send_interactive(
+                user_number,
+                f"Available {service_type}s in {header_loc}",
+                self._build_friendly_provider_body(service_type or 'provider', header_loc, len(providers), session),
+                buttons,
+                self._friendly_footer(),
+            )
+
+            session["state"] = ConversationState.PROVIDER_SELECTION
+        except Exception as e:
+            logger.error(f"Error while listing providers: {e}")
+            await self._log_and_send_response(user_number, "Sorry, I couldn't find providers right now. Please try again.", "provider_list_error")
+
+    async def handle_cancel_existing_booking_confirm(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
+        """Handles user decision on cancelling an existing booking to create a new one."""
+        text = message_text.strip().lower()
+
+        if text in ['yes', 'y', 'ok', 'confirm']:
+            conflicting_booking_id = session.get("data", {}).get("_conflicting_booking_id")
+            pending_request = session.get("data", {}).get("_pending_booking_request")
+
+            if conflicting_booking_id:
+                await self.db.update_booking_status(conflicting_booking_id, "cancelled")
+                await self._log_and_send_response(user_number, "Your previous booking has been cancelled.", "booking_cancelled")
+
+            if session.get("data"):
+                session["data"].pop("_conflicting_booking_id", None)
+                session["data"].pop("_pending_booking_request", None)
+
+            if pending_request:
+                await self._list_providers_for_selection(
+                    user_number,
+                    pending_request.get("service_type"),
+                    pending_request.get("location"),
+                    session,
+                    user
+                )
+            else:
+                session['state'] = ConversationState.SERVICE_SEARCH
+                await self._log_and_send_response(user_number, "Please tell me what service you are looking for.", "service_search_prompt")
+
+        elif text in ['no', 'n', 'cancel']:
+            if session.get("data"):
+                session["data"].pop("_conflicting_booking_id", None)
+                session["data"].pop("_pending_booking_request", None)
+            session['state'] = ConversationState.SERVICE_SEARCH
+            await self._log_and_send_response(user_number, "Okay, I've kept your existing booking. What else can I help you with?", "booking_kept")
+        else:
+            await self._log_and_send_response(user_number, "Please reply with 'yes' to cancel the old booking and create a new one, or 'no' to keep your existing booking.", "clarification_prompt")
+
     async def handle_ai_response(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
         if getattr(self, 'ai_paused', False):
             await self._log_and_send_response(user_number, "AI is currently paused. Please try again later or use HELP.", "ai_paused")
@@ -2595,73 +2698,50 @@ class MessageHandler:
             # Special handling: when Claude says CONFIRM selected_provider, actually
             # list real providers for the chosen service/location so the user can pick.
             if status == "CONFIRM" and field == "selected_provider":
-                try:
-                    service_type = (data.get("service_type") or (session.get("data") or {}).get("service_type") or "").strip().lower()
-                    # Prefer Claude-provided location, then session, then stored user location
-                    raw_location = (data.get("location") or (session.get("data") or {}).get("location") or (user or {}).get("location") or "").strip()
+                service_type = (data.get("service_type") or (session.get("data") or {}).get("service_type") or "").strip().lower()
+                raw_location = (data.get("location") or (session.get("data") or {}).get("location") or (user or {}).get("location") or "").strip()
 
-                    # Normalize to our known service areas so free-form addresses (e.g. '17 Taguta Rd, Greencroft')
-                    # resolve to an area like 'Harare' or 'Greencroft'.
-                    from app.utils.location_extractor import get_location_extractor
-                    location_extractor = get_location_extractor()
-                    norm_location = location_extractor.normalize_user_location(raw_location) if raw_location else None
+                # Check for existing active bookings for a similar service type
+                active_bookings = await self.db.get_active_bookings_for_user(user_number)
+                if active_bookings:
+                    synonyms_map = {
+                        "website": ["web", "developer", "engineer", "frontend", "fullstack", "wordpress", "shopify", "wix", "site"],
+                        "web": ["website", "developer", "frontend", "fullstack"],
+                        "developer": ["engineer", "programmer", "software"],
+                        "software": ["developer", "engineer", "fullstack"],
+                        "app": ["mobile", "android", "ios", "flutter", "react", "native"],
+                        "fitness": ["gym", "trainer", "personal"],
+                        "gym": ["fitness", "trainer"],
+                        "trainer": ["fitness", "gym"],
+                        "plumber": ["plumbing"],
+                        "electrician": ["electrical", "electricity"],
+                        "cleaner": ["cleaning"],
+                    }
+                    new_service_tokens = set(re.findall(r"[a-z0-9]+", service_type.lower()))
+                    for token in list(new_service_tokens):
+                        new_service_tokens.update(synonyms_map.get(token, []))
 
-                    # First try a direct DB query with normalized area (if available), otherwise no location filter
-                    providers: List[Dict[str, Any]] = []
-                    if service_type:
-                        if norm_location:
-                            providers = await self.db.get_providers_by_service(service_type, norm_location)
-                        else:
-                            providers = await self.db.get_providers_by_service(service_type)
+                    for booking in active_bookings:
+                        existing_service_type = (booking.get("service_type") or "").lower()
+                        existing_service_tokens = set(re.findall(r"[a-z0-9]+", existing_service_type))
+                        for token in list(existing_service_tokens):
+                            existing_service_tokens.update(synonyms_map.get(token, []))
+                        
+                        if new_service_tokens.intersection(existing_service_tokens):
+                            session["data"]["_pending_booking_request"] = {
+                                "service_type": service_type,
+                                "location": raw_location,
+                            }
+                            session["data"]["_conflicting_booking_id"] = booking.get("booking_id")
+                            session["state"] = ConversationState.CANCEL_EXISTING_BOOKING_CONFIRM
+                            await self._log_and_send_response(
+                                user_number,
+                                f"You already have an active booking for a similar service ({existing_service_type}). Do you want to cancel the existing booking and create a new one? (yes/no)",
+                                "cancel_existing_booking_prompt"
+                            )
+                            return
 
-                    # If still none but we have a normalized area, fetch all for the service and filter by area heuristics
-                    if not providers and service_type:
-                        all_for_service = await self.db.get_providers_by_service(service_type)
-                        if norm_location:
-                            providers = location_extractor.filter_providers_by_location(all_for_service, norm_location)
-                        else:
-                            providers = all_for_service
-
-                    # If after all that we still have no providers for the service, only then report none
-                    if not providers:
-                        await self._log_and_send_response(
-                            user_number,
-                            self._short(
-                                f"Sorry, no {service_type or 'provider'}s available right now.",
-                                "Sorry, no providers available right now."
-                            ),
-                            "ai_no_providers_for_confirm",
-                        )
-                        return
-
-                    # Cache providers in session and move to PROVIDER_SELECTION
-                    session.setdefault("data", {})
-                    session["data"]["service_type"] = service_type
-                    session["data"]["providers"] = providers
-                    if norm_location:
-                        session["data"]["location"] = norm_location
-
-                    # Build interactive buttons (reuse existing UX)
-                    buttons: List[Dict[str, Any]] = []
-                    for p in providers[:3]:
-                        buttons.append({
-                            "id": f"provider_{p.get('whatsapp_number') or p.get('_id')}",
-                            "title": f"{p.get('name') or 'Provider'}",
-                        })
-
-                    header_loc = norm_location or (user or {}).get("location") or "your area"
-                    await self._log_and_send_interactive(
-                        user_number,
-                        f"Available {service_type}s in {header_loc}",
-                        self._build_friendly_provider_body(service_type or 'provider', header_loc, len(providers), session),
-                        buttons,
-                        self._friendly_footer(),
-                    )
-
-                    session["state"] = ConversationState.PROVIDER_SELECTION
-                    return
-                except Exception as e:
-                    logger.error(f"Error while listing providers after AI CONFIRM: {e}")
+                await self._list_providers_for_selection(user_number, service_type, raw_location, session, user)
 
             # Execute booking-level actions that Claude has already explained
             # to the user via assistantMessage. Backend only performs the
@@ -2709,6 +2789,66 @@ class MessageHandler:
                         session["data"].pop("_reschedule_new_time", None)
                         session["data"].pop("_bookings_list", None)
                     session["state"] = ConversationState.SERVICE_SEARCH
+                return
+
+            # Create a booking when Claude completes the booking contract
+            if status == "COMPLETE" and field == "booking":
+                try:
+                    # Compose a date_time string
+                    date_time = (
+                        (data or {}).get("date_time")
+                        or (data or {}).get("scheduled_time")
+                        or (f"{(data or {}).get('date')} {(data or {}).get('time')}" if ((data or {}).get('date') and (data or {}).get('time')) else None)
+                    )
+                    # Resolve provider WhatsApp number if an id is present
+                    prov_id = (data or {}).get("provider_id") or (data or {}).get("provider") or (session.get("data") or {}).get("selected_provider", {}).get("_id")
+                    prov_msisdn = None
+                    if prov_id and hasattr(self.db, 'get_provider_by_id'):
+                        try:
+                            pdoc = await self.db.get_provider_by_id(str(prov_id))
+                            if pdoc:
+                                prov_msisdn = pdoc.get('whatsapp_number')
+                        except Exception:
+                            prov_msisdn = None
+
+                    # Generate a booking id
+                    bid = self._generate_booking_id()
+
+                    booking_doc: Dict[str, Any] = {
+                        'booking_id': bid,
+                        'user_whatsapp_number': user_number,
+                        'provider_whatsapp_number': prov_msisdn,
+                        'service_type': (data or {}).get('service_type') or (session.get('data') or {}).get('service_type'),
+                        'date_time': date_time or '',
+                        'status': 'pending',
+                        'problem_description': (data or {}).get('problem_description') or (session.get('data') or {}).get('issue') or '',
+                    }
+
+                    # Optional helpful fields
+                    if prov_id:
+                        booking_doc['provider_id'] = str(prov_id)
+                    cust_phone = (data or {}).get('customer_phone')
+                    if cust_phone:
+                        booking_doc['customer_phone'] = cust_phone
+                    cust_name = (data or {}).get('customer_name')
+                    if cust_name:
+                        booking_doc['customer_name'] = cust_name
+                    loc = (data or {}).get('location') or (session.get('data') or {}).get('location') or (user or {}).get('location')
+                    if loc:
+                        booking_doc['location'] = loc
+
+                    try:
+                        await self.db.create_booking(booking_doc)
+                    except Exception as e:
+                        logger.warning(f"Failed to create booking for {user_number}: {e}")
+                    finally:
+                        # Clear quick-booking helpers if any
+                        if session.get('data'):
+                            for k in ['_pending_booking', 'selected_provider_index', '_bookings_list', '_cancel_booking_id', '_reschedule_booking_id', '_reschedule_new_time']:
+                                session['data'].pop(k, None)
+                        session['state'] = ConversationState.SERVICE_SEARCH
+                except Exception as e:
+                    logger.error(f"Error finalizing booking: {e}")
                 return
 
             return
@@ -2861,6 +3001,15 @@ class MessageHandler:
         except Exception:
             pass
         return s
+
+    def _generate_booking_id(self) -> str:
+        """Generate a compact, unique-ish booking id without extra imports."""
+        try:
+            # Example: B20251218T112233123456 (UTC timestamp-based)
+            return 'B' + datetime.utcnow().strftime('%Y%m%d%H%M%S%f')
+        except Exception:
+            # Last resort
+            return f"B{int(datetime.utcnow().timestamp()*1000)}"
 
     async def _maybe_quick_provider_choice(self, user_number: str, message_text: str, session: Dict, user: Dict) -> bool:
         """Infer provider selection and/or time from free-form user text and create a booking.

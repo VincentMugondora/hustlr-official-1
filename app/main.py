@@ -10,6 +10,8 @@ warnings.filterwarnings(
 from fastapi import FastAPI
 from app.api import whatsapp, service_providers, bookings, users
 from app.db import connect_to_mongo, close_mongo_connection
+from app.utils.mongo_service import MongoService
+from config import settings
 from app.utils.baileys_client import BaileysClient
 import logging
 import sys
@@ -33,6 +35,14 @@ app = FastAPI(title="Hustlr WhatsApp Bot")
 @app.on_event("startup")
 async def on_startup():
     await connect_to_mongo()
+    # Non-breaking: ensure indexes if enabled
+    try:
+        if getattr(settings, 'ENABLE_INDEX_CREATION', False):
+            svc = MongoService()
+            await svc.ensure_indexes()
+    except Exception:
+        # Do not fail startup on index ensure
+        pass
 
 @app.on_event("shutdown")
 async def on_shutdown():
