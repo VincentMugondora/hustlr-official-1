@@ -387,6 +387,35 @@ class MessageHandler:
     async def handle_main_menu(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
         """Handle main menu and service search"""
         state = session['state']
+
+        # --- Intent Reset Trigger ---
+        # If the user's message signals a new request, clear any stale booking context
+        # to prevent the AI from getting stuck on a previous, completed flow.
+        text_cmd_compact = re.sub(r"\s+", " ", message_text.strip().lower())
+        new_intent_keywords = [
+            "need", "want", "help", "looking for", "book", "get", "find",
+            "out of shape", "trainer", "fitness", "another", "new", "different"
+        ]
+
+        # Avoid resetting if we are in the middle of a confirmation step
+        is_in_confirmation_flow = state in {
+            ConversationState.BOOKING_CONFIRM,
+            ConversationState.CANCEL_BOOKING_CONFIRM,
+            ConversationState.RESCHEDULE_BOOKING_CONFIRM,
+            ConversationState.CANCEL_EXISTING_BOOKING_CONFIRM
+        }
+
+        if any(keyword in text_cmd_compact for keyword in new_intent_keywords) and not is_in_confirmation_flow:
+            if session.get('data'):
+                for k in [
+                    '_pending_booking', 'selected_provider_index', '_bookings_list',
+                    '_cancel_booking_id', '_reschedule_booking_id', '_reschedule_new_time',
+                    'service_type', 'providers', 'selected_provider', 'booking_time',
+                    'location', 'issue', 'problem_description', 'date', 'time'
+                ]:
+                    session['data'].pop(k, None)
+            session['state'] = ConversationState.SERVICE_SEARCH
+            state = session['state']
         
         # Default any legacy/"new" state for onboarded users into service search
         if state == ConversationState.NEW:
@@ -2842,9 +2871,14 @@ class MessageHandler:
                     except Exception as e:
                         logger.warning(f"Failed to create booking for {user_number}: {e}")
                     finally:
-                        # Clear quick-booking helpers if any
+                        # Clear booking-related data from session
                         if session.get('data'):
-                            for k in ['_pending_booking', 'selected_provider_index', '_bookings_list', '_cancel_booking_id', '_reschedule_booking_id', '_reschedule_new_time']:
+                            for k in [
+                                '_pending_booking', 'selected_provider_index', '_bookings_list',
+                                '_cancel_booking_id', '_reschedule_booking_id', '_reschedule_new_time',
+                                'service_type', 'providers', 'selected_provider', 'booking_time',
+                                'location', 'issue', 'problem_description', 'date', 'time'
+                            ]:
                                 session['data'].pop(k, None)
                         session['state'] = ConversationState.SERVICE_SEARCH
                 except Exception as e:
