@@ -686,6 +686,36 @@ class MessageHandler:
             "help_menu"
         )
 
+    async def handle_main_menu(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
+        text = (message_text or '').strip().lower()
+        # Quick commands
+        if text in {"help", "/help", "?"}:
+            await self.send_help_menu(user_number)
+            return
+        if any(k in text for k in ["my bookings", "view bookings", "bookings"]):
+            await self.show_user_bookings(user_number, session, user, mode="view")
+            session['state'] = ConversationState.VIEW_BOOKINGS
+            return
+        if any(k in text for k in ["cancel booking", "cancel a booking", "cancel"]):
+            await self.show_user_bookings(user_number, session, user, mode="cancel")
+            session['state'] = ConversationState.CANCEL_BOOKING_SELECT
+            return
+        if any(k in text for k in ["reschedule", "change time", "move booking", "reschedule booking"]):
+            await self.show_user_bookings(user_number, session, user, mode="reschedule")
+            session['state'] = ConversationState.RESCHEDULE_BOOKING_SELECT
+            return
+
+        # Quick intent: book using existing provider list or time hints
+        try:
+            handled = await self._maybe_quick_provider_choice(user_number, message_text, session, user)
+            if handled:
+                return
+        except Exception:
+            pass
+
+        # Default: let AI parse and drive next action
+        await self.handle_ai_response(user_number, message_text, session, user)
+
     def _normalize_msisdn(self, phone: str) -> Optional[str]:
         s = re.sub(r"\D+", "", str(phone or ""))
         if not s:
@@ -2074,9 +2104,9 @@ class MessageHandler:
                 session["state"] = ConversationState.SERVICE_SEARCH
                 return
 
-    def extract_service_type(self, message_text: str) -> Optional[str]:
+    def extract_service_type(self, message_text: str, return_map: bool = False) -> Optional[str]:
         """Extract service type from message text using keyword matching."""
-        message_text = message_text.lower()
+        message_text = (message_text or '').lower()
         # Expanded service map
         services = {
             'plumber': 'plumber',
@@ -2230,6 +2260,9 @@ class MessageHandler:
             'hiring': 'recruiter',
             'staffing': 'recruiter',
         }
+
+        if return_map:
+            return services
 
         for keyword, service in services.items():
             if keyword in message_text:

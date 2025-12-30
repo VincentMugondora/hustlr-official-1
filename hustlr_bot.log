@@ -44930,3 +44930,50 @@ Traceback (most recent call last):
           ^^^^^^^^^^^^^^^^^^^^^
 AttributeError: 'MessageHandler' object has no attribute 'handle_main_menu'
 2025-12-30 13:53:32,614 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2025-12-30 14:15:21,452 - app.api.whatsapp - INFO - [2025-12-30T12:15:21.452431] Baileys webhook received
+2025-12-30 14:15:21,455 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hi",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3EB0785777D90CBE1A0942",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1767096908,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "conversation": "hi",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "K6sU9o1JZyNfpQ==",
+          "senderTimestamp": "1767078455",
+          "senderAccountType": "E2EE",
+          "receiverAccountType": "E2EE",
+          "recipientKeyHash": "DRuaPNpV6+OMqQ==",
+          "recipientTimestamp": "1767081832"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "3GJ3i8bGX1RlCU4juN/3Fa+KFcZ/W6GV1JMUX6vcNuQ=",
+        "limitSharingV2": {
+          "trigger": "UNKNOWN",
+          "initiatedByMe": false
+        }
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2025-12-30 14:15:21,539 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2025-12-30 14:15:21,540 - app.api.whatsapp - INFO - Baileys text: 'hi'
+2025-12-30 14:15:21,908 - app.api.whatsapp - ERROR - Error handling Baileys message from 263777530322
+Traceback (most recent call last):
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\api\whatsapp.py", line 413, in receive_baileys_message
+    await baileys_message_handler.handle_message(message)
+  File "C:\Users\vinmu\Desktop\hustlr-official-1\app\utils\message_handler.py", line 507, in handle_message
+    await self.handle_main_menu(user_number, message_text, session, user)
+          ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'MessageHandler' object has no attribute 'handle_main_menu'
+2025-12-30 14:15:23,807 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
