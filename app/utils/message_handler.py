@@ -310,41 +310,22 @@ class MessageHandler:
             text = (message_text or '').strip().lower()
             prefs: List[str] = []
             if text not in ['skip', 'no', 'none', 'na', 'n/a', '']:
-                }
-                await self.db.create_booking(booking_doc)
-                created_bookings += 1
-            except AssertionError as ae:
-                logger.critical(ae)
-            except Exception as e:
-                logger.error(f"Failed to create booking for provider {provider.get('_id')}: {e}")
+                # Reuse service keyword mapping from extract_service_type
+                services_map = self.extract_service_type(text, return_map=True)
+                for keyword, service in services_map.items():
+                    if keyword in text and service not in prefs:
+                        prefs.append(service)
 
-        if created_bookings > 0:
-            provider_names = [p['name'] for p in selected_providers]
-            service_title = service_type.title()
-            if created_bookings == 1:
-                msg = (
-                    f"Booking confirmed!\n"
-                    f"{provider_names[0]} will assist you with {service_title}.\n"
-                    f"Location: {location}\n"
-                    f"Date: {booking_time}"
-                )
-            else:
-                provider_list_str = ", ".join(provider_names)
-                msg = (
-                    f"{created_bookings} bookings confirmed!\n"
-                    f"Providers: {provider_list_str}\n"
-                    f"Service: {service_title}\n"
-                    f"Location: {location}\n"
-                    f"Date: {booking_time}"
-                )
-        elif created_bookings > 0:
-            msg = f"I've booked {created_bookings} out of {len(selected_providers)} providers. There was an issue with the others."
-        else:
-            msg = "I'm sorry, there was an error and I couldn't complete your bookings. Please try again."
-            return
-
-        await self._log_and_send_response(target, msg, f"booking_{change_type}_notify_{role}")
-        return
+                if not prefs:
+                    await self._log_and_send_response(
+                        user_number,
+                        self._short(
+                            "I couldn't match any services from that. Try something like: plumber, electrician, cleaner, driver. Or reply 'skip'.",
+                            "Couldn't match services. Try: plumber, electrician, cleaner (or 'skip')."
+                        ),
+                        "onboarding_preferences_invalid"
+                    )
+                    return
     
     async def send_help_menu(self, user_number: str) -> None:
         """Send help menu with options"""
@@ -1708,31 +1689,22 @@ class MessageHandler:
                     )
                     # Resolve provider WhatsApp number if an id is present
                     prov_id = (data or {}).get("provider_id") or (data or {}).get("provider") or (session.get("data") or {}).get("selected_provider", {}).get("_id")
-                    prov_msisdn = None
-                    if prov_id and hasattr(self.db, 'get_provider_by_id'):
-                        try:
-                            pdoc = await self.db.get_provider_by_id(str(prov_id))
-                            if pdoc:
-                                prov_msisdn = pdoc.get('whatsapp_number')
-                        except Exception:
-                            prov_msisdn = None
+                    provider_phone = None
+                    if prov_id:
+                        provider = await self.db.get_provider(prov_id)
+                        if provider:
+                            provider_phone = provider.get("whatsapp_number")
 
-                    # Generate a booking id
-                    bid = self._generate_booking_id()
-
-                    booking_doc: Dict[str, Any] = {
-                        'booking_id': bid,
-                        'user_whatsapp_number': user_number,
-                        'provider_whatsapp_number': prov_msisdn,
-                        'service_type': (data or {}).get('service_type') or (session.get('data') or {}).get('service_type'),
-                        'date_time': date_time or '',
-                        'status': 'pending',
-                        'problem_description': (data or {}).get('problem_description') or (session.get('data') or {}).get('issue') or '',
+                    booking_doc = {
+                        "service_type": (data or {}).get("service_type"),
+                        "customer_whatsapp_number": user_number,
+                        "provider_whatsapp_number": provider_phone,
+                        "booking_time": date_time,
+                        "status": "pending",
+                        "problem_description": (data or {}).get("problem_description"),
                     }
 
-                    # Optional helpful fields
-                    if prov_id:
-                        booking_doc['provider_id'] = str(prov_id)
+                    # Add optional fields
                     cust_phone = (data or {}).get('customer_phone')
                     if cust_phone:
                         booking_doc['customer_phone'] = cust_phone
@@ -1743,19 +1715,211 @@ class MessageHandler:
                     if loc:
                         booking_doc['location'] = loc
 
-                    try:
-    
-    for keyword, service in services.items():
-        if keyword in message_text:
-            return service
-    
-    return None
+                    booking_doc = await self.db.create_booking(booking_doc)
+                    logger.info(f"Booking created from AI response: {booking_doc.get('_id')}")
+                    # Send confirmation to user
+                    await self._log_and_send_response(
+                        user_number,
+                        f"Booking confirmed! Details sent to your WhatsApp.",
+                        "ai_booking_confirmation"
+                    )
+                except Exception as e:
+                    logger.error(f"Failed to create booking from AI response: {e}")
+
+                # Clear session data after booking is complete
+                if session.get("data"):
+                    keys_to_clear = [
+                        '_pending_booking', 'selected_provider_index', '_bookings_list',
+                        '_cancel_booking_id', '_reschedule_booking_id', '_reschedule_new_time',
+                        'service_type', 'providers', 'selected_provider', 'selected_providers',
+                        'booking_time', 'location', 'issue', 'problem_description', 'date', 'time'
+                    ]
+                    for k in keys_to_clear:
+                        session["data"].pop(k, None)
+                session["state"] = ConversationState.SERVICE_SEARCH
+                return
+
+    def extract_service_type(self, message_text: str) -> Optional[str]:
+        """Extract service type from message text using keyword matching."""
+        message_text = message_text.lower()
+        # Expanded service map
+        services = {
+            'plumber': 'plumber',
+            'plumbing': 'plumber',
+            'electrician': 'electrician',
+            'electrical': 'electrician',
+            'electricity': 'electrician',
+            'carpenter': 'carpenter',
+            'carpentry': 'carpenter',
+            'wood': 'carpenter',
+            'painter': 'painter',
+            'painting': 'painter',
+            'cleaner': 'cleaner',
+            'cleaning': 'cleaner',
+            'mechanic': 'mechanic',
+            'repair': 'mechanic',
+            'gardener': 'gardener',
+            'gardening': 'gardener',
+            'landscaping': 'gardener',
+            'builder': 'builder',
+            'building': 'builder',
+            'construction': 'builder',
+            'welder': 'welder',
+            'welding': 'welder',
+            'driver': 'driver',
+            'driving': 'driver',
+            'transport': 'driver',
+            'tiler': 'tiler',
+            'tiling': 'tiler',
+            'technician': 'technician',
+            'gadget': 'technician',
+            'appliance': 'technician',
+            'dstv': 'technician',
+            'cctv': 'technician',
+            'solar': 'technician',
+            'inverter': 'technician',
+            'fridge': 'technician',
+            'refridgeration': 'technician',
+            'aircon': 'technician',
+            'air con': 'technician',
+            'air-con': 'technician',
+            'airconditioner': 'technician',
+            'air conditioner': 'technician',
+            'air-conditioner': 'technician',
+            'laundry': 'laundry',
+            'washing': 'laundry',
+            'ironing': 'laundry',
+            'gas': 'gas',
+            'refill': 'gas',
+            'tutor': 'tutor',
+            'tution': 'tutor',
+            'lessons': 'tutor',
+            'extra lessons': 'tutor',
+            'catering': 'catering',
+            'caterer': 'catering',
+            'food': 'catering',
+            'events': 'catering',
+            'chef': 'catering',
+            'cook': 'catering',
+            'photography': 'photography',
+            'photographer': 'photography',
+            'photos': 'photography',
+            'videos': 'photography',
+            'video': 'photography',
+            'videographer': 'photography',
+            'designer': 'designer',
+            'graphic': 'designer',
+            'web': 'designer',
+            'developer': 'designer',
+            'tailor': 'tailor',
+            'dressmaker': 'tailor',
+            'sewing': 'tailor',
+            'alterations': 'tailor',
+            'beautician': 'beautician',
+            'beauty': 'beautician',
+            'nails': 'beautician',
+            'manicure': 'beautician',
+            'pedicure': 'beautician',
+            'makeup': 'beautician',
+            'artist': 'beautician',
+            'hair': 'beautician',
+            'stylist': 'beautician',
+            'barber': 'beautician',
+            'salon': 'beautician',
+            'massage': 'massage',
+            'therapist': 'massage',
+            'therapy': 'massage',
+            'fitness': 'fitness',
+            'trainer': 'fitness',
+            'gym': 'fitness',
+            'coach': 'fitness',
+            'health': 'fitness',
+            'nutritionist': 'fitness',
+            'dietician': 'fitness',
+            'accountant': 'accountant',
+            'accounting': 'accountant',
+            'bookkeeper': 'accountant',
+            'tax': 'accountant',
+            'consultant': 'consultant',
+            'business': 'consultant',
+            'strategy': 'consultant',
+            'marketing': 'consultant',
+            'legal': 'legal',
+            'lawyer': 'legal',
+            'attorney': 'legal',
+            'paralegal': 'legal',
+            'security': 'security',
+            'guard': 'security',
+            'bouncer': 'security',
+            'alarm': 'security',
+            'fumigation': 'fumigation',
+            'pest': 'fumigation',
+            'control': 'fumigation',
+            'fumigator': 'fumigation',
+            'interior': 'interior',
+            'decorator': 'interior',
+            'design': 'interior',
+            'furniture': 'interior',
+            'upholstery': 'interior',
+            'courier': 'courier',
+            'delivery': 'courier',
+            'errands': 'courier',
+            'logistics': 'courier',
+            'car': 'car',
+            'rental': 'car',
+            'hire': 'car',
+            'vehicle': 'car',
+            'event': 'event',
+            'planner': 'event',
+            'planning': 'event',
+            'mc': 'event',
+            'dj': 'event',
+            'sound': 'event',
+            'hire': 'event',
+            'real': 'real',
+            'estate': 'real',
+            'agent': 'real',
+            'property': 'real',
+            'realtor': 'real',
+            ' borehole': 'borehole',
+            'drilling': 'borehole',
+            'water': 'borehole',
+            'survey': 'borehole',
+            'casing': 'borehole',
+            'installation': 'borehole',
+            'pump': 'borehole',
+            'tank': 'borehole',
+            'stand': 'borehole',
+            'recruiter': 'recruiter',
+            'recruitment': 'recruiter',
+            'hiring': 'recruiter',
+            'staffing': 'recruiter',
+        }
+
+        for keyword, service in services.items():
+            if keyword in message_text:
+                return service
+        
+        return None
+
+    def _parse_relative_time(self, time_str: str) -> Optional[datetime]:
+        """Parse a relative time string into a datetime object."""
+        now = datetime.now()
+        t_raw = (time_str or '').strip().lower()
+        t = ' ' + t_raw + ' '
+
+        # "in 5 minutes", "in 2 hours", "in 3 days", "in 1 week"
+        m = re.search(r"\s(in|for)\s+(\d+)\s+(minute|hour|day|week)s?(\s|$)", t)
+        if m:
+            n = int(m.group(2))
+            unit = m.group(3)
+            if unit == 'minute':
                 return now + timedelta(minutes=n)
-            if unit in ('hour', 'hours', 'hr', 'hrs'):
+            if unit == 'hour':
                 return now + timedelta(hours=n)
-            if unit.startswith('day'):
+            if unit == 'day':
                 return now + timedelta(days=n)
-            if unit.startswith('week'):
+            if unit == 'week':
                 return now + timedelta(weeks=n)
 
         # Keywords today/tomorrow/tonight with optional time after
