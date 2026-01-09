@@ -486,6 +486,35 @@ class MessageHandler:
         except Exception as e:
             logger.warning(f"Could not store user message in history for {user_number}: {e}")
         
+        expired = False
+        try:
+            la_raw = session.get('last_activity')
+            if la_raw:
+                last_dt = du_parse(la_raw)
+                if datetime.utcnow() - last_dt > timedelta(hours=24):
+                    expired = True
+        except Exception:
+            expired = False
+        if expired:
+            session['state'] = ConversationState.SERVICE_SEARCH if (user and user.get('onboarding_completed', False)) else ConversationState.NEW
+            session['data'] = {}
+        if message_text in {'hi', 'hello', 'hey', 'start', 'menu'}:
+            session['state'] = ConversationState.SERVICE_SEARCH if (user and user.get('onboarding_completed', False)) else ConversationState.NEW
+            if session['state'] == ConversationState.SERVICE_SEARCH:
+                session['data'] = {}
+                await self._log_and_send_response(
+                    user_number,
+                    self._short("What service do you need? For example: plumber, electrician, cleaner.", "What service do you need?"),
+                    "session_reset"
+                )
+                session['last_activity'] = datetime.utcnow().isoformat()
+                session_to_save = session.copy()
+                if isinstance(session_to_save.get('state'), ConversationState):
+                    session_to_save['state'] = session_to_save['state'].value
+                self.user_sessions[user_number] = session
+                await self.db.save_session(user_number, session_to_save)
+                return
+        
         # Route based on conversation state
         current_state = session['state']
         if current_state == ConversationState.BOOKING_PENDING_PROVIDER:
@@ -2053,15 +2082,46 @@ class MessageHandler:
                         or (f"{(data or {}).get('date')} {(data or {}).get('time')}" if ((data or {}).get('date') and (data or {}).get('time')) else None)
                     )
                     # Resolve provider WhatsApp number if an id is present
-                    prov_id = (data or {}).get("provider_id") or (data or {}).get("provider") or (session.get("data") or {}).get("selected_provider", {}).get("_id")
+                    prov_id = (data or {}).get("provider_id") or (data or {}).get("provider")
+                    provider = None
                     provider_phone = None
+                    service_cur = ((data or {}).get("service_type") or "").strip().lower()
+                    # Prefer explicit provider id from current payload only
                     if prov_id:
                         provider = await self.db.get_provider(prov_id)
                         if provider:
                             provider_phone = provider.get("whatsapp_number")
+                    # Otherwise, resolve provider based on current booking data (service + location)
+                    if not provider:
+                        raw_loc = (data or {}).get('location') or (user or {}).get('location') or ''
+                        # Try to find providers for this service
+                        try:
+                            candidates = await self.db.get_providers_by_service(service_cur) if service_cur else []
+                        except Exception:
+                            candidates = []
+                        # Filter by location if available
+                        pick = None
+                        if candidates:
+                            if raw_loc:
+                                loc_norm = raw_loc.strip().lower()
+                                for p in candidates:
+                                    if str(p.get('location', '')).strip().lower() == loc_norm:
+                                        pick = p
+                                        break
+                            pick = pick or candidates[0]
+                        provider = pick
+                        if provider:
+                            provider_phone = provider.get('whatsapp_number')
+                    # Safety guard: ensure provider offers the requested service
+                    try:
+                        if provider and service_cur:
+                            prov_svc = str(provider.get('service_type') or '').strip().lower()
+                            assert (service_cur in prov_svc) or (prov_svc in service_cur), "CRITICAL: Provider-service mismatch detected"
+                    except AssertionError as ae:
+                        logger.error(f"{ae}")
 
                     booking_doc = {
-                        "service_type": (data or {}).get("service_type"),
+                        "service_type": service_cur or (data or {}).get("service_type"),
                         "customer_whatsapp_number": user_number,
                         "provider_whatsapp_number": provider_phone,
                         "booking_time": date_time,
@@ -2076,18 +2136,27 @@ class MessageHandler:
                     cust_name = (data or {}).get('customer_name')
                     if cust_name:
                         booking_doc['customer_name'] = cust_name
-                    loc = (data or {}).get('location') or (session.get('data') or {}).get('location') or (user or {}).get('location')
+                    loc = (data or {}).get('location') or (user or {}).get('location')
                     if loc:
                         booking_doc['location'] = loc
 
                     booking_doc = await self.db.create_booking(booking_doc)
                     logger.info(f"Booking created from AI response: {booking_doc.get('_id')}")
                     # Send confirmation to user
-                    await self._log_and_send_response(
-                        user_number,
-                        f"Booking confirmed! Details sent to your WhatsApp.",
-                        "ai_booking_confirmation"
-                    )
+                    try:
+                        provider_name = (provider or {}).get('name') or (provider or {}).get('business_name') or 'Provider'
+                        service_title = (service_cur or 'service').title()
+                        location_text = booking_doc.get('location') or 'Location not set'
+                        time_text = booking_doc.get('booking_time') or 'Time not set'
+                        msg = (
+                            f"Booking confirmed!\n"
+                            f"{provider_name} will assist you with {service_title}.\n"
+                            f"Location: {location_text}\n"
+                            f"Date: {time_text}"
+                        )
+                    except Exception:
+                        msg = "Booking confirmed! Details sent to your WhatsApp."
+                    await self._log_and_send_response(user_number, msg, "ai_booking_confirmation")
                 except Exception as e:
                     logger.error(f"Failed to create booking from AI response: {e}")
 
@@ -2097,6 +2166,7 @@ class MessageHandler:
                         '_pending_booking', 'selected_provider_index', '_bookings_list',
                         '_cancel_booking_id', '_reschedule_booking_id', '_reschedule_new_time',
                         'service_type', 'providers', 'selected_provider', 'selected_providers',
+                        'all_providers', 'current_provider', 'active_booking', 'booking_context',
                         'booking_time', 'location', 'issue', 'problem_description', 'date', 'time'
                     ]
                     for k in keys_to_clear:

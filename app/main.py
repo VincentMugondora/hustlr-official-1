@@ -44,6 +44,25 @@ async def on_startup():
         # Do not fail startup on index ensure
         pass
 
+    # Best-effort: check Baileys sender availability
+    try:
+        bc = BaileysClient()
+        base_url = bc.base_url
+        async with httpx.AsyncClient() as client:
+            healthy = False
+            for path in ("/health", "/status", "/"):
+                try:
+                    resp = await client.get(f"{base_url}{path}", timeout=2.0)
+                    if resp.status_code < 500:
+                        healthy = True
+                        break
+                except Exception:
+                    continue
+            if not healthy:
+                logging.getLogger(__name__).warning("Baileys sender not available at startup (tried %s)", base_url)
+    except Exception as e:
+        logging.getLogger(__name__).warning("Baileys sender health check failed: %s", e)
+
 @app.on_event("shutdown")
 async def on_shutdown():
     await close_mongo_connection()

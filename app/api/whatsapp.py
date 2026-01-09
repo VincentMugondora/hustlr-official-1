@@ -326,6 +326,14 @@ async def receive_baileys_message(
 
     from_number = (payload.get("from") or "").strip()
     from_number = from_number.split("@")[0]
+    # Prefer senderPn when available (actual MSISDN), as 'from' may be a LID/broadcast id
+    try:
+        key_meta = ((payload.get("rawMessage") or {}).get("key") or {})
+        sender_pn = (key_meta.get("senderPn") or "").strip()
+        if sender_pn:
+            from_number = sender_pn.split("@")[0]
+    except Exception:
+        pass
     text = (payload.get("text") or "").strip()
     # Extract message id for idempotency when available
     message_id = None
@@ -358,31 +366,68 @@ async def receive_baileys_message(
     if not text:
         raw = payload.get("rawMessage") or {}
         raw_msg = raw.get("message") or {}
-        loc = raw_msg.get("locationMessage")
-        if loc:
-            lat = loc.get("degreesLatitude")
-            lng = loc.get("degreesLongitude")
-            name = loc.get("name") or ""
-            address = loc.get("address") or ""
-            parts = []
-            location_name = None
-            if lat is not None and lng is not None:
-                location_service = get_location_service()
-                location_name = await location_service.reverse_geocode(lat, lng)
-                logger.info(f"Reverse geocoded coordinates ({lat}, {lng}) to: {location_name}")
 
-            # Priority: reverse geocoded name > provided name > address > coordinates
-            if location_name:
-                parts.append(location_name)
-            elif name:
-                parts.append(name)
-            elif address:
-                parts.append(address)
+        # 1) Plain text fallbacks
+        try:
+            text = (raw_msg.get("conversation") or "").strip()
+        except Exception:
+            text = text
+        if not text:
+            try:
+                text = ((raw_msg.get("extendedTextMessage") or {}).get("text") or "").strip()
+            except Exception:
+                pass
+        # 2) Ephemeral wrapper
+        if not text:
+            try:
+                eph = (raw_msg.get("ephemeralMessage") or {}).get("message") or {}
+                text = (eph.get("conversation") or "").strip() or (((eph.get("extendedTextMessage") or {}).get("text")) or "").strip()
+            except Exception:
+                pass
+        # 3) Buttons/list responses
+        if not text:
+            try:
+                br = (raw_msg.get("buttonsResponseMessage") or {})
+                if br:
+                    text = (br.get("selectedDisplayText") or br.get("text") or br.get("selectedButtonId") or "").strip()
+            except Exception:
+                pass
+        if not text:
+            try:
+                lr = (raw_msg.get("listResponseMessage") or {})
+                if lr:
+                    ssr = (lr.get("singleSelectReply") or {})
+                    text = (ssr.get("title") or ssr.get("selectedRowId") or "").strip()
+            except Exception:
+                pass
 
-            if lat is not None and lng is not None:
-                parts.append(f"({lat},{lng})")
+        # 4) Location messages
+        if not text:
+            loc = raw_msg.get("locationMessage")
+            if loc:
+                lat = loc.get("degreesLatitude")
+                lng = loc.get("degreesLongitude")
+                name = loc.get("name") or ""
+                address = loc.get("address") or ""
+                parts = []
+                location_name = None
+                if lat is not None and lng is not None:
+                    location_service = get_location_service()
+                    location_name = await location_service.reverse_geocode(lat, lng)
+                    logger.info(f"Reverse geocoded coordinates ({lat}, {lng}) to: {location_name}")
 
-            text = " ".join(parts) or "[location shared]"
+                # Priority: reverse geocoded name > provided name > address > coordinates
+                if location_name:
+                    parts.append(location_name)
+                elif name:
+                    parts.append(name)
+                elif address:
+                    parts.append(address)
+
+                if lat is not None and lng is not None:
+                    parts.append(f"({lat},{lng})")
+
+                text = " ".join(parts) or "[location shared]"
     # Idempotency: drop duplicates early
     if getattr(settings, 'ENABLE_WEBHOOK_IDEMPOTENCY', False) and message_id:
         try:
