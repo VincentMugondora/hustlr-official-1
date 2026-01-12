@@ -1943,6 +1943,12 @@ class MessageHandler:
                 session["state"] = ConversationState.NO_PROVIDERS_OPTIONS
                 return
 
+            # Rank providers (non-destructive scoring; safe if fields missing)
+            try:
+                providers = self._rank_providers(providers, session)
+            except Exception:
+                pass
+
             session.setdefault("data", {})
             session["data"]["service_type"] = service_type
             session["data"]["providers"] = providers
