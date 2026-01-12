@@ -46864,3 +46864,31 @@ For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/St
   }
 }
 2026-01-12 10:12:48,969 - httpx - INFO - HTTP Request: GET http://localhost:3000/health "HTTP/1.1 200 OK"
+2026-01-12 10:17:36,701 - httpx - INFO - HTTP Request: GET http://localhost:3000/health "HTTP/1.1 200 OK"
+2026-01-12 10:20:32,040 - app.api.whatsapp - INFO - [2026-01-12T08:20:32.040166] Baileys webhook received
+2026-01-12 10:20:32,046 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "status",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "status@broadcast",
+      "fromMe": false,
+      "id": "ACF55724152A47D3CC0E8A0CB97B54AF",
+      "participant": "263715526238@s.whatsapp.net",
+      "participantLid": "194111650947169@lid"
+    },
+    "messageTimestamp": 1768206009,
+    "pushName": "King",
+    "broadcast": true,
+    "message": {
+      "protocolMessage": {
+        "key": {
+          "remoteJid": "status@broadcast",
+          "fromMe": true,
+          "id": "AC3B86CF0BD8BFB30EE8804C1751A3E0"
+        },
+        "type": "REVOKE"
+      }
+    }
+  }
+}

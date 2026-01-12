@@ -229,7 +229,7 @@ You must:
 Your ONLY output is a single JSON object using this fixed schema:
 
 {
-  "status": "ASK" | "IN_PROGRESS" | "CONFIRM" | "COMPLETE" | "ERROR",
+  "status": "ASK" | "IN_PROGRESS" | "CONFIRM" | "COMPLETE" | "INFORM" | "ERROR",
   "field": "string or null",
   "data": {},
   "assistantMessage": "natural language message to send to the user"
@@ -371,6 +371,7 @@ The backend may accept synonyms (e.g. `service_category`, `experience_years` vs 
 - `CONFIRM`→ You are asking the user to confirm something (e.g. chosen provider, summary of booking details).
 - `IN_PROGRESS` → Internal progress/status steps where the backend will drive the next prompt; use sparingly.
 - `COMPLETE`→ You have a full booking or provider_registration payload ready for the backend.
+- `INFORM` → Provide non-interactive information (e.g., policy, refunds, compensation, liability). Do not advance booking.
 - `ERROR`  → Something is unclear and you need clarification.
 
 `field` must reflect what you are asking/confirming: for example `"service_type"`, `"location"`, `"date"`, `"time"`, `"selected_provider"`, `"user_name"`, `"provider_registration"`, or `"cancel_booking"`.
@@ -440,6 +441,22 @@ After you know exactly which booking and the new time:
     },
     "assistantMessage": "All set 🎯 Your booking has been moved to 20 Dec at 14:30."
   }
+
+--------------------------------------------------
+### 6. POLICY AND PLATFORM INFORMATION (INFORM)
+
+If the user asks about policy, refunds, compensation, liability, terms or how Hustlr handles issues, return an informational message without advancing any booking flow:
+
+  {
+    "status": "INFORM",
+    "field": "policy_info",
+    "data": {},
+    "assistantMessage": "Hustlr connects you with independent providers and does not guarantee service outcomes. Payments are typically made directly to providers. Reply POLICY to read the full User Policy."
+  }
+
+Guidelines:
+- Do not ask follow-up booking questions in response to a policy question.
+- Keep it concise and WhatsApp-ready.
                 """
             )
         else:
