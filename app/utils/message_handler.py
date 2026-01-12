@@ -647,6 +647,11 @@ class MessageHandler:
                     "session_reset"
                 )
                 session['last_activity'] = datetime.utcnow().isoformat()
+                # FSM veneer for observability
+                try:
+                    session['fsm_state'] = self._fsm_state_for_session(session)
+                except Exception:
+                    pass
                 session_to_save = session.copy()
                 if isinstance(session_to_save.get('state'), ConversationState):
                     session_to_save['state'] = session_to_save['state'].value
@@ -670,6 +675,11 @@ class MessageHandler:
                 session['state'] = ConversationState.SERVICE_SEARCH if (user and user.get('onboarding_completed', False)) else ConversationState.NEW
                 session['data'] = {}
                 session['last_activity'] = datetime.utcnow().isoformat()
+                # FSM veneer for observability
+                try:
+                    session['fsm_state'] = self._fsm_state_for_session(session)
+                except Exception:
+                    pass
                 session_to_save = session.copy()
                 if isinstance(session_to_save.get('state'), ConversationState):
                     session_to_save['state'] = session_to_save['state'].value
@@ -703,6 +713,11 @@ class MessageHandler:
         
         # Update session in both memory and database
         session['last_activity'] = datetime.utcnow().isoformat()
+        # FSM veneer for observability
+        try:
+            session['fsm_state'] = self._fsm_state_for_session(session)
+        except Exception:
+            pass
         # Convert ConversationState enum to string for database storage
         session_to_save = session.copy()
         if isinstance(session_to_save.get('state'), ConversationState):
