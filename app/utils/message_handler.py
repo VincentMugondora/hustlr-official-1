@@ -1928,8 +1928,18 @@ class MessageHandler:
             if t == 'BOOKING_CANCEL':
                 reason = (entities.get('reason') or '').strip()
                 ok = await self.db.update_booking_fields(bid, {'status': 'cancelled', 'cancel_reason': reason})
+                if ok:
+                    try:
+                        await self._release_lock_for_booking(bid)
+                    except Exception:
+                        pass
                 return ok, "Cancelled." if ok else "No change."
             ok = await self.db.update_booking_fields(bid, {'status': 'completed'})
+            if ok:
+                try:
+                    await self._release_lock_for_booking(bid)
+                except Exception:
+                    pass
             return ok, "Completed." if ok else "No change."
         # Assign/Reassign
         if t in {'BOOKING_ASSIGN','BOOKING_REASSIGN'}:
@@ -2182,6 +2192,10 @@ class MessageHandler:
 
             if conflicting_booking_id:
                 await self.db.update_booking_status(conflicting_booking_id, "cancelled")
+                try:
+                    await self._release_lock_for_booking(conflicting_booking_id)
+                except Exception:
+                    pass
                 await self._log_and_send_response(user_number, "Your previous booking has been cancelled.", "booking_cancelled")
 
             if session.get("data"):
@@ -2393,7 +2407,12 @@ class MessageHandler:
 
                     for bid in bids_any:
                         try:
-                            await self.db.update_booking_status(bid, "cancelled")
+                            ok = await self.db.update_booking_status(bid, "cancelled")
+                            if ok:
+                                try:
+                                    await self._release_lock_for_booking(bid)
+                                except Exception:
+                                    pass
                         except Exception:
                             # Ignore per-booking failures; Claude has already
                             # informed the user in assistantMessage.
@@ -3112,8 +3131,15 @@ class MessageHandler:
             if 1 <= i <= len(items):
                 selected = items[i-1]
                 try:
-                    await self.db.update_booking_status(bid, 'cancelled')
-                    await self._notify_booking_other_party(user_number, bid, 'cancelled')
+                    bid = selected.get('id')
+                    if bid:
+                        ok = await self.db.update_booking_status(bid, 'cancelled')
+                        if ok:
+                            try:
+                                await self._release_lock_for_booking(bid)
+                            except Exception:
+                                pass
+                        await self._notify_booking_other_party(user_number, bid, 'cancelled')
                 except Exception:
                     pass
             await self._log_and_send_response(user_number, "Your booking has been cancelled.", "booking_cancelled_success")
