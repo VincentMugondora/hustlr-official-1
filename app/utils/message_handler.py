@@ -2008,6 +2008,22 @@ class MessageHandler:
 
             session.setdefault("data", {})
             session["data"]["service_type"] = service_type
+            # Safety rule: avoid showing the same top provider repeatedly to the same user
+            try:
+                last_pid = (session.get('data') or {}).get('_last_provider_id')
+                if last_pid and len(providers) > 1:
+                    reordered = [p for p in providers if str(self._provider_unique_id(p) or '') != str(last_pid)]
+                    # Keep at least 1 result; if filter removes all, keep original
+                    if reordered:
+                        # Append the previously shown provider(s) at the end
+                        for p in providers:
+                            pid = str(self._provider_unique_id(p) or '')
+                            if pid == str(last_pid):
+                                reordered.append(p)
+                        providers = reordered
+            except Exception:
+                pass
+
             session["data"]["providers"] = providers
             if norm_location:
                 session["data"]["location"] = norm_location
@@ -2027,6 +2043,14 @@ class MessageHandler:
                 buttons,
                 self._friendly_footer(),
             )
+
+            # Remember last shown top provider for spam prevention heuristic
+            try:
+                top = providers[0] if providers else None
+                if top:
+                    session.setdefault('data', {})['_last_provider_id'] = self._provider_unique_id(top)
+            except Exception:
+                pass
 
             session["state"] = ConversationState.PROVIDER_SELECTION
         except Exception as e:
