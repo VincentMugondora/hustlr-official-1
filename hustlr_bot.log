@@ -47793,3 +47793,4 @@ For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/St
 2026-01-12 11:26:44,926 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_ERROR, Message: I need a bit more info on your budget. Did you mean $2, or perhaps a range like $20-$50? Let me know...
 2026-01-12 11:26:46,390 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2026-01-12 11:26:46,498 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2026-01-12 11:48:30,434 - httpx - INFO - HTTP Request: GET http://localhost:3000/health "HTTP/1.1 200 OK"
