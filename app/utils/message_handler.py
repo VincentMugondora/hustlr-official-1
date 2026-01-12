@@ -38,6 +38,7 @@ class ConversationState(Enum):
     RESCHEDULE_BOOKING_NEW_TIME = "reschedule_booking_new_time"
     RESCHEDULE_BOOKING_CONFIRM = "reschedule_booking_confirm"
     CANCEL_EXISTING_BOOKING_CONFIRM = "cancel_existing_booking_confirm"
+    NO_PROVIDERS_OPTIONS = "no_providers_options"
     
     # Provider registration states
     PROVIDER_REGISTER = "provider_register"
@@ -557,6 +558,8 @@ class MessageHandler:
             ConversationState.PROVIDER_REGISTER_CONTACT,
         }:
             await self.handle_provider_registration(user_number, message_text, session)
+        elif current_state == ConversationState.NO_PROVIDERS_OPTIONS:
+            await self.handle_no_providers_options(user_number, message_text, session, user)
         else:
             await self.handle_main_menu(user_number, message_text, session, user)
         
@@ -763,6 +766,19 @@ class MessageHandler:
         try:
             handled = await self._maybe_quick_provider_choice(user_number, message_text, session, user)
             if handled:
+                return
+        except Exception:
+            pass
+
+        # Policy/compensation questions: inform directly instead of ASK
+        try:
+            if re.search(r"\b(compensat|refund|pay\s*back|liabilit(y|ies)|policy)\b", text):
+                msg = (
+                    "Hustlr connects you with independent providers. Payments are usually made directly to the provider. "
+                    "Hustlr does not guarantee service outcomes and is not liable for disputes between users and providers. "
+                    "Reply POLICY to read the full User Policy."
+                )
+                await self._log_and_send_response(user_number, msg, "policy_inform")
                 return
         except Exception:
             pass
@@ -1809,14 +1825,26 @@ class MessageHandler:
                     providers = all_for_service
 
             if not providers:
-                await self._log_and_send_response(
-                    user_number,
-                    self._short(
-                        f"Sorry, no {service_type or 'provider'}s available right now.",
-                        "Sorry, no providers available right now."
-                    ),
-                    "ai_no_providers_for_confirm",
+                header_loc = (norm_location or (user or {}).get("location") or "your area").strip()
+                body = (
+                    f"I couldn’t find any {service_type or 'provider'} available in {header_loc} right now.\n"
+                    "Would you like to:\n\n"
+                    "1) Change the time\n"
+                    "2) Change the location\n"
+                    "3) Be notified when one becomes available"
                 )
+                buttons = [
+                    {"id": "opt_change_time", "title": "Change time"},
+                    {"id": "opt_change_location", "title": "Change location"},
+                    {"id": "opt_notify_me", "title": "Notify me"},
+                ]
+                await self._log_and_send_interactive(user_number, "No providers available", body, buttons, None)
+                session.setdefault("data", {})
+                session["data"]["_no_providers_ctx"] = {
+                    "service_type": service_type,
+                    "location": norm_location or raw_location or (user or {}).get("location") or "",
+                }
+                session["state"] = ConversationState.NO_PROVIDERS_OPTIONS
                 return
 
             session.setdefault("data", {})
@@ -1845,6 +1873,48 @@ class MessageHandler:
         except Exception as e:
             logger.error(f"Error while listing providers: {e}")
             await self._log_and_send_response(user_number, "Sorry, I couldn't find providers right now. Please try again.", "provider_list_error")
+
+    async def handle_no_providers_options(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
+        text = (message_text or '').strip().lower()
+        choice = None
+        if re.search(r"\b1\b|time|later|tomorrow|change time", text):
+            choice = 'time'
+        elif re.search(r"\b2\b|location|area|place|change location", text):
+            choice = 'location'
+        elif re.search(r"\b3\b|notify|waitlist|alert", text):
+            choice = 'notify'
+
+        if choice == 'time':
+            await self._log_and_send_response(
+                user_number,
+                self._short("When would you like the service? (e.g., 'tomorrow 10am')", "When? (e.g., tomorrow 10am)"),
+                "no_providers_change_time"
+            )
+            session['state'] = ConversationState.BOOKING_TIME
+            return
+        if choice == 'location':
+            await self._log_and_send_response(
+                user_number,
+                self._short("Which area should I search in? (e.g., Harare, Bulawayo)", "Your area?"),
+                "no_providers_change_location"
+            )
+            session['state'] = ConversationState.BOOKING_LOCATION
+            return
+        if choice == 'notify':
+            await self._log_and_send_response(
+                user_number,
+                "Okay, I’ll keep an eye out and let you know when someone is available. In the meantime, you can try another time or nearby area.",
+                "no_providers_notify"
+            )
+            session['state'] = ConversationState.SERVICE_SEARCH
+            # Clear the temporary context
+            try:
+                session.setdefault('data', {}).pop('_no_providers_ctx', None)
+            except Exception:
+                pass
+            return
+        # If unclear, re-prompt briefly
+        await self._log_and_send_response(user_number, "Please reply 1, 2, or 3.", "no_providers_options_repeat")
 
     async def handle_cancel_existing_booking_confirm(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
         """Handles user decision on cancelling an existing booking to create a new one."""

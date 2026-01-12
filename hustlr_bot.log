@@ -46863,3 +46863,4 @@ For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/St
     }
   }
 }
+2026-01-12 10:12:48,969 - httpx - INFO - HTTP Request: GET http://localhost:3000/health "HTTP/1.1 200 OK"
