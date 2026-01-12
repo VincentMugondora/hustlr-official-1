@@ -525,6 +525,11 @@ class MessageHandler:
         await self._log_and_send_response(user_number, msg, "booking_creation_confirmed")
 
         session['state'] = ConversationState.SERVICE_SEARCH
+        # Mark FSM as completed for observability, then reset data
+        try:
+            session.setdefault('data', {})['_fsm_state_override'] = 'completed'
+        except Exception:
+            pass
         session['data'] = {}
 
     # --------------------------------------------------------------------------
