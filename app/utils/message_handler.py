@@ -675,6 +675,11 @@ class MessageHandler:
                 session['state'] = ConversationState.SERVICE_SEARCH if (user and user.get('onboarding_completed', False)) else ConversationState.NEW
                 session['data'] = {}
                 session['last_activity'] = datetime.utcnow().isoformat()
+                # FSM veneer override to mark a cancellation event
+                try:
+                    session.setdefault('data', {})['_fsm_state_override'] = 'cancelled'
+                except Exception:
+                    pass
                 # FSM veneer for observability
                 try:
                     session['fsm_state'] = self._fsm_state_for_session(session)
@@ -716,6 +721,13 @@ class MessageHandler:
         # FSM veneer for observability
         try:
             session['fsm_state'] = self._fsm_state_for_session(session)
+        except Exception:
+            pass
+        # Apply FSM override if present (single-use)
+        try:
+            ovr = (session.get('data') or {}).pop('_fsm_state_override', None)
+            if ovr:
+                session['fsm_state'] = ovr
         except Exception:
             pass
         # Convert ConversationState enum to string for database storage
