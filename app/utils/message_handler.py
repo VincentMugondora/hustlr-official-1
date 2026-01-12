@@ -25,8 +25,10 @@ class ConversationState(Enum):
     BOOKING_SERVICE_DETAILS = "booking_service_details"  # Ask about specific issue/details
     BOOKING_TIME = "booking_time"
     BOOKING_LOCATION = "booking_location"  # Confirm location for service
+    BOOKING_DATE = "booking_date"  # Ask for date before time
     CONFIRM_LOCATION = "confirm_location"  # Explicit yes/no confirmation after time
     BOOKING_USER_NAME = "booking_user_name"
+    BOOKING_BUDGET = "booking_budget"  # Optional budget step
     PROVIDER_SELECTION = "provider_selection"
     BOOKING_CONFIRM = "booking_confirm"  # Final confirmation before booking
     BOOKING_PENDING_PROVIDER = "booking_pending_provider"  # Waiting for provider response
