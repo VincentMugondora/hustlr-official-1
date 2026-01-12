@@ -347,7 +347,7 @@ async def receive_baileys_message(
     try:
         raw_msg = (payload.get("rawMessage") or {})
         if isinstance(raw_msg, dict) and raw_msg.get("messageStubType") is not None:
-            logger.info(f"Baileys stub/system message from {from_number}, skipping (messageStubType present)")
+            logger.debug(f"Baileys stub/system message from {from_number}, skipping (messageStubType present)")
             return {"status": "skipped_stub"}
     except Exception:
         pass
@@ -358,7 +358,7 @@ async def receive_baileys_message(
         remote_jid = ((raw_msg.get("key") or {}).get("remoteJid") or "").lower()
         is_broadcast = bool(raw_msg.get("broadcast")) or remote_jid.endswith("@broadcast") or from_number.lower() == "status"
         if is_broadcast:
-            logger.info(f"Baileys broadcast/status message from '{from_number}' (remoteJid='{remote_jid}'), skipping")
+            logger.debug(f"Baileys broadcast/status message from '{from_number}' (remoteJid='{remote_jid}'), skipping")
             return {"status": "skipped_broadcast"}
     except Exception:
         pass
