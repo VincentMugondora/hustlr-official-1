@@ -25,8 +25,10 @@ class ConversationState(Enum):
     BOOKING_SERVICE_DETAILS = "booking_service_details"  # Ask about specific issue/details
     BOOKING_TIME = "booking_time"
     BOOKING_LOCATION = "booking_location"  # Confirm location for service
+    BOOKING_DATE = "booking_date"
     CONFIRM_LOCATION = "confirm_location"  # Explicit yes/no confirmation after time
     BOOKING_USER_NAME = "booking_user_name"
+    BOOKING_BUDGET = "booking_budget"
     PROVIDER_SELECTION = "provider_selection"
     BOOKING_CONFIRM = "booking_confirm"  # Final confirmation before booking
     BOOKING_PENDING_PROVIDER = "booking_pending_provider"  # Waiting for provider response
@@ -258,8 +260,10 @@ class MessageHandler:
             ConversationState.BOOKING_SERVICE_DETAILS.value,
             ConversationState.BOOKING_TIME.value,
             ConversationState.BOOKING_LOCATION.value,
+            ConversationState.BOOKING_DATE.value,
             ConversationState.CONFIRM_LOCATION.value,
             ConversationState.BOOKING_USER_NAME.value,
+            ConversationState.BOOKING_BUDGET.value,
             ConversationState.PROVIDER_SELECTION.value,
             ConversationState.VIEW_BOOKINGS.value,
             ConversationState.CANCEL_BOOKING_SELECT.value,
@@ -726,6 +730,30 @@ class MessageHandler:
             await self.handle_main_menu(user_number, message_text, session, user or {})
         elif not user or not user.get('onboarding_completed', False):
             await self.handle_onboarding(user_number, message_text, session)
+        elif current_state == ConversationState.BOOKING_LOCATION:
+            await self.handle_booking_location(user_number, message_text, session, user)
+        elif current_state == ConversationState.BOOKING_DATE:
+            await self.handle_booking_date(user_number, message_text, session, user)
+        elif current_state == ConversationState.BOOKING_TIME:
+            await self.handle_booking_time(user_number, message_text, session, user)
+        elif current_state == ConversationState.BOOKING_BUDGET:
+            await self.handle_booking_budget(user_number, message_text, session, user)
+        elif current_state == ConversationState.BOOKING_USER_NAME:
+            await self.handle_booking_user_name(user_number, message_text, session, user)
+        elif current_state == ConversationState.BOOKING_CONFIRM:
+            await self.handle_booking_confirm(user_number, message_text, session, user)
+        elif current_state == ConversationState.CANCEL_EXISTING_BOOKING_CONFIRM:
+            await self.handle_cancel_existing_booking_confirm(user_number, message_text, session, user or {})
+        elif current_state == ConversationState.CANCEL_BOOKING_SELECT:
+            await self.handle_cancel_booking_select(user_number, message_text, session, user or {})
+        elif current_state == ConversationState.CANCEL_BOOKING_CONFIRM:
+            await self.handle_cancel_booking_select(user_number, message_text, session, user or {})
+        elif current_state == ConversationState.RESCHEDULE_BOOKING_SELECT:
+            await self.handle_reschedule_booking_select(user_number, message_text, session, user or {})
+        elif current_state == ConversationState.RESCHEDULE_BOOKING_NEW_TIME:
+            await self.handle_reschedule_booking_new_time(user_number, message_text, session, user or {})
+        elif current_state == ConversationState.RESCHEDULE_BOOKING_CONFIRM:
+            await self.handle_reschedule_booking_confirm(user_number, message_text, session, user or {})
         elif current_state in {
             ConversationState.PROVIDER_REGISTER,
             ConversationState.PROVIDER_REGISTER_NAME,
@@ -972,8 +1000,132 @@ class MessageHandler:
         except Exception:
             pass
 
+        try:
+            svc = self.extract_service_type(text)
+            if svc:
+                session.setdefault('data', {})['service_type'] = svc
+                intro = f"Sure! I can help you find a {svc} near you.\nI’ll ask a few quick questions.\n\nFirst, where are you located?"
+                await self._log_and_send_response(user_number, intro, "intent_acknowledge")
+                session['state'] = ConversationState.BOOKING_LOCATION
+                return
+        except Exception:
+            pass
+
         # Default: let AI parse and drive next action
         await self.handle_ai_response(user_number, message_text, session, user)
+
+    async def handle_booking_location(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
+        raw = (message_text or '').strip()
+        loc_ex = get_location_extractor()
+        norm = None
+        try:
+            norm = loc_ex.normalize_user_location(raw)
+        except Exception:
+            norm = None
+        loc = norm or raw.title()
+        session.setdefault('data', {})['location'] = loc
+        await self._log_and_send_response(user_number, f"Great 👍 {loc}.\n\nWhat day do you need the service?\n(e.g. tomorrow, Monday, 13 Jan)", "ask_booking_date")
+        session['state'] = ConversationState.BOOKING_DATE
+
+    async def handle_booking_date(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
+        date_text = (message_text or '').strip()
+        session.setdefault('data', {})['date'] = date_text
+        await self._log_and_send_response(user_number, f"Got it 👍 {date_text}.\n\nWhat time works best for you?\n(e.g. 9am, 14:00)", "ask_booking_time")
+        session['state'] = ConversationState.BOOKING_TIME
+
+    async def handle_booking_time(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
+        date_part = (session.get('data') or {}).get('date') or ''
+        combo = f"{date_part} {message_text}".strip()
+        dt = None
+        try:
+            dt = self._canonicalize_booking_time(combo)
+        except Exception:
+            dt = None
+        if not dt:
+            await self._log_and_send_response(user_number, "I couldn't understand that time. Try '9am' or '14:00'.", "booking_time_invalid_simple")
+            return
+        iso = dt.strftime('%Y-%m-%d %H:%M')
+        session.setdefault('data', {})['booking_time'] = iso
+        await self._log_and_send_response(user_number, f"Perfect 👍 {iso}.\n\nDo you have a budget in mind?\n(You can say 'skip' if you’re not sure)", "ask_booking_budget")
+        session['state'] = ConversationState.BOOKING_BUDGET
+
+    async def handle_booking_budget(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
+        txt = (message_text or '').strip().lower()
+        if txt not in {'skip', 'no', 'none', ''}:
+            session.setdefault('data', {})['budget'] = message_text.strip()
+            await self._log_and_send_response(user_number, f"Noted 👍 {message_text.strip()}.", "budget_noted")
+        else:
+            await self._log_and_send_response(user_number, "No problem 😊", "budget_skipped")
+        await self._send_booking_summary(user_number, session)
+        session['state'] = ConversationState.BOOKING_CONFIRM
+
+    async def handle_booking_user_name(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
+        name = (message_text or '').strip()
+        if name:
+            session.setdefault('data', {})['customer_name'] = name
+            await self._log_and_send_response(user_number, f"Thanks 👍 {name}.", "name_noted")
+        await self._send_booking_summary(user_number, session)
+        session['state'] = ConversationState.BOOKING_CONFIRM
+
+    async def _send_booking_summary(self, user_number: str, session: Dict) -> None:
+        sd = (session.get('data') or {})
+        svc = (sd.get('service_type') or 'service').title()
+        loc = sd.get('location') or 'Not set'
+        dt_text = sd.get('booking_time') or 'Not set'
+        date_only = (sd.get('date') or '').strip()
+        if dt_text and dt_text != 'Not set':
+            date_disp = dt_text.split(' ')[0]
+            time_disp = ' '.join(dt_text.split(' ')[1:])
+        else:
+            date_disp = date_only or 'Not set'
+            time_disp = 'Not set'
+        budget = sd.get('budget') or 'Not specified'
+        msg = (
+            "Here’s what I have:\n\n"
+            f"• Service: {svc}\n"
+            f"• Location: {loc}\n"
+            f"• Date: {date_disp}\n"
+            f"• Time: {time_disp}\n"
+            f"• Budget: {budget}\n\n"
+            "Should I go ahead and find a provider for you?\n(Yes / No)"
+        )
+        await self._log_and_send_response(user_number, msg, "booking_summary")
+
+    async def handle_booking_confirm(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
+        txt = (message_text or '').strip().lower()
+        yes_vals = {'yes', 'y', 'sure', 'ok', 'okay', 'please', 'go ahead'}
+        no_vals = {'no', 'n', 'change', 'edit'}
+        if txt in yes_vals:
+            sd = (session.get('data') or {})
+            svc = (sd.get('service_type') or '').strip().lower()
+            loc = (sd.get('location') or '').strip()
+            if not svc:
+                await self._log_and_send_response(user_number, "What service do you need?", "service_missing")
+                session['state'] = ConversationState.SERVICE_SEARCH
+                return
+            await self._log_and_send_response(user_number, "Great! Let me find the best provider for you 🔍", "matching_start")
+            await self._list_providers_for_selection(user_number, svc, loc, session, user or {})
+            return
+        if txt in no_vals:
+            await self._log_and_send_response(user_number, "No problem. What would you like to change? (location/date/time/budget)", "booking_change_prompt")
+            return
+        if re.search(r"location|area|place", txt):
+            await self._log_and_send_response(user_number, "Sure, which area should I search in?", "change_location")
+            session['state'] = ConversationState.BOOKING_LOCATION
+            return
+        if re.search(r"date|day", txt):
+            await self._log_and_send_response(user_number, "What day works for you?", "change_date")
+            session['state'] = ConversationState.BOOKING_DATE
+            return
+        if re.search(r"time|hour|o'clock|am|pm|:\d{2}", txt):
+            await self._log_and_send_response(user_number, "What time works best?", "change_time")
+            session['state'] = ConversationState.BOOKING_TIME
+            return
+        if re.search(r"budget|price|cost|fee", txt):
+            await self._log_and_send_response(user_number, "What budget should I use? (or say 'skip')", "change_budget")
+            session['state'] = ConversationState.BOOKING_BUDGET
+            return
+        await self._log_and_send_response(user_number, "Please reply Yes to proceed, or say what to change: location, date, time, or budget.", "booking_confirm_repeat")
 
     def _normalize_msisdn(self, phone: str) -> Optional[str]:
         s = re.sub(r"\D+", "", str(phone or ""))
