@@ -119,6 +119,102 @@ class MessageHandler:
     def _friendly_footer(self) -> str:
         return "Reply with one or more numbers (e.g., 1 or 1, 2)" if self._is_concise() else "Tap one or more providers or reply with numbers (e.g., 1 or 1, 2) to book."
 
+    # --- Provider ranking helpers (non-breaking; uses fields if present) ---
+    def _to_float(self, v: Any, default: float = 0.0) -> float:
+        try:
+            if v is None:
+                return default
+            return float(v)
+        except Exception:
+            return default
+
+    def _to_int(self, v: Any, default: int = 0) -> int:
+        try:
+            if v is None:
+                return default
+            if isinstance(v, bool):
+                return int(v)
+            return int(float(v))
+        except Exception:
+            return default
+
+    def _parse_dt_safe(self, s: Any) -> Optional[datetime]:
+        try:
+            if not s:
+                return None
+            if isinstance(s, datetime):
+                return s
+            # tolerate ISO strings with/without Z
+            return datetime.fromisoformat(str(s).replace('Z', '+00:00'))
+        except Exception:
+            return None
+
+    def _score_provider(self, p: Dict[str, Any], session: Dict[str, Any]) -> float:
+        score = 0.0
+        # Rating (0-5 → up to 30)
+        rating = self._to_float(p.get('rating'), 0.0)
+        score += min(rating * 6.0, 30.0)
+
+        # Experience via completed jobs (each 5 jobs → 1 point, cap 20)
+        jobs = self._to_int(p.get('completed_jobs'), 0)
+        score += min(jobs / 5.0, 20.0)
+
+        # Budget fit (if both budget and provider price range exist)
+        sd = (session or {}).get('data') or {}
+        budget = None
+        for k in ('budget', 'budget_max', 'budget_min'):
+            if sd.get(k) is not None:
+                try:
+                    budget = self._to_int(sd.get(k))
+                    break
+                except Exception:
+                    continue
+        min_price = None
+        max_price = None
+        # Accept multiple possible field names for safety
+        for k in ('min_price', 'price_min', 'minPrice'):
+            if p.get(k) is not None:
+                min_price = self._to_int(p.get(k))
+                break
+        for k in ('max_price', 'price_max', 'maxPrice'):
+            if p.get(k) is not None:
+                max_price = self._to_int(p.get(k))
+                break
+        if budget is not None:
+            if min_price is not None and max_price is not None and min_price <= budget <= max_price:
+                score += 25.0
+            elif min_price is not None and abs(min_price - budget) <= 10:
+                score += 10.0
+
+        # Recent activity (updated_at/last_active/registered_at)
+        ts = self._parse_dt_safe(p.get('last_active')) or self._parse_dt_safe(p.get('updated_at')) or self._parse_dt_safe(p.get('registered_at'))
+        if ts:
+            try:
+                hours = (datetime.utcnow() - ts).total_seconds() / 3600.0
+                if hours < 24:
+                    score += 15.0
+                elif hours < 72:
+                    score += 8.0
+            except Exception:
+                pass
+
+        # Light preference for exact location match (if both present)
+        try:
+            user_loc = (sd.get('location') or '').strip().lower()
+            prov_loc = str(p.get('location') or '').strip().lower()
+            if user_loc and prov_loc and user_loc == prov_loc:
+                score += 5.0
+        except Exception:
+            pass
+
+        return float(score)
+
+    def _rank_providers(self, providers: List[Dict[str, Any]], session: Dict[str, Any]) -> List[Dict[str, Any]]:
+        try:
+            return sorted(providers, key=lambda pr: self._score_provider(pr, session), reverse=True)
+        except Exception:
+            return providers
+
     def _normalize_msisdn(self, phone: str) -> Optional[str]:
         s = re.sub(r"\D+", "", str(phone or ""))
         if not s:
