@@ -182,6 +182,38 @@ class MongoService:
         cursor = db.providers.find(query).sort("registered_at", -1).limit(limit)
         return [doc async for doc in cursor]
 
+    # Lightweight provider lock to avoid double-assigning the same provider concurrently
+    async def acquire_provider_lock(self, provider_key: str, ttl_seconds: int = 300) -> bool:
+        """Acquire a short-lived lock for a provider. Returns True if acquired.
+
+        Implementation uses a best-effort document in 'provider_locks' collection.
+        This is not strictly atomic without a unique index, but sufficient for low contention.
+        """
+        db = get_database()
+        now = datetime.utcnow()
+        expires = now + timedelta(seconds=int(ttl_seconds or 300))
+        coll = db.provider_locks
+        existing = await coll.find_one({"provider_key": provider_key})
+        if existing and existing.get("expires_at") and existing["expires_at"] > now:
+            return False
+        await coll.update_one(
+            {"provider_key": provider_key},
+            {"$set": {"provider_key": provider_key, "expires_at": expires, "updated_at": now}, "$setOnInsert": {"created_at": now}},
+            upsert=True,
+        )
+        return True
+
+    async def is_provider_locked(self, provider_key: str) -> bool:
+        db = get_database()
+        now = datetime.utcnow()
+        doc = await db.provider_locks.find_one({"provider_key": provider_key})
+        return bool(doc and doc.get("expires_at") and doc["expires_at"] > now)
+
+    async def release_provider_lock(self, provider_key: str) -> bool:
+        db = get_database()
+        res = await db.provider_locks.delete_one({"provider_key": provider_key})
+        return res.deleted_count > 0
+
     # Booking operations
     async def create_booking(self, booking_data: Dict[str, Any]) -> bool:
         db = get_database()
