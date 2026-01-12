@@ -47794,3 +47794,55 @@ For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/St
 2026-01-12 11:26:46,390 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2026-01-12 11:26:46,498 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
 2026-01-12 11:48:30,434 - httpx - INFO - HTTP Request: GET http://localhost:3000/health "HTTP/1.1 200 OK"
+2026-01-12 11:51:10,062 - httpx - INFO - HTTP Request: GET http://localhost:3000/health "HTTP/1.1 200 OK"
+2026-01-12 11:55:17,290 - app.api.whatsapp - INFO - [2026-01-12T09:55:17.288175] Baileys webhook received
+2026-01-12 11:55:17,291 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "status",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "status@broadcast",
+      "fromMe": false,
+      "id": "ACD6356CC99693E5549370C1AD702D92",
+      "participant": "263780416173@s.whatsapp.net",
+      "participantLid": "172043823755335@lid"
+    },
+    "messageTimestamp": 1768211694,
+    "pushName": "Rashy\ud83d\ude18",
+    "broadcast": true,
+    "message": {
+      "imageMessage": {
+        "url": "https://mmg.whatsapp.net/v/t62.7118-24/614732478_1908554966429390_6172655948605312700_n.enc?ccb=11-4&oh=01_Q5Aa3gGsUFp135lgtyhGtnDrWVu0_we0DXRX8xGTs50roSnwYA&oe=698C3FED&_nc_sid=5e03e0&mms3=true",
+        "mimetype": "image/jpeg",
+        "caption": "\ud83d\udc4c",
+        "fileSha256": "MDufbjW98C1wlpy26103AHBN77cO17QcuQaG9Cd/sP0=",
+        "fileLength": "20885",
+        "height": 960,
+        "width": 540,
+        "mediaKey": "IwNbSsZdKGt38j7mznbU3Rrjj1ZaBkgmOQ/5zf/5bI4=",
+        "fileEncSha256": "i5SIvVFMeUJWwUS9cY/tjMTBZaXVE4PdllSAR808+yM=",
+        "directPath": "/v/t62.7118-24/614732478_1908554966429390_6172655948605312700_n.enc?ccb=11-4&oh=01_Q5Aa3gGsUFp135lgtyhGtnDrWVu0_we0DXRX8xGTs50roSnwYA&oe=698C3FED&_nc_sid=5e03e0",
+        "mediaKeyTimestamp": "1768211675",
+        "jpegThumbnail": "/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkJCQkKCQoLCwoODw0PDhUTERETFR8WGBYYFh8wHiMeHiMeMCozKScpMypMOzU1O0xXSUVJV2pfX2qFf4WuruoBCQkJCQoJCgsLCg4PDQ8OFRMRERMVHxYYFhgWHzAeIx4eIx4wKjMpJykzKkw7NTU7TFdJRUlXal9faoV/ha6u6v/CABEIAKAAWgMBIgACEQEDEQH/xAAwAAEAAgMBAQAAAAAAAAAAAAAAAwQCBgcFAQEBAQEBAAAAAAAAAAAAAAAAAAECA//aAAwDAQACEAMQAAAA4aAAAAAAAAAAADpn3rOfPfI/vVoa5e6Nmc1w6fEczw6mjk9Xqvmm4/fiayzwzMoc6xLHBMRQWK5S830/Ll29hlZIeKT1vFqp0DCLNY6tmtLT830KC7TlD9ubFGxmaxb+aim+29T2NZa0teWn51+guyIFzaqSRGmYe74FnpbHrG0yzQfa0UK32E2HPmWes9N+8zL0upzjA2fY+dZHR6OiVzcKWp1pNYHXAAAAAAAAAAAH/8QAOxAAAgECAwMIBQsFAAAAAAAAAQIDABEEEiETMVUGFyJBUZOj4gUQFBZhByQyREVQVHGRseEzkqHB0f/aAAgBAQABPwD7wHybzn7TTu65tZ+KJ3Vc20/E07o1za4jiid1XNpiOKJ3Vc2uI4mndVza4jiad1XNxiOJJ3dH5Op+JJ3dc3s/EU7um5BTL9oJ3de5c341P7KQaVapYWcJlkZLEnTr0ox4hUTNi7WygnINST/vdW1eQ5Ex+V48oe6qwY5Q3YNDmqWVWd4hjgpLKi6L9LrX89KYyCUqcYguoCrlG8aMf8igJpY+hjWzBSCci7yd9RxSxoqvMXt1sNTTVKNDR3nSlGgo0KA9TCTMCHUL2Fbn9633pqamqWiDc0Dp6xTPrZbaHWpJZlkXRTFY5zexHZSu7s5ghC5muzt120vYb6swUBjmbrNrU1PUlGQ3OlX09QraBXC2Ou420qfGpBhtot3LsWT4h+lWGxBxIJm/qD6EWUgUMpAI3U1PTCpaKi5q9ChXpKZcMQkSsrSkEsN27KBrpSxLHCiyYoIoleQEvuYqQQL3vvvXtZcZArTTEiyoNHufpLvAFYMFMJArG5yAmsxIBKlfgf4prCnqZgPWKvWOQyRqNltEvd1sGuADbQ1M8CRoGwJtGQcjRdAD8qiOcbVYlSJFJjKsNDbcABUGKEeEgaZg0jLmCqNTfUWFKxZQSCD2U1SGptdTRbU6Veg1BqvWP9O4HDFo77VxoUX/ALS4ycOQweFJJnVETpsxN/0rD4+SFCvs4MmSwfOSygjSysN1Ycj2eLKxYZb3O80xpzUzUW1OtZqz9VBqx2J2UOXNYsN97WG4mlwPo9JnhzF5UAdkZiDY7t1RrEmImxcjhQuisbBVubn9aWfBY+UiPEo7ohIQNnb4/lWAifD4WOJ9SBqb3pjTtpWJmRASzWFZ71moGg1YnDYfFx7OdMy9lyP2pOTnoWLFGcI+1YaAyNQwCxY2FZw7RiWcxiTUXFrb6GKih9L4aQKDnBizbtX3UilekzMzm/XoATe3VupmqR6nQMdazL2mg1BqzVnro5w1ukAQD8DWNwsGMi2chIIN1ZTZlPaKTkw0ex+dmbLmvnFlF+sLUM8jSTo9ugQARTOKmenl6RBozamvfs8N8by0OXp4Z43lr3/PDPG8te/54Z43lpuXkzfUfF8tDlxKPqR73y0vL2YfUPF8te/z9fo3xvLR5dnhvjeWn5aFvs/xfLTcqyxJ9i8Ty0eUh/C+J/H3j//EABoRAAMBAQEBAAAAAAAAAAAAAAABEhEwUUD/2gAIAQIBAT8A6UzX6azX6Uyn9Mslksxksl9f/8QAGBEAAwEBAAAAAAAAAAAAAAAAAAESMBH/2gAIAQMBAT8A04cRKJRKJWi1pFIpHUUilr//2Q==",
+        "contextInfo": {
+          "forwardingScore": 2,
+          "isForwarded": true,
+          "statusAttributionType": "RESHARED_FROM_POST",
+          "pairedMediaType": "NOT_PAIRED_MEDIA",
+          "statusSourceType": "IMAGE"
+        },
+        "scansSidecar": "J93vVCSKDvS7vwEGHZsLJghZ1ACvBEGNpQsQA5GLnX8/CPMdAgGPBw==",
+        "scanLengths": [
+          2949,
+          7323,
+          3530,
+          7083
+        ],
+        "midQualityFileSha256": "9B78ii9sCR7pqsbK2ABE0QnrG3wlj/16bfYVZG87RhY="
+      },
+      "messageContextInfo": {
+        "messageSecret": "dQt+3YH8DQ/sDqrAcobT05srRoRUP9IvTiDhQWWaBTM="
+      }
+    }
+  }
+}
