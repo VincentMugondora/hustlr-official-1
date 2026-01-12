@@ -514,6 +514,31 @@ class MessageHandler:
                 self.user_sessions[user_number] = session
                 await self.db.save_session(user_number, session_to_save)
                 return
+
+        # Exit intent: gracefully end/neutralize the session on polite closures
+        try:
+            is_exit = False
+            if message_text in {"thanks", "thank you", "ok thanks", "okay thanks", "bye", "goodbye", "cheers", "no thanks", "done", "that's all", "thats all"}:
+                is_exit = True
+            elif re.fullmatch(r"\s*(ok(ay)?\s+)?(thanks|thank you)[\w\s\.!]*\s*", message_text or ""):
+                is_exit = True
+            if is_exit:
+                await self._log_and_send_response(
+                    user_number,
+                    self._short("You're welcome! Reach out anytime.", "You're welcome!"),
+                    "session_exit"
+                )
+                session['state'] = ConversationState.SERVICE_SEARCH if (user and user.get('onboarding_completed', False)) else ConversationState.NEW
+                session['data'] = {}
+                session['last_activity'] = datetime.utcnow().isoformat()
+                session_to_save = session.copy()
+                if isinstance(session_to_save.get('state'), ConversationState):
+                    session_to_save['state'] = session_to_save['state'].value
+                self.user_sessions[user_number] = session
+                await self.db.save_session(user_number, session_to_save)
+                return
+        except Exception:
+            pass
         
         # Route based on conversation state
         current_state = session['state']
