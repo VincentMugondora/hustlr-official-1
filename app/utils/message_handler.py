@@ -215,6 +215,48 @@ class MessageHandler:
         except Exception:
             return providers
 
+    def _provider_unique_id(self, p: Dict[str, Any]) -> Optional[str]:
+        try:
+            pid = p.get('whatsapp_number') or p.get('_id')
+            return str(pid) if pid is not None else None
+        except Exception:
+            return None
+
+    def _fsm_state_for_session(self, session: Dict[str, Any]) -> str:
+        try:
+            st = session.get('state')
+            if isinstance(st, ConversationState):
+                st_val = st.value
+            else:
+                st_val = str(st or '')
+        except Exception:
+            st_val = ''
+        collecting_states = {
+            ConversationState.BOOKING_SERVICE_DETAILS.value,
+            ConversationState.BOOKING_TIME.value,
+            ConversationState.BOOKING_LOCATION.value,
+            ConversationState.CONFIRM_LOCATION.value,
+            ConversationState.BOOKING_USER_NAME.value,
+            ConversationState.PROVIDER_SELECTION.value,
+            ConversationState.VIEW_BOOKINGS.value,
+            ConversationState.CANCEL_BOOKING_SELECT.value,
+            ConversationState.CANCEL_BOOKING_CONFIRM.value,
+            ConversationState.RESCHEDULE_BOOKING_SELECT.value,
+            ConversationState.RESCHEDULE_BOOKING_NEW_TIME.value,
+            ConversationState.RESCHEDULE_BOOKING_CONFIRM.value,
+        }
+        if st_val in {ConversationState.NEW.value, ConversationState.SERVICE_SEARCH.value}:
+            return "idle"
+        if st_val in collecting_states:
+            return "collecting"
+        if st_val == ConversationState.BOOKING_CONFIRM.value:
+            return "confirming"
+        if st_val == ConversationState.BOOKING_PENDING_PROVIDER.value:
+            return "matching"
+        if st_val == ConversationState.NO_PROVIDERS_OPTIONS.value:
+            return "failed"
+        return "collecting"
+
     def _normalize_msisdn(self, phone: str) -> Optional[str]:
         s = re.sub(r"\D+", "", str(phone or ""))
         if not s:
