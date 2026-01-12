@@ -518,7 +518,7 @@ class MessageHandler:
 
         msg = (
             f"Booking confirmed!\n"
-            f"{provider['name']} will assist you with {s_type.title()}.\n"
+            f"{chosen_provider['name']} will assist you with {s_type.title()}.\n"
             f"Location: {location}\n"
             f"Date: {booking_time}"
         )
@@ -2749,16 +2749,69 @@ class MessageHandler:
         booking_time = booking_time_dt.strftime('%Y-%m-%d %H:%M')
         location = (session.get('data') or {}).get('location') or (user or {}).get('location') or ''
 
+        # Provider lock to avoid double-assigning concurrently
+        locked = True
+        chosen_provider = provider
+        key = str(self._provider_unique_id(provider) or provider.get('name') or prov_idx)
+        try:
+            if hasattr(self.db, 'acquire_provider_lock'):
+                locked = await self.db.acquire_provider_lock(key, ttl_seconds=300)
+        except Exception:
+            locked = True
+
+        if not locked:
+            alt = None
+            for i, cand in enumerate(providers):
+                if i == (prov_idx - 1):
+                    continue
+                try:
+                    c_key = str(self._provider_unique_id(cand) or cand.get('name') or i)
+                    ok = await self.db.acquire_provider_lock(c_key, ttl_seconds=300) if hasattr(self.db, 'acquire_provider_lock') else True
+                except Exception:
+                    ok = True
+                if not ok:
+                    continue
+                try:
+                    prov_service = (cand.get('service_type') or '').lower()
+                    req_service = (s_type or '').lower()
+                    if req_service in prov_service or prov_service in req_service:
+                        alt = cand
+                        break
+                except Exception:
+                    continue
+
+            if alt is None:
+                header_loc = (location or (user or {}).get("location") or "your area").strip()
+                body = (
+                    f"I couldn’t find an available provider in {header_loc} at that time.\n"
+                    "Would you like to:\n\n"
+                    "1) Change the time\n"
+                    "2) Change the location\n"
+                    "3) Be notified when one becomes available"
+                )
+                buttons = [
+                    {"id": "opt_noprov_1", "title": "Change time"},
+                    {"id": "opt_noprov_2", "title": "Change location"},
+                    {"id": "opt_noprov_3", "title": "Notify me"},
+                ]
+                await self._log_and_send_interactive(user_number, "No providers available", body, buttons, None)
+                session.setdefault("data", {})
+                session["data"]["_no_providers_ctx"] = {"service_type": s_type, "location": location}
+                session['state'] = ConversationState.NO_PROVIDERS_OPTIONS
+                return
+            else:
+                chosen_provider = alt
+
         # Final check: does this provider offer this service?
-        provider_service = (provider.get('service_type') or '').lower()
+        provider_service = (chosen_provider.get('service_type') or '').lower()
         request_service = (s_type or '').lower()
         # Basic check, can be improved with synonyms
-        assert request_service in provider_service or provider_service in request_service, f"Provider {provider.get('_id')} does not offer {request_service}"
+        assert request_service in provider_service or provider_service in request_service, f"Provider {chosen_provider.get('_id')} does not offer {request_service}"
 
         booking_doc = {
             'booking_id': self._generate_booking_id(),
             'customer_whatsapp_number': user_number,
-            'provider_whatsapp_number': provider.get('whatsapp_number'),
+            'provider_whatsapp_number': chosen_provider.get('whatsapp_number'),
             'service_type': s_type,
             'booking_time': booking_time,
             'location': location,
