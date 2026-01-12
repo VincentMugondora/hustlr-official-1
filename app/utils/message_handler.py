@@ -1349,12 +1349,22 @@ class MessageHandler:
             m = re.search(r"reason=\"([^\"]*)\"", text)
             reason = m.group(1) if m else ''
             ok = await self.db.update_booking_fields(bid, {'status': 'cancelled', 'cancel_reason': reason})
+            if ok:
+                try:
+                    await self._release_lock_for_booking(bid)
+                except Exception:
+                    pass
             await send("Cancelled." if ok else "No change.")
             return
 
         if low.startswith('/complete booking'):
             bid = arg_after('/complete booking').split()[0]
             ok = await self.db.update_booking_fields(bid, {'status': 'completed'})
+            if ok:
+                try:
+                    await self._release_lock_for_booking(bid)
+                except Exception:
+                    pass
             await send("Completed." if ok else "No change.")
             return
 
@@ -2107,7 +2117,7 @@ class MessageHandler:
                             await self.db.update_user(user_number, {
                                 'last_rec_provider': {
                                     'key': top_key,
-                                    'expires_at': datetime.utcnow().isoformat()
+                                    'expires_at': (datetime.utcnow() + timedelta(minutes=30)).isoformat()
                                 }
                             })
                     except Exception:
