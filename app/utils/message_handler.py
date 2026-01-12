@@ -222,6 +222,29 @@ class MessageHandler:
         except Exception:
             return None
 
+    async def _release_lock_for_booking(self, booking_id: str) -> bool:
+        """Best-effort release of a provider lock for a given booking id."""
+        try:
+            if not hasattr(self.db, 'release_provider_lock'):
+                return False
+            b = await self.db.get_booking_by_id(booking_id)
+            if not b:
+                return False
+            released_any = False
+            # Prefer whatsapp number; fallback to provider_id
+            for key_name in ('provider_whatsapp_number', 'provider_id'):
+                k = b.get(key_name)
+                if not k:
+                    continue
+                try:
+                    ok = await self.db.release_provider_lock(str(k))
+                    released_any = released_any or ok
+                except Exception:
+                    pass
+            return released_any
+        except Exception:
+            return False
+
     def _fsm_state_for_session(self, session: Dict[str, Any]) -> str:
         try:
             st = session.get('state')
@@ -516,17 +539,17 @@ class MessageHandler:
         await self.db.create_booking(booking_doc)
         await self._notify_booking_other_party(user_number, booking_doc['booking_id'], 'new')
 
+        # Enter explicit matching phase UX
         msg = (
-            f"Booking confirmed!\n"
-            f"{chosen_provider['name']} will assist you with {s_type.title()}.\n"
+            f"Request sent to {chosen_provider['name']} for {s_type.title()}.\n"
             f"Location: {location}\n"
-            f"Date: {booking_time}"
+            f"Date: {booking_time}\n"
+            f"Please wait while I confirm availability."
         )
-        await self._log_and_send_response(user_number, msg, "booking_creation_confirmed")
+        await self._log_and_send_response(user_number, msg, "booking_pending_provider")
 
-        session['state'] = ConversationState.SERVICE_SEARCH
-        # Mark FSM as completed for observability; allow handle_message to apply and clear
-        session['data'] = {'_fsm_state_override': 'completed'}
+        session['state'] = ConversationState.BOOKING_PENDING_PROVIDER
+        session.setdefault('data', {})['active_booking'] = booking_doc['booking_id']
 
     # --------------------------------------------------------------------------
     # Public Handler Methods
@@ -2024,6 +2047,21 @@ class MessageHandler:
             # Safety rule: avoid showing the same top provider repeatedly to the same user
             try:
                 last_pid = (session.get('data') or {}).get('_last_provider_id')
+                # Persisted last recommendation from user profile (with expiry)
+                if not last_pid:
+                    rp = (user or {}).get('last_rec_provider') or {}
+                    key = rp.get('key')
+                    exp = rp.get('expires_at')
+                    exp_dt = None
+                    try:
+                        if isinstance(exp, str):
+                            exp_dt = datetime.fromisoformat(exp.replace('Z', '+00:00'))
+                        elif isinstance(exp, datetime):
+                            exp_dt = exp
+                    except Exception:
+                        exp_dt = None
+                    if key and exp_dt and exp_dt > datetime.utcnow():
+                        last_pid = str(key)
                 if last_pid and len(providers) > 1:
                     reordered = [p for p in providers if str(self._provider_unique_id(p) or '') != str(last_pid)]
                     # Keep at least 1 result; if filter removes all, keep original
@@ -2061,7 +2099,19 @@ class MessageHandler:
             try:
                 top = providers[0] if providers else None
                 if top:
-                    session.setdefault('data', {})['_last_provider_id'] = self._provider_unique_id(top)
+                    top_key = self._provider_unique_id(top)
+                    session.setdefault('data', {})['_last_provider_id'] = top_key
+                    # Persist to user profile with a 30-minute TTL equivalent
+                    try:
+                        if top_key:
+                            await self.db.update_user(user_number, {
+                                'last_rec_provider': {
+                                    'key': top_key,
+                                    'expires_at': datetime.utcnow().isoformat()
+                                }
+                            })
+                    except Exception:
+                        pass
             except Exception:
                 pass
 
