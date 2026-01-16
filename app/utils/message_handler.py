@@ -1100,6 +1100,11 @@ class MessageHandler:
                     sections = [{"title": "Available areas", "rows": rows}]
                     body = "Choose your area to see available providers."
                     await self._log_and_send_list(user_number, f"{svc.title()} near you", body, "Select area", sections, None)
+                    # Remember choices for numeric/id replies
+                    try:
+                        session.setdefault('data', {})['_available_locations'] = available_locations[:10]
+                    except Exception:
+                        pass
                     session['state'] = ConversationState.BOOKING_LOCATION
                     return
 
@@ -1122,6 +1127,26 @@ class MessageHandler:
             norm = loc_ex.normalize_user_location(raw)
         except Exception:
             norm = None
+        # Map numeric or id selections to stored options when present
+        try:
+            sel = re.fullmatch(r"\s*(?:loc_)?(\d{1,2})\s*", raw, re.I)
+            if sel:
+                idx = int(sel.group(1))
+                opts = (session.get('data') or {}).get('_available_locations') or []
+                if 1 <= idx <= len(opts):
+                    chosen = opts[idx - 1]
+                    session.setdefault('data', {})['location'] = chosen
+                    # Clear stored options after selection
+                    try:
+                        session['data'].pop('_available_locations', None)
+                    except Exception:
+                        pass
+                    await self._log_and_send_response(user_number, f"Great 👍 {chosen}.\n\nWhat day do you need the service?\n(e.g. tomorrow, Monday, 13 Jan)", "ask_booking_date")
+                    session['state'] = ConversationState.BOOKING_DATE
+                    return
+        except Exception:
+            pass
+
         # If we couldn't recognize the area, show DB-backed options for this service
         if not norm:
             try:
@@ -1135,6 +1160,11 @@ class MessageHandler:
                 sections = [{"title": "Available areas", "rows": rows}]
                 body = "Please pick one of the areas where we currently have providers."
                 await self._log_and_send_list(user_number, "Where are you located?", body, "Select area", sections, None)
+                # Remember choices for numeric/id replies
+                try:
+                    session.setdefault('data', {})['_available_locations'] = available_locations[:10]
+                except Exception:
+                    pass
                 session['state'] = ConversationState.BOOKING_LOCATION
                 return
         loc = norm or raw.title()
