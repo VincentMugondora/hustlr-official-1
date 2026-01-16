@@ -1,0 +1,38 @@
+[
+  {
+    "whatsapp_number": "263718275163",
+    "name": "Seagate Plumbers",
+    "service_type": "plumber",
+    "location": "Harare",
+    "business_name": "Seagate Plumbers",
+    "contact": "+263718275163",
+    "status": "active"
+  },
+  {
+    "whatsapp_number": "263780000123",
+    "name": "Bulawayo Fixers",
+    "service_type": "plumber",
+    "location": "Bulawayo",
+    "business_name": "Bulawayo Fixers",
+    "contact": "+263780000123",
+    "status": "active"
+  },
+  {
+    "whatsapp_number": "263719111222",
+    "name": "Bright Sparks",
+    "service_type": "electrician",
+    "location": "Harare",
+    "business_name": "Bright Sparks Electrical",
+    "contact": "+263719111222",
+    "status": "active"
+  },
+  {
+    "whatsapp_number": "263775555777",
+    "name": "Clean Pros",
+    "service_type": "cleaner",
+    "location": "Bulawayo",
+    "business_name": "Clean Pros",
+    "contact": "+263775555777",
+    "status": "active"
+  }
+]

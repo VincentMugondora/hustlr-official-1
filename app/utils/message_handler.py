@@ -82,9 +82,33 @@ class MessageHandler:
             logger.warning(f"Could not store bot message in history for {user_number}: {e}")
 
     async def _log_and_send_interactive(self, user_number: str, header: str, body: str, buttons: List[Dict], footer: str = None) -> None:
-        """Log interactive response and send it to user"""
+        """Log interactive response and send it to user with graceful fallback to text."""
         logger.info(f"[BOT RESPONSE] To: {user_number}, Type: interactive_buttons, Header: {header}, Body: {body[:50]}...")
-        await self.whatsapp_api.send_interactive_buttons(user_number, header, body, buttons, footer)
+        try:
+            if hasattr(self.whatsapp_api, 'send_interactive_buttons'):
+                await self.whatsapp_api.send_interactive_buttons(user_number, header, body, buttons, footer)
+                return
+        except Exception:
+            # Fall through to text rendering
+            pass
+        # Fallback: render as a numbered text list
+        try:
+            lines: List[str] = []
+            if header:
+                lines.append(header)
+            if body:
+                lines.append(body)
+            if buttons:
+                for idx, btn in enumerate(buttons, start=1):
+                    title = (btn.get('title') or '').strip()
+                    if title:
+                        lines.append(f"{idx}) {title}")
+            if footer:
+                lines.append(footer)
+            await self._log_and_send_response(user_number, "\n".join(lines), "interactive_buttons_fallback")
+        except Exception:
+            # Last resort: send body only
+            await self._log_and_send_response(user_number, body, "interactive_buttons_fallback_body_only")
 
     async def _log_and_send_list(self, user_number: str, header: str, body: str, button_text: str, sections: List[Dict], footer: str = None) -> None:
         """Log interactive list response and send it. Fallback to plain text if not supported."""
@@ -501,10 +525,31 @@ class MessageHandler:
             elif event == 'rescheduled' and new_time:
                 msg = f"Booking {booking_id} has been rescheduled to {new_time} by the {actor_role}. Please confirm if you are available."
             elif event == 'new':
-                prov_name = (booking.get('provider') or {}).get('name', 'the provider')
                 service = booking.get('service_type', 'service')
                 time = self._format_booking_time_for_display(booking.get('booking_time', ''))
-                msg = f"New booking request from {prov_name} for {service} at {time}. Please reply 'confirm' or 'decline'."
+                if is_customer:
+                    # Notify provider about a new request from the customer
+                    cust_display = None
+                    try:
+                        user_doc = await self.db.get_user(cust_num)
+                        if user_doc:
+                            cust_display = user_doc.get('name')
+                    except Exception:
+                        cust_display = None
+                    cust_display = cust_display or cust_num
+                    msg = f"New booking request from {cust_display} for {service} at {time}. Please reply 'confirm' or 'decline'."
+                else:
+                    # Notify customer that the request was sent to the provider
+                    prov_display = None
+                    try:
+                        if hasattr(self.db, 'get_provider_by_whatsapp'):
+                            pdoc = await self.db.get_provider_by_whatsapp(prov_num)
+                            if pdoc:
+                                prov_display = pdoc.get('name')
+                    except Exception:
+                        prov_display = None
+                    prov_display = prov_display or 'the provider'
+                    msg = f"Your booking request to {prov_display} for {service} at {time} has been sent. We'll confirm availability."
 
             if msg:
                 await self._log_and_send_response(target_num, msg, f"booking_notify_{event}")
@@ -534,6 +579,19 @@ class MessageHandler:
             if word in text:
                 if 1 <= idx <= len(providers):
                     return idx
+
+        # Handle explicit button id patterns like "provider_<id>"
+        try:
+            m = re.search(r"\bprovider_([a-zA-Z0-9+_\-]+)\b", text)
+        except Exception:
+            m = None
+        if m:
+            pid = m.group(1).lower()
+            for i, p in enumerate(providers, start=1):
+                candidates = [str(p.get('whatsapp_number') or '').lower(), str(p.get('_id') or '').lower()]
+                for cand in candidates:
+                    if cand and pid in cand:
+                        return i
 
         for i, p in enumerate(providers, start=1):
             name = (p.get('name') or '').lower()
@@ -814,6 +872,8 @@ class MessageHandler:
             await self.handle_cancel_booking_select(user_number, message_text, session, user or {})
         elif current_state == ConversationState.CANCEL_BOOKING_CONFIRM:
             await self.handle_cancel_booking_select(user_number, message_text, session, user or {})
+        elif current_state == ConversationState.VIEW_BOOKINGS:
+            await self.handle_view_bookings_state(user_number, message_text, session, user)
         elif current_state == ConversationState.RESCHEDULE_BOOKING_SELECT:
             await self.handle_reschedule_booking_select(user_number, message_text, session, user or {})
         elif current_state == ConversationState.RESCHEDULE_BOOKING_NEW_TIME:
