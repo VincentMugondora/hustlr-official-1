@@ -44,6 +44,23 @@ class WhatsAppMessage:
                 text = (msg.get("text") or {}).get("body", "")
                 return cls(from_number, text=text, msg_type="text")
 
+            # Interactive (buttons and lists)
+            if msg_type == "interactive":
+                inter = msg.get("interactive") or {}
+                i_type = inter.get("type")
+                text = ""
+                try:
+                    if i_type == "button":
+                        btn = inter.get("button") or {}
+                        # Prefer user-visible text; fall back to payload/id
+                        text = (btn.get("text") or btn.get("payload") or "")
+                    elif i_type in ("list_reply", "list"):
+                        lr = inter.get("list_reply") or {}
+                        text = (lr.get("title") or lr.get("id") or "")
+                except Exception:
+                    text = ""
+                return cls(from_number, text=text, msg_type="interactive")
+
             # Image
             if msg_type == "image":
                 image = msg.get("image") or {}
