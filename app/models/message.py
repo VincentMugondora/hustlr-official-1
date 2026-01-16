@@ -50,10 +50,18 @@ class WhatsAppMessage:
                 i_type = inter.get("type")
                 text = ""
                 try:
+                    # Buttons: Cloud sends interactive.type == "button" and payload under "button_reply"
                     if i_type == "button":
-                        btn = inter.get("button") or {}
-                        # Prefer user-visible text; fall back to payload/id
-                        text = (btn.get("text") or btn.get("payload") or "")
+                        btn = inter.get("button_reply") or inter.get("button") or {}
+                        # Prefer user-visible title/text; fall back to id/payload
+                        text = (
+                            btn.get("title")
+                            or btn.get("text")
+                            or btn.get("id")
+                            or btn.get("payload")
+                            or ""
+                        )
+                    # List replies: type may be "list_reply" with payload under "list_reply"
                     elif i_type in ("list_reply", "list"):
                         lr = inter.get("list_reply") or {}
                         text = (lr.get("title") or lr.get("id") or "")

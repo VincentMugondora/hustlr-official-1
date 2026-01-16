@@ -86,6 +86,41 @@ class MessageHandler:
         logger.info(f"[BOT RESPONSE] To: {user_number}, Type: interactive_buttons, Header: {header}, Body: {body[:50]}...")
         await self.whatsapp_api.send_interactive_buttons(user_number, header, body, buttons, footer)
 
+    async def _log_and_send_list(self, user_number: str, header: str, body: str, button_text: str, sections: List[Dict], footer: str = None) -> None:
+        """Log interactive list response and send it. Fallback to plain text if not supported."""
+        logger.info(f"[BOT RESPONSE] To: {user_number}, Type: interactive_list, Header: {header}, Body: {body[:50]}...")
+        try:
+            # Prefer a real interactive list when transport supports it
+            if hasattr(self.whatsapp_api, 'send_interactive_list'):
+                await self.whatsapp_api.send_interactive_list(user_number, header, body, button_text, sections, footer)
+                return
+        except Exception:
+            pass
+        # Fallback rendering as a numbered text list
+        try:
+            lines: List[str] = []
+            if header:
+                lines.append(header)
+            if body:
+                lines.append(body)
+            rows = []
+            try:
+                for sec in sections or []:
+                    for row in (sec.get('rows') or []):
+                        rows.append(row)
+            except Exception:
+                rows = []
+            for idx, row in enumerate(rows, start=1):
+                title = (row.get('title') or row.get('id') or '').strip()
+                if title:
+                    lines.append(f"{idx}) {title}")
+            if footer:
+                lines.append(footer)
+            await self._log_and_send_response(user_number, "\n".join(lines), "interactive_list_fallback")
+        except Exception:
+            # Last resort: just send the body
+            await self._log_and_send_response(user_number, body, "interactive_list_fallback_body_only")
+
     def _is_concise(self) -> bool:
         try:
             return bool(getattr(settings, 'USE_CONCISE_RESPONSES', False))
@@ -438,7 +473,15 @@ class MessageHandler:
     async def _notify_booking_other_party(self, original_actor_number: str, booking_id: str, event: str, new_time: Optional[str] = None) -> None:
         """Notify the other party involved in a booking about a change."""
         try:
-            booking = await self.db.get_booking(booking_id)
+            booking = None
+            try:
+                # Prefer explicit by-id getter when available
+                if hasattr(self.db, 'get_booking_by_id'):
+                    booking = await self.db.get_booking_by_id(booking_id)
+                elif hasattr(self.db, 'get_booking'):
+                    booking = await self.db.get_booking(booking_id)
+            except Exception:
+                booking = None
             if not booking:
                 return
 
@@ -1027,6 +1070,40 @@ class MessageHandler:
             svc = self.extract_service_type(text)
             if svc:
                 session.setdefault('data', {})['service_type'] = svc
+                # Try using user's saved location if it maps to an available area
+                try:
+                    loc_ex = get_location_extractor()
+                    providers_for_service = await self.db.get_providers_by_service(svc)
+                    available_locations = loc_ex.get_available_locations_for_service(providers_for_service or [])
+                except Exception:
+                    available_locations = []
+
+                try:
+                    user_loc_raw = (user or {}).get('location') or ''
+                    user_loc_norm = loc_ex.normalize_user_location(user_loc_raw) if user_loc_raw else None
+                except Exception:
+                    user_loc_norm = None
+
+                if user_loc_norm and user_loc_norm in (available_locations or []):
+                    session.setdefault('data', {})['location'] = user_loc_norm
+                    await self._log_and_send_response(
+                        user_number,
+                        f"Great 👍 {user_loc_norm}.\n\nWhat day do you need the service?\n(e.g. tomorrow, Monday, 13 Jan)",
+                        "ask_booking_date",
+                    )
+                    session['state'] = ConversationState.BOOKING_DATE
+                    return
+
+                if available_locations:
+                    # Present only locations where we actually have providers
+                    rows = [{"id": f"loc_{i+1}", "title": loc} for i, loc in enumerate(available_locations[:10])]
+                    sections = [{"title": "Available areas", "rows": rows}]
+                    body = "Choose your area to see available providers."
+                    await self._log_and_send_list(user_number, f"{svc.title()} near you", body, "Select area", sections, None)
+                    session['state'] = ConversationState.BOOKING_LOCATION
+                    return
+
+                # Fallback: ask for free-text location
                 intro = f"Sure! I can help you find a {svc} near you.\nI’ll ask a few quick questions.\n\nFirst, where are you located?"
                 await self._log_and_send_response(user_number, intro, "intent_acknowledge")
                 session['state'] = ConversationState.BOOKING_LOCATION
@@ -1045,6 +1122,21 @@ class MessageHandler:
             norm = loc_ex.normalize_user_location(raw)
         except Exception:
             norm = None
+        # If we couldn't recognize the area, show DB-backed options for this service
+        if not norm:
+            try:
+                svc = (session.get('data') or {}).get('service_type') or ''
+                providers_for_service = await self.db.get_providers_by_service(svc)
+                available_locations = loc_ex.get_available_locations_for_service(providers_for_service or [])
+            except Exception:
+                available_locations = []
+            if available_locations:
+                rows = [{"id": f"loc_{i+1}", "title": loc} for i, loc in enumerate(available_locations[:10])]
+                sections = [{"title": "Available areas", "rows": rows}]
+                body = "Please pick one of the areas where we currently have providers."
+                await self._log_and_send_list(user_number, "Where are you located?", body, "Select area", sections, None)
+                session['state'] = ConversationState.BOOKING_LOCATION
+                return
         loc = norm or raw.title()
         session.setdefault('data', {})['location'] = loc
         await self._log_and_send_response(user_number, f"Great 👍 {loc}.\n\nWhat day do you need the service?\n(e.g. tomorrow, Monday, 13 Jan)", "ask_booking_date")
@@ -3078,9 +3170,11 @@ class MessageHandler:
         booking_doc = {
             'booking_id': self._generate_booking_id(),
             'customer_whatsapp_number': user_number,
+            'user_whatsapp_number': user_number,
             'provider_whatsapp_number': chosen_provider.get('whatsapp_number'),
             'service_type': s_type,
             'booking_time': booking_time,
+            'date_time': booking_time,
             'location': location,
             'status': 'pending',
             'created_at': datetime.utcnow().isoformat(),
@@ -3092,7 +3186,7 @@ class MessageHandler:
 
         msg = (
             f"Booking confirmed!\n"
-            f"{provider['name']} will assist you with {s_type.title()}.\n"
+            f"{chosen_provider.get('name') or 'Provider'} will assist you with {s_type.title()}.\n"
             f"Location: {location}\n"
             f"Date: {booking_time}"
         )
@@ -3213,7 +3307,7 @@ class MessageHandler:
             enriched.append({
                 'id': b.get('booking_id') or '',
                 'provider': pname or pnum or 'Provider',
-                'time': self._format_booking_time_for_display(b.get('date_time') or ''),
+                'time': self._format_booking_time_for_display(b.get('date_time') or b.get('booking_time') or ''),
                 'status': b.get('status') or 'pending',
             })
         lines = []
