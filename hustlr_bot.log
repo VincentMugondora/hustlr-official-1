@@ -48767,3 +48767,199 @@ Example: 'Vincent, Avondale'...
 2026-01-16 12:49:46,728 - app.utils.message_handler - WARNING - Failed to send WhatsApp message to 263771234567: WhatsApp API configuration missing
 2026-01-16 12:49:46,854 - app.api.whatsapp - INFO - Message processed successfully for 263771234567
 2026-01-16 13:43:05,040 - app.main - WARNING - Baileys sender not available at startup (tried http://localhost:3000)
+2026-01-20 09:33:35,865 - app.main - WARNING - Baileys sender not available at startup (tried http://localhost:3000)
+2026-01-20 09:47:11,548 - app.api.whatsapp - INFO - [2026-01-20T07:47:11.548069] WhatsApp webhook received
+2026-01-20 09:47:11,548 - app.api.whatsapp - INFO - Headers: {'user-agent': 'Mozilla/5.0 (Windows NT; Windows NT 10.0; en-ZW) WindowsPowerShell/5.1.26100.7462', 'content-type': 'application/json', 'host': 'localhost:8000', 'content-length': '1952', 'expect': '100-continue', 'connection': 'Keep-Alive'}
+2026-01-20 09:47:11,548 - app.api.whatsapp - INFO - Raw payload: {
+  "object": "whatsapp_business_account",
+  "entry": [
+    {
+      "id": "12345678",
+      "changes": [
+        {
+          "field": "messages",
+          "value": {
+            "messages": [
+              {
+                "from": "263777123456",
+                "timestamp": "1617754800",
+                "type": "text",
+                "id": "wamid.abc123",
+                "text": {
+                  "body": "I need a plumber"
+                }
+              }
+            ],
+            "messaging_product": "whatsapp",
+            "metadata": {
+              "display_phone_number": "1234567890",
+              "phone_number_id": "1234567890"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
+2026-01-20 09:47:11,548 - app.api.whatsapp - INFO - Parsed message object: <app.models.message.WhatsAppMessage object at 0x000001A57B5B5010>
+2026-01-20 09:47:11,548 - app.api.whatsapp - INFO - From number: 263777123456
+2026-01-20 09:47:11,548 - app.api.whatsapp - INFO - Message text: 'I need a plumber'
+2026-01-20 09:47:11,550 - app.api.whatsapp - INFO - Message length: 16 characters
+2026-01-20 09:47:11,550 - app.api.whatsapp - INFO - Message ID: wamid.abc123
+2026-01-20 09:47:11,550 - app.api.whatsapp - INFO - Message timestamp: 1617754800
+2026-01-20 09:47:11,550 - app.api.whatsapp - INFO - Message type: text
+2026-01-20 09:47:11,550 - app.api.whatsapp - INFO - Phone number ID: 1234567890
+2026-01-20 09:47:11,550 - app.api.whatsapp - INFO - Display phone number: 1234567890
+2026-01-20 09:47:12,040 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777123456, Type: onboarding_privacy_declined, Message: Welcome to Hustlr! I'll help you find local service providers.
+
+To get started, send your name and a...
+2026-01-20 09:47:12,040 - app.utils.message_handler - WARNING - Failed to send WhatsApp message to 263777123456: WhatsApp API configuration missing
+2026-01-20 09:47:12,242 - app.api.whatsapp - INFO - Message processed successfully for 263777123456
+2026-01-20 09:47:23,223 - app.api.whatsapp - INFO - [2026-01-20T07:47:23.223030] WhatsApp webhook received
+2026-01-20 09:47:23,223 - app.api.whatsapp - INFO - Headers: {'user-agent': 'Mozilla/5.0 (Windows NT; Windows NT 10.0; en-ZW) WindowsPowerShell/5.1.26100.7462', 'content-type': 'application/json', 'host': 'localhost:8000', 'content-length': '1962', 'expect': '100-continue'}
+2026-01-20 09:47:23,224 - app.api.whatsapp - INFO - Raw payload: {
+  "object": "whatsapp_business_account",
+  "entry": [
+    {
+      "id": "12345678",
+      "changes": [
+        {
+          "field": "messages",
+          "value": {
+            "messages": [
+              {
+                "from": "263777123456",
+                "timestamp": "1617754801",
+                "type": "text",
+                "id": "wamid.def456",
+                "text": {
+                  "body": "My kitchen sink is clogged"
+                }
+              }
+            ],
+            "messaging_product": "whatsapp",
+            "metadata": {
+              "display_phone_number": "1234567890",
+              "phone_number_id": "1234567890"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
+2026-01-20 09:47:23,227 - app.api.whatsapp - INFO - Parsed message object: <app.models.message.WhatsAppMessage object at 0x000001A57B5B4170>
+2026-01-20 09:47:23,227 - app.api.whatsapp - INFO - From number: 263777123456
+2026-01-20 09:47:23,227 - app.api.whatsapp - INFO - Message text: 'My kitchen sink is clogged'
+2026-01-20 09:47:23,228 - app.api.whatsapp - INFO - Message length: 26 characters
+2026-01-20 09:47:23,228 - app.api.whatsapp - INFO - Message ID: wamid.def456
+2026-01-20 09:47:23,229 - app.api.whatsapp - INFO - Message timestamp: 1617754801
+2026-01-20 09:47:23,230 - app.api.whatsapp - INFO - Message type: text
+2026-01-20 09:47:23,231 - app.api.whatsapp - INFO - Phone number ID: 1234567890
+2026-01-20 09:47:23,231 - app.api.whatsapp - INFO - Display phone number: 1234567890
+2026-01-20 09:47:23,711 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777123456, Type: onboarding_retry, Message: Please send both your *name* and *area* in one message.
+Example: 'Vincent, Avondale'...
+2026-01-20 09:47:23,711 - app.utils.message_handler - WARNING - Failed to send WhatsApp message to 263777123456: WhatsApp API configuration missing
+2026-01-20 09:47:23,918 - app.api.whatsapp - INFO - Message processed successfully for 263777123456
+2026-01-20 09:47:41,924 - app.api.whatsapp - INFO - [2026-01-20T07:47:41.924922] WhatsApp webhook received
+2026-01-20 09:47:41,925 - app.api.whatsapp - INFO - Headers: {'user-agent': 'Mozilla/5.0 (Windows NT; Windows NT 10.0; en-ZW) WindowsPowerShell/5.1.26100.7462', 'content-type': 'application/json', 'host': 'localhost:8000', 'content-length': '2329', 'expect': '100-continue'}
+2026-01-20 09:47:41,926 - app.api.whatsapp - INFO - Raw payload: {
+  "object": "whatsapp_business_account",
+  "entry": [
+    {
+      "id": "12345678",
+      "changes": [
+        {
+          "field": "messages",
+          "value": {
+            "messages": [
+              {
+                "from": "263777123456",
+                "timestamp": "1617754802",
+                "type": "location",
+                "id": "wamid.ghi789",
+                "location": {
+                  "longitude": 31.053028,
+                  "name": "My Home",
+                  "address": "123 Main St, Harare",
+                  "latitude": -17.824858
+                }
+              }
+            ],
+            "messaging_product": "whatsapp",
+            "metadata": {
+              "display_phone_number": "1234567890",
+              "phone_number_id": "1234567890"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
+2026-01-20 09:47:41,927 - app.api.whatsapp - INFO - Parsed message object: <app.models.message.WhatsAppMessage object at 0x000001A57B5B6A50>
+2026-01-20 09:47:41,927 - app.api.whatsapp - INFO - From number: 263777123456
+2026-01-20 09:47:41,927 - app.api.whatsapp - INFO - Message text: ''
+2026-01-20 09:47:41,927 - app.api.whatsapp - INFO - Message length: 0 characters
+2026-01-20 09:47:41,927 - app.api.whatsapp - INFO - Message ID: wamid.ghi789
+2026-01-20 09:47:41,929 - app.api.whatsapp - INFO - Message timestamp: 1617754802
+2026-01-20 09:47:41,929 - app.api.whatsapp - INFO - Message type: location
+2026-01-20 09:47:41,929 - app.api.whatsapp - INFO - Phone number ID: 1234567890
+2026-01-20 09:47:41,930 - app.api.whatsapp - INFO - Display phone number: 1234567890
+2026-01-20 09:47:43,065 - app.utils.location_service - INFO - Reverse geocoded (-17.824858, 31.053028) to: Ahmed Ben Bella Avenue, Harare, Zimbabwe
+2026-01-20 09:47:43,066 - app.api.whatsapp - INFO - Reverse geocoded coordinates (-17.824858, 31.053028) to: Ahmed Ben Bella Avenue, Harare
+2026-01-20 09:47:43,066 - app.api.whatsapp - INFO - Normalized location text: Ahmed Ben Bella Avenue, Harare (-17.824858,31.053028)
+2026-01-20 09:47:43,577 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777123456, Type: privacy_policy, Message: Privacy Policy:
+
+- We store your name, location, and booking history
+- We share your info with servi...
+2026-01-20 09:47:43,579 - app.utils.message_handler - WARNING - Failed to send WhatsApp message to 263777123456: WhatsApp API configuration missing
+2026-01-20 09:47:43,780 - app.api.whatsapp - INFO - Message processed successfully for 263777123456
+2026-01-20 09:48:19,211 - app.api.whatsapp - INFO - [2026-01-20T07:48:19.211868] WhatsApp webhook received
+2026-01-20 09:48:19,213 - app.api.whatsapp - INFO - Headers: {'user-agent': 'Mozilla/5.0 (Windows NT; Windows NT 10.0; en-ZW) WindowsPowerShell/5.1.26100.7462', 'content-type': 'application/json', 'host': 'localhost:8000', 'content-length': '2490', 'expect': '100-continue'}
+2026-01-20 09:48:19,213 - app.api.whatsapp - INFO - Raw payload: {
+  "object": "whatsapp_business_account",
+  "entry": [
+    {
+      "id": "12345678",
+      "changes": [
+        {
+          "field": "messages",
+          "value": {
+            "messages": [
+              {
+                "timestamp": "1617754803",
+                "from": "263777123456",
+                "interactive": {
+                  "type": "button_reply",
+                  "button_reply": {
+                    "id": "1",
+                    "title": "Seagate Plumbers"
+                  }
+                },
+                "id": "wamid.jkl012",
+                "type": "interactive"
+              }
+            ],
+            "messaging_product": "whatsapp",
+            "metadata": {
+              "display_phone_number": "1234567890",
+              "phone_number_id": "1234567890"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
+2026-01-20 09:48:19,215 - app.api.whatsapp - INFO - Parsed message object: <app.models.message.WhatsAppMessage object at 0x000001A57B5B5C70>
+2026-01-20 09:48:19,215 - app.api.whatsapp - INFO - From number: 263777123456
+2026-01-20 09:48:19,215 - app.api.whatsapp - INFO - Message text: ''
+2026-01-20 09:48:19,215 - app.api.whatsapp - INFO - Message length: 0 characters
+2026-01-20 09:48:19,215 - app.api.whatsapp - INFO - Message ID: wamid.jkl012
+2026-01-20 09:48:19,216 - app.api.whatsapp - INFO - Message timestamp: 1617754803
+2026-01-20 09:48:19,216 - app.api.whatsapp - INFO - Message type: interactive
+2026-01-20 09:48:19,216 - app.api.whatsapp - INFO - Phone number ID: 1234567890
+2026-01-20 09:48:19,217 - app.api.whatsapp - INFO - Display phone number: 1234567890
+2026-01-20 09:48:19,418 - app.api.whatsapp - INFO - Non-text message received from 263777123456, skipping
+2026-01-20 09:49:15,723 - app.main - WARNING - Baileys sender not available at startup (tried http://localhost:3000)
