@@ -646,7 +646,7 @@ class MessageHandler:
 
         # Enter explicit matching phase UX
         msg = (
-            f"Request sent to {chosen_provider['name']} for {s_type.title()}.\n"
+            f"Request sent to {provider['name']} for {s_type.title()}.\n"
             f"Location: {location}\n"
             f"Date: {booking_time}\n"
             f"Please wait while I confirm availability."
