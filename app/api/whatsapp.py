@@ -279,8 +279,9 @@ async def receive_whatsapp_message(
             try:
                 entry = payload.get("entry", [])
                 msg_obj = (
-                    (entry[0].get("changes", [])[0].get("value", {}).get("messages", []) or [None]
-                )[0] or {}
+                    (entry[0].get("changes", [])[0].get("value", {}).get("messages", []) or [None])[0]
+                    or {}
+                )
                 inter = msg_obj.get("interactive") or {}
                 i_type = inter.get("type")
                 if i_type == "button":
