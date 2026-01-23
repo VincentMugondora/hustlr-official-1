@@ -274,7 +274,31 @@ async def receive_whatsapp_message(
 
     # Handle message with enhanced handler
     try:
-        if message.text:  # Only process text messages for now
+        msg_type_lower = (getattr(message, "type", "") or "").lower()
+        if msg_type_lower == "interactive" and not message.text:
+            try:
+                entry = payload.get("entry", [])
+                msg_obj = (
+                    (entry[0].get("changes", [])[0].get("value", {}).get("messages", []) or [None]
+                )[0] or {}
+                inter = msg_obj.get("interactive") or {}
+                i_type = inter.get("type")
+                if i_type == "button":
+                    btn = inter.get("button_reply") or inter.get("button") or {}
+                    message.text = (
+                        btn.get("title")
+                        or btn.get("text")
+                        or btn.get("id")
+                        or btn.get("payload")
+                        or ""
+                    )
+                elif i_type in ("list_reply", "list"):
+                    lr = inter.get("list_reply") or {}
+                    message.text = (lr.get("title") or lr.get("id") or "")
+            except Exception:
+                pass
+
+        if message.text or msg_type_lower in ("interactive",):
             await message_handler.handle_message(message)
             logger.info(f"Message processed successfully for {message.from_number}")
             if incoming_doc_id is not None:
@@ -286,7 +310,6 @@ async def receive_whatsapp_message(
             logger.info(f"Non-text message received from {message.from_number}, skipping")
     except Exception as e:
         logger.exception(f"Error handling message from {message.from_number}")
-        # Send error message to user
         try:
             await whatsapp_api.send_text_message(
                 message.from_number,

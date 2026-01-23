@@ -235,7 +235,12 @@ class MongoService:
 
     async def get_user_bookings(self, whatsapp_number: str) -> List[Dict[str, Any]]:
         db = get_database()
-        cursor = db.bookings.find({"user_whatsapp_number": whatsapp_number})
+        cursor = db.bookings.find({
+            "$or": [
+                {"user_whatsapp_number": whatsapp_number},
+                {"customer_whatsapp_number": whatsapp_number},
+            ]
+        })
         return [doc async for doc in cursor]
 
     async def update_booking_status(self, booking_id: str, status: str) -> bool:

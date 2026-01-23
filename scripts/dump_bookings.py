@@ -9,7 +9,10 @@ async def main(msisdn: str | None = None):
     db = get_database()
     query = {}
     if msisdn and msisdn.lower() != "all":
-        query = {"user_whatsapp_number": msisdn}
+        query = {"$or": [
+            {"user_whatsapp_number": msisdn},
+            {"customer_whatsapp_number": msisdn},
+        ]}
     cur = db.bookings.find(query).sort("created_at", -1).limit(50)
     items = [doc async for doc in cur]
     for d in items:
