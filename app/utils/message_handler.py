@@ -1324,6 +1324,14 @@ class MessageHandler:
         txt = (message_text or '').strip().lower()
         yes_vals = {'yes', 'y', 'sure', 'ok', 'okay', 'please', 'go ahead'}
         no_vals = {'no', 'n', 'change', 'edit'}
+        try:
+            providers = (session.get('data') or {}).get('providers') or []
+            if providers:
+                handled = await self._maybe_quick_provider_choice(user_number, message_text, session, user)
+                if handled:
+                    return
+        except Exception:
+            pass
         if txt in yes_vals:
             sd = (session.get('data') or {})
             svc = (sd.get('service_type') or '').strip().lower()
