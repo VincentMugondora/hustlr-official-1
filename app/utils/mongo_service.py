@@ -464,6 +464,9 @@ class MongoService:
         data.setdefault("timestamp", now)
         if "processed" not in data:
             data["processed"] = False
+        # Drop null/empty message_id so sparse unique index does not conflict
+        if not data.get("message_id"):
+            data.pop("message_id", None)
         result = await db.incoming_messages.insert_one(data)
         return result.inserted_id
 
