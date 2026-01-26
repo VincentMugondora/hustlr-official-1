@@ -1227,13 +1227,37 @@ class MessageHandler:
                     pass
                 session['state'] = ConversationState.BOOKING_LOCATION
                 return
-        loc = norm or raw.title()
-        session.setdefault('data', {})['location'] = loc
-        await self._log_and_send_response(user_number, f"Great 👍 {loc}.\n\nWhat day do you need the service?\n(e.g. tomorrow, Monday, 13 Jan)", "ask_booking_date")
+        loc_store = norm or raw.title()
+        session.setdefault('data', {})['location'] = loc_store
+        loc_disp = loc_store
+        try:
+            if norm and raw:
+                rlow = raw.strip().lower()
+                suburbs = getattr(loc_ex, 'HARARE_SUBURBS', {})
+                if rlow in suburbs and suburbs.get(rlow) == norm:
+                    loc_disp = f"{raw.strip().title()}, {norm}"
+        except Exception:
+            loc_disp = loc_store
+        await self._log_and_send_response(user_number, f"Great 👍 {loc_disp}.\n\nWhat day do you need the service?\n(e.g. tomorrow, Monday, 13 Jan)", "ask_booking_date")
         session['state'] = ConversationState.BOOKING_DATE
 
     async def handle_booking_date(self, user_number: str, message_text: str, session: Dict, user: Dict) -> None:
         date_text = (message_text or '').strip()
+        # If user provided both date and time (e.g., "tomorrow 12:00"), capture both now
+        dt = None
+        try:
+            dt = self._canonicalize_booking_time(date_text)
+        except Exception:
+            dt = None
+        if dt:
+            iso = dt.strftime('%Y-%m-%d %H:%M')
+            sd = session.setdefault('data', {})
+            sd['date'] = dt.strftime('%Y-%m-%d')
+            sd['booking_time'] = iso
+            await self._log_and_send_response(user_number, f"Perfect 👍 {iso}.\n\nDo you have a budget in mind?\n(You can say 'skip' if you’re not sure)", "ask_booking_budget")
+            session['state'] = ConversationState.BOOKING_BUDGET
+            return
+        # Otherwise proceed to ask for time separately
         session.setdefault('data', {})['date'] = date_text
         await self._log_and_send_response(user_number, f"Got it 👍 {date_text}.\n\nWhat time works best for you?\n(e.g. 9am, 14:00)", "ask_booking_time")
         session['state'] = ConversationState.BOOKING_TIME
@@ -2971,8 +2995,21 @@ class MessageHandler:
             'videographer': 'photography',
             'designer': 'designer',
             'graphic': 'designer',
-            'web': 'designer',
-            'developer': 'designer',
+            'design': 'designer',
+            # Software/engineering keywords
+            'software developer': 'developer',
+            'software': 'developer',
+            'developer': 'developer',
+            'programmer': 'developer',
+            'engineer': 'developer',
+            'web developer': 'developer',
+            'frontend': 'developer',
+            'backend': 'developer',
+            'mobile': 'developer',
+            'android': 'developer',
+            'ios': 'developer',
+            'flutter': 'developer',
+            'react': 'developer',
             'tailor': 'tailor',
             'dressmaker': 'tailor',
             'sewing': 'tailor',
