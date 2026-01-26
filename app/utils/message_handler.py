@@ -866,6 +866,13 @@ class MessageHandler:
             await self.handle_booking_user_name(user_number, message_text, session, user)
         elif current_state == ConversationState.BOOKING_CONFIRM:
             await self.handle_booking_confirm(user_number, message_text, session, user)
+        elif current_state == ConversationState.PROVIDER_SELECTION:
+            try:
+                handled = await self._maybe_quick_provider_choice(user_number, message_text, session, user)
+                if not handled:
+                    await self._log_and_send_response(user_number, "Please reply with the number of a provider from the list.", "provider_select_repeat")
+            except Exception:
+                await self._log_and_send_response(user_number, "Please reply with the number of a provider from the list.", "provider_select_repeat")
         elif current_state == ConversationState.CANCEL_EXISTING_BOOKING_CONFIRM:
             await self.handle_cancel_existing_booking_confirm(user_number, message_text, session, user or {})
         elif current_state == ConversationState.CANCEL_BOOKING_SELECT:
