@@ -48965,3 +48965,190 @@ Example: 'Vincent, Avondale'...
 2026-01-20 09:49:15,723 - app.main - WARNING - Baileys sender not available at startup (tried http://localhost:3000)
 2026-01-23 11:12:01,788 - app.main - WARNING - Baileys sender not available at startup (tried http://localhost:3000)
 2026-01-26 12:45:01,628 - app.main - WARNING - Baileys sender not available at startup (tried http://localhost:3000)
+2026-01-26 13:10:31,145 - app.api.whatsapp - INFO - [2026-01-26T11:10:31.145746] WhatsApp webhook received
+2026-01-26 13:10:31,147 - app.api.whatsapp - INFO - Headers: {'user-agent': 'Mozilla/5.0 (Windows NT; Windows NT 10.0; en-ZW) WindowsPowerShell/5.1.26100.7627', 'content-type': 'application/json', 'host': '127.0.0.1:8000', 'content-length': '1123', 'expect': '100-continue', 'connection': 'Keep-Alive'}
+2026-01-26 13:10:31,148 - app.api.whatsapp - INFO - Raw payload: {
+  "entry": [
+    {
+      "changes": [
+        {
+          "value": {
+            "messages": [
+              {
+                "from": "263777123456",
+                "type": "text",
+                "text": {
+                  "body": "hi"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
+2026-01-26 13:10:31,148 - app.api.whatsapp - INFO - Parsed message object: <app.models.message.WhatsAppMessage object at 0x0000017DDED37710>
+2026-01-26 13:10:31,150 - app.api.whatsapp - INFO - From number: 263777123456
+2026-01-26 13:10:31,150 - app.api.whatsapp - INFO - Message text: 'hi'
+2026-01-26 13:10:31,150 - app.api.whatsapp - INFO - Message length: 2 characters
+2026-01-26 13:10:31,151 - app.api.whatsapp - INFO - Message ID: N/A
+2026-01-26 13:10:31,151 - app.api.whatsapp - INFO - Message timestamp: N/A
+2026-01-26 13:10:31,151 - app.api.whatsapp - INFO - Message type: text
+2026-01-26 13:10:31,399 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777123456, Type: session_reset, Message: What service do you need? For example: plumber, electrician, cleaner....
+2026-01-26 13:10:31,400 - app.utils.message_handler - WARNING - Failed to send WhatsApp message to 263777123456: WhatsApp API configuration missing
+2026-01-26 13:10:31,515 - app.api.whatsapp - INFO - Message processed successfully for 263777123456
+2026-01-26 13:26:34,303 - app.api.whatsapp - INFO - [2026-01-26T11:26:34.303121] WhatsApp webhook received
+2026-01-26 13:26:34,305 - app.api.whatsapp - INFO - Headers: {'user-agent': 'Mozilla/5.0 (Windows NT; Windows NT 10.0; en-ZW) WindowsPowerShell/5.1.26100.7627', 'content-type': 'application/json', 'host': '127.0.0.1:8000', 'content-length': '1128', 'expect': '100-continue', 'connection': 'Keep-Alive'}
+2026-01-26 13:26:34,308 - app.api.whatsapp - INFO - Raw payload: {
+  "entry": [
+    {
+      "changes": [
+        {
+          "value": {
+            "messages": [
+              {
+                "from": "263777123456",
+                "type": "text",
+                "text": {
+                  "body": "plumber"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
+2026-01-26 13:26:34,311 - app.api.whatsapp - INFO - Parsed message object: <app.models.message.WhatsAppMessage object at 0x0000017DDED37710>
+2026-01-26 13:26:34,318 - app.api.whatsapp - INFO - From number: 263777123456
+2026-01-26 13:26:34,318 - app.api.whatsapp - INFO - Message text: 'plumber'
+2026-01-26 13:26:34,319 - app.api.whatsapp - INFO - Message length: 7 characters
+2026-01-26 13:26:34,319 - app.api.whatsapp - INFO - Message ID: N/A
+2026-01-26 13:26:34,319 - app.api.whatsapp - INFO - Message timestamp: N/A
+2026-01-26 13:26:34,319 - app.api.whatsapp - INFO - Message type: text
+2026-01-26 13:26:34,393 - app.api.whatsapp - WARNING - Failed to store incoming message for 263777123456: E11000 duplicate key error collection: hustlr-1.incoming_messages index: message_id_1 dup key: { message_id: null }, full error: {'index': 0, 'code': 11000, 'errmsg': 'E11000 duplicate key error collection: hustlr-1.incoming_messages index: message_id_1 dup key: { message_id: null }', 'keyPattern': {'message_id': 1}, 'keyValue': {'message_id': None}}
+2026-01-26 13:26:34,661 - app.utils.location_extractor - INFO - Available cities/towns: ['Bulawayo', 'Harare']
+2026-01-26 13:26:34,664 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777123456, Type: ask_booking_date, Message: Great  Harare.
+
+What day do you need the service?
+(e.g. tomorrow, Monday, 13 Jan)...
+2026-01-26 13:26:34,667 - app.utils.message_handler - WARNING - Failed to send WhatsApp message to 263777123456: WhatsApp API configuration missing
+2026-01-26 13:26:34,908 - app.api.whatsapp - INFO - Message processed successfully for 263777123456
+2026-01-26 13:30:24,900 - app.api.whatsapp - INFO - [2026-01-26T11:30:24.900005] WhatsApp webhook received
+2026-01-26 13:30:24,900 - app.api.whatsapp - INFO - Headers: {'user-agent': 'Mozilla/5.0 (Windows NT; Windows NT 10.0; en-ZW) WindowsPowerShell/5.1.26100.7627', 'content-type': 'application/json', 'host': '127.0.0.1:8000', 'content-length': '1122', 'expect': '100-continue', 'connection': 'Keep-Alive'}
+2026-01-26 13:30:24,901 - app.api.whatsapp - INFO - Raw payload: {
+  "entry": [
+    {
+      "changes": [
+        {
+          "value": {
+            "messages": [
+              {
+                "from": "263777123456",
+                "type": "text",
+                "text": {
+                  "body": "1"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
+2026-01-26 13:30:24,902 - app.api.whatsapp - INFO - Parsed message object: <app.models.message.WhatsAppMessage object at 0x0000017DDED5A1B0>
+2026-01-26 13:30:24,902 - app.api.whatsapp - INFO - From number: 263777123456
+2026-01-26 13:30:24,902 - app.api.whatsapp - INFO - Message text: '1'
+2026-01-26 13:30:24,903 - app.api.whatsapp - INFO - Message length: 1 characters
+2026-01-26 13:30:24,903 - app.api.whatsapp - INFO - Message ID: N/A
+2026-01-26 13:30:24,903 - app.api.whatsapp - INFO - Message timestamp: N/A
+2026-01-26 13:30:24,904 - app.api.whatsapp - INFO - Message type: text
+2026-01-26 13:30:24,960 - app.api.whatsapp - WARNING - Failed to store incoming message for 263777123456: E11000 duplicate key error collection: hustlr-1.incoming_messages index: message_id_1 dup key: { message_id: null }, full error: {'index': 0, 'code': 11000, 'errmsg': 'E11000 duplicate key error collection: hustlr-1.incoming_messages index: message_id_1 dup key: { message_id: null }', 'keyPattern': {'message_id': 1}, 'keyValue': {'message_id': None}}
+2026-01-26 13:30:25,146 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777123456, Type: ask_booking_time, Message: Got it  1.
+
+What time works best for you?
+(e.g. 9am, 14:00)...
+2026-01-26 13:30:25,153 - app.utils.message_handler - WARNING - Failed to send WhatsApp message to 263777123456: WhatsApp API configuration missing
+2026-01-26 13:30:25,281 - app.api.whatsapp - INFO - Message processed successfully for 263777123456
+2026-01-26 13:32:49,390 - app.api.whatsapp - INFO - [2026-01-26T11:32:49.390411] WhatsApp webhook received
+2026-01-26 13:32:49,403 - app.api.whatsapp - INFO - Headers: {'user-agent': 'Mozilla/5.0 (Windows NT; Windows NT 10.0; en-ZW) WindowsPowerShell/5.1.26100.7627', 'content-type': 'application/json', 'host': '127.0.0.1:8000', 'content-length': '1134', 'expect': '100-continue', 'connection': 'Keep-Alive'}
+2026-01-26 13:32:49,405 - app.api.whatsapp - INFO - Raw payload: {
+  "entry": [
+    {
+      "changes": [
+        {
+          "value": {
+            "messages": [
+              {
+                "from": "263777123456",
+                "type": "text",
+                "text": {
+                  "body": "tomorrow 10am"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
+2026-01-26 13:32:49,419 - app.api.whatsapp - INFO - Parsed message object: <app.models.message.WhatsAppMessage object at 0x0000017DDED37710>
+2026-01-26 13:32:49,421 - app.api.whatsapp - INFO - From number: 263777123456
+2026-01-26 13:32:49,484 - app.api.whatsapp - INFO - Message text: 'tomorrow 10am'
+2026-01-26 13:32:49,485 - app.api.whatsapp - INFO - Message length: 13 characters
+2026-01-26 13:32:49,490 - app.api.whatsapp - INFO - Message ID: N/A
+2026-01-26 13:32:49,506 - app.api.whatsapp - INFO - Message timestamp: N/A
+2026-01-26 13:32:49,507 - app.api.whatsapp - INFO - Message type: text
+2026-01-26 13:32:49,627 - app.api.whatsapp - WARNING - Failed to store incoming message for 263777123456: E11000 duplicate key error collection: hustlr-1.incoming_messages index: message_id_1 dup key: { message_id: null }, full error: {'index': 0, 'code': 11000, 'errmsg': 'E11000 duplicate key error collection: hustlr-1.incoming_messages index: message_id_1 dup key: { message_id: null }', 'keyPattern': {'message_id': 1}, 'keyValue': {'message_id': None}}
+2026-01-26 13:32:50,652 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777123456, Type: ask_booking_budget, Message: Perfect  2026-01-01 10:00.
+
+Do you have a budget in mind?
+(You can say 'skip' if youre not sure)...
+2026-01-26 13:32:50,653 - app.utils.message_handler - WARNING - Failed to send WhatsApp message to 263777123456: WhatsApp API configuration missing
+2026-01-26 13:32:51,108 - app.api.whatsapp - INFO - Message processed successfully for 263777123456
+2026-01-26 13:33:37,726 - app.api.whatsapp - INFO - [2026-01-26T11:33:37.726673] WhatsApp webhook received
+2026-01-26 13:33:37,734 - app.api.whatsapp - INFO - Headers: {'user-agent': 'Mozilla/5.0 (Windows NT; Windows NT 10.0; en-ZW) WindowsPowerShell/5.1.26100.7627', 'content-type': 'application/json', 'host': '127.0.0.1:8000', 'content-length': '1124', 'expect': '100-continue', 'connection': 'Keep-Alive'}
+2026-01-26 13:33:37,735 - app.api.whatsapp - INFO - Raw payload: {
+  "entry": [
+    {
+      "changes": [
+        {
+          "value": {
+            "messages": [
+              {
+                "from": "263777123456",
+                "type": "text",
+                "text": {
+                  "body": "yes"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
+2026-01-26 13:33:37,736 - app.api.whatsapp - INFO - Parsed message object: <app.models.message.WhatsAppMessage object at 0x0000017DDED591F0>
+2026-01-26 13:33:37,738 - app.api.whatsapp - INFO - From number: 263777123456
+2026-01-26 13:33:37,739 - app.api.whatsapp - INFO - Message text: 'yes'
+2026-01-26 13:33:37,740 - app.api.whatsapp - INFO - Message length: 3 characters
+2026-01-26 13:33:37,741 - app.api.whatsapp - INFO - Message ID: N/A
+2026-01-26 13:33:37,741 - app.api.whatsapp - INFO - Message timestamp: N/A
+2026-01-26 13:33:37,742 - app.api.whatsapp - INFO - Message type: text
+2026-01-26 13:33:37,807 - app.api.whatsapp - WARNING - Failed to store incoming message for 263777123456: E11000 duplicate key error collection: hustlr-1.incoming_messages index: message_id_1 dup key: { message_id: null }, full error: {'index': 0, 'code': 11000, 'errmsg': 'E11000 duplicate key error collection: hustlr-1.incoming_messages index: message_id_1 dup key: { message_id: null }', 'keyPattern': {'message_id': 1}, 'keyValue': {'message_id': None}}
+2026-01-26 13:33:38,020 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777123456, Type: budget_noted, Message: Noted  yes....
+2026-01-26 13:33:38,020 - app.utils.message_handler - WARNING - Failed to send WhatsApp message to 263777123456: WhatsApp API configuration missing
+2026-01-26 13:33:38,175 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777123456, Type: booking_summary, Message: Heres what I have:
+
+ Service: Plumber
+ Location: Harare
+ Date: 2026-01-01
+ Time: 10:00
+ Budget...
+2026-01-26 13:33:38,186 - app.utils.message_handler - WARNING - Failed to send WhatsApp message to 263777123456: WhatsApp API configuration missing
+2026-01-26 13:33:38,369 - app.api.whatsapp - INFO - Message processed successfully for 263777123456

@@ -1,6 +1,10 @@
 import sys
 import json
 import asyncio
+import os
+
+# Allow running this script directly by ensuring project root is on sys.path
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from app.db import connect_to_mongo, get_database
 
 
