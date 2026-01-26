@@ -48964,3 +48964,4 @@ Example: 'Vincent, Avondale'...
 2026-01-20 09:48:19,418 - app.api.whatsapp - INFO - Non-text message received from 263777123456, skipping
 2026-01-20 09:49:15,723 - app.main - WARNING - Baileys sender not available at startup (tried http://localhost:3000)
 2026-01-23 11:12:01,788 - app.main - WARNING - Baileys sender not available at startup (tried http://localhost:3000)
+2026-01-26 12:45:01,628 - app.main - WARNING - Baileys sender not available at startup (tried http://localhost:3000)
