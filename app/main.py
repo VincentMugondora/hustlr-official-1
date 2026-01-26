@@ -8,6 +8,7 @@ warnings.filterwarnings(
 )
 
 from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
 from app.api import whatsapp, service_providers, bookings, users
 from app.db import connect_to_mongo, close_mongo_connection
 from app.utils.mongo_service import MongoService
@@ -76,6 +77,14 @@ app.include_router(users.router, prefix="/api/users", tags=["Users"])
 @app.get("/")
 def root():
     return {"message": "Hustlr WhatsApp Bot is running"}
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
+@app.get("/service-providers")
+def providers_alias():
+    return RedirectResponse(url="/api/providers/", status_code=307)
 
 @app.post("/admin/notify-admins")
 async def notify_admins():
