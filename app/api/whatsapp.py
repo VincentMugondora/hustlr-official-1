@@ -223,7 +223,7 @@ async def receive_whatsapp_message(
             media_doc = {
                 "whatsapp_number": message.from_number,
                 "media_id": media_id,
-                "content_type": content_type,
+                "content_type": co/.ntent_type,
                 "size": size_bytes,
                 "caption": getattr(message, "media_caption", None),
                 "url": url,
