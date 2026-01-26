@@ -50424,3 +50424,4 @@ Location: Harare
 Date: 2026-01-0...
 2026-01-26 15:12:09,041 - app.utils.message_handler - WARNING - Failed to send WhatsApp message to 263777123456: WhatsApp API configuration missing
 2026-01-26 15:12:09,173 - app.api.whatsapp - INFO - Message processed successfully for 263777123456
+2026-01-26 15:14:22,042 - httpx - INFO - HTTP Request: GET http://localhost:3000/health "HTTP/1.1 200 OK"
