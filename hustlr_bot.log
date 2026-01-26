@@ -50093,3 +50093,257 @@ What time works best for you?
 2026-01-26 14:24:04,946 - app.api.whatsapp - INFO - Message processed successfully for 263777123456
 2026-01-26 14:35:20,365 - httpx - INFO - HTTP Request: GET http://localhost:3000/health "HTTP/1.1 200 OK"
 2026-01-26 14:36:10,071 - httpx - INFO - HTTP Request: GET http://localhost:3000/health "HTTP/1.1 200 OK"
+2026-01-26 14:37:38,157 - httpx - INFO - HTTP Request: GET http://localhost:3000/health "HTTP/1.1 200 OK"
+2026-01-26 14:46:01,783 - app.api.whatsapp - INFO - [2026-01-26T12:46:01.783232] WhatsApp webhook received
+2026-01-26 14:46:01,784 - app.api.whatsapp - INFO - Headers: {'user-agent': 'Mozilla/5.0 (Windows NT; Windows NT 10.0; en-ZW) WindowsPowerShell/5.1.26100.7627', 'content-type': 'application/json', 'host': '127.0.0.1:8000', 'content-length': '1123', 'expect': '100-continue', 'connection': 'Keep-Alive'}
+2026-01-26 14:46:01,785 - app.api.whatsapp - INFO - Raw payload: {
+  "entry": [
+    {
+      "changes": [
+        {
+          "value": {
+            "messages": [
+              {
+                "from": "263777123456",
+                "type": "text",
+                "text": {
+                  "body": "hi"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
+2026-01-26 14:46:01,786 - app.api.whatsapp - INFO - Parsed message object: <app.models.message.WhatsAppMessage object at 0x000001C813FD3620>
+2026-01-26 14:46:01,786 - app.api.whatsapp - INFO - From number: 263777123456
+2026-01-26 14:46:01,787 - app.api.whatsapp - INFO - Message text: 'hi'
+2026-01-26 14:46:01,788 - app.api.whatsapp - INFO - Message length: 2 characters
+2026-01-26 14:46:01,788 - app.api.whatsapp - INFO - Message ID: N/A
+2026-01-26 14:46:01,789 - app.api.whatsapp - INFO - Message timestamp: N/A
+2026-01-26 14:46:01,790 - app.api.whatsapp - INFO - Message type: text
+2026-01-26 14:46:01,976 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777123456, Type: session_reset, Message: What service do you need? For example: plumber, electrician, cleaner....
+2026-01-26 14:46:01,979 - app.utils.message_handler - WARNING - Failed to send WhatsApp message to 263777123456: WhatsApp API configuration missing
+2026-01-26 14:46:02,076 - app.api.whatsapp - INFO - Message processed successfully for 263777123456
+2026-01-26 14:46:16,463 - app.api.whatsapp - INFO - [2026-01-26T12:46:16.463017] WhatsApp webhook received
+2026-01-26 14:46:16,464 - app.api.whatsapp - INFO - Headers: {'user-agent': 'Mozilla/5.0 (Windows NT; Windows NT 10.0; en-ZW) WindowsPowerShell/5.1.26100.7627', 'content-type': 'application/json', 'host': '127.0.0.1:8000', 'content-length': '1139', 'expect': '100-continue', 'connection': 'Keep-Alive'}
+2026-01-26 14:46:16,464 - app.api.whatsapp - INFO - Raw payload: {
+  "entry": [
+    {
+      "changes": [
+        {
+          "value": {
+            "messages": [
+              {
+                "from": "263777123456",
+                "type": "text",
+                "text": {
+                  "body": "software developer"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
+2026-01-26 14:46:16,465 - app.api.whatsapp - INFO - Parsed message object: <app.models.message.WhatsAppMessage object at 0x000001C81423B860>
+2026-01-26 14:46:16,465 - app.api.whatsapp - INFO - From number: 263777123456
+2026-01-26 14:46:16,466 - app.api.whatsapp - INFO - Message text: 'software developer'
+2026-01-26 14:46:16,466 - app.api.whatsapp - INFO - Message length: 18 characters
+2026-01-26 14:46:16,467 - app.api.whatsapp - INFO - Message ID: N/A
+2026-01-26 14:46:16,467 - app.api.whatsapp - INFO - Message timestamp: N/A
+2026-01-26 14:46:16,467 - app.api.whatsapp - INFO - Message type: text
+2026-01-26 14:46:16,693 - app.utils.location_extractor - INFO - Available cities/towns: ['Bulawayo', 'Harare']
+2026-01-26 14:46:16,694 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777123456, Type: ask_booking_date, Message: Great  Harare.
+
+What day do you need the service?
+(e.g. tomorrow, Monday, 13 Jan)...
+2026-01-26 14:46:16,694 - app.utils.message_handler - WARNING - Failed to send WhatsApp message to 263777123456: WhatsApp API configuration missing
+2026-01-26 14:46:16,793 - app.api.whatsapp - INFO - Message processed successfully for 263777123456
+2026-01-26 14:51:46,769 - app.api.whatsapp - INFO - [2026-01-26T12:51:46.769124] WhatsApp webhook received
+2026-01-26 14:51:46,772 - app.api.whatsapp - INFO - Headers: {'user-agent': 'Mozilla/5.0 (Windows NT; Windows NT 10.0; en-ZW) WindowsPowerShell/5.1.26100.7627', 'content-type': 'application/json', 'host': '127.0.0.1:8000', 'content-length': '1129', 'expect': '100-continue', 'connection': 'Keep-Alive'}
+2026-01-26 14:51:46,794 - app.api.whatsapp - INFO - Raw payload: {
+  "entry": [
+    {
+      "changes": [
+        {
+          "value": {
+            "messages": [
+              {
+                "from": "263777123456",
+                "type": "text",
+                "text": {
+                  "body": "mufakose"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
+2026-01-26 14:51:46,804 - app.api.whatsapp - INFO - Parsed message object: <app.models.message.WhatsAppMessage object at 0x000001C813EE84A0>
+2026-01-26 14:51:46,810 - app.api.whatsapp - INFO - From number: 263777123456
+2026-01-26 14:51:46,821 - app.api.whatsapp - INFO - Message text: 'mufakose'
+2026-01-26 14:51:46,832 - app.api.whatsapp - INFO - Message length: 8 characters
+2026-01-26 14:51:46,840 - app.api.whatsapp - INFO - Message ID: N/A
+2026-01-26 14:51:46,858 - app.api.whatsapp - INFO - Message timestamp: N/A
+2026-01-26 14:51:46,870 - app.api.whatsapp - INFO - Message type: text
+2026-01-26 14:51:47,103 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777123456, Type: ask_booking_time, Message: Got it  mufakose.
+
+What time works best for you?
+(e.g. 9am, 14:00)...
+2026-01-26 14:51:47,108 - app.utils.message_handler - WARNING - Failed to send WhatsApp message to 263777123456: WhatsApp API configuration missing
+2026-01-26 14:51:47,206 - app.api.whatsapp - INFO - Message processed successfully for 263777123456
+2026-01-26 14:52:38,870 - app.api.whatsapp - INFO - [2026-01-26T12:52:38.870958] WhatsApp webhook received
+2026-01-26 14:52:38,870 - app.api.whatsapp - INFO - Headers: {'user-agent': 'Mozilla/5.0 (Windows NT; Windows NT 10.0; en-ZW) WindowsPowerShell/5.1.26100.7627', 'content-type': 'application/json', 'host': '127.0.0.1:8000', 'content-length': '1135', 'expect': '100-continue', 'connection': 'Keep-Alive'}
+2026-01-26 14:52:38,872 - app.api.whatsapp - INFO - Raw payload: {
+  "entry": [
+    {
+      "changes": [
+        {
+          "value": {
+            "messages": [
+              {
+                "from": "263777123456",
+                "type": "text",
+                "text": {
+                  "body": "tomorrow 12:00"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
+2026-01-26 14:52:38,875 - app.api.whatsapp - INFO - Parsed message object: <app.models.message.WhatsAppMessage object at 0x000001C814239A90>
+2026-01-26 14:52:38,876 - app.api.whatsapp - INFO - From number: 263777123456
+2026-01-26 14:52:38,876 - app.api.whatsapp - INFO - Message text: 'tomorrow 12:00'
+2026-01-26 14:52:38,878 - app.api.whatsapp - INFO - Message length: 14 characters
+2026-01-26 14:52:38,878 - app.api.whatsapp - INFO - Message ID: N/A
+2026-01-26 14:52:38,879 - app.api.whatsapp - INFO - Message timestamp: N/A
+2026-01-26 14:52:38,886 - app.api.whatsapp - INFO - Message type: text
+2026-01-26 14:52:39,105 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777123456, Type: ask_booking_budget, Message: Perfect  2026-01-27 12:00.
+
+Do you have a budget in mind?
+(You can say 'skip' if youre not sure)...
+2026-01-26 14:52:39,106 - app.utils.message_handler - WARNING - Failed to send WhatsApp message to 263777123456: WhatsApp API configuration missing
+2026-01-26 14:52:39,205 - app.api.whatsapp - INFO - Message processed successfully for 263777123456
+2026-01-26 14:54:04,824 - app.api.whatsapp - INFO - [2026-01-26T12:54:04.824762] WhatsApp webhook received
+2026-01-26 14:54:04,824 - app.api.whatsapp - INFO - Headers: {'user-agent': 'Mozilla/5.0 (Windows NT; Windows NT 10.0; en-ZW) WindowsPowerShell/5.1.26100.7627', 'content-type': 'application/json', 'host': '127.0.0.1:8000', 'content-length': '1125', 'expect': '100-continue', 'connection': 'Keep-Alive'}
+2026-01-26 14:54:04,827 - app.api.whatsapp - INFO - Raw payload: {
+  "entry": [
+    {
+      "changes": [
+        {
+          "value": {
+            "messages": [
+              {
+                "from": "263777123456",
+                "type": "text",
+                "text": {
+                  "body": "skip"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
+2026-01-26 14:54:04,828 - app.api.whatsapp - INFO - Parsed message object: <app.models.message.WhatsAppMessage object at 0x000001C81414BA40>
+2026-01-26 14:54:04,828 - app.api.whatsapp - INFO - From number: 263777123456
+2026-01-26 14:54:04,829 - app.api.whatsapp - INFO - Message text: 'skip'
+2026-01-26 14:54:04,830 - app.api.whatsapp - INFO - Message length: 4 characters
+2026-01-26 14:54:04,830 - app.api.whatsapp - INFO - Message ID: N/A
+2026-01-26 14:54:04,831 - app.api.whatsapp - INFO - Message timestamp: N/A
+2026-01-26 14:54:04,835 - app.api.whatsapp - INFO - Message type: text
+2026-01-26 14:54:06,361 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777123456, Type: budget_skipped, Message: No problem ...
+2026-01-26 14:54:06,362 - app.utils.message_handler - WARNING - Failed to send WhatsApp message to 263777123456: WhatsApp API configuration missing
+2026-01-26 14:54:06,451 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777123456, Type: booking_summary, Message: Heres what I have:
+
+ Service: Developer
+ Location: Harare
+ Date: 2026-01-27
+ Time: 12:00
+ Budg...
+2026-01-26 14:54:06,452 - app.utils.message_handler - WARNING - Failed to send WhatsApp message to 263777123456: WhatsApp API configuration missing
+2026-01-26 14:54:06,555 - app.api.whatsapp - INFO - Message processed successfully for 263777123456
+2026-01-26 14:54:43,864 - app.api.whatsapp - INFO - [2026-01-26T12:54:43.864042] WhatsApp webhook received
+2026-01-26 14:54:43,865 - app.api.whatsapp - INFO - Headers: {'user-agent': 'Mozilla/5.0 (Windows NT; Windows NT 10.0; en-ZW) WindowsPowerShell/5.1.26100.7627', 'content-type': 'application/json', 'host': '127.0.0.1:8000', 'content-length': '1124', 'expect': '100-continue', 'connection': 'Keep-Alive'}
+2026-01-26 14:54:43,868 - app.api.whatsapp - INFO - Raw payload: {
+  "entry": [
+    {
+      "changes": [
+        {
+          "value": {
+            "messages": [
+              {
+                "from": "263777123456",
+                "type": "text",
+                "text": {
+                  "body": "yes"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
+2026-01-26 14:54:43,869 - app.api.whatsapp - INFO - Parsed message object: <app.models.message.WhatsAppMessage object at 0x000001C81426CB60>
+2026-01-26 14:54:43,871 - app.api.whatsapp - INFO - From number: 263777123456
+2026-01-26 14:54:43,871 - app.api.whatsapp - INFO - Message text: 'yes'
+2026-01-26 14:54:43,872 - app.api.whatsapp - INFO - Message length: 3 characters
+2026-01-26 14:54:43,872 - app.api.whatsapp - INFO - Message ID: N/A
+2026-01-26 14:54:43,872 - app.api.whatsapp - INFO - Message timestamp: N/A
+2026-01-26 14:54:43,873 - app.api.whatsapp - INFO - Message type: text
+2026-01-26 14:54:44,602 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777123456, Type: matching_start, Message: Great! Let me find the best provider for you ...
+2026-01-26 14:54:44,603 - app.utils.message_handler - WARNING - Failed to send WhatsApp message to 263777123456: WhatsApp API configuration missing
+2026-01-26 14:54:44,707 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777123456, Type: interactive_buttons, Header: Available developers in Harare, Body: Sorry you're going through this. I can connect you...
+2026-01-26 14:54:44,708 - app.utils.message_handler - ERROR - Error while listing providers: WhatsApp API configuration missing
+2026-01-26 14:54:44,708 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777123456, Type: provider_list_error, Message: Sorry, I couldn't find providers right now. Please try again....
+2026-01-26 14:54:44,708 - app.utils.message_handler - WARNING - Failed to send WhatsApp message to 263777123456: WhatsApp API configuration missing
+2026-01-26 14:54:44,810 - app.api.whatsapp - INFO - Message processed successfully for 263777123456
+2026-01-26 14:55:31,736 - app.api.whatsapp - INFO - [2026-01-26T12:55:31.736396] WhatsApp webhook received
+2026-01-26 14:55:31,738 - app.api.whatsapp - INFO - Headers: {'user-agent': 'Mozilla/5.0 (Windows NT; Windows NT 10.0; en-ZW) WindowsPowerShell/5.1.26100.7627', 'content-type': 'application/json', 'host': '127.0.0.1:8000', 'content-length': '1122', 'expect': '100-continue', 'connection': 'Keep-Alive'}
+2026-01-26 14:55:31,742 - app.api.whatsapp - INFO - Raw payload: {
+  "entry": [
+    {
+      "changes": [
+        {
+          "value": {
+            "messages": [
+              {
+                "from": "263777123456",
+                "type": "text",
+                "text": {
+                  "body": "1"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
+2026-01-26 14:55:31,745 - app.api.whatsapp - INFO - Parsed message object: <app.models.message.WhatsAppMessage object at 0x000001C81426D640>
+2026-01-26 14:55:31,746 - app.api.whatsapp - INFO - From number: 263777123456
+2026-01-26 14:55:31,752 - app.api.whatsapp - INFO - Message text: '1'
+2026-01-26 14:55:31,756 - app.api.whatsapp - INFO - Message length: 1 characters
+2026-01-26 14:55:31,757 - app.api.whatsapp - INFO - Message ID: N/A
+2026-01-26 14:55:31,758 - app.api.whatsapp - INFO - Message timestamp: N/A
+2026-01-26 14:55:31,760 - app.api.whatsapp - INFO - Message type: text
+2026-01-26 14:55:32,524 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777123456, Type: booking_confirm_repeat, Message: Please reply Yes to proceed, or say what to change: location, date, time, or budget....
+2026-01-26 14:55:32,524 - app.utils.message_handler - WARNING - Failed to send WhatsApp message to 263777123456: WhatsApp API configuration missing
+2026-01-26 14:55:32,894 - app.api.whatsapp - INFO - Message processed successfully for 263777123456
