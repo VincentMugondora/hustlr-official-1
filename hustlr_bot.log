@@ -50347,3 +50347,4 @@ Do you have a budget in mind?
 2026-01-26 14:55:32,524 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777123456, Type: booking_confirm_repeat, Message: Please reply Yes to proceed, or say what to change: location, date, time, or budget....
 2026-01-26 14:55:32,524 - app.utils.message_handler - WARNING - Failed to send WhatsApp message to 263777123456: WhatsApp API configuration missing
 2026-01-26 14:55:32,894 - app.api.whatsapp - INFO - Message processed successfully for 263777123456
+2026-01-26 15:01:30,515 - httpx - INFO - HTTP Request: GET http://localhost:3000/health "HTTP/1.1 200 OK"
