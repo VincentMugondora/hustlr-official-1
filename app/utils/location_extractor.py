@@ -47,7 +47,9 @@ class LocationExtractor:
     # back to the user.
     HARARE_SUBURBS = {
         'avondale': 'Harare',
+        'avondale west': 'Harare',
         'borrowdale': 'Harare',
+        'borrowdale brook': 'Harare',
         'belvedere': 'Harare',
         'greendale': 'Harare',
         'graniteside': 'Harare',
@@ -56,7 +58,13 @@ class LocationExtractor:
         'vainona': 'Harare',
         'milton park': 'Harare',
         'mufakose': 'Harare',
+        'budiriro': 'Harare',
+        'highfield': 'Harare',
         'emerald hill': 'Harare',
+        'marlborough': 'Harare',
+        'eastlea': 'Harare',
+        'mabelreign': 'Harare',
+        'glen lorne': 'Harare',
         'highlands': 'Harare',
         'downtown': 'Harare',
         'city centre': 'Harare',

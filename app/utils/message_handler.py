@@ -7,6 +7,7 @@ import logging
 import json
 from app.models.message import WhatsAppMessage
 from app.utils.location_extractor import get_location_extractor
+from app.utils.fuzzy_match import find_best_service_match, find_best_location_match
 from config import settings
 
 logger = logging.getLogger(__name__)
@@ -468,7 +469,7 @@ class MessageHandler:
 
     def _canonicalize_booking_time(self, time_str: str) -> Optional[datetime]:
         """Parse a human-readable time string into a canonical datetime object."""
-        return self._parse_relative_time(time_str)
+        return self._parse_relative_time(self._pre_normalize_text(time_str))
 
     def _format_booking_time_for_display(self, dt_text: str) -> str:
         s = (dt_text or '').strip()
@@ -706,6 +707,35 @@ class MessageHandler:
             return long_text  # Always verbose for LLM mode
         return short_text if self._is_concise() else long_text
 
+    def _pre_normalize_text(self, text: str) -> str:
+        s = (text or "").strip()
+        # Strip surrounding quotes
+        if s.startswith(("'", '"')) and s.endswith(("'", '"')) and len(s) >= 2:
+            s = s[1:-1].strip()
+        # Normalize common Zimbabwean time patterns like 0800hrs/08:00hrs -> 08:00
+        t = s
+        try:
+            # 1) HHMMhrs -> HH:MM
+            def repl_compact(m):
+                hhmm = m.group(1)
+                if len(hhmm) == 3:
+                    hh = hhmm[0]
+                    mm = hhmm[1:]
+                else:
+                    hh = hhmm[:-2]
+                    mm = hhmm[-2:]
+                hh = hh.zfill(2)
+                return f"{hh}:{mm}"
+
+            t = re.sub(r"\b(\d{3,4})\s*hrs\b", repl_compact, t, flags=re.I)
+            # 2) HH:MMhrs -> HH:MM
+            t = re.sub(r"\b(\d{1,2}):(\d{2})\s*hrs\b", r"\1:\2", t, flags=re.I)
+        except Exception:
+            t = s
+        # Collapse whitespace and lowercase for matching
+        t = re.sub(r"\s+", " ", t).strip().lower()
+        return t
+
     def _build_friendly_provider_body(self, service_type: str, location: str, providers_count: int, session: Dict) -> str:
         if self._is_concise():
             return f"Found {providers_count} {service_type}s in {location}. Pick one:"
@@ -726,7 +756,7 @@ class MessageHandler:
     async def handle_message(self, message: WhatsAppMessage) -> None:
         """Main message handler - routes to appropriate handlers"""
         user_number = message.from_number
-        message_text = message.text.strip().lower()
+        message_text = self._pre_normalize_text(message.text)
         
         # Try to load session from database first, then fall back to memory
         db_session = await self.db.get_session(user_number)
@@ -1146,11 +1176,45 @@ class MessageHandler:
                     available_locations = []
 
                 try:
+                    # 1) Try to detect location from the current message text
+                    msg_loc_norm = loc_ex.normalize_user_location(text)
+                except Exception:
+                    msg_loc_norm = None
+
+                try:
                     user_loc_raw = (user or {}).get('location') or ''
                     user_loc_norm = loc_ex.normalize_user_location(user_loc_raw) if user_loc_raw else None
                 except Exception:
                     user_loc_norm = None
 
+                # 2) Prefer location indicated in the current message when available
+                if msg_loc_norm and msg_loc_norm in (available_locations or []):
+                    session.setdefault('data', {})['location'] = msg_loc_norm
+                    await self._log_and_send_response(
+                        user_number,
+                        f"Great 👍 {msg_loc_norm}.\n\nWhat day do you need the service?\n(e.g. tomorrow, Monday, 13 Jan)",
+                        "ask_booking_date",
+                    )
+                    session['state'] = ConversationState.BOOKING_DATE
+                    return
+
+                # 3) Fuzzy match location from message text against DB-backed options
+                if (not msg_loc_norm) and available_locations:
+                    try:
+                        fm_loc = find_best_location_match(text, available_locations)
+                    except Exception:
+                        fm_loc = None
+                    if fm_loc:
+                        session.setdefault('data', {})['location'] = fm_loc
+                        await self._log_and_send_response(
+                            user_number,
+                            f"Great 👍 {fm_loc}.\n\nWhat day do you need the service?\n(e.g. tomorrow, Monday, 13 Jan)",
+                            "ask_booking_date",
+                        )
+                        session['state'] = ConversationState.BOOKING_DATE
+                        return
+
+                # 4) Otherwise fall back to user's saved location when suitable
                 if user_loc_norm and user_loc_norm in (available_locations or []):
                     session.setdefault('data', {})['location'] = user_loc_norm
                     await self._log_and_send_response(
@@ -1190,10 +1254,26 @@ class MessageHandler:
         raw = (message_text or '').strip()
         loc_ex = get_location_extractor()
         norm = None
+        # Build available locations for the selected service to enable fuzzy matching
+        available_locations: List[str] = []
+        try:
+            svc = (session.get('data') or {}).get('service_type') or ''
+            providers_for_service = await self.db.get_providers_by_service(svc) if svc else []
+            available_locations = loc_ex.get_available_locations_for_service(providers_for_service or [])
+        except Exception:
+            available_locations = []
         try:
             norm = loc_ex.normalize_user_location(raw)
         except Exception:
             norm = None
+        # Fuzzy match against available DB-backed locations when direct normalization fails
+        if not norm and available_locations:
+            try:
+                fm = find_best_location_match(raw, available_locations)
+                if fm:
+                    norm = fm
+            except Exception:
+                pass
         # Map numeric or id selections to stored options when present
         try:
             sel = re.fullmatch(r"\s*(?:loc_)?(\d{1,2})\s*", raw, re.I)
@@ -2416,6 +2496,7 @@ class MessageHandler:
             norm_location = location_extractor.normalize_user_location(raw_location) if raw_location else None
 
             providers: List[Dict[str, Any]] = []
+            used_broad_fallback = False
             if service_type:
                 if norm_location:
                     providers = await self.db.get_providers_by_service(service_type, norm_location)
@@ -2428,6 +2509,16 @@ class MessageHandler:
                     providers = location_extractor.filter_providers_by_location(all_for_service, norm_location)
                 else:
                     providers = all_for_service
+
+            # Final fallback: if still none and we had a location constraint, ignore location entirely
+            if not providers and service_type:
+                try:
+                    # Only mark as broad when we had a location that yielded no results
+                    if norm_location or (raw_location and raw_location.strip()):
+                        providers = await self.db.get_providers_by_service(service_type)
+                        used_broad_fallback = bool(providers)
+                except Exception:
+                    pass
 
             if not providers:
                 header_loc = (norm_location or (user or {}).get("location") or "your area").strip()
@@ -2454,7 +2545,62 @@ class MessageHandler:
 
             # Rank providers (non-destructive scoring; safe if fields missing)
             try:
-                providers = self._rank_providers(providers, session)
+                # Optional LLM-based ranking via Bedrock when available
+                ranked_by_llm = []
+                try:
+                    if hasattr(self.lambda_service, 'rank_providers'):
+                        # Compose a compact request summary for semantic ranking
+                        sd = session.get('data') or {}
+                        issue = (sd.get('issue') or sd.get('problem_description') or '').strip()
+                        time_hint = (sd.get('booking_time') or sd.get('date') or '').strip()
+                        req_summary_parts = [
+                            f"service={service_type or ''}",
+                            f"location={(norm_location or raw_location or (user or {}).get('location') or '').strip()}",
+                        ]
+                        if issue:
+                            req_summary_parts.append(f"issue={issue}")
+                        if time_hint:
+                            req_summary_parts.append(f"time={time_hint}")
+                        user_req_summary = "; ".join([p for p in req_summary_parts if p])
+
+                        prov_payload = []
+                        for i, p in enumerate(providers):
+                            pid = self._provider_unique_id(p) or str(i)
+                            prov_payload.append({
+                                'id': str(pid),
+                                'name': p.get('name'),
+                                'service_type': p.get('service_type'),
+                                'location': p.get('location'),
+                            })
+
+                        ranked_by_llm = await self.lambda_service.rank_providers(
+                            user_req_summary,
+                            prov_payload,
+                            location_hint=(norm_location or raw_location or (user or {}).get('location') or ''),
+                            top_k=len(providers),
+                        ) or []
+                except Exception:
+                    ranked_by_llm = []
+
+                if ranked_by_llm:
+                    # Build a score map and reorder providers accordingly, keeping unknown ids at end
+                    score_map = {}
+                    order = []
+                    for item in ranked_by_llm:
+                        try:
+                            pid = str(item.get('id'))
+                            score_map[pid] = float(item.get('score') or 0.0)
+                            order.append(pid)
+                        except Exception:
+                            continue
+                    def _pid_of(p):
+                        return str(self._provider_unique_id(p) or '')
+                    known = [p for p in providers if _pid_of(p) in score_map]
+                    unknown = [p for p in providers if _pid_of(p) not in score_map]
+                    known_sorted = sorted(known, key=lambda pr: score_map.get(_pid_of(pr), 0.0), reverse=True)
+                    providers = known_sorted + unknown
+                else:
+                    providers = self._rank_providers(providers, session)
             except Exception:
                 pass
 
@@ -2503,6 +2649,8 @@ class MessageHandler:
                 })
 
             header_loc = norm_location or (user or {}).get("location") or "your area"
+            if used_broad_fallback:
+                header_loc = "all areas"
             await self._log_and_send_interactive(
                 user_number,
                 f"Available {service_type}s in {header_loc}",
@@ -3116,7 +3264,14 @@ class MessageHandler:
         for keyword, service in services.items():
             if keyword in message_text:
                 return service
-        
+        # Fuzzy fallback using rapidfuzz aliases
+        try:
+            fuzzy = find_best_service_match(message_text)
+            if fuzzy:
+                return fuzzy
+        except Exception:
+            pass
+
         return None
 
     def _parse_relative_time(self, time_str: str) -> Optional[datetime]:

@@ -504,3 +504,100 @@ Guidelines:
                 }
             ],
         }
+
+    def _resolve_bedrock_model(self) -> str:
+        cfg_model_id = getattr(settings, 'HUSTLR_BEDROCK_MODEL_ID', "") or ""
+        inference_profile_arn = getattr(settings, 'HUSTLR_BEDROCK_INFERENCE_PROFILE_ARN', "") or ""
+        model_for_invoke = (inference_profile_arn.strip() or cfg_model_id.strip())
+        if not (self.use_bedrock_intent and model_for_invoke):
+            raise RuntimeError("Bedrock intent model is not configured.")
+        if not self.bedrock_client:
+            bedrock_kwargs = {
+                'region_name': self.aws_region,
+                'config': self.client_config,
+            }
+            if self.aws_access_key_id and self.aws_secret_access_key:
+                bedrock_kwargs['aws_access_key_id'] = self.aws_access_key_id
+                bedrock_kwargs['aws_secret_access_key'] = self.aws_secret_access_key
+            self.bedrock_client = boto3.client('bedrock-runtime', **bedrock_kwargs)
+        return model_for_invoke
+
+    def _invoke_bedrock_messages(self, system_prompt: str, user_text: str, max_tokens: int = 600, temperature: float = 0.2) -> str:
+        model_for_invoke = self._resolve_bedrock_model()
+        body = {
+            "anthropic_version": "bedrock-2023-05-31",
+            "max_tokens": int(max_tokens or 600),
+            "temperature": float(temperature or 0.2),
+            "system": system_prompt,
+            "messages": [
+                {
+                    "role": "user",
+                    "content": [{"type": "text", "text": user_text}],
+                }
+            ],
+        }
+        response = self.bedrock_client.invoke_model(
+            modelId=model_for_invoke,
+            body=json.dumps(body).encode("utf-8"),
+            contentType="application/json",
+            accept="application/json",
+        )
+        raw_body = response.get("body")
+        if hasattr(raw_body, "read"):
+            parsed = json.loads(raw_body.read())
+        else:
+            parsed = json.loads(raw_body)
+        final_text = None
+        content = parsed.get("content")
+        if isinstance(content, list):
+            texts = []
+            for item in content:
+                if isinstance(item, dict) and item.get("type") == "text":
+                    t = item.get("text") or ""
+                    if t:
+                        texts.append(t)
+            if texts:
+                final_text = "\n".join(texts).strip()
+        if not final_text:
+            t = parsed.get("output_text") or parsed.get("completion") or ""
+            if t:
+                final_text = str(t).strip()
+        if not final_text:
+            raise RuntimeError("Empty Bedrock response")
+        return final_text
+
+    def _parse_json_array(self, text: str) -> Any:
+        try:
+            return json.loads(text)
+        except Exception:
+            s = str(text or "")
+            i = s.find("[")
+            j = s.rfind("]")
+            if i != -1 and j != -1 and j > i:
+                try:
+                    return json.loads(s[i:j+1])
+                except Exception:
+                    return []
+            return []
+
+    async def rank_providers(self, user_request: str, providers: Any, location_hint: Optional[str] = None, top_k: int = 5) -> Any:
+        try:
+            system_prompt = (
+                "You are a matching assistant. You must return ONLY a JSON array. "
+                "Given a user request and a list of providers (each has an 'id'), return a JSON array of objects with keys: id, score (0..1), reason. "
+                "Use synonyms and fuzzy semantics for service matching. Prefer providers whose service_type best matches the request and whose location matches the hint. "
+                "If no locations match exactly, you may include the best alternatives but explain briefly in reason. Do not invent providers."
+            )
+            payload = {
+                "user_request": user_request,
+                "location_hint": location_hint,
+                "providers": providers,
+                "top_k": int(top_k or 5),
+            }
+            user_text = json.dumps(payload, default=str)
+            out = self._invoke_bedrock_messages(system_prompt, user_text, max_tokens=600, temperature=0.2)
+            arr = self._parse_json_array(out)
+            return arr
+        except Exception as e:
+            logger.warning(f"rank_providers failed: {e}")
+            return []

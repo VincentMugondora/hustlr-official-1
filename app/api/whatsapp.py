@@ -14,6 +14,7 @@ import logging
 import json
 from datetime import datetime
 from app.utils.storage_service import StorageService
+import re
 
 router = APIRouter()
 
@@ -33,6 +34,22 @@ message_handler = MessageHandler(whatsapp_api, mongo_service, ai_service)
 # Baileys-based transport (WhatsApp Web via Node service)
 baileys_client = BaileysClient()
 baileys_message_handler = MessageHandler(baileys_client, mongo_service, ai_service)
+
+
+def _normalize_msisdn(phone: str) -> str:
+    """Normalize phone numbers to digits-only E.164-like Zimbabwe format (263...)."""
+    s = re.sub(r"\D+", "", str(phone or ""))
+    if not s:
+        return ""
+    if s.startswith("0") and len(s) >= 9:
+        return "263" + s[1:]
+    if s.startswith("7") and len(s) >= 9:
+        return "263" + s
+    if s.startswith("263"):
+        return s
+    if len(s) >= 9:
+        return "263" + s
+    return s
 
 @router.get("/webhook")
 async def verify_whatsapp_webhook(
@@ -72,6 +89,11 @@ async def receive_whatsapp_message(
 
     # Parse incoming WhatsApp message
     message = WhatsAppMessage.from_webhook(payload)
+    # Normalize sender MSISDN to avoid session fragmentation across transports
+    try:
+        message.from_number = _normalize_msisdn(message.from_number)
+    except Exception:
+        pass
     
     # Comprehensive logging
     logger.info(f"Parsed message object: {message}")
@@ -461,6 +483,11 @@ async def receive_baileys_message(
         except Exception:
             pass
 
+    # Normalize MSISDN for Baileys before constructing the message
+    try:
+        from_number = _normalize_msisdn(from_number)
+    except Exception:
+        pass
     message = WhatsAppMessage(from_number, text)
 
     logger.info(f"Baileys message from: {message.from_number}")

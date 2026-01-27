@@ -66,6 +66,14 @@ class MongoService:
                 "fitness": ["gym", "trainer", "personal"],
                 "gym": ["fitness", "trainer"],
                 "trainer": ["fitness", "gym"],
+                # Gardening / lawn
+                "gardener": ["lawn", "grass", "mow", "mowing", "mower", "landscape", "landscaping", "yard", "garden", "grasscutter", "grass cutter", "lawn service"],
+                "lawn": ["gardener", "grass", "mow", "mowing", "landscaping"],
+                # Home services common variants
+                "plumber": ["plumbing", "pipe", "drain", "toilet", "sink"],
+                "electrician": ["electrical", "wiring"],
+                "cleaner": ["cleaning", "maid", "housekeeping"],
+                "technician": ["appliance", "fridge", "cctv", "dstv", "solar", "inverter", "aircon", "air conditioner"],
             }
             expanded = set(tokens)
             for t in list(tokens):
