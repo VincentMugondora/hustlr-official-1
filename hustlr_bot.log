@@ -52236,3 +52236,51 @@ Do you have a budget in mind?
 2026-01-27 10:16:12,125 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
 2026-01-27 10:24:18,555 - httpx - INFO - HTTP Request: GET http://localhost:3000/health "HTTP/1.1 200 OK"
 2026-01-27 10:40:46,776 - httpx - INFO - HTTP Request: GET http://localhost:3000/health "HTTP/1.1 200 OK"
+2026-01-27 10:41:58,641 - httpx - INFO - HTTP Request: GET http://localhost:3000/health "HTTP/1.1 200 OK"
+2026-01-27 10:51:16,195 - app.api.whatsapp - INFO - [2026-01-27T08:51:16.195022] Baileys webhook received
+2026-01-27 10:51:16,195 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "status",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "status@broadcast",
+      "fromMe": false,
+      "id": "ACC3F2FDB83A88C2C8156B0224D2394C",
+      "participant": "263782890282@s.whatsapp.net",
+      "participantLid": "166537457602712@lid"
+    },
+    "messageTimestamp": 1769503873,
+    "pushName": "Hoskick power  baba Taku",
+    "broadcast": true,
+    "message": {
+      "senderKeyDistributionMessage": {
+        "groupId": "status@broadcast",
+        "axolotlSenderKeyDistributionMessage": "Mwjku5joAhAAGiDGMmqpdUpbd/O99c9ysBaOPAvgwSH3rgwLdcjI/kPfMSIhBWsCRrlWPR3Izv43B3kf7HsvswWl63YwSe6UizhW9z9E"
+      },
+      "imageMessage": {
+        "url": "https://mmg.whatsapp.net/o1/v/t24/f2/m233/AQMxPEJ-ldc3RXTv10jSVU9vqgBzQa6nmpufw5-nfz4Kb44-CTagTvGv1blGqy7oACs01Fdy8TUx6Frsrl4GhLb0fJms6CHN2NdzMDy8MQ?ccb=9-4&oh=01_Q5Aa3gGD_GPW_QvHEFMHQCZwOMRAxNut3qFu2vsWAyRHSkXO0w&oe=699FD55B&_nc_sid=e6ed6c&mms3=true",
+        "mimetype": "image/jpeg",
+        "caption": "Kwatakabva mutunhu",
+        "fileSha256": "9wiQxFjU+nA6GXqKWydvpGmBRCEETm/RVSeYTR6ssaQ=",
+        "fileLength": "133495",
+        "height": 1080,
+        "width": 810,
+        "mediaKey": "3m1BS5j/40l2Oe2GsWbx7RxtjRjsIzhepBUfPE684ck=",
+        "fileEncSha256": "gVRG3Kp8qxFbkFs7LeJj2rJUxOMdynd7aWpAScFfdQc=",
+        "directPath": "/o1/v/t24/f2/m233/AQMxPEJ-ldc3RXTv10jSVU9vqgBzQa6nmpufw5-nfz4Kb44-CTagTvGv1blGqy7oACs01Fdy8TUx6Frsrl4GhLb0fJms6CHN2NdzMDy8MQ?ccb=9-4&oh=01_Q5Aa3gGD_GPW_QvHEFMHQCZwOMRAxNut3qFu2vsWAyRHSkXO0w&oe=699FD55B&_nc_sid=e6ed6c",
+        "mediaKeyTimestamp": "1769359132",
+        "jpegThumbnail": "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABsSFBcUERsXFhceHBsgKEIrKCUlKFE6PTBCYFVlZF9VXVtqeJmBanGQc1tdhbWGkJ6jq62rZ4C8ybqmx5moq6T/2wBDARweHigjKE4rK06kbl1upKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKT/wgARCABIAEgDASIAAhEBAxEB/8QAGQAAAgMBAAAAAAAAAAAAAAAAAAQCAwUB/8QAGQEAAwEBAQAAAAAAAAAAAAAAAQIDAAUE/9oADAMBAAIQAxAAAAB+FgmpQ0UR7XForaOhXNhVSNEI52vtUXVsqTr6LyzjcxCLWco0hIm051XPkV4Wn36zGPaec5lSgrMnCNGjk3HY2qZF6p0VV/Pc6GiWkqMWA0oqAGVWCqPTAa8Cb//EAB0RAAICAgMBAAAAAAAAAAAAAAABAhESIRAxUSL/2gAIAQIBAT8AxyKUdIjFVoxx0WJkhEnSszZY2Il4NeC7GJ6JDQlsl2J/JLpcf//EAB4RAAIBBQEBAQAAAAAAAAAAAAABAgMREiExEBMy/9oACAEDAQE/AL7KdFTimTWLaflhxaKSSppk5Xk2LZiPpSqQ+eLZLpFX4WGlYQ0nKxDRkhvRHg/2R6/P/8QAKhAAAgIBBAEEAQMFAAAAAAAAAQIAAxEEEiFBMQUTUWEUIiSxMlJxgcH/2gAIAQEAAT8AZdvnzHY8Ac56l9LLXluM+BNKj+5hsDB4zLhYteTjn4m1BauK+f5j5YbAvPUGntC7ds/CYOMDuajCsepo13OWPO0T1B/1KITk/BlmoYoa2JwB5EpsvFqsVLfGI+usQqr1jP8AdE3W8rzKqW37nzNaQVBM9M5RzNe5/I+lm/edx7mg0aPuewZz4EFSJnagmvC+0TYgz1iensGq9wDAPULYGZY4sXDLPTSRZYh4+J6nxq2lS7v+T0ywtWUI5WEzUKHGCMzT2HTu9TeM8AT3rCdvmVMtud2JVtr1Q6BHmeqAHUggg8Su0rYCORNIMZPGTMyx9zBSpAHZiPv1drLkjqVuRnJGfuUVMvmEKQwPQlSPqLGSoZxycmJo7X5PA/iV6t6CiqTaq8HEt9YqUYCMWMvt1FhD48+PqLtBzgg94i1hlDK3P3HY7cciaZcuc5PHcTSVUM1la4ZvMqwamPXM0aqrOFHc1qJuU45zBg0/6mRuIORKLRwMyw7hk+ZpP6z/AIl7ba2P1NO37ck/c0jfqsP3NZbiwCV5epdvxErUqAwEXRoSGDYhrbqadCGJM1oPskDyZWrJp8Ec9RUsbeBwevuW1uWwVORNKSqqG7GJuAYg+JXx3P/+AAMA/9k=",
+        "contextInfo": {
+          "pairedMediaType": "NOT_PAIRED_MEDIA",
+          "statusSourceType": "IMAGE"
+        },
+        "thumbnailDirectPath": "/v/t62.35850-24/534481440_869670092343305_5434410433030580555_n.enc?ccb=11-4&oh=01_Q5Aa3gE5Rqilwqwuqa9CoWRUyzgAK8nDEdq1999GxfI_dEOZJw&oe=69A007FC&_nc_sid=5e03e0",
+        "thumbnailSha256": "jfZmrJWI1Z5AQjGXwCuoXz+3vCXQrn1qNvKc6sMkqs8=",
+        "thumbnailEncSha256": "GN3rwHdm3LI0GnK0jjm9riDxFZS028kc2p7ZxjuTWPI="
+      },
+      "messageContextInfo": {
+        "messageSecret": "mcq/k6fA+gfCvrMMHBSWwcYr3pc/wZ6gtvU5kHogttQ="
+      }
+    }
+  }
+}
