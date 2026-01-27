@@ -2429,19 +2429,6 @@ class MessageHandler:
                 else:
                     providers = all_for_service
 
-            # Try fuzzy matching if no exact matches found
-            if not providers and service_type:
-                from app.utils.fuzzy_match import get_matching_providers
-                all_providers = await self.db.get_all_providers()
-                matched_providers, error = get_matching_providers(service_type, raw_location or (norm_location or ""), all_providers)
-                if matched_providers:
-                    providers = matched_providers
-                elif error:
-                    # Log the fuzzy match error but continue with empty providers
-                    import logging
-                    logger = logging.getLogger(__name__)
-                    logger.info(f"Fuzzy match result for {service_type} in {raw_location}: {error}")
-
             if not providers:
                 header_loc = (norm_location or (user or {}).get("location") or "your area").strip()
                 body = (
