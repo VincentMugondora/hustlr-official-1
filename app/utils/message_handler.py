@@ -875,6 +875,25 @@ class MessageHandler:
         except Exception as e:
             logger.warning(f"Could not store user message in history for {user_number}: {e}")
         
+        # Optional LLM-structured intent mode: delegate slot-filling to Bedrock
+        try:
+            if self._use_llm_structured_intent():
+                handled = await self._handle_llm_structured_flow(user_number, message_text, session, user or {})
+                if handled:
+                    session['last_activity'] = datetime.utcnow().isoformat()
+                    try:
+                        session['fsm_state'] = self._fsm_state_for_session(session)
+                    except Exception:
+                        pass
+                    session_to_save = session.copy()
+                    if isinstance(session_to_save.get('state'), ConversationState):
+                        session_to_save['state'] = session_to_save['state'].value
+                    self.user_sessions[user_number] = session
+                    await self.db.save_session(user_number, session_to_save)
+                    return
+        except Exception:
+            pass
+        
         expired = False
         try:
             la_raw = session.get('last_activity')
