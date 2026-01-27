@@ -81,6 +81,12 @@ class MongoService:
         cursor = db.providers.find(query)
         return [doc async for doc in cursor]
 
+    async def get_all_providers(self) -> List[Dict[str, Any]]:
+        """Get all active providers for fuzzy matching."""
+        db = get_database()
+        cursor = db.providers.find({"status": "active"})
+        return [doc async for doc in cursor]
+
     async def create_provider(self, provider_data: Dict[str, Any]) -> bool:
         db = get_database()
         provider_data = dict(provider_data)

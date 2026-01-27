@@ -51191,3 +51191,7 @@ Date: 2026-01-0...
 2026-01-27 08:15:15,946 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
 2026-01-27 08:15:16,091 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
 2026-01-27 08:34:14,146 - httpx - INFO - HTTP Request: GET http://localhost:3000/health "HTTP/1.1 200 OK"
+2026-01-27 08:34:28,536 - httpx - INFO - HTTP Request: GET http://localhost:3000/health "HTTP/1.1 200 OK"
+2026-01-27 08:35:28,891 - httpx - INFO - HTTP Request: GET http://localhost:3000/health "HTTP/1.1 200 OK"
+2026-01-27 08:36:12,366 - httpx - INFO - HTTP Request: GET http://localhost:3000/health "HTTP/1.1 200 OK"
+2026-01-27 08:36:30,780 - httpx - INFO - HTTP Request: GET http://localhost:3000/health "HTTP/1.1 200 OK"
