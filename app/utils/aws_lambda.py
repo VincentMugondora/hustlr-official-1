@@ -621,7 +621,7 @@ Guidelines:
                 "- Never invent data.\n"
                 "- Never output text outside JSON.\n"
             )
-            raw = self._invoke_bedrock_messages(system_prompt, str(user_text or ""), max_tokens=500, temperature=0.2)
+            raw = self._invoke_bedrock_messages(system_prompt, str(user_text or ""), max_tokens=500, temperature=0.0)
             # Parse a single JSON object
             try:
                 return json.loads(raw)
