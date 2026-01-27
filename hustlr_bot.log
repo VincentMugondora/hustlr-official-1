@@ -52528,3 +52528,49 @@ Do you have a budget in mind?
     }
   }
 }
+2026-01-27 11:20:21,538 - httpx - INFO - HTTP Request: GET http://localhost:3000/health "HTTP/1.1 200 OK"
+2026-01-27 11:20:26,869 - app.api.whatsapp - INFO - [2026-01-27T09:20:26.869052] Baileys webhook received
+2026-01-27 11:20:26,870 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "status",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "status@broadcast",
+      "fromMe": false,
+      "id": "ACF14CB57B7B52A13FB7A92A3DCDDCBE",
+      "participant": "263780416173@s.whatsapp.net",
+      "participantLid": "172043823755335@lid"
+    },
+    "messageTimestamp": 1769505623,
+    "pushName": "Rashy\ud83d\ude18",
+    "broadcast": true,
+    "message": {
+      "imageMessage": {
+        "url": "https://mmg.whatsapp.net/v/t62.7118-24/541919624_1572667454007584_9041297675205899419_n.enc?ccb=11-4&oh=01_Q5Aa3gG_d89V7ButWgRLRsg4jWepApA5Hl5yCDrO6CY8-2sPVw&oe=69A00DCC&_nc_sid=5e03e0&mms3=true",
+        "mimetype": "image/jpeg",
+        "caption": "Kkkkkkkkk hanz ndichakufumgisa one day kna tazopasa \ud83d\ude00 uripi sahwira",
+        "fileSha256": "Y7/64aayDteu4STpcS62RCGhUZyimkHeAo1KSkeaj5U=",
+        "fileLength": "48976",
+        "height": 1040,
+        "width": 780,
+        "mediaKey": "ZtqKJJnAiAtCbVBEEc3zFWtHQ+zMb3AOZmOSjwANFOg=",
+        "fileEncSha256": "cfSQvS7Q816URnY9371aeTTreihp56ookRYEsGjbwhc=",
+        "directPath": "/v/t62.7118-24/541919624_1572667454007584_9041297675205899419_n.enc?ccb=11-4&oh=01_Q5Aa3gG_d89V7ButWgRLRsg4jWepApA5Hl5yCDrO6CY8-2sPVw&oe=69A00DCC&_nc_sid=5e03e0",
+        "mediaKeyTimestamp": "1769505552",
+        "jpegThumbnail": "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",
+        "contextInfo": {
+          "pairedMediaType": "NOT_PAIRED_MEDIA",
+          "statusSourceType": "IMAGE"
+        },
+        "scansSidecar": "yd6hRPHnghZRlZSTOly3hqfnlS4=",
+        "scanLengths": [
+          6842,
+          42134
+        ]
+      },
+      "messageContextInfo": {
+        "messageSecret": "A+lGbe65Od0e975u8r6Sp0ww9ZBJ27GRH6O9uGnZtv0="
+      }
+    }
+  }
+}

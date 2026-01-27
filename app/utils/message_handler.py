@@ -736,6 +736,97 @@ class MessageHandler:
         t = re.sub(r"\s+", " ", t).strip().lower()
         return t
 
+    def _use_llm_structured_intent(self) -> bool:
+        try:
+            return bool(getattr(settings, 'USE_LLM_STRUCTURED_INTENT', False))
+        except Exception:
+            return False
+
+    async def _handle_llm_structured_flow(self, user_number: str, message_text: str, session: Dict, user: Dict) -> bool:
+        try:
+            llm = await self.lambda_service.parse_structured_intent(message_text)
+        except Exception:
+            return False
+
+        if not isinstance(llm, dict):
+            return False
+
+        slots = llm.get('slots') or {}
+        reply = (llm.get('reply') or '').strip()
+        missing = list(llm.get('missing_slots') or [])
+
+        sd = session.setdefault('data', {})
+
+        svc_raw = (slots.get('service') or '').strip().lower()
+        if svc_raw:
+            svc_canon = self.extract_service_type(svc_raw) or find_best_service_match(svc_raw) or svc_raw
+            sd['service_type'] = svc_canon
+
+        loc_raw = (slots.get('location') or '').strip()
+        if loc_raw:
+            try:
+                le = get_location_extractor()
+                loc_norm = le.normalize_user_location(loc_raw) or le.normalize_user_location(loc_raw.split(',')[0])
+            except Exception:
+                loc_norm = None
+            sd['location'] = loc_norm or loc_raw
+
+        dt_raw = (slots.get('datetime') or '').strip()
+        if dt_raw:
+            try:
+                # Accept ISO or natural language; normalize via existing parser
+                dt = self._canonicalize_booking_time(dt_raw)
+                if dt:
+                    sd['booking_time'] = dt.strftime('%Y-%m-%d %H:%M')
+                else:
+                    sd['booking_time'] = dt_raw
+            except Exception:
+                sd['booking_time'] = dt_raw
+
+        if 'budget' in slots:
+            sd['budget'] = slots.get('budget')
+
+        # Decide next step
+        required = []
+        if not sd.get('service_type'):
+            required.append('service')
+        if not sd.get('location'):
+            required.append('location')
+        if not sd.get('booking_time') and not sd.get('date'):
+            required.append('datetime')
+
+        need = missing or required
+        if need:
+            nxt = need[0]
+            if nxt == 'service':
+                session['state'] = ConversationState.SERVICE_SEARCH
+            elif nxt == 'location':
+                session['state'] = ConversationState.BOOKING_LOCATION
+            elif nxt in ('datetime', 'time', 'date'):
+                session['state'] = ConversationState.BOOKING_TIME
+            elif nxt == 'budget':
+                session['state'] = ConversationState.BOOKING_BUDGET
+            else:
+                session['state'] = ConversationState.SERVICE_SEARCH
+            session['last_activity'] = datetime.utcnow().isoformat()
+            try:
+                session['fsm_state'] = self._fsm_state_for_session(session)
+            except Exception:
+                pass
+            if reply:
+                await self._log_and_send_response(user_number, reply, 'llm_slot_question')
+            return True
+
+        svc = (sd.get('service_type') or '').strip()
+        loc = (sd.get('location') or '').strip()
+        if not svc:
+            await self._log_and_send_response(user_number, self._short("What service do you need? For example: plumber, electrician, cleaner.", "What service do you need?"), 'ask_service_type')
+            session['state'] = ConversationState.SERVICE_SEARCH
+            return True
+
+        await self._list_providers_for_selection(user_number, svc, loc, session, user or {})
+        return True
+
     def _build_friendly_provider_body(self, service_type: str, location: str, providers_count: int, session: Dict) -> str:
         if self._is_concise():
             return f"Found {providers_count} {service_type}s in {location}. Pick one:"
