@@ -50813,3 +50813,381 @@ Date: 2026-01-0...
   }
 }
 2026-01-26 15:55:52,401 - httpx - INFO - HTTP Request: GET http://localhost:3000/health "HTTP/1.1 200 OK"
+2026-01-27 08:12:48,041 - httpx - INFO - HTTP Request: GET http://localhost:3000/health "HTTP/1.1 200 OK"
+2026-01-27 08:13:06,002 - app.api.whatsapp - INFO - [2026-01-27T06:13:06.001440] Baileys webhook received
+2026-01-27 08:13:06,002 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3EB030B67003824D25DB5E",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1769494383,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2026-01-27 08:13:11,890 - app.api.whatsapp - INFO - [2026-01-27T06:13:11.890514] Baileys webhook received
+2026-01-27 08:13:11,893 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3EB030B67003824D25DB5E",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1769494389,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2026-01-27 08:13:13,547 - app.api.whatsapp - INFO - [2026-01-27T06:13:13.547822] Baileys webhook received
+2026-01-27 08:13:13,563 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "hello",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3EB030B67003824D25DB5E",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1769494390,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "conversation": "hello",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "eCXKKdmUbS/yPQ==",
+          "senderTimestamp": "1768203911",
+          "senderAccountType": "E2EE",
+          "receiverAccountType": "E2EE",
+          "recipientKeyHash": "DRuaPNpV6+OMqQ==",
+          "recipientTimestamp": "1767081832"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "fKIu17BZNtWhTmo/fZdIuZ3/q2/B8Sy3gz1B/EZCcv4=",
+        "limitSharingV2": {
+          "trigger": "UNKNOWN",
+          "initiatedByMe": false
+        }
+      }
+    }
+  }
+}
+2026-01-27 08:13:13,642 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2026-01-27 08:13:13,652 - app.api.whatsapp - INFO - Baileys text: 'hello'
+2026-01-27 08:13:14,014 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: session_reset, Message: What service do you need? For example: plumber, electrician, cleaner....
+2026-01-27 08:13:16,682 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2026-01-27 08:13:16,889 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2026-01-27 08:13:34,632 - app.api.whatsapp - INFO - [2026-01-27T06:13:34.632495] Baileys webhook received
+2026-01-27 08:13:34,634 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "l need a my lawn mawn",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3EB0484E22BCFD2D81750A",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1769494412,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "conversation": "l need a my lawn mawn",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "eCXKKdmUbS/yPQ==",
+          "senderTimestamp": "1768203911",
+          "senderAccountType": "E2EE",
+          "receiverAccountType": "E2EE",
+          "recipientKeyHash": "DRuaPNpV6+OMqQ==",
+          "recipientTimestamp": "1767081832"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "AQ5IcovkiLPKnEg7GhC809nh/6rYVKqBTP3XnnS2ZSw=",
+        "limitSharingV2": {
+          "trigger": "UNKNOWN",
+          "initiatedByMe": false
+        }
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2026-01-27 08:13:34,694 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2026-01-27 08:13:34,694 - app.api.whatsapp - INFO - Baileys text: 'l need a my lawn mawn'
+2026-01-27 08:13:34,942 - app.utils.aws_lambda - INFO - [BEDROCK CONFIG] source=settings cfg(HUSTLR)=anthropic.claude-3-5-sonnet-20240620-v1:0, env_ignored(BEDROCK_MODEL_ID)=, param_ignored=None, inference_profile_arn=arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, resolved_model_id=anthropic.claude-3-5-sonnet-20240620-v1:0, chosen=arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, use_bedrock=True, region=us-east-1, has_creds=True
+2026-01-27 08:13:34,968 - app.utils.aws_lambda - INFO - [BEDROCK INVOKE] modelId=arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, region=us-east-1
+2026-01-27 08:13:39,721 - app.utils.aws_lambda - INFO - [CLAUDE RESPONSE] Model: arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, User: Vincent Mugondora, Question: l need a my lawn mawn..., Answer: ```json
+{
+  "status": "ASK",
+  "field": "location",
+  "data": {
+    "service_type": "lawn mowing"
+  },
+  "assistantMessage": "Sure  I can help you find someone to mow your lawn. Where are you located...
+2026-01-27 08:13:39,721 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_ASK, Message: Sure  I can help you find someone to mow your lawn. Where are you located?...
+2026-01-27 08:13:41,281 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2026-01-27 08:13:41,466 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2026-01-27 08:14:03,056 - app.api.whatsapp - INFO - [2026-01-27T06:14:03.056261] Baileys webhook received
+2026-01-27 08:14:03,057 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3EB0E58C2015C255F85231",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1769494440,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2026-01-27 08:14:13,039 - app.api.whatsapp - INFO - [2026-01-27T06:14:13.039784] Baileys webhook received
+2026-01-27 08:14:13,041 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3EB0E58C2015C255F85231",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1769494450,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2026-01-27 08:14:14,783 - app.api.whatsapp - INFO - [2026-01-27T06:14:14.783472] Baileys webhook received
+2026-01-27 08:14:14,785 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "mufakose",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3EB0E58C2015C255F85231",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1769494451,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "conversation": "mufakose",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "eCXKKdmUbS/yPQ==",
+          "senderTimestamp": "1768203911",
+          "senderAccountType": "E2EE",
+          "receiverAccountType": "E2EE",
+          "recipientKeyHash": "DRuaPNpV6+OMqQ==",
+          "recipientTimestamp": "1767081832"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "YYk+E8Gq3ujoCcKo8rEXiSirH55Syz9vgwnrjgVh7fE=",
+        "limitSharingV2": {
+          "trigger": "UNKNOWN",
+          "initiatedByMe": false
+        }
+      }
+    }
+  }
+}
+2026-01-27 08:14:14,892 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2026-01-27 08:14:14,895 - app.api.whatsapp - INFO - Baileys text: 'mufakose'
+2026-01-27 08:14:15,364 - app.utils.aws_lambda - INFO - [BEDROCK CONFIG] source=settings cfg(HUSTLR)=anthropic.claude-3-5-sonnet-20240620-v1:0, env_ignored(BEDROCK_MODEL_ID)=, param_ignored=None, inference_profile_arn=arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, resolved_model_id=anthropic.claude-3-5-sonnet-20240620-v1:0, chosen=arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, use_bedrock=True, region=us-east-1, has_creds=True
+2026-01-27 08:14:15,366 - app.utils.aws_lambda - INFO - [BEDROCK INVOKE] modelId=arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, region=us-east-1
+2026-01-27 08:14:17,931 - app.utils.aws_lambda - INFO - [CLAUDE RESPONSE] Model: arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, User: Vincent Mugondora, Question: mufakose..., Answer: ```json
+{
+  "status": "ASK",
+  "field": "date",
+  "data": {
+    "service_type": "lawn mowing",
+    "location": "mufakose"
+  },
+  "assistantMessage": "Got it  Mufakose. When would you like the lawn mo...
+2026-01-27 08:14:17,932 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_ASK, Message: Got it  Mufakose. When would you like the lawn mowing service? Today, tomorrow, or a specific date?...
+2026-01-27 08:14:19,815 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2026-01-27 08:14:20,018 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2026-01-27 08:14:42,850 - app.api.whatsapp - INFO - [2026-01-27T06:14:42.850370] Baileys webhook received
+2026-01-27 08:14:42,851 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "tomorrow at 08:00",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3EB0E5399579C33118EB78",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1769494480,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "message": {
+      "conversation": "tomorrow at 08:00",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "eCXKKdmUbS/yPQ==",
+          "senderTimestamp": "1768203911",
+          "senderAccountType": "E2EE",
+          "receiverAccountType": "E2EE",
+          "recipientKeyHash": "DRuaPNpV6+OMqQ==",
+          "recipientTimestamp": "1767081832"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "vjRKOOT6zXoGc7P7pNts5VJXxLA9TLTi5i03UNxBllA=",
+        "limitSharingV2": {
+          "trigger": "UNKNOWN",
+          "initiatedByMe": false
+        }
+      }
+    },
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2026-01-27 08:14:42,951 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2026-01-27 08:14:42,951 - app.api.whatsapp - INFO - Baileys text: 'tomorrow at 08:00'
+2026-01-27 08:14:43,260 - app.utils.aws_lambda - INFO - [BEDROCK CONFIG] source=settings cfg(HUSTLR)=anthropic.claude-3-5-sonnet-20240620-v1:0, env_ignored(BEDROCK_MODEL_ID)=, param_ignored=None, inference_profile_arn=arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, resolved_model_id=anthropic.claude-3-5-sonnet-20240620-v1:0, chosen=arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, use_bedrock=True, region=us-east-1, has_creds=True
+2026-01-27 08:14:43,260 - app.utils.aws_lambda - INFO - [BEDROCK INVOKE] modelId=arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, region=us-east-1
+2026-01-27 08:14:46,081 - app.utils.aws_lambda - INFO - [CLAUDE RESPONSE] Model: arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, User: Vincent Mugondora, Question: tomorrow at 08:00..., Answer: ```json
+{
+  "status": "ASK",
+  "field": "budget",
+  "data": {
+    "service_type": "lawn mowing",
+    "location": "mufakose",
+    "date": "tomorrow",
+    "time": "08:00"
+  },
+  "assistantMessage": "Per...
+2026-01-27 08:14:46,081 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_ASK, Message: Perfect! Tomorrow at 08:00 in Mufakose for lawn mowing  Do you have a budget in mind, or should I f...
+2026-01-27 08:14:47,909 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2026-01-27 08:14:48,072 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2026-01-27 08:14:59,188 - app.api.whatsapp - INFO - [2026-01-27T06:14:59.188553] Baileys webhook received
+2026-01-27 08:14:59,191 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3EB0C36F864BA75BF47A6B",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1769494496,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ],
+    "verifiedBizName": "Vincent Mugondora"
+  }
+}
+2026-01-27 08:15:05,396 - app.api.whatsapp - INFO - [2026-01-27T06:15:05.396321] Baileys webhook received
+2026-01-27 08:15:05,396 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3EB0C36F864BA75BF47A6B",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1769494502,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "messageStubType": 2,
+    "messageStubParameters": [
+      "No matching sessions found for message"
+    ]
+  }
+}
+2026-01-27 08:15:07,281 - app.api.whatsapp - INFO - [2026-01-27T06:15:07.281970] Baileys webhook received
+2026-01-27 08:15:07,281 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "263777530322",
+  "text": "20",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "245943215608017@lid",
+      "fromMe": false,
+      "id": "3EB0C36F864BA75BF47A6B",
+      "senderPn": "263777530322@s.whatsapp.net"
+    },
+    "messageTimestamp": 1769494504,
+    "pushName": "Vincent Mugondora",
+    "broadcast": false,
+    "verifiedBizName": "Vincent Mugondora",
+    "message": {
+      "conversation": "20",
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "eCXKKdmUbS/yPQ==",
+          "senderTimestamp": "1768203911",
+          "senderAccountType": "E2EE",
+          "receiverAccountType": "E2EE",
+          "recipientKeyHash": "DRuaPNpV6+OMqQ==",
+          "recipientTimestamp": "1767081832"
+        },
+        "deviceListMetadataVersion": 2,
+        "messageSecret": "HvYQfUyQWmw4AO9qga5t+CVZSLlnp2prSTsug9gvWHY=",
+        "limitSharingV2": {
+          "trigger": "UNKNOWN",
+          "initiatedByMe": false
+        }
+      }
+    }
+  }
+}
+2026-01-27 08:15:07,326 - app.api.whatsapp - INFO - Baileys message from: 263777530322
+2026-01-27 08:15:07,326 - app.api.whatsapp - INFO - Baileys text: '20'
+2026-01-27 08:15:08,016 - app.utils.aws_lambda - INFO - [BEDROCK CONFIG] source=settings cfg(HUSTLR)=anthropic.claude-3-5-sonnet-20240620-v1:0, env_ignored(BEDROCK_MODEL_ID)=, param_ignored=None, inference_profile_arn=arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, resolved_model_id=anthropic.claude-3-5-sonnet-20240620-v1:0, chosen=arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, use_bedrock=True, region=us-east-1, has_creds=True
+2026-01-27 08:15:08,016 - app.utils.aws_lambda - INFO - [BEDROCK INVOKE] modelId=arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, region=us-east-1
+2026-01-27 08:15:11,296 - app.utils.aws_lambda - INFO - [CLAUDE RESPONSE] Model: arn:aws:bedrock:us-east-1:081809265215:inference-profile/global.anthropic.claude-sonnet-4-5-20250929-v1:0, User: Vincent Mugondora, Question: 20..., Answer: ```json
+{
+  "status": "CONFIRM",
+  "field": "selected_provider",
+  "data": {
+    "service_type": "lawn mowing",
+    "location": "mufakose",
+    "date": "tomorrow",
+    "time": "08:00",
+    "budget_min...
+2026-01-27 08:15:11,296 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: ai_CONFIRM, Message: Perfect  Budget of $20 noted. Let me find the best lawn mowing provider available in Mufakose for t...
+2026-01-27 08:15:13,266 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2026-01-27 08:15:13,739 - app.utils.message_handler - INFO - [BOT RESPONSE] To: 263777530322, Type: interactive_buttons, Header: No providers available, Body: I couldn’t find any lawn mowing available in Harar...
+2026-01-27 08:15:15,946 - httpx - INFO - HTTP Request: POST http://localhost:3000/send-text "HTTP/1.1 200 OK"
+2026-01-27 08:15:16,091 - app.api.whatsapp - INFO - Baileys message processed successfully for 263777530322
+2026-01-27 08:34:14,146 - httpx - INFO - HTTP Request: GET http://localhost:3000/health "HTTP/1.1 200 OK"
