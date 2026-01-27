@@ -601,3 +601,40 @@ Guidelines:
         except Exception as e:
             logger.warning(f"rank_providers failed: {e}")
             return []
+
+    async def parse_structured_intent(self, user_text: str) -> Dict[str, Any]:
+        """Use Bedrock to parse the user's message into a strict JSON schema.
+
+        Returns a dict with keys: intent (str), slots (dict), missing_slots (list), reply (str).
+        On failure, returns a minimal default object.
+        """
+        try:
+            system_prompt = (
+                "You are Hustlr, a WhatsApp assistant that helps users book local services.\n"
+                "Your job is to: understand the user’s intent, normalize service names (e.g., software engineer → software developer), "
+                "extract booking details if present, and ask only ONE missing question at a time. Stay friendly, short, and clear.\n\n"
+                "Respond ONLY in valid JSON with the following keys: intent, slots, missing_slots, reply.\n"
+                "Rules:\n"
+                "- Normalize service synonyms (e.g., lawn mowing/grass cutting → lawn service).\n"
+                "- Parse times when possible; ISO 8601 preferred (e.g., 2026-01-28T08:00).\n"
+                "- Never mention providers, availability, or prices.\n"
+                "- Never invent data.\n"
+                "- Never output text outside JSON.\n"
+            )
+            raw = self._invoke_bedrock_messages(system_prompt, str(user_text or ""), max_tokens=500, temperature=0.2)
+            # Parse a single JSON object
+            try:
+                return json.loads(raw)
+            except Exception:
+                s = str(raw or "")
+                i = s.find("{")
+                j = s.rfind("}")
+                if i != -1 and j != -1 and j > i:
+                    try:
+                        return json.loads(s[i:j+1])
+                    except Exception:
+                        pass
+            return {"intent": "UNKNOWN", "slots": {}, "missing_slots": ["service"], "reply": "What service do you need?"}
+        except Exception as e:
+            logger.warning(f"parse_structured_intent failed: {e}")
+            return {"intent": "UNKNOWN", "slots": {}, "missing_slots": ["service"], "reply": "What service do you need?"}
