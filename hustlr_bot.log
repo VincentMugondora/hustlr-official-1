@@ -52284,3 +52284,49 @@ Do you have a budget in mind?
     }
   }
 }
+2026-01-27 10:55:49,686 - httpx - INFO - HTTP Request: GET http://localhost:3000/health "HTTP/1.1 200 OK"
+2026-01-27 11:08:35,312 - app.api.whatsapp - INFO - [2026-01-27T09:08:35.312195] Baileys webhook received
+2026-01-27 11:08:35,312 - app.api.whatsapp - INFO - Baileys payload: {
+  "from": "status",
+  "text": "",
+  "rawMessage": {
+    "key": {
+      "remoteJid": "status@broadcast",
+      "fromMe": false,
+      "id": "AC5C595B9C2C233DC45AD8198C8B104A",
+      "participant": "263780416173@s.whatsapp.net",
+      "participantLid": "172043823755335@lid"
+    },
+    "messageTimestamp": 1769504911,
+    "pushName": "Rashy\ud83d\ude18",
+    "broadcast": true,
+    "message": {
+      "imageMessage": {
+        "url": "https://mmg.whatsapp.net/v/t62.7118-24/622789402_1428477345575612_10375005515394964_n.enc?ccb=11-4&oh=01_Q5Aa3gGvNVTHRNRuuyYqzV36boveQDAA8EzyiF0BMyAiIG1mig&oe=699FD661&_nc_sid=5e03e0&mms3=true",
+        "mimetype": "image/jpeg",
+        "caption": "Ndafunga kure. Sahwira wemunhu \u2764\ufe0f",
+        "fileSha256": "ZS4NeLBjA8QwDb08cnpzWLkvoNSGTKt2/z2bgB+QwrU=",
+        "fileLength": "79782",
+        "height": 1280,
+        "width": 960,
+        "mediaKey": "TxNhjo4+zxEvKr4anRpS8FN4Fb5m+F6Gay4AyCXlL8o=",
+        "fileEncSha256": "oG67gUQHnAnoe7pfGYybR4MBpIFBMBUNtRaCrdvbMLg=",
+        "directPath": "/v/t62.7118-24/622789402_1428477345575612_10375005515394964_n.enc?ccb=11-4&oh=01_Q5Aa3gGvNVTHRNRuuyYqzV36boveQDAA8EzyiF0BMyAiIG1mig&oe=699FD661&_nc_sid=5e03e0",
+        "mediaKeyTimestamp": "1769504851",
+        "jpegThumbnail": "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",
+        "contextInfo": {
+          "pairedMediaType": "NOT_PAIRED_MEDIA",
+          "statusSourceType": "IMAGE"
+        },
+        "scansSidecar": "aEvKQcbn+k5ArR32rDhJWzS5Cgk=",
+        "scanLengths": [
+          11361,
+          68421
+        ]
+      },
+      "messageContextInfo": {
+        "messageSecret": "3S9VkeDdDqEmoj1rBBOfe3Ia05CNjlkjZRjjMjur2xc="
+      }
+    }
+  }
+}
