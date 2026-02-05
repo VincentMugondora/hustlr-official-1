@@ -53300,3 +53300,4 @@ For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/St
     }
   }
 }
+2026-01-28 10:13:03,873 - app.main - WARNING - Baileys sender not available at startup (tried http://localhost:3000)

@@ -566,3 +566,90 @@ async def process_pending_messages(limit: int = 100):
         "errors": errors,
         "remaining_unprocessed": remaining,
     }
+
+
+@router.post("/__test/structured-intent")
+async def test_structured_intent(payload: dict = Body(...)):
+    text = str((payload or {}).get("text") or "").strip()
+    if not text:
+        return {"error": "text field required"}
+    try:
+        svc = ai_service if hasattr(ai_service, 'parse_structured_intent') else AWSLambdaService()
+    except Exception:
+        svc = AWSLambdaService()
+    try:
+        result = await svc.parse_structured_intent(text)
+    except Exception as e:
+        return {"error": f"bedrock_parse_failed: {e.__class__.__name__}"}
+    return {"llm": result}
+
+
+@router.post("/__test/provider-shortlist")
+async def test_provider_shortlist(payload: dict = Body(...)):
+    """
+    QA route: given slots (service, location, datetime, budget), return the provider shortlist
+    the production handler would present, including optional Bedrock ranking.
+    """
+    slots = (payload or {}).get("slots", {})
+    service_raw = str(slots.get("service") or "").strip()
+    location_raw = str(slots.get("location") or "").strip()
+    datetime_raw = str(slots.get("datetime") or "").strip()
+    budget_raw = slots.get("budget")
+    if not service_raw:
+        return {"error": "service is required"}
+    # Normalize service type using handler logic
+    from app.utils.message_handler import MessageHandler
+    mh = MessageHandler(None, mongo_service, ai_service)
+    service_canonical = mh.extract_service_type(service_raw) or service_raw
+    # Normalize location
+    norm_location = None
+    if location_raw:
+        try:
+            from app.utils.location_extractor import get_location_extractor
+            le = get_location_extractor()
+            norm_location = le.normalize_user_location(location_raw) or le.normalize_user_location(location_raw.split(',')[0])
+        except Exception:
+            norm_location = location_raw
+    # Fetch providers
+    providers = await mongo_service.get_providers_by_service(service_canonical, norm_location)
+    # Optional Bedrock ranking
+    ranked = []
+    try:
+        if hasattr(ai_service, 'rank_providers') and providers:
+            user_req = f"{service_canonical} in {norm_location or 'any'}"
+            if datetime_raw:
+                user_req += f" at {datetime_raw}"
+            if budget_raw is not None:
+                user_req += f" budget {budget_raw}"
+            ranked_by_llm = await ai_service.rank_providers(user_req, providers, location_hint=norm_location, top_k=10)
+            if ranked_by_llm:
+                ranked_ids = {str(item.get('id')) for item in ranked_by_llm}
+                known = [p for p in providers if str(p.get('_id')) in ranked_ids]
+                unknown = [p for p in providers if str(p.get('_id')) not in ranked_ids]
+                # Preserve LLM order
+                id_to_provider = {str(p.get('_id')): p for p in known}
+                known_sorted = [id_to_provider[str(item.get('id'))] for item in ranked_by_llm if str(item.get('id')) in id_to_provider]
+                ranked = known_sorted + unknown
+            else:
+                ranked = mh._rank_providers(providers, {})
+        else:
+            ranked = mh._rank_providers(providers, {})
+    except Exception as e:
+        ranked = providers
+    # Prepare shortlist (id, name, service, location)
+    shortlist = []
+    for p in ranked[:10]:
+        shortlist.append({
+            "id": str(p.get("_id")),
+            "name": p.get("name"),
+            "service_type": p.get("service_type"),
+            "location": p.get("location"),
+            "whatsapp_number": p.get("whatsapp_number"),
+        })
+    return {
+        "service_canonical": service_canonical,
+        "normalized_location": norm_location,
+        "providers_found": len(providers),
+        "shortlisted": len(shortlist),
+        "shortlist": shortlist,
+    }
